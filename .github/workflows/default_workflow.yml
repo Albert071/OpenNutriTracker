@@ -76,7 +76,6 @@ jobs:
   ios-build:
     runs-on: macos-latest
     timeout-minutes: 45
-    needs: linux-checks
     permissions:
       contents: write
     steps:
@@ -163,6 +162,241 @@ jobs:
 
       - name: Build iOS (no codesign)
         run: flutter build ios --no-codesign --release
+
+  ios-integration-tests:
+    runs-on: macos-latest
+    timeout-minutes: 45
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.41.7'
+          channel: 'stable'
+          cache: true
+
+      - name: Cache Flutter packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.pub-cache
+          key: ${{ runner.os }}-pub-cache-${{ hashFiles('**/pubspec.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-pub-cache-
+
+      - name: Cache CocoaPods
+        uses: actions/cache@v4
+        with:
+          path: ios/Pods
+          key: ${{ runner.os }}-pods-${{ hashFiles('ios/Podfile.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-pods-
+
+      - name: Generate stub .env for CI
+        run: |
+          cat > .env <<'EOF'
+          FDC_API_KEY="ci-stub"
+          SENTRY_DNS="https://stub@sentry.io/0"
+          SUPABASE_PROJECT_URL="https://stub.supabase.co"
+          SUPABASE_PROJECT_ANON_KEY="ci-stub"
+          EOF
+
+      - name: Install Flutter packages
+        run: flutter pub get
+
+      - name: Generate code
+        run: dart run build_runner build --delete-conflicting-outputs
+
+      - name: Pod install (regenerate lockfile if constraints have shifted)
+        run: |
+          cd ios
+          if ! pod install --repo-update; then
+            echo "::warning::Podfile.lock has stale constraints; regenerating via pod update"
+            pod update
+          fi
+
+      # Pick any available iPhone simulator on the runner. macos-latest
+      # ships several preinstalled; we don't care which exact model — the
+      # boot-smoke test is platform-bridge driven, not display-pixel driven.
+      - name: Pick + boot iPhone simulator
+        run: |
+          DEVICE_UDID=$(xcrun simctl list devices available iPhone -j | python3 -c "
+          import sys, json
+          data = json.load(sys.stdin)
+          devices = [d for runtime in data['devices'].values() for d in runtime if d.get('isAvailable')]
+          if not devices:
+              sys.exit('No available iPhone simulators on this runner')
+          print(devices[0]['udid'])
+          ")
+          echo "Booting simulator UDID: $DEVICE_UDID"
+          xcrun simctl boot "$DEVICE_UDID"
+          xcrun simctl bootstatus "$DEVICE_UDID"
+          echo "DEVICE_UDID=$DEVICE_UDID" >> $GITHUB_ENV
+
+      - name: Run integration tests
+        run: flutter test integration_test/ -d "$DEVICE_UDID" --reporter expanded
+
+  android-build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.41.7'
+          channel: 'stable'
+          cache: true
+
+      - name: Cache Flutter packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.pub-cache
+          key: ${{ runner.os }}-pub-cache-${{ hashFiles('**/pubspec.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-pub-cache-
+
+      - name: Cache Gradle
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('android/**/*.gradle*', 'android/**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      - name: Generate stub .env for CI
+        run: |
+          cat > .env <<'EOF'
+          FDC_API_KEY="ci-stub"
+          SENTRY_DNS="https://stub@sentry.io/0"
+          SUPABASE_PROJECT_URL="https://stub.supabase.co"
+          SUPABASE_PROJECT_ANON_KEY="ci-stub"
+          EOF
+
+      - name: Install Flutter packages
+        run: flutter pub get
+
+      - name: Generate code
+        run: dart run build_runner build --delete-conflicting-outputs
+
+      - name: Build APK (debug)
+        # --release would need a keystore which CI doesn't have; --debug
+        # exercises the same Gradle / desugaring / R8 paths sufficiently
+        # for a "compiles cleanly" gate.
+        run: flutter build apk --debug
+
+  android-integration-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.41.7'
+          channel: 'stable'
+          cache: true
+
+      - name: Cache Flutter packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.pub-cache
+          key: ${{ runner.os }}-pub-cache-${{ hashFiles('**/pubspec.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-pub-cache-
+
+      - name: Cache Gradle
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('android/**/*.gradle*', 'android/**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      # Cache the AVD snapshot so future runs skip the slow first-boot.
+      # Key includes the API level so a bump invalidates the cache.
+      - name: Cache AVD
+        uses: actions/cache@v4
+        id: avd-cache
+        with:
+          path: |
+            ~/.android/avd/*
+            ~/.android/adb*
+          key: avd-android-34
+
+      - name: Enable KVM (so the Android emulator runs at native speed)
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+
+      - name: Generate stub .env for CI
+        run: |
+          cat > .env <<'EOF'
+          FDC_API_KEY="ci-stub"
+          SENTRY_DNS="https://stub@sentry.io/0"
+          SUPABASE_PROJECT_URL="https://stub.supabase.co"
+          SUPABASE_PROJECT_ANON_KEY="ci-stub"
+          EOF
+
+      - name: Install Flutter packages
+        run: flutter pub get
+
+      - name: Generate code
+        run: dart run build_runner build --delete-conflicting-outputs
+
+      # First emulator-runner pass — only runs when the AVD cache is empty.
+      # It boots the emulator once to seed the snapshot, then exits. This
+      # makes the actual test pass below much faster.
+      - name: Generate AVD snapshot (cache miss only)
+        if: steps.avd-cache.outputs.cache-hit != 'true'
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 34
+          target: google_apis
+          arch: x86_64
+          force-avd-creation: false
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          disable-animations: false
+          script: echo "AVD snapshot generated for cache"
+
+      - name: Run integration tests on Android emulator
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 34
+          target: google_apis
+          arch: x86_64
+          force-avd-creation: false
+          emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          disable-animations: true
+          script: flutter test integration_test/ --reporter expanded
 
 # Historical reference — the original single-step `just ci` invocation that
 # was used before this workflow was split into linux-checks + ios-build.
