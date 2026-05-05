@@ -54,6 +54,15 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m14(count, size) => "${count} öğe · ${size}";
 
+  static String m15(count) => "${count} malzeme";
+
+  static String m16(count) =>
+      "${count} malzeme içeren bu tarif içe aktarılsın mı?";
+
+  static String m17(count) => "${count} seçildi";
+
+  static String m18(count) => "${count} tarif silinsin mi?";
+
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "activityExample": MessageLookupByLibrary.simpleMessage(
@@ -65,6 +74,8 @@ class MessageLookup extends MessageLookupByLibrary {
             "Bilgi\n\'2024 Compendium\n of Physical Activities\'\nden sağlanmıştır"),
         "additionalInfoLabelCustom":
             MessageLookupByLibrary.simpleMessage("Özel Yemek Öğesi"),
+        "additionalInfoLabelRecipe":
+            MessageLookupByLibrary.simpleMessage("Özel Tarif"),
         "additionalInfoLabelFDC": MessageLookupByLibrary.simpleMessage(
             "Daha Fazla Bilgi\nFoodData Central\'da"),
         "additionalInfoLabelOFF": MessageLookupByLibrary.simpleMessage(
@@ -206,9 +217,11 @@ class MessageLookup extends MessageLookupByLibrary {
         "csvImportPartialLabel": m13,
         "csvImportSuccessLabel": m12,
         "downloadSampleCsvAction":
-            MessageLookupByLibrary.simpleMessage("Örnek CSV"),
+            MessageLookupByLibrary.simpleMessage("Örnek yemekler (csv)"),
+        "downloadSampleRecipesCsvAction":
+            MessageLookupByLibrary.simpleMessage("Örnek tarifler (csv)"),
         "importMealsCsvAction":
-            MessageLookupByLibrary.simpleMessage("Yemekleri içe aktar (CSV)"),
+            MessageLookupByLibrary.simpleMessage("Yemekleri içe aktar (csv)"),
         "exportAction": MessageLookupByLibrary.simpleMessage("Dışa Aktar"),
         "exportImportDescription": MessageLookupByLibrary.simpleMessage(
             "Uygulama verilerini bir zip dosyasına dışa aktarabilir ve daha sonra içe aktarabilirsiniz. Bu, verilerinizi yedeklemek veya başka bir cihaza aktarmak istiyorsanız kullanışlıdır.\n\nUygulama, verilerinizi saklamak için herhangi bir bulut hizmeti kullanmaz."),
@@ -695,6 +708,90 @@ class MessageLookup extends MessageLookupByLibrary {
             "Gizlilik politikasını okudum ve kabul ediyorum."),
         "recentlyAddedLabel":
             MessageLookupByLibrary.simpleMessage("Son Eklenenler"),
+        "recipesLabel": MessageLookupByLibrary.simpleMessage("Tarifler"),
+        "recipesEmptyLabel":
+            MessageLookupByLibrary.simpleMessage("Henüz tarif yok"),
+        "recipesEmptyHint": MessageLookupByLibrary.simpleMessage(
+            "Birden fazla malzemeden bir öğün oluşturun ve diğer yiyecekler gibi yeniden kullanın."),
+        "createRecipeTitle":
+            MessageLookupByLibrary.simpleMessage("Tarif Oluştur"),
+        "newCustomMealLabel":
+            MessageLookupByLibrary.simpleMessage("Yeni Özel Yiyecek"),
+        "discardChangesTitle": MessageLookupByLibrary.simpleMessage(
+            "Değişiklikler iptal edilsin mi?"),
+        "discardChangesContent": MessageLookupByLibrary.simpleMessage(
+            "Kaydedilmemiş değişiklikleriniz kaybolacak."),
+        "discardChangesConfirmLabel":
+            MessageLookupByLibrary.simpleMessage("Vazgeç"),
+        "editRecipeTitle":
+            MessageLookupByLibrary.simpleMessage("Tarifi Düzenle"),
+        "recipeNameLabel":
+            MessageLookupByLibrary.simpleMessage("Tarif adı"),
+        "recipeDescriptionLabel":
+            MessageLookupByLibrary.simpleMessage("Açıklama (isteğe bağlı)"),
+        "recipeServingsCountLabel":
+            MessageLookupByLibrary.simpleMessage("Porsiyonlar (isteğe bağlı)"),
+        "recipeServingsCountHelper": MessageLookupByLibrary.simpleMessage(
+            "Bu tarifi gram yerine porsiyon olarak kaydetmenize olanak tanır."),
+        "recipeIngredientsLabel":
+            MessageLookupByLibrary.simpleMessage("Malzemeler"),
+        "recipeAddIngredientLabel":
+            MessageLookupByLibrary.simpleMessage("Malzeme Ekle"),
+        "recipeNoIngredientsLabel":
+            MessageLookupByLibrary.simpleMessage("Henüz malzeme yok"),
+        "recipeTotalWeightLabel":
+            MessageLookupByLibrary.simpleMessage("Toplam ağırlık (g)"),
+        "recipeTotalWeightHelper": MessageLookupByLibrary.simpleMessage(
+            "Varsayılan olarak malzemelerin toplamı. Sıvılar yaklaşık 1 ml ≈ 1 g olarak hesaplanır."),
+        "recipeNutritionPreviewLabel":
+            MessageLookupByLibrary.simpleMessage("Beslenme (toplam)"),
+        "recipeNutritionPer100Label":
+            MessageLookupByLibrary.simpleMessage("100 g başına"),
+        "recipeIngredientAmountLabel":
+            MessageLookupByLibrary.simpleMessage("Miktar"),
+        "recipeIngredientUnitLabel":
+            MessageLookupByLibrary.simpleMessage("Birim"),
+        "recipeSaveLabel":
+            MessageLookupByLibrary.simpleMessage("Tarifi Kaydet"),
+        "recipeSaveErrorLabel":
+            MessageLookupByLibrary.simpleMessage("Tarif kaydedilemedi."),
+        "recipeNameRequiredLabel":
+            MessageLookupByLibrary.simpleMessage("Tarif bir ad gerektirir"),
+        "recipeNeedsIngredientsLabel":
+            MessageLookupByLibrary.simpleMessage("En az bir malzeme ekleyin"),
+        "recipeInvalidTotalWeightLabel": MessageLookupByLibrary.simpleMessage(
+            "Toplam ağırlık sıfırdan büyük olmalı"),
+        "shareRecipeLabel":
+            MessageLookupByLibrary.simpleMessage("Tarifi paylaş"),
+        "duplicateRecipeLabel":
+            MessageLookupByLibrary.simpleMessage("Çoğalt"),
+        "duplicateRecipeNameSuffix":
+            MessageLookupByLibrary.simpleMessage("(kopya)"),
+        "recipeTagsLabel": MessageLookupByLibrary.simpleMessage("Etiketler"),
+        "recipeTagsHelper": MessageLookupByLibrary.simpleMessage(
+            "Virgülle ayırın, örn. \"kahvaltı, vegan\""),
+        "recipesFilterAllLabel":
+            MessageLookupByLibrary.simpleMessage("Tümü"),
+        "importRecipesCsvAction":
+            MessageLookupByLibrary.simpleMessage("Tarifleri içe aktar (csv)"),
+        "selectionCountLabel": m17,
+        "deleteSelectedRecipesConfirmTitle": m18,
+        "importRecipeLabel":
+            MessageLookupByLibrary.simpleMessage("Tarifi içe aktar"),
+        "importRecipeSuccessLabel":
+            MessageLookupByLibrary.simpleMessage("Tarif içe aktarıldı"),
+        "importRecipeErrorLabel": MessageLookupByLibrary.simpleMessage(
+            "Tarif kodu çözümlenemedi"),
+        "recipesLoadErrorLabel": MessageLookupByLibrary.simpleMessage(
+            "Tarifler yüklenemedi. Lütfen daha sonra tekrar deneyin."),
+        "importRecipeConfirmContent": m16,
+        "recipeDeleteConfirmTitle":
+            MessageLookupByLibrary.simpleMessage("Tarif silinsin mi?"),
+        "recipeDeleteConfirmContent": MessageLookupByLibrary.simpleMessage(
+            "Bu tariften günlüğe eklenen önceki girdiler korunacaktır."),
+        "recipeLogCtaLabel":
+            MessageLookupByLibrary.simpleMessage("Bu Tarifi Kaydet"),
+        "recipeIngredientCountLabel": m15,
         "reportErrorDialogText": MessageLookupByLibrary.simpleMessage(
             "Geliştiriciye bir hata bildirmek istiyor musunuz?"),
         "retryLabel": MessageLookupByLibrary.simpleMessage("Tekrar Dene"),

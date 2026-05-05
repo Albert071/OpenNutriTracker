@@ -5,8 +5,10 @@ import 'package:archive/archive.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:opennutritracker/core/data/data_source/user_activity_dbo.dart';
 import 'package:opennutritracker/core/data/dbo/intake_dbo.dart';
+import 'package:opennutritracker/core/data/dbo/recipe_dbo.dart';
 import 'package:opennutritracker/core/data/dbo/tracked_day_dbo.dart';
 import 'package:opennutritracker/core/data/repository/intake_repository.dart';
+import 'package:opennutritracker/core/data/repository/recipe_repository.dart';
 import 'package:opennutritracker/core/data/repository/tracked_day_repository.dart';
 import 'package:opennutritracker/core/data/repository/user_activity_repository.dart';
 
@@ -14,21 +16,25 @@ class ImportDataUsecase {
   final UserActivityRepository _userActivityRepository;
   final IntakeRepository _intakeRepository;
   final TrackedDayRepository _trackedDayRepository;
+  final RecipeRepository _recipeRepository;
 
   ImportDataUsecase(
     this._userActivityRepository,
     this._intakeRepository,
     this._trackedDayRepository,
+    this._recipeRepository,
   );
 
-  /// Imports user activity, intake, and tracked day data from a zip file
-  /// containing JSON files.
+  /// Imports user activity, intake, tracked day, and (optionally) recipe
+  /// data from a zip file containing JSON files. Recipe file is treated as
+  /// optional so zips exported by older versions still import.
   ///
   /// Returns true if import was successful, false otherwise.
   Future<bool> importData(
     String userActivityJsonFileName,
     String userIntakeJsonFileName,
     String trackedDayJsonFileName,
+    String recipeJsonFileName,
   ) async {
     // Allow user to pick a zip file
     final result = await FilePicker.pickFiles(
@@ -93,6 +99,17 @@ class ImportDataUsecase {
       await _trackedDayRepository.addAllTrackedDays(trackedDayDBOs);
     } else {
       throw Exception('Tracked day file not found in the archive');
+    }
+
+    // Extract and process recipe data — optional so older zips still import.
+    final recipeFile = archive.findFile(recipeJsonFileName);
+    if (recipeFile != null) {
+      final recipeJsonString = utf8.decode(recipeFile.content as List<int>);
+      final recipeList =
+          (jsonDecode(recipeJsonString) as List).cast<Map<String, dynamic>>();
+      final recipeDBOs =
+          recipeList.map((json) => RecipeDBO.fromJson(json)).toList();
+      await _recipeRepository.addAllRecipeDBOs(recipeDBOs);
     }
 
     return true;

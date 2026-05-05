@@ -51,3 +51,18 @@ class CsvImportErrorState extends ExportImportState {
   @override
   List<Object?> get props => [message];
 }
+
+/// Result of a recipe CSV import. [imported] is the number of recipes saved;
+/// [skipped] is the number of rows that failed validation.
+class RecipeCsvImportResultState extends ExportImportState {
+  final int imported;
+  final int skipped;
+
+  const RecipeCsvImportResultState({
+    required this.imported,
+    required this.skipped,
+  });
+
+  @override
+  List<Object?> get props => [imported, skipped];
+}

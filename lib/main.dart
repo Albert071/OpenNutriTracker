@@ -24,6 +24,10 @@ import 'package:opennutritracker/features/add_meal/presentation/add_meal_screen.
 import 'package:opennutritracker/features/add_activity/presentation/add_activity_screen.dart';
 import 'package:opennutritracker/features/edit_meal/presentation/edit_meal_screen.dart';
 import 'package:opennutritracker/features/onboarding/onboarding_screen.dart';
+import 'package:opennutritracker/features/recipes/presentation/screens/import_recipe_scanner_screen.dart';
+import 'package:opennutritracker/features/recipes/presentation/screens/recipe_builder_screen.dart';
+import 'package:opennutritracker/features/recipes/presentation/screens/recipe_detail_screen.dart';
+import 'package:opennutritracker/features/recipes/presentation/screens/recipes_page.dart';
 import 'package:opennutritracker/features/home/presentation/screens/import_activity_scanner_screen.dart';
 import 'package:opennutritracker/features/home/presentation/screens/import_meal_scanner_screen.dart';
 import 'package:opennutritracker/features/scanner/scanner_screen.dart';
@@ -164,6 +168,13 @@ class OpenNutriTrackerApp extends StatelessWidget {
             const ImportMealScannerScreen(),
         NavigationOptions.importActivityScannerRoute: (context) =>
             const ImportActivityScannerScreen(),
+        NavigationOptions.recipesRoute: (context) => const RecipesPage(),
+        NavigationOptions.recipeBuilderRoute: (context) =>
+            const RecipeBuilderScreen(),
+        NavigationOptions.recipeDetailRoute: (context) =>
+            const RecipeDetailScreen(),
+        NavigationOptions.importRecipeScannerRoute: (context) =>
+            const ImportRecipeScannerScreen(),
       },
     );
   }

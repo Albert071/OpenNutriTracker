@@ -1,8 +1,10 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:opennutritracker/core/data/data_source/remote_search_cache_data_source.dart';
 import 'package:opennutritracker/core/data/data_source/custom_meal_data_source.dart';
+import 'package:opennutritracker/core/data/data_source/recipe_data_source.dart';
 import 'package:opennutritracker/core/data/dbo/meal_dbo.dart';
 import 'package:opennutritracker/core/data/dbo/meal_nutriments_dbo.dart';
+import 'package:opennutritracker/core/data/dbo/recipe_dbo.dart';
 import 'package:opennutritracker/core/domain/entity/intake_entity.dart';
 import 'package:opennutritracker/core/domain/entity/intake_type_entity.dart';
 import 'package:opennutritracker/core/domain/usecase/get_intake_usecase.dart';
@@ -72,6 +74,17 @@ class _FakeCustomMealDataSource implements CustomMealDataSource {
 
   @override
   List<MealDBO> getAllCustomMeals() => meals;
+
+  @override
+  dynamic noSuchMethod(Invocation invocation) =>
+      throw UnimplementedError('Unexpected call: ${invocation.memberName}');
+}
+
+class _FakeRecipeDataSource implements RecipeDataSource {
+  final List<RecipeDBO> recipes = [];
+
+  @override
+  List<RecipeDBO> getAllRecipes() => recipes;
 
   @override
   dynamic noSuchMethod(Invocation invocation) =>
@@ -163,6 +176,7 @@ void main() {
     late _FakeGetIntakeUsecase getIntakeUsecase;
     late _FakeCustomMealDataSource customMealDataSource;
     late _FakeRemoteSearchCacheDataSource cachedOffMealDataSource;
+    late _FakeRecipeDataSource recipeDataSource;
     late SearchProductsUseCase useCase;
 
     setUp(() {
@@ -170,11 +184,13 @@ void main() {
       getIntakeUsecase = _FakeGetIntakeUsecase();
       customMealDataSource = _FakeCustomMealDataSource();
       cachedOffMealDataSource = _FakeRemoteSearchCacheDataSource();
+      recipeDataSource = _FakeRecipeDataSource();
       useCase = SearchProductsUseCase(
         productsRepository,
         getIntakeUsecase,
         customMealDataSource,
         cachedOffMealDataSource,
+        recipeDataSource,
       );
     });
 
@@ -579,6 +595,101 @@ void main() {
       },
     );
   });
+
+  group('SearchProductsUseCase recipes integration', () {
+    late _FakeProductsRepository productsRepository;
+    late _FakeGetIntakeUsecase getIntakeUsecase;
+    late _FakeCustomMealDataSource customMealDataSource;
+    late _FakeRemoteSearchCacheDataSource cachedOffMealDataSource;
+    late _FakeRecipeDataSource recipeDataSource;
+    late SearchProductsUseCase useCase;
+
+    setUp(() {
+      productsRepository = _FakeProductsRepository();
+      getIntakeUsecase = _FakeGetIntakeUsecase();
+      customMealDataSource = _FakeCustomMealDataSource();
+      cachedOffMealDataSource = _FakeRemoteSearchCacheDataSource();
+      recipeDataSource = _FakeRecipeDataSource();
+      useCase = SearchProductsUseCase(
+        productsRepository,
+        getIntakeUsecase,
+        customMealDataSource,
+        cachedOffMealDataSource,
+        recipeDataSource,
+      );
+    });
+
+    test('saved recipe matching the search appears with recipe source',
+        () async {
+      recipeDataSource.recipes
+          .add(_recipeDbo(id: 'r-1', name: 'Vanilla Cake'));
+      productsRepository.offResults['cake'] = const [];
+
+      final result = await useCase.searchOFFProductsByString('cake');
+
+      expect(result.meals, hasLength(1));
+      expect(result.meals.first.name, 'Vanilla Cake');
+      expect(result.meals.first.source, MealSourceEntity.recipe);
+      expect(result.meals.first.code, 'r-1');
+    });
+
+    test('recipe and custom meal with the same name do not dedup-collide',
+        () async {
+      recipeDataSource.recipes
+          .add(_recipeDbo(id: 'r-1', name: 'Banana Bread'));
+      customMealDataSource.meals
+          .add(_customMealDbo(code: 'cm-1', name: 'Banana Bread'));
+      productsRepository.offResults['banana'] = const [];
+
+      final result = await useCase.searchOFFProductsByString('banana');
+
+      // Both appear because dedup is namespaced by source.
+      expect(result.meals, hasLength(2));
+      final sources = result.meals.map((m) => m.source).toSet();
+      expect(sources,
+          containsAll([MealSourceEntity.custom, MealSourceEntity.recipe]));
+    });
+
+    test('recipe outranks OFF cache hit for the same search string', () async {
+      recipeDataSource.recipes
+          .add(_recipeDbo(id: 'r-1', name: 'Tomato Soup'));
+      cachedOffMealDataSource.meals.add(
+        _offCacheDbo(code: 'off-1', name: 'Tomato Soup canned'),
+      );
+      productsRepository.offResults['tomato'] = const [];
+
+      final result = await useCase.searchOFFProductsByString('tomato');
+
+      // Recipe (priority 2) appears before OFF cache (priority 4).
+      expect(result.meals.first.source, MealSourceEntity.recipe);
+    });
+  });
+}
+
+RecipeDBO _recipeDbo({
+  required String id,
+  required String name,
+}) {
+  return RecipeDBO(
+    id: id,
+    name: name,
+    description: null,
+    ingredients: [],
+    totalWeightG: 100,
+    aggregatedNutrimentsPer100: MealNutrimentsDBO(
+      energyKcal100: 0,
+      carbohydrates100: null,
+      fat100: null,
+      proteins100: null,
+      sugars100: null,
+      saturatedFat100: null,
+      fiber100: null,
+    ),
+    createdAt: DateTime.utc(2024, 1, 1),
+    updatedAt: DateTime.utc(2024, 1, 1),
+    servingsCount: null,
+    tags: null,
+  );
 }
 
 MealDBO _customMealDbo({required String code, required String name}) =>

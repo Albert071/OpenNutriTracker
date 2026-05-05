@@ -13,6 +13,69 @@
   "homeLabel": "Home",
   "diaryLabel": "Diary",
   "diaryFutureDateWarning": "You are editing a future date",
+  "recipesLabel": "Recipes",
+  "recipesEmptyLabel": "No recipes yet",
+  "recipesEmptyHint": "Build a meal from multiple ingredients and reuse it like any other food.",
+  "createRecipeTitle": "Create Recipe",
+  "newCustomMealLabel": "New Custom Food",
+  "discardChangesTitle": "Discard changes?",
+  "discardChangesContent": "Your unsaved changes will be lost.",
+  "discardChangesConfirmLabel": "Discard",
+  "editRecipeTitle": "Edit Recipe",
+  "recipeNameLabel": "Recipe name",
+  "recipeDescriptionLabel": "Description (optional)",
+  "recipeServingsCountLabel": "Servings (optional)",
+  "recipeServingsCountHelper": "Lets you log this recipe by serving instead of grams.",
+  "recipeIngredientsLabel": "Ingredients",
+  "recipeAddIngredientLabel": "Add Ingredient",
+  "recipeNoIngredientsLabel": "No ingredients yet",
+  "recipeTotalWeightLabel": "Total weight (g)",
+  "recipeTotalWeightHelper": "Defaults to sum of ingredients. Liquids approximated as 1 ml ≈ 1 g.",
+  "recipeNutritionPreviewLabel": "Nutrition (total)",
+  "recipeNutritionPer100Label": "Per 100 g",
+  "recipeIngredientAmountLabel": "Amount",
+  "recipeIngredientUnitLabel": "Unit",
+  "recipeSaveLabel": "Save Recipe",
+  "recipeSaveErrorLabel": "Could not save recipe.",
+  "recipeNameRequiredLabel": "Recipe needs a name",
+  "recipeNeedsIngredientsLabel": "Add at least one ingredient",
+  "recipeInvalidTotalWeightLabel": "Total weight must be greater than zero",
+  "shareRecipeLabel": "Share recipe",
+  "duplicateRecipeLabel": "Duplicate",
+  "duplicateRecipeNameSuffix": "(copy)",
+  "recipeTagsLabel": "Tags",
+  "recipeTagsHelper": "Comma-separated, e.g. \"breakfast, vegan\"",
+  "recipesFilterAllLabel": "All",
+  "selectionCountLabel": "{count} selected",
+  "@selectionCountLabel": {
+    "placeholders": {"count": {"type": "int"}}
+  },
+  "importRecipesCsvAction": "Import recipes (csv)",
+  "deleteSelectedRecipesConfirmTitle": "Delete {count} recipe(s)?",
+  "@deleteSelectedRecipesConfirmTitle": {
+    "placeholders": {"count": {"type": "int"}}
+  },
+  "importRecipeLabel": "Import recipe",
+  "importRecipeSuccessLabel": "Recipe imported",
+  "importRecipeErrorLabel": "Could not parse recipe code",
+  "recipesLoadErrorLabel": "Could not load recipes. Try again later.",
+  "importRecipeConfirmContent": "Import this recipe with {count} ingredient(s)?",
+  "@importRecipeConfirmContent": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "recipeDeleteConfirmTitle": "Delete recipe?",
+  "recipeDeleteConfirmContent": "Past diary entries logged from this recipe will be kept.",
+  "recipeLogCtaLabel": "Log this Recipe",
+  "recipeIngredientCountLabel": "{count} ingredient(s)",
+  "@recipeIngredientCountLabel": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "profileLabel": "Profile",
   "searchLabel": "Search",
   "searchProductsPage": "Products",
@@ -115,8 +178,9 @@
   "exportImportErrorLabel": "Export / Import error",
   "exportAction": "Export",
   "importAction": "Import",
-  "downloadSampleCsvAction": "Sample CSV",
-  "importMealsCsvAction": "Import meals (CSV)",
+  "downloadSampleCsvAction": "Sample meals (csv)",
+  "downloadSampleRecipesCsvAction": "Sample recipes (csv)",
+  "importMealsCsvAction": "Import meals (csv)",
   "csvImportSuccessLabel": "Imported {count} meal(s) from the CSV file.",
   "@csvImportSuccessLabel": {
     "placeholders": {

@@ -1,10 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:opennutritracker/core/presentation/widgets/add_item_bottom_sheet.dart';
+import 'package:opennutritracker/core/utils/locator.dart';
+import 'package:opennutritracker/core/utils/navigation_options.dart';
 import 'package:opennutritracker/features/diary/diary_page.dart';
 import 'package:opennutritracker/core/presentation/widgets/home_appbar.dart';
 import 'package:opennutritracker/features/home/home_page.dart';
 import 'package:opennutritracker/core/presentation/widgets/main_appbar.dart';
 import 'package:opennutritracker/features/profile/profile_page.dart';
+import 'package:opennutritracker/core/domain/entity/intake_type_entity.dart';
+import 'package:opennutritracker/features/add_meal/domain/entity/meal_entity.dart';
+import 'package:opennutritracker/features/edit_meal/presentation/edit_meal_screen.dart';
+import 'package:opennutritracker/features/recipes/presentation/bloc/recipes_bloc.dart';
+import 'package:opennutritracker/features/recipes/presentation/screens/recipes_page.dart';
+import 'package:opennutritracker/features/settings/presentation/bloc/custom_meals_bloc.dart';
 import 'package:opennutritracker/generated/l10n.dart';
 
 class MainScreen extends StatefulWidget {
@@ -22,10 +30,65 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   void didChangeDependencies() {
-    _bodyPages = [const HomePage(), const DiaryPage(), const ProfilePage()];
+    _bodyPages = [
+      const HomePage(),
+      const DiaryPage(),
+      const RecipesPage(),
+      const ProfilePage(),
+    ];
     _appbarPages = [
       const HomeAppbar(),
       MainAppbar(title: S.of(context).diaryLabel, iconData: Icons.book),
+      AppBar(
+        leading: const Icon(Icons.menu_book),
+        title: Text(S.of(context).recipesLabel),
+        actions: [
+          PopupMenuButton<_RecipesAction>(
+            tooltip: S.of(context).addLabel,
+            icon: const Icon(Icons.add),
+            onSelected: (action) => _onRecipesAddSelected(context, action),
+            itemBuilder: (context) => [
+              PopupMenuItem(
+                value: _RecipesAction.newRecipe,
+                child: Row(
+                  children: [
+                    const Icon(Icons.menu_book_outlined),
+                    const SizedBox(width: 12),
+                    Text(S.of(context).createRecipeTitle),
+                  ],
+                ),
+              ),
+              PopupMenuItem(
+                value: _RecipesAction.newCustomMeal,
+                child: Row(
+                  children: [
+                    const Icon(Icons.restaurant_outlined),
+                    const SizedBox(width: 12),
+                    Text(S.of(context).newCustomMealLabel),
+                  ],
+                ),
+              ),
+              PopupMenuItem(
+                value: _RecipesAction.importRecipe,
+                child: Row(
+                  children: [
+                    const Icon(Icons.qr_code_scanner_outlined),
+                    const SizedBox(width: 12),
+                    Text(S.of(context).importRecipeLabel),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          IconButton(
+            tooltip: S.of(context).settingsLabel,
+            onPressed: () => Navigator.of(
+              context,
+            ).pushNamed(NavigationOptions.settingsRoute),
+            icon: const Icon(Icons.settings_outlined),
+          ),
+        ],
+      ),
       MainAppbar(
         title: S.of(context).profileLabel,
         iconData: Icons.account_circle,
@@ -64,6 +127,12 @@ class _MainScreenState extends State<MainScreen> {
           ),
           NavigationDestination(
             icon: _selectedPageIndex == 2
+                ? const Icon(Icons.menu_book)
+                : const Icon(Icons.menu_book_outlined),
+            label: S.of(context).recipesLabel,
+          ),
+          NavigationDestination(
+            icon: _selectedPageIndex == 3
                 ? const Icon(Icons.account_circle)
                 : const Icon(Icons.account_circle_outlined),
             label: S.of(context).profileLabel,
@@ -79,7 +148,39 @@ class _MainScreenState extends State<MainScreen> {
     });
   }
 
-  void _onFabPressed(BuildContext context) async {
+  Future<void> _onRecipesAddSelected(
+    BuildContext context,
+    _RecipesAction action,
+  ) async {
+    switch (action) {
+      case _RecipesAction.newRecipe:
+        await Navigator.of(
+          context,
+        ).pushNamed(NavigationOptions.recipeBuilderRoute);
+        locator<RecipesBloc>().add(const LoadRecipesEvent());
+      case _RecipesAction.newCustomMeal:
+        await Navigator.of(context).pushNamed(
+          NavigationOptions.editMealRoute,
+          arguments: EditMealScreenArguments(
+            DateTime.now(),
+            MealEntity.empty(),
+            IntakeTypeEntity.breakfast,
+            false,
+            editOnly: true,
+          ),
+        );
+        locator<CustomMealsBloc>().add(LoadCustomMealsEvent());
+      case _RecipesAction.importRecipe:
+        await Navigator.of(
+          context,
+        ).pushNamed(NavigationOptions.importRecipeScannerRoute);
+        // The scanner screen itself dispatches LoadRecipesEvent on success,
+        // but cover the cancel-then-reopen flow here too.
+        locator<RecipesBloc>().add(const LoadRecipesEvent());
+    }
+  }
+
+  void _onFabPressed(BuildContext context) {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -95,3 +196,5 @@ class _MainScreenState extends State<MainScreen> {
     );
   }
 }
+
+enum _RecipesAction { newRecipe, newCustomMeal, importRecipe }

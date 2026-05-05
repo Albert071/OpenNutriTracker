@@ -13,8 +13,6 @@ import 'package:opennutritracker/features/diary/presentation/bloc/calendar_day_b
 import 'package:opennutritracker/features/diary/presentation/bloc/diary_bloc.dart';
 import 'package:opennutritracker/features/home/presentation/bloc/home_bloc.dart';
 import 'package:opennutritracker/features/profile/presentation/bloc/profile_bloc.dart';
-import 'package:opennutritracker/features/settings/custom_meals_screen.dart';
-import 'package:opennutritracker/features/settings/presentation/bloc/custom_meals_bloc.dart';
 import 'package:opennutritracker/features/settings/presentation/bloc/settings_bloc.dart';
 import 'package:opennutritracker/features/settings/presentation/widgets/export_import_dialog.dart';
 import 'package:opennutritracker/features/settings/presentation/widgets/import_custom_food_data_dialog.dart';
@@ -64,23 +62,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
             return ListView(
               children: [
                 const SizedBox(height: 16.0),
-                // Nutrition
-                ListTile(
-                  leading: const Icon(Icons.restaurant_menu_outlined),
-                  title: Text(S.of(context).settingsCustomMealsLabel),
-                  onTap: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => BlocProvider(
-                        create: (_) => locator<CustomMealsBloc>()
-                          ..add(LoadCustomMealsEvent()),
-                        child: CustomMealsScreen(
-                          usesImperialUnits: state.usesImperialUnits,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
                 ListTile(
                   leading: const Icon(Icons.ac_unit_outlined),
                   title: Text(S.of(context).settingsUnitsLabel),

@@ -52,6 +52,15 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m14(count, size) => "${count} položek · ${size}";
 
+  static String m15(count) => "${count} ingredience(í)";
+
+  static String m16(count) =>
+      "Importovat tento recept s ${count} ingrediencí(emi)?";
+
+  static String m17(count) => "Vybráno: ${count}";
+
+  static String m18(count) => "Smazat ${count} recept(ů)?";
+
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "activityExample": MessageLookupByLibrary.simpleMessage(
@@ -64,6 +73,8 @@ class MessageLookup extends MessageLookupByLibrary {
             "Informace poskytnutá\n během \n\'2024 Compendium\n of Physical Activities\'"),
         "additionalInfoLabelCustom":
             MessageLookupByLibrary.simpleMessage("Vlastní jídlo"),
+        "additionalInfoLabelRecipe":
+            MessageLookupByLibrary.simpleMessage("Vlastní recept"),
         "additionalInfoLabelFDC": MessageLookupByLibrary.simpleMessage(
             "Více informadcí na\nFoodData Central"),
         "additionalInfoLabelOFF": MessageLookupByLibrary.simpleMessage(
@@ -202,9 +213,11 @@ class MessageLookup extends MessageLookupByLibrary {
         "csvImportPartialLabel": m13,
         "csvImportSuccessLabel": m12,
         "downloadSampleCsvAction":
-            MessageLookupByLibrary.simpleMessage("Vzorové CSV"),
+            MessageLookupByLibrary.simpleMessage("Vzorová jídla (csv)"),
+        "downloadSampleRecipesCsvAction":
+            MessageLookupByLibrary.simpleMessage("Vzorové recepty (csv)"),
         "importMealsCsvAction":
-            MessageLookupByLibrary.simpleMessage("Importovat jídla (CSV)"),
+            MessageLookupByLibrary.simpleMessage("Importovat jídla (csv)"),
         "exportAction": MessageLookupByLibrary.simpleMessage("Export"),
         "exportImportDescription": MessageLookupByLibrary.simpleMessage(
             "Můžete uložit data z aplikace do .zip archívu a později je znovu importovat. To je užitečné, pokud potřebujete data zálohovat, nebo přenést na jiné zařízení.\n\nAplikace pro ukládání dat nepoužívá žádné cloudové služby."),
@@ -702,6 +715,90 @@ class MessageLookup extends MessageLookupByLibrary {
         "readLabel": MessageLookupByLibrary.simpleMessage(
             "Četl jsem pravidla ohledně soukromí a souhlasím s nimi."),
         "recentlyAddedLabel": MessageLookupByLibrary.simpleMessage("Nedávné"),
+        "recipesLabel": MessageLookupByLibrary.simpleMessage("Recepty"),
+        "recipesEmptyLabel":
+            MessageLookupByLibrary.simpleMessage("Zatím žádné recepty"),
+        "recipesEmptyHint": MessageLookupByLibrary.simpleMessage(
+            "Vytvořte jídlo z více ingrediencí a používejte ho jako jakoukoli jinou potravinu."),
+        "createRecipeTitle":
+            MessageLookupByLibrary.simpleMessage("Vytvořit recept"),
+        "newCustomMealLabel":
+            MessageLookupByLibrary.simpleMessage("Nová vlastní potravina"),
+        "discardChangesTitle":
+            MessageLookupByLibrary.simpleMessage("Zahodit změny?"),
+        "discardChangesContent": MessageLookupByLibrary.simpleMessage(
+            "Vaše neuložené změny budou ztraceny."),
+        "discardChangesConfirmLabel":
+            MessageLookupByLibrary.simpleMessage("Zahodit"),
+        "editRecipeTitle":
+            MessageLookupByLibrary.simpleMessage("Upravit recept"),
+        "recipeNameLabel":
+            MessageLookupByLibrary.simpleMessage("Název receptu"),
+        "recipeDescriptionLabel":
+            MessageLookupByLibrary.simpleMessage("Popis (volitelný)"),
+        "recipeServingsCountLabel":
+            MessageLookupByLibrary.simpleMessage("Porce (volitelné)"),
+        "recipeServingsCountHelper": MessageLookupByLibrary.simpleMessage(
+            "Umožňuje zaznamenávat tento recept po porcích místo gramů."),
+        "recipeIngredientsLabel":
+            MessageLookupByLibrary.simpleMessage("Ingredience"),
+        "recipeAddIngredientLabel":
+            MessageLookupByLibrary.simpleMessage("Přidat ingredienci"),
+        "recipeNoIngredientsLabel":
+            MessageLookupByLibrary.simpleMessage("Zatím žádné ingredience"),
+        "recipeTotalWeightLabel":
+            MessageLookupByLibrary.simpleMessage("Celková hmotnost (g)"),
+        "recipeTotalWeightHelper": MessageLookupByLibrary.simpleMessage(
+            "Výchozí hodnotou je součet ingrediencí. Tekutiny jsou přibližně 1 ml ≈ 1 g."),
+        "recipeNutritionPreviewLabel":
+            MessageLookupByLibrary.simpleMessage("Výživa (celkem)"),
+        "recipeNutritionPer100Label":
+            MessageLookupByLibrary.simpleMessage("Na 100 g"),
+        "recipeIngredientAmountLabel":
+            MessageLookupByLibrary.simpleMessage("Množství"),
+        "recipeIngredientUnitLabel":
+            MessageLookupByLibrary.simpleMessage("Jednotka"),
+        "recipeSaveLabel":
+            MessageLookupByLibrary.simpleMessage("Uložit recept"),
+        "recipeSaveErrorLabel": MessageLookupByLibrary.simpleMessage(
+            "Recept se nepodařilo uložit."),
+        "recipeNameRequiredLabel":
+            MessageLookupByLibrary.simpleMessage("Recept potřebuje název"),
+        "recipeNeedsIngredientsLabel": MessageLookupByLibrary.simpleMessage(
+            "Přidejte alespoň jednu ingredienci"),
+        "recipeInvalidTotalWeightLabel": MessageLookupByLibrary.simpleMessage(
+            "Celková hmotnost musí být větší než nula"),
+        "shareRecipeLabel":
+            MessageLookupByLibrary.simpleMessage("Sdílet recept"),
+        "duplicateRecipeLabel":
+            MessageLookupByLibrary.simpleMessage("Duplikovat"),
+        "duplicateRecipeNameSuffix":
+            MessageLookupByLibrary.simpleMessage("(kopie)"),
+        "recipeTagsLabel": MessageLookupByLibrary.simpleMessage("Štítky"),
+        "recipeTagsHelper": MessageLookupByLibrary.simpleMessage(
+            "Oddělené čárkou, např. \"snídaně, veganské\""),
+        "recipesFilterAllLabel":
+            MessageLookupByLibrary.simpleMessage("Vše"),
+        "importRecipesCsvAction":
+            MessageLookupByLibrary.simpleMessage("Importovat recepty (csv)"),
+        "selectionCountLabel": m17,
+        "deleteSelectedRecipesConfirmTitle": m18,
+        "importRecipeLabel":
+            MessageLookupByLibrary.simpleMessage("Importovat recept"),
+        "importRecipeSuccessLabel":
+            MessageLookupByLibrary.simpleMessage("Recept importován"),
+        "importRecipeErrorLabel": MessageLookupByLibrary.simpleMessage(
+            "Nepodařilo se zpracovat kód receptu"),
+        "recipesLoadErrorLabel": MessageLookupByLibrary.simpleMessage(
+            "Recepty se nepodařilo načíst. Zkuste to prosím později."),
+        "importRecipeConfirmContent": m16,
+        "recipeDeleteConfirmTitle":
+            MessageLookupByLibrary.simpleMessage("Smazat recept?"),
+        "recipeDeleteConfirmContent": MessageLookupByLibrary.simpleMessage(
+            "Předchozí záznamy v deníku z tohoto receptu budou zachovány."),
+        "recipeLogCtaLabel":
+            MessageLookupByLibrary.simpleMessage("Zaznamenat tento recept"),
+        "recipeIngredientCountLabel": m15,
         "reportErrorDialogText": MessageLookupByLibrary.simpleMessage(
             "Přejete si nahlásit chybu vývojáři aplikace?"),
         "retryLabel": MessageLookupByLibrary.simpleMessage("Znovu"),

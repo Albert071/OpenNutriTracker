@@ -120,7 +120,9 @@ void main() {
       final encoded = SharedMealPayload.fromIntakeList(intakes).toJsonString();
       final decoded = SharedMealPayload.fromJsonString(encoded);
 
-      expect(decoded.version, 1);
+      // v2 payload format: items now carry a source field, plus a new
+      // recipes bucket. Older v1 payloads remain readable.
+      expect(decoded.version, 2);
       expect(decoded.offRefs.length, 1);
       expect(decoded.offRefs[0].barcode, '4001724039143');
       expect(decoded.offRefs[0].amount, 100.0);
@@ -315,6 +317,83 @@ void main() {
       expect(decoded.items.single.carbohydrates100, equals(22.5));
       expect(decoded.items.single.fat100, equals(0));
       expect(decoded.items.single.proteins100, equals(7));
+    });
+
+    test(
+      'v1 payload (no source field, no recipes bucket) still parses',
+      () async {
+        // Hand-craft a v1 wire format: [1, offRefs, items]. Items have only
+        // 13 fields (no source). This simulates a payload from an older
+        // sender — the receiver should treat items as custom by default.
+        final v1Json = jsonEncode([
+          1,
+          [
+            ['4001724039143', 100, 'g'],
+          ],
+          [
+            [
+              'Old Soup', // name
+              null, // brands
+              'g', // unit
+              200, // amount
+              80, // kcal/100
+              null, null, null, null, null, null, // macros
+              null, null, // thumb, main
+            ],
+          ],
+        ]);
+        final v1Encoded =
+            base64Url.encode(gzip.encode(utf8.encode(v1Json)));
+        final decoded = SharedMealPayload.fromJsonString(v1Encoded);
+
+        expect(decoded.version, 1);
+        expect(decoded.offRefs.single.barcode, '4001724039143');
+        expect(decoded.items.single.name, 'Old Soup');
+        // Items without an explicit source are treated as custom — that's
+        // what older senders meant.
+        expect(decoded.items.single.source, MealSourceEntity.custom);
+        // Recipes bucket is empty when reading a v1 payload.
+        expect(decoded.recipes, isEmpty);
+      },
+    );
+
+    test('v2: fdc-source items keep their source on round-trip', () {
+      final intakes = [
+        makeIntake(createMeal(
+          code: 'fdc-1234',
+          name: 'Banana',
+          source: MealSourceEntity.fdc,
+        )),
+      ];
+      final encoded = SharedMealPayload.fromIntakeList(intakes).toJsonString();
+      final decoded = SharedMealPayload.fromJsonString(encoded);
+
+      expect(decoded.items.single.source, MealSourceEntity.fdc);
+      expect(decoded.items.single.code, 'fdc-1234');
+      // The rebuilt MealEntity preserves the FDC source so the receiver
+      // routes it to the remote-search cache rather than the custom box.
+      final meal = decoded.items.single.toMealEntity();
+      expect(meal.source, MealSourceEntity.fdc);
+      expect(meal.code, 'fdc-1234');
+    });
+
+    test('v2: custom-source items get a fresh code on the receiver side', () {
+      final intakes = [
+        makeIntake(createMeal(
+          code: 'sender-id-xyz',
+          name: 'Mom\'s Soup',
+          source: MealSourceEntity.custom,
+        )),
+      ];
+      final encoded = SharedMealPayload.fromIntakeList(intakes).toJsonString();
+      final decoded = SharedMealPayload.fromJsonString(encoded);
+
+      final meal = decoded.items.single.toMealEntity();
+      // Custom items get a fresh UUID so the receiver doesn't collide
+      // with the sender's id space (the sender's id has no meaning to us).
+      expect(meal.code, isNotEmpty);
+      expect(meal.code, isNot('sender-id-xyz'));
+      expect(meal.source, MealSourceEntity.custom);
     });
   });
 }

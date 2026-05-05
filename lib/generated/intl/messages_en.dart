@@ -55,6 +55,15 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m14(count, size) => "${count} item(s) · ${size}";
 
+  static String m15(count) => "${count} ingredient(s)";
+
+  static String m16(count) =>
+      "Import this recipe with ${count} ingredient(s)?";
+
+  static String m17(count) => "${count} selected";
+
+  static String m18(count) => "Delete ${count} recipe(s)?";
+
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "activityExample": MessageLookupByLibrary.simpleMessage(
@@ -66,6 +75,8 @@ class MessageLookup extends MessageLookupByLibrary {
             "Information provided\n by the \n\'2024 Compendium\n of Physical Activities\'"),
         "additionalInfoLabelCustom":
             MessageLookupByLibrary.simpleMessage("Custom Meal Item"),
+        "additionalInfoLabelRecipe":
+            MessageLookupByLibrary.simpleMessage("Custom Recipe"),
         "additionalInfoLabelFDC": MessageLookupByLibrary.simpleMessage(
             "More Information at\nFoodData Central"),
         "additionalInfoLabelOFF": MessageLookupByLibrary.simpleMessage(
@@ -190,9 +201,11 @@ class MessageLookup extends MessageLookupByLibrary {
         "csvImportPartialLabel": m13,
         "csvImportSuccessLabel": m12,
         "downloadSampleCsvAction":
-            MessageLookupByLibrary.simpleMessage("Sample CSV"),
+            MessageLookupByLibrary.simpleMessage("Sample meals (csv)"),
+        "downloadSampleRecipesCsvAction":
+            MessageLookupByLibrary.simpleMessage("Sample recipes (csv)"),
         "importMealsCsvAction":
-            MessageLookupByLibrary.simpleMessage("Import meals (CSV)"),
+            MessageLookupByLibrary.simpleMessage("Import meals (csv)"),
         "exportAction": MessageLookupByLibrary.simpleMessage("Export"),
         "customMealsDeleteConfirmContent": MessageLookupByLibrary.simpleMessage(
             "All diary entries using this meal will also be removed."),
@@ -730,6 +743,90 @@ class MessageLookup extends MessageLookupByLibrary {
         "readLabel": MessageLookupByLibrary.simpleMessage(
             "I have read and accept the privacy policy."),
         "recentlyAddedLabel": MessageLookupByLibrary.simpleMessage("Recently"),
+        "recipesLabel": MessageLookupByLibrary.simpleMessage("Recipes"),
+        "recipesEmptyLabel":
+            MessageLookupByLibrary.simpleMessage("No recipes yet"),
+        "recipesEmptyHint": MessageLookupByLibrary.simpleMessage(
+            "Build a meal from multiple ingredients and reuse it like any other food."),
+        "createRecipeTitle":
+            MessageLookupByLibrary.simpleMessage("Create Recipe"),
+        "newCustomMealLabel":
+            MessageLookupByLibrary.simpleMessage("New Custom Food"),
+        "discardChangesTitle":
+            MessageLookupByLibrary.simpleMessage("Discard changes?"),
+        "discardChangesContent": MessageLookupByLibrary.simpleMessage(
+            "Your unsaved changes will be lost."),
+        "discardChangesConfirmLabel":
+            MessageLookupByLibrary.simpleMessage("Discard"),
+        "editRecipeTitle":
+            MessageLookupByLibrary.simpleMessage("Edit Recipe"),
+        "recipeNameLabel":
+            MessageLookupByLibrary.simpleMessage("Recipe name"),
+        "recipeDescriptionLabel":
+            MessageLookupByLibrary.simpleMessage("Description (optional)"),
+        "recipeServingsCountLabel":
+            MessageLookupByLibrary.simpleMessage("Servings (optional)"),
+        "recipeServingsCountHelper": MessageLookupByLibrary.simpleMessage(
+            "Lets you log this recipe by serving instead of grams."),
+        "recipeIngredientsLabel":
+            MessageLookupByLibrary.simpleMessage("Ingredients"),
+        "recipeAddIngredientLabel":
+            MessageLookupByLibrary.simpleMessage("Add Ingredient"),
+        "recipeNoIngredientsLabel":
+            MessageLookupByLibrary.simpleMessage("No ingredients yet"),
+        "recipeTotalWeightLabel":
+            MessageLookupByLibrary.simpleMessage("Total weight (g)"),
+        "recipeTotalWeightHelper": MessageLookupByLibrary.simpleMessage(
+            "Defaults to sum of ingredients. Liquids approximated as 1 ml ≈ 1 g."),
+        "recipeNutritionPreviewLabel":
+            MessageLookupByLibrary.simpleMessage("Nutrition (total)"),
+        "recipeNutritionPer100Label":
+            MessageLookupByLibrary.simpleMessage("Per 100 g"),
+        "recipeIngredientAmountLabel":
+            MessageLookupByLibrary.simpleMessage("Amount"),
+        "recipeIngredientUnitLabel":
+            MessageLookupByLibrary.simpleMessage("Unit"),
+        "recipeSaveLabel":
+            MessageLookupByLibrary.simpleMessage("Save Recipe"),
+        "recipeSaveErrorLabel":
+            MessageLookupByLibrary.simpleMessage("Could not save recipe."),
+        "recipeNameRequiredLabel":
+            MessageLookupByLibrary.simpleMessage("Recipe needs a name"),
+        "recipeNeedsIngredientsLabel": MessageLookupByLibrary.simpleMessage(
+            "Add at least one ingredient"),
+        "recipeInvalidTotalWeightLabel": MessageLookupByLibrary.simpleMessage(
+            "Total weight must be greater than zero"),
+        "shareRecipeLabel":
+            MessageLookupByLibrary.simpleMessage("Share recipe"),
+        "duplicateRecipeLabel":
+            MessageLookupByLibrary.simpleMessage("Duplicate"),
+        "duplicateRecipeNameSuffix":
+            MessageLookupByLibrary.simpleMessage("(copy)"),
+        "recipeTagsLabel": MessageLookupByLibrary.simpleMessage("Tags"),
+        "recipeTagsHelper": MessageLookupByLibrary.simpleMessage(
+            "Comma-separated, e.g. \"breakfast, vegan\""),
+        "recipesFilterAllLabel":
+            MessageLookupByLibrary.simpleMessage("All"),
+        "importRecipesCsvAction":
+            MessageLookupByLibrary.simpleMessage("Import recipes (csv)"),
+        "selectionCountLabel": m17,
+        "deleteSelectedRecipesConfirmTitle": m18,
+        "importRecipeLabel":
+            MessageLookupByLibrary.simpleMessage("Import recipe"),
+        "importRecipeSuccessLabel":
+            MessageLookupByLibrary.simpleMessage("Recipe imported"),
+        "importRecipeErrorLabel": MessageLookupByLibrary.simpleMessage(
+            "Could not parse recipe code"),
+        "recipesLoadErrorLabel": MessageLookupByLibrary.simpleMessage(
+            "Could not load recipes. Try again later."),
+        "importRecipeConfirmContent": m16,
+        "recipeDeleteConfirmTitle":
+            MessageLookupByLibrary.simpleMessage("Delete recipe?"),
+        "recipeDeleteConfirmContent": MessageLookupByLibrary.simpleMessage(
+            "Past diary entries logged from this recipe will be kept."),
+        "recipeLogCtaLabel":
+            MessageLookupByLibrary.simpleMessage("Log this Recipe"),
+        "recipeIngredientCountLabel": m15,
         "reportErrorDialogText": MessageLookupByLibrary.simpleMessage(
             "Do you want to report an error to the developer?"),
         "retryLabel": MessageLookupByLibrary.simpleMessage("Retry"),

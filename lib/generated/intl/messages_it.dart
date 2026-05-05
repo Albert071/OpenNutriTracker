@@ -52,6 +52,15 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m14(count, size) => "${count} elementi · ${size}";
 
+  static String m15(count) => "${count} ingrediente/i";
+
+  static String m16(count) =>
+      "Importare questa ricetta con ${count} ingrediente(i)?";
+
+  static String m17(count) => "${count} selezionati";
+
+  static String m18(count) => "Eliminare ${count} ricetta/e?";
+
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "activityExample": MessageLookupByLibrary.simpleMessage(
@@ -64,6 +73,8 @@ class MessageLookup extends MessageLookupByLibrary {
             "Informazioni fornite\ndal\n\'2024 Compendium\ndelle Attività Fisiche\'"),
         "additionalInfoLabelCustom":
             MessageLookupByLibrary.simpleMessage("Alimento personalizzato"),
+        "additionalInfoLabelRecipe":
+            MessageLookupByLibrary.simpleMessage("Ricetta personalizzata"),
         "additionalInfoLabelFDC": MessageLookupByLibrary.simpleMessage(
             "Maggiori informazioni su\nFoodData Central"),
         "additionalInfoLabelOFF": MessageLookupByLibrary.simpleMessage(
@@ -204,9 +215,11 @@ class MessageLookup extends MessageLookupByLibrary {
         "csvImportPartialLabel": m13,
         "csvImportSuccessLabel": m12,
         "downloadSampleCsvAction":
-            MessageLookupByLibrary.simpleMessage("CSV di esempio"),
+            MessageLookupByLibrary.simpleMessage("Pasti di esempio (csv)"),
+        "downloadSampleRecipesCsvAction": MessageLookupByLibrary.simpleMessage(
+            "Ricette di esempio (csv)"),
         "importMealsCsvAction":
-            MessageLookupByLibrary.simpleMessage("Importa pasti (CSV)"),
+            MessageLookupByLibrary.simpleMessage("Importa pasti (csv)"),
         "exportAction": MessageLookupByLibrary.simpleMessage("Esporta"),
         "exportImportDescription": MessageLookupByLibrary.simpleMessage(
             "Puoi esportare i dati dell\'app in un file zip e importarli successivamente. Utile per backup o trasferimento su un altro dispositivo.\n\nL\'app non utilizza servizi cloud per memorizzare i tuoi dati."),
@@ -708,6 +721,90 @@ class MessageLookup extends MessageLookupByLibrary {
         "readLabel": MessageLookupByLibrary.simpleMessage(
             "Ho letto e accetto la privacy policy."),
         "recentlyAddedLabel": MessageLookupByLibrary.simpleMessage("Recenti"),
+        "recipesLabel": MessageLookupByLibrary.simpleMessage("Ricette"),
+        "recipesEmptyLabel":
+            MessageLookupByLibrary.simpleMessage("Nessuna ricetta ancora"),
+        "recipesEmptyHint": MessageLookupByLibrary.simpleMessage(
+            "Crea un pasto da più ingredienti e riutilizzalo come qualsiasi altro alimento."),
+        "createRecipeTitle":
+            MessageLookupByLibrary.simpleMessage("Crea ricetta"),
+        "newCustomMealLabel": MessageLookupByLibrary.simpleMessage(
+            "Nuovo alimento personalizzato"),
+        "discardChangesTitle":
+            MessageLookupByLibrary.simpleMessage("Annullare le modifiche?"),
+        "discardChangesContent": MessageLookupByLibrary.simpleMessage(
+            "Le modifiche non salvate andranno perse."),
+        "discardChangesConfirmLabel":
+            MessageLookupByLibrary.simpleMessage("Annulla"),
+        "editRecipeTitle":
+            MessageLookupByLibrary.simpleMessage("Modifica ricetta"),
+        "recipeNameLabel":
+            MessageLookupByLibrary.simpleMessage("Nome della ricetta"),
+        "recipeDescriptionLabel":
+            MessageLookupByLibrary.simpleMessage("Descrizione (opzionale)"),
+        "recipeServingsCountLabel":
+            MessageLookupByLibrary.simpleMessage("Porzioni (opzionale)"),
+        "recipeServingsCountHelper": MessageLookupByLibrary.simpleMessage(
+            "Permette di registrare questa ricetta per porzioni invece che in grammi."),
+        "recipeIngredientsLabel":
+            MessageLookupByLibrary.simpleMessage("Ingredienti"),
+        "recipeAddIngredientLabel":
+            MessageLookupByLibrary.simpleMessage("Aggiungi ingrediente"),
+        "recipeNoIngredientsLabel":
+            MessageLookupByLibrary.simpleMessage("Nessun ingrediente ancora"),
+        "recipeTotalWeightLabel":
+            MessageLookupByLibrary.simpleMessage("Peso totale (g)"),
+        "recipeTotalWeightHelper": MessageLookupByLibrary.simpleMessage(
+            "Predefinito come somma degli ingredienti. I liquidi sono approssimati a 1 ml ≈ 1 g."),
+        "recipeNutritionPreviewLabel":
+            MessageLookupByLibrary.simpleMessage("Nutrizione (totale)"),
+        "recipeNutritionPer100Label":
+            MessageLookupByLibrary.simpleMessage("Per 100 g"),
+        "recipeIngredientAmountLabel":
+            MessageLookupByLibrary.simpleMessage("Quantità"),
+        "recipeIngredientUnitLabel":
+            MessageLookupByLibrary.simpleMessage("Unità"),
+        "recipeSaveLabel":
+            MessageLookupByLibrary.simpleMessage("Salva ricetta"),
+        "recipeSaveErrorLabel": MessageLookupByLibrary.simpleMessage(
+            "Impossibile salvare la ricetta."),
+        "recipeNameRequiredLabel": MessageLookupByLibrary.simpleMessage(
+            "La ricetta ha bisogno di un nome"),
+        "recipeNeedsIngredientsLabel": MessageLookupByLibrary.simpleMessage(
+            "Aggiungi almeno un ingrediente"),
+        "recipeInvalidTotalWeightLabel": MessageLookupByLibrary.simpleMessage(
+            "Il peso totale deve essere maggiore di zero"),
+        "shareRecipeLabel":
+            MessageLookupByLibrary.simpleMessage("Condividi ricetta"),
+        "duplicateRecipeLabel":
+            MessageLookupByLibrary.simpleMessage("Duplica"),
+        "duplicateRecipeNameSuffix":
+            MessageLookupByLibrary.simpleMessage("(copia)"),
+        "recipeTagsLabel": MessageLookupByLibrary.simpleMessage("Tag"),
+        "recipeTagsHelper": MessageLookupByLibrary.simpleMessage(
+            "Separati da virgola, es. \"colazione, vegano\""),
+        "recipesFilterAllLabel":
+            MessageLookupByLibrary.simpleMessage("Tutti"),
+        "importRecipesCsvAction":
+            MessageLookupByLibrary.simpleMessage("Importa ricette (csv)"),
+        "selectionCountLabel": m17,
+        "deleteSelectedRecipesConfirmTitle": m18,
+        "importRecipeLabel":
+            MessageLookupByLibrary.simpleMessage("Importa ricetta"),
+        "importRecipeSuccessLabel":
+            MessageLookupByLibrary.simpleMessage("Ricetta importata"),
+        "importRecipeErrorLabel": MessageLookupByLibrary.simpleMessage(
+            "Impossibile leggere il codice della ricetta"),
+        "recipesLoadErrorLabel": MessageLookupByLibrary.simpleMessage(
+            "Impossibile caricare le ricette. Riprova più tardi."),
+        "importRecipeConfirmContent": m16,
+        "recipeDeleteConfirmTitle":
+            MessageLookupByLibrary.simpleMessage("Eliminare ricetta?"),
+        "recipeDeleteConfirmContent": MessageLookupByLibrary.simpleMessage(
+            "Le voci del diario registrate da questa ricetta saranno mantenute."),
+        "recipeLogCtaLabel":
+            MessageLookupByLibrary.simpleMessage("Registra questa ricetta"),
+        "recipeIngredientCountLabel": m15,
         "reportErrorDialogText": MessageLookupByLibrary.simpleMessage(
             "Vuoi segnalare un errore allo sviluppatore?"),
         "retryLabel": MessageLookupByLibrary.simpleMessage("Riprova"),

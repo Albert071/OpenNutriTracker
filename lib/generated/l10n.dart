@@ -190,6 +190,456 @@ class S {
     );
   }
 
+  /// `Recipes`
+  String get recipesLabel {
+    return Intl.message(
+      'Recipes',
+      name: 'recipesLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No recipes yet`
+  String get recipesEmptyLabel {
+    return Intl.message(
+      'No recipes yet',
+      name: 'recipesEmptyLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Build a meal from multiple ingredients and reuse it like any other food.`
+  String get recipesEmptyHint {
+    return Intl.message(
+      'Build a meal from multiple ingredients and reuse it like any other food.',
+      name: 'recipesEmptyHint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Create Recipe`
+  String get createRecipeTitle {
+    return Intl.message(
+      'Create Recipe',
+      name: 'createRecipeTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `New Custom Food`
+  String get newCustomMealLabel {
+    return Intl.message(
+      'New Custom Food',
+      name: 'newCustomMealLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Discard changes?`
+  String get discardChangesTitle {
+    return Intl.message(
+      'Discard changes?',
+      name: 'discardChangesTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Your unsaved changes will be lost.`
+  String get discardChangesContent {
+    return Intl.message(
+      'Your unsaved changes will be lost.',
+      name: 'discardChangesContent',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Discard`
+  String get discardChangesConfirmLabel {
+    return Intl.message(
+      'Discard',
+      name: 'discardChangesConfirmLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Edit Recipe`
+  String get editRecipeTitle {
+    return Intl.message(
+      'Edit Recipe',
+      name: 'editRecipeTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Recipe name`
+  String get recipeNameLabel {
+    return Intl.message(
+      'Recipe name',
+      name: 'recipeNameLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Description (optional)`
+  String get recipeDescriptionLabel {
+    return Intl.message(
+      'Description (optional)',
+      name: 'recipeDescriptionLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Servings (optional)`
+  String get recipeServingsCountLabel {
+    return Intl.message(
+      'Servings (optional)',
+      name: 'recipeServingsCountLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Lets you log this recipe by serving instead of grams.`
+  String get recipeServingsCountHelper {
+    return Intl.message(
+      'Lets you log this recipe by serving instead of grams.',
+      name: 'recipeServingsCountHelper',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Ingredients`
+  String get recipeIngredientsLabel {
+    return Intl.message(
+      'Ingredients',
+      name: 'recipeIngredientsLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Add Ingredient`
+  String get recipeAddIngredientLabel {
+    return Intl.message(
+      'Add Ingredient',
+      name: 'recipeAddIngredientLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No ingredients yet`
+  String get recipeNoIngredientsLabel {
+    return Intl.message(
+      'No ingredients yet',
+      name: 'recipeNoIngredientsLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Total weight (g)`
+  String get recipeTotalWeightLabel {
+    return Intl.message(
+      'Total weight (g)',
+      name: 'recipeTotalWeightLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Defaults to sum of ingredients. Liquids approximated as 1 ml ≈ 1 g.`
+  String get recipeTotalWeightHelper {
+    return Intl.message(
+      'Defaults to sum of ingredients. Liquids approximated as 1 ml ≈ 1 g.',
+      name: 'recipeTotalWeightHelper',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Nutrition (total)`
+  String get recipeNutritionPreviewLabel {
+    return Intl.message(
+      'Nutrition (total)',
+      name: 'recipeNutritionPreviewLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Per 100 g`
+  String get recipeNutritionPer100Label {
+    return Intl.message(
+      'Per 100 g',
+      name: 'recipeNutritionPer100Label',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Amount`
+  String get recipeIngredientAmountLabel {
+    return Intl.message(
+      'Amount',
+      name: 'recipeIngredientAmountLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Unit`
+  String get recipeIngredientUnitLabel {
+    return Intl.message(
+      'Unit',
+      name: 'recipeIngredientUnitLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Save Recipe`
+  String get recipeSaveLabel {
+    return Intl.message(
+      'Save Recipe',
+      name: 'recipeSaveLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Could not save recipe.`
+  String get recipeSaveErrorLabel {
+    return Intl.message(
+      'Could not save recipe.',
+      name: 'recipeSaveErrorLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Recipe needs a name`
+  String get recipeNameRequiredLabel {
+    return Intl.message(
+      'Recipe needs a name',
+      name: 'recipeNameRequiredLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Add at least one ingredient`
+  String get recipeNeedsIngredientsLabel {
+    return Intl.message(
+      'Add at least one ingredient',
+      name: 'recipeNeedsIngredientsLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Total weight must be greater than zero`
+  String get recipeInvalidTotalWeightLabel {
+    return Intl.message(
+      'Total weight must be greater than zero',
+      name: 'recipeInvalidTotalWeightLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Share recipe`
+  String get shareRecipeLabel {
+    return Intl.message(
+      'Share recipe',
+      name: 'shareRecipeLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Duplicate`
+  String get duplicateRecipeLabel {
+    return Intl.message(
+      'Duplicate',
+      name: 'duplicateRecipeLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `(copy)`
+  String get duplicateRecipeNameSuffix {
+    return Intl.message(
+      '(copy)',
+      name: 'duplicateRecipeNameSuffix',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Tags`
+  String get recipeTagsLabel {
+    return Intl.message(
+      'Tags',
+      name: 'recipeTagsLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Comma-separated, e.g. "breakfast, vegan"`
+  String get recipeTagsHelper {
+    return Intl.message(
+      'Comma-separated, e.g. "breakfast, vegan"',
+      name: 'recipeTagsHelper',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `All`
+  String get recipesFilterAllLabel {
+    return Intl.message(
+      'All',
+      name: 'recipesFilterAllLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `{count} selected`
+  String selectionCountLabel(Object count) {
+    return Intl.message(
+      '$count selected',
+      name: 'selectionCountLabel',
+      desc: '',
+      args: [count],
+    );
+  }
+
+  /// `Import recipes (csv)`
+  String get importRecipesCsvAction {
+    return Intl.message(
+      'Import recipes (csv)',
+      name: 'importRecipesCsvAction',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Delete {count} recipe(s)?`
+  String deleteSelectedRecipesConfirmTitle(Object count) {
+    return Intl.message(
+      'Delete $count recipe(s)?',
+      name: 'deleteSelectedRecipesConfirmTitle',
+      desc: '',
+      args: [count],
+    );
+  }
+
+  /// `Import recipe`
+  String get importRecipeLabel {
+    return Intl.message(
+      'Import recipe',
+      name: 'importRecipeLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Recipe imported`
+  String get importRecipeSuccessLabel {
+    return Intl.message(
+      'Recipe imported',
+      name: 'importRecipeSuccessLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Could not parse recipe code`
+  String get importRecipeErrorLabel {
+    return Intl.message(
+      'Could not parse recipe code',
+      name: 'importRecipeErrorLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Could not load recipes. Try again later.`
+  String get recipesLoadErrorLabel {
+    return Intl.message(
+      'Could not load recipes. Try again later.',
+      name: 'recipesLoadErrorLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Import this recipe with {count} ingredient(s)?`
+  String importRecipeConfirmContent(Object count) {
+    return Intl.message(
+      'Import this recipe with $count ingredient(s)?',
+      name: 'importRecipeConfirmContent',
+      desc: '',
+      args: [count],
+    );
+  }
+
+  /// `Delete recipe?`
+  String get recipeDeleteConfirmTitle {
+    return Intl.message(
+      'Delete recipe?',
+      name: 'recipeDeleteConfirmTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Past diary entries logged from this recipe will be kept.`
+  String get recipeDeleteConfirmContent {
+    return Intl.message(
+      'Past diary entries logged from this recipe will be kept.',
+      name: 'recipeDeleteConfirmContent',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Log this Recipe`
+  String get recipeLogCtaLabel {
+    return Intl.message(
+      'Log this Recipe',
+      name: 'recipeLogCtaLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `{count} ingredient(s)`
+  String recipeIngredientCountLabel(Object count) {
+    return Intl.message(
+      '$count ingredient(s)',
+      name: 'recipeIngredientCountLabel',
+      desc: '',
+      args: [count],
+    );
+  }
+
   /// `Search`
   String get searchLabel {
     return Intl.message(
@@ -1074,8 +1524,17 @@ class S {
 
   String get downloadSampleCsvAction {
     return Intl.message(
-      'Sample CSV',
+      'Sample meals (csv)',
       name: 'downloadSampleCsvAction',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get downloadSampleRecipesCsvAction {
+    return Intl.message(
+      'Sample recipes (csv)',
+      name: 'downloadSampleRecipesCsvAction',
       desc: '',
       args: [],
     );
@@ -1083,7 +1542,7 @@ class S {
 
   String get importMealsCsvAction {
     return Intl.message(
-      'Import meals (CSV)',
+      'Import meals (csv)',
       name: 'importMealsCsvAction',
       desc: '',
       args: [],
@@ -1969,6 +2428,16 @@ class S {
     return Intl.message(
       'Custom Meal Item',
       name: 'additionalInfoLabelCustom',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Custom Recipe`
+  String get additionalInfoLabelRecipe {
+    return Intl.message(
+      'Custom Recipe',
+      name: 'additionalInfoLabelRecipe',
       desc: '',
       args: [],
     );

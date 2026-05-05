@@ -5,6 +5,7 @@ import 'package:opennutritracker/core/utils/locator.dart';
 import 'package:opennutritracker/features/diary/presentation/bloc/calendar_day_bloc.dart';
 import 'package:opennutritracker/features/diary/presentation/bloc/diary_bloc.dart';
 import 'package:opennutritracker/features/home/presentation/bloc/home_bloc.dart';
+import 'package:opennutritracker/features/recipes/presentation/bloc/recipes_bloc.dart';
 import 'package:opennutritracker/features/settings/presentation/bloc/export_import_bloc.dart';
 import 'package:opennutritracker/generated/l10n.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -75,6 +76,29 @@ class ImportCustomFoodDataDialog extends StatelessWidget {
                   } else if (state is CsvImportResultState) {
                     refreshScreens();
                     return _buildCsvResult(context, state);
+                  } else if (state is RecipeCsvImportResultState) {
+                    refreshScreens();
+                    locator<RecipesBloc>().add(const LoadRecipesEvent());
+                    final summary = state.skipped == 0
+                        ? S
+                            .of(context)
+                            .csvImportSuccessLabel(state.imported)
+                        : S
+                            .of(context)
+                            .csvImportPartialLabel(
+                              state.imported,
+                              state.skipped,
+                            );
+                    return Row(
+                      children: [
+                        Icon(
+                          Icons.check_circle,
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
+                        const SizedBox(width: 8),
+                        Expanded(child: Text(summary)),
+                      ],
+                    );
                   } else if (state is CsvImportErrorState) {
                     return Row(
                       children: [
@@ -104,6 +128,15 @@ class ImportCustomFoodDataDialog extends StatelessWidget {
         TextButton(
           onPressed: () => exportImportBloc.add(ImportMealsCsvEvent()),
           child: Text(S.of(context).importMealsCsvAction),
+        ),
+        TextButton(
+          onPressed: () =>
+              exportImportBloc.add(DownloadSampleRecipesCsvEvent()),
+          child: Text(S.of(context).downloadSampleRecipesCsvAction),
+        ),
+        TextButton(
+          onPressed: () => exportImportBloc.add(ImportRecipesCsvEvent()),
+          child: Text(S.of(context).importRecipesCsvAction),
         ),
       ],
     );

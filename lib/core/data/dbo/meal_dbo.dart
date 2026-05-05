@@ -91,7 +91,9 @@ enum MealSourceDBO {
   @HiveField(2)
   off,
   @HiveField(3)
-  fdc;
+  fdc,
+  @HiveField(4)
+  recipe;
 
   factory MealSourceDBO.fromMealSourceEntity(MealSourceEntity entity) {
     MealSourceDBO mealSourceDBO;
@@ -107,6 +109,9 @@ enum MealSourceDBO {
         break;
       case MealSourceEntity.fdc:
         mealSourceDBO = MealSourceDBO.fdc;
+        break;
+      case MealSourceEntity.recipe:
+        mealSourceDBO = MealSourceDBO.recipe;
         break;
     }
     return mealSourceDBO;

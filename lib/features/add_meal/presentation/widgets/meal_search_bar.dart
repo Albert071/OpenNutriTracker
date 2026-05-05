@@ -5,7 +5,9 @@ import 'package:opennutritracker/generated/l10n.dart';
 class MealSearchBar extends StatelessWidget {
   final ValueNotifier<String> searchStringListener;
   final Function(String) onSearchSubmit;
-  final Function() onBarcodePressed;
+  // Nullable so callers that don't surface a barcode flow (e.g. the recipe
+  // ingredient picker) can omit the suffix icon entirely.
+  final Function()? onBarcodePressed;
 
   final _searchTextController = TextEditingController();
 
@@ -32,12 +34,12 @@ class MealSearchBar extends StatelessWidget {
             decoration: InputDecoration(
               hintText: S.of(context).searchLabel,
               prefixIcon: const Icon(Icons.search_outlined),
-              suffixIcon: IconButton(
-                icon: const Icon(CustomIcons.barcode_scan),
-                onPressed: () {
-                  onBarcodePressed();
-                },
-              ),
+              suffixIcon: onBarcodePressed != null
+                  ? IconButton(
+                      icon: const Icon(CustomIcons.barcode_scan),
+                      onPressed: onBarcodePressed,
+                    )
+                  : null,
               filled: true,
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10),

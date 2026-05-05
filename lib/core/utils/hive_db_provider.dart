@@ -10,6 +10,8 @@ import 'package:opennutritracker/core/data/dbo/intake_type_dbo.dart';
 import 'package:opennutritracker/core/data/dbo/physical_activity_dbo.dart';
 import 'package:opennutritracker/core/data/dbo/meal_dbo.dart';
 import 'package:opennutritracker/core/data/dbo/meal_nutriments_dbo.dart';
+import 'package:opennutritracker/core/data/dbo/recipe_dbo.dart';
+import 'package:opennutritracker/core/data/dbo/recipe_ingredient_dbo.dart';
 import 'package:opennutritracker/core/data/dbo/tracked_day_dbo.dart';
 import 'package:opennutritracker/core/data/dbo/user_dbo.dart';
 import 'package:opennutritracker/core/data/dbo/user_gender_dbo.dart';
@@ -23,6 +25,7 @@ class HiveDBProvider extends ChangeNotifier {
   static const userBoxName = 'UserBox';
   static const trackedDayBoxName = 'TrackedDayBox';
   static const customMealBoxName = 'CustomMealBox';
+  static const recipeBoxName = 'RecipeBox';
   static const cachedOffMealBoxName = 'CachedOffMealBox';
   // Sidecar to cachedOffMealBox: maps meal `code` -> millisSinceEpoch of
   // last "touch" (creation or user re-select). Used by the TTL sweep so
@@ -35,6 +38,7 @@ class HiveDBProvider extends ChangeNotifier {
   late Box<UserDBO> userBox;
   late Box<TrackedDayDBO> trackedDayBox;
   late Box<MealDBO> customMealBox;
+  late Box<RecipeDBO> recipeBox;
   late Box<MealDBO> cachedOffMealBox;
   late Box<int> cachedOffMealTimestampsBox;
 
@@ -56,6 +60,8 @@ class HiveDBProvider extends ChangeNotifier {
     Hive.registerAdapter(PhysicalActivityDBOAdapter());
     Hive.registerAdapter(PhysicalActivityTypeDBOAdapter());
     Hive.registerAdapter(AppThemeDBOAdapter());
+    Hive.registerAdapter(RecipeDBOAdapter());
+    Hive.registerAdapter(RecipeIngredientDBOAdapter());
 
     configBox = await Hive.openBox(
       configBoxName,
@@ -79,6 +85,10 @@ class HiveDBProvider extends ChangeNotifier {
     );
     customMealBox = await Hive.openBox(
       customMealBoxName,
+      encryptionCipher: encryptionCypher,
+    );
+    recipeBox = await Hive.openBox(
+      recipeBoxName,
       encryptionCipher: encryptionCypher,
     );
     cachedOffMealBox = await Hive.openBox(

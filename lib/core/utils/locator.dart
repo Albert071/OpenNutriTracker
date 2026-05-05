@@ -3,6 +3,7 @@ import 'package:get_it/get_it.dart';
 import 'package:opennutritracker/core/data/data_source/config_data_source.dart';
 import 'package:opennutritracker/core/data/data_source/remote_search_cache_data_source.dart';
 import 'package:opennutritracker/core/data/data_source/custom_meal_data_source.dart';
+import 'package:opennutritracker/core/data/data_source/recipe_data_source.dart';
 import 'package:opennutritracker/core/data/data_source/intake_data_source.dart';
 import 'package:opennutritracker/core/data/data_source/physical_activity_data_source.dart';
 import 'package:opennutritracker/core/data/data_source/tracked_day_data_source.dart';
@@ -11,6 +12,7 @@ import 'package:opennutritracker/core/data/data_source/user_data_source.dart';
 import 'package:opennutritracker/core/data/repository/config_repository.dart';
 import 'package:opennutritracker/core/data/repository/intake_repository.dart';
 import 'package:opennutritracker/core/data/repository/physical_activity_repository.dart';
+import 'package:opennutritracker/core/data/repository/recipe_repository.dart';
 import 'package:opennutritracker/core/data/repository/tracked_day_repository.dart';
 import 'package:opennutritracker/core/data/repository/user_activity_repository.dart';
 import 'package:opennutritracker/core/data/repository/user_repository.dart';
@@ -19,16 +21,21 @@ import 'package:opennutritracker/core/domain/usecase/add_intake_usecase.dart';
 import 'package:opennutritracker/core/domain/usecase/add_tracked_day_usecase.dart';
 import 'package:opennutritracker/core/domain/usecase/add_user_activity_usercase.dart';
 import 'package:opennutritracker/core/domain/usecase/add_user_usecase.dart';
+import 'package:opennutritracker/core/domain/usecase/compute_recipe_nutrition_usecase.dart';
 import 'package:opennutritracker/core/domain/usecase/delete_intake_usecase.dart';
+import 'package:opennutritracker/core/domain/usecase/delete_recipe_usecase.dart';
 import 'package:opennutritracker/core/domain/usecase/delete_user_activity_usecase.dart';
+import 'package:opennutritracker/core/domain/usecase/get_all_recipes_usecase.dart';
 import 'package:opennutritracker/core/domain/usecase/get_config_usecase.dart';
 import 'package:opennutritracker/core/domain/usecase/get_intake_usecase.dart';
 import 'package:opennutritracker/core/domain/usecase/get_kcal_goal_usecase.dart';
 import 'package:opennutritracker/core/domain/usecase/get_macro_goal_usecase.dart';
 import 'package:opennutritracker/core/domain/usecase/get_physical_activity_usecase.dart';
+import 'package:opennutritracker/core/domain/usecase/get_recipe_by_id_usecase.dart';
 import 'package:opennutritracker/core/domain/usecase/get_tracked_day_usecase.dart';
 import 'package:opennutritracker/core/domain/usecase/get_user_activity_usecase.dart';
 import 'package:opennutritracker/core/domain/usecase/get_user_usecase.dart';
+import 'package:opennutritracker/core/domain/usecase/save_recipe_usecase.dart';
 import 'package:opennutritracker/core/domain/usecase/update_intake_usecase.dart';
 import 'package:opennutritracker/core/domain/usecase/update_user_activity_usecase.dart';
 import 'package:opennutritracker/core/utils/env.dart';
@@ -55,12 +62,16 @@ import 'package:opennutritracker/features/home/presentation/bloc/home_bloc.dart'
 import 'package:opennutritracker/features/meal_detail/presentation/bloc/meal_detail_bloc.dart';
 import 'package:opennutritracker/features/onboarding/presentation/bloc/onboarding_bloc.dart';
 import 'package:opennutritracker/features/profile/presentation/bloc/profile_bloc.dart';
+import 'package:opennutritracker/features/recipes/presentation/bloc/recipe_builder_bloc.dart';
+import 'package:opennutritracker/features/recipes/presentation/bloc/recipe_detail_bloc.dart';
+import 'package:opennutritracker/features/recipes/presentation/bloc/recipes_bloc.dart';
 import 'package:opennutritracker/features/scanner/domain/usecase/search_product_by_barcode_usecase.dart';
 import 'package:opennutritracker/features/scanner/presentation/scanner_bloc.dart';
 import 'package:opennutritracker/features/settings/domain/usecase/download_sample_csv_usecase.dart';
 import 'package:opennutritracker/features/settings/domain/usecase/export_data_usecase.dart';
 import 'package:opennutritracker/features/settings/domain/usecase/import_data_usecase.dart';
 import 'package:opennutritracker/features/settings/domain/usecase/import_meals_csv_usecase.dart';
+import 'package:opennutritracker/features/settings/domain/usecase/import_recipes_csv_usecase.dart';
 import 'package:opennutritracker/features/settings/presentation/bloc/custom_meals_bloc.dart';
 import 'package:opennutritracker/features/settings/presentation/bloc/export_import_bloc.dart';
 import 'package:opennutritracker/features/settings/presentation/bloc/settings_bloc.dart';
@@ -126,6 +137,13 @@ Future<void> initLocator() async {
   locator.registerLazySingleton<ProfileBloc>(
     () => ProfileBloc(locator(), locator(), locator(), locator(), locator()),
   );
+  locator.registerLazySingleton<RecipesBloc>(() => RecipesBloc(locator()));
+  locator.registerFactory<RecipeBuilderBloc>(
+    () => RecipeBuilderBloc(locator(), locator()),
+  );
+  locator.registerFactory<RecipeDetailBloc>(
+    () => RecipeDetailBloc(locator(), locator()),
+  );
   locator.registerLazySingleton(
     () => SettingsBloc(
       locator(),
@@ -137,9 +155,13 @@ Future<void> initLocator() async {
     ),
   );
   locator.registerFactory(
-    () => ExportImportBloc(locator(), locator(), locator(), locator()),
+    () => ExportImportBloc(
+        locator(), locator(), locator(), locator(), locator()),
   );
-  locator.registerFactory<CustomMealsBloc>(
+  // Lazy singleton: shared between RecipesPage's Custom Meals tab and the
+  // create-from-popup flow on the same tab — both must mutate / observe the
+  // same instance so the list refreshes after a new entry is created.
+  locator.registerLazySingleton<CustomMealsBloc>(
     () => CustomMealsBloc(locator(), locator(), locator(), locator()),
   );
 
@@ -194,6 +216,7 @@ Future<void> initLocator() async {
       locator(),
       locator(),
       locator(),
+      locator(),
     ),
   );
   locator.registerLazySingleton<SearchProductByBarcodeUseCase>(
@@ -237,13 +260,23 @@ Future<void> initLocator() async {
   );
   locator.registerLazySingleton(() => GetMacroGoalUsecase(locator()));
   locator.registerLazySingleton(
-    () => ExportDataUsecase(locator(), locator(), locator()),
+    () => ExportDataUsecase(locator(), locator(), locator(), locator()),
   );
   locator.registerLazySingleton(
-    () => ImportDataUsecase(locator(), locator(), locator()),
+    () => ImportDataUsecase(locator(), locator(), locator(), locator()),
   );
   locator.registerLazySingleton(() => ImportMealsCsvUsecase(locator()));
+  locator.registerLazySingleton(() => ImportRecipesCsvUsecase(locator()));
   locator.registerLazySingleton(() => DownloadSampleCsvUsecase());
+
+  // Recipe use cases
+  locator.registerLazySingleton(() => ComputeRecipeNutritionUseCase());
+  locator.registerLazySingleton(
+    () => SaveRecipeUseCase(locator(), locator()),
+  );
+  locator.registerLazySingleton(() => GetAllRecipesUseCase(locator()));
+  locator.registerLazySingleton(() => GetRecipeByIdUseCase(locator()));
+  locator.registerLazySingleton(() => DeleteRecipeUseCase(locator()));
 
   // Repositories
   locator.registerLazySingleton(() => ConfigRepository(locator()));
@@ -264,6 +297,9 @@ Future<void> initLocator() async {
   );
   locator.registerLazySingleton<TrackedDayRepository>(
     () => TrackedDayRepository(locator()),
+  );
+  locator.registerLazySingleton<RecipeRepository>(
+    () => RecipeRepository(locator()),
   );
 
   // DataSources
@@ -290,6 +326,9 @@ Future<void> initLocator() async {
   );
   locator.registerLazySingleton(
     () => CustomMealDataSource(hiveDBProvider.customMealBox),
+  );
+  locator.registerLazySingleton(
+    () => RecipeDataSource(hiveDBProvider.recipeBox),
   );
   locator.registerLazySingleton(
     () => RemoteSearchCacheDataSource(

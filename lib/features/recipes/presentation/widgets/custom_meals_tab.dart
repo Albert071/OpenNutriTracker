@@ -7,42 +7,51 @@ import 'package:opennutritracker/features/edit_meal/presentation/edit_meal_scree
 import 'package:opennutritracker/features/settings/presentation/bloc/custom_meals_bloc.dart';
 import 'package:opennutritracker/generated/l10n.dart';
 
-class CustomMealsScreen extends StatelessWidget {
+/// Embeddable list of user-created custom meals (formerly the body of
+/// CustomMealsScreen in Settings). Hosted inside RecipesPage's TabBarView.
+class CustomMealsTab extends StatelessWidget {
   final bool usesImperialUnits;
 
-  const CustomMealsScreen({super.key, required this.usesImperialUnits});
+  const CustomMealsTab({super.key, required this.usesImperialUnits});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text(S.of(context).settingsCustomMealsLabel)),
-      body: BlocBuilder<CustomMealsBloc, CustomMealsState>(
-        builder: (context, state) {
-          if (state is CustomMealsLoadingState || state is CustomMealsInitial) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (state is CustomMealsLoadedState) {
-            if (state.meals.isEmpty) {
-              return Center(child: Text(S.of(context).customMealsEmptyLabel));
-            }
-            return ListView.builder(
-              itemCount: state.meals.length,
-              itemBuilder: (context, index) {
-                final meal = state.meals[index];
-                return ListTile(
-                  title: Text(meal.name ?? ''),
-                  subtitle: meal.brands != null ? Text(meal.brands!) : null,
-                  onTap: () => _openEditMeal(context, meal),
-                  trailing: IconButton(
-                    icon: const Icon(Icons.delete_outline),
-                    onPressed: () => _confirmDelete(context, meal),
-                  ),
-                );
-              },
+    return BlocBuilder<CustomMealsBloc, CustomMealsState>(
+      builder: (context, state) {
+        if (state is CustomMealsLoadingState ||
+            state is CustomMealsInitial) {
+          return const Center(child: CircularProgressIndicator());
+        }
+        if (state is CustomMealsLoadedState) {
+          if (state.meals.isEmpty) {
+            return Center(
+              child: Padding(
+                padding: const EdgeInsets.all(32),
+                child: Text(
+                  S.of(context).customMealsEmptyLabel,
+                  textAlign: TextAlign.center,
+                ),
+              ),
             );
           }
-          return const SizedBox();
-        },
-      ),
+          return ListView.builder(
+            itemCount: state.meals.length,
+            itemBuilder: (context, index) {
+              final meal = state.meals[index];
+              return ListTile(
+                title: Text(meal.name ?? ''),
+                subtitle: meal.brands != null ? Text(meal.brands!) : null,
+                onTap: () => _openEditMeal(context, meal),
+                trailing: IconButton(
+                  icon: const Icon(Icons.delete_outline),
+                  onPressed: () => _confirmDelete(context, meal),
+                ),
+              );
+            },
+          );
+        }
+        return const SizedBox.shrink();
+      },
     );
   }
 
@@ -62,6 +71,7 @@ class CustomMealsScreen extends StatelessWidget {
   }
 
   Future<void> _confirmDelete(BuildContext context, MealEntity meal) async {
+    final bloc = context.read<CustomMealsBloc>();
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
@@ -79,10 +89,8 @@ class CustomMealsScreen extends StatelessWidget {
         ],
       ),
     );
-    if (confirmed == true && context.mounted) {
-      context
-          .read<CustomMealsBloc>()
-          .add(DeleteCustomMealEvent(meal.code ?? meal.name ?? ''));
+    if (confirmed == true) {
+      bloc.add(DeleteCustomMealEvent(meal.code ?? meal.name ?? ''));
     }
   }
 }

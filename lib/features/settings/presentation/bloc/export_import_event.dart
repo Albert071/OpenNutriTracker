@@ -20,8 +20,20 @@ class ImportMealsCsvEvent extends ExportImportEvent {
   List<Object?> get props => [];
 }
 
-/// User asked for a CSV template to fill in.
+/// User picked a CSV file to import as recipes.
+class ImportRecipesCsvEvent extends ExportImportEvent {
+  @override
+  List<Object?> get props => [];
+}
+
+/// User asked for a custom-meal CSV template to fill in.
 class DownloadSampleCsvEvent extends ExportImportEvent {
+  @override
+  List<Object?> get props => [];
+}
+
+/// User asked for a recipe CSV template to fill in.
+class DownloadSampleRecipesCsvEvent extends ExportImportEvent {
   @override
   List<Object?> get props => [];
 }

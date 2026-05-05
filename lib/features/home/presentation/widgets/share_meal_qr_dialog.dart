@@ -3,7 +3,9 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:opennutritracker/core/data/repository/recipe_repository.dart';
 import 'package:opennutritracker/core/domain/entity/intake_entity.dart';
+import 'package:opennutritracker/core/utils/locator.dart';
 import 'package:opennutritracker/features/home/domain/entity/shared_meal_payload.dart';
 import 'package:opennutritracker/generated/l10n.dart';
 import 'package:path_provider/path_provider.dart';
@@ -28,7 +30,10 @@ class _ShareMealQrDialogState extends State<ShareMealQrDialog> {
   @override
   void initState() {
     super.initState();
-    _code = SharedMealPayload.fromIntakeList(widget.intakeList).toJsonString();
+    _code = SharedMealPayload.fromIntakeList(
+      widget.intakeList,
+      recipeRepository: locator<RecipeRepository>(),
+    ).toJsonString();
   }
 
   @override

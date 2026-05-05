@@ -11,6 +11,8 @@ import 'package:opennutritracker/core/data/dbo/intake_type_dbo.dart';
 import 'package:opennutritracker/core/data/dbo/meal_dbo.dart';
 import 'package:opennutritracker/core/data/dbo/meal_nutriments_dbo.dart';
 import 'package:opennutritracker/core/data/dbo/physical_activity_dbo.dart';
+import 'package:opennutritracker/core/data/dbo/recipe_dbo.dart';
+import 'package:opennutritracker/core/data/dbo/recipe_ingredient_dbo.dart';
 import 'package:opennutritracker/core/data/dbo/tracked_day_dbo.dart';
 import 'package:opennutritracker/core/data/dbo/user_dbo.dart';
 import 'package:opennutritracker/core/data/dbo/user_gender_dbo.dart';
@@ -28,6 +30,8 @@ extension HiveRegistrar on HiveInterface {
     registerAdapter(MealSourceDBOAdapter());
     registerAdapter(PhysicalActivityDBOAdapter());
     registerAdapter(PhysicalActivityTypeDBOAdapter());
+    registerAdapter(RecipeDBOAdapter());
+    registerAdapter(RecipeIngredientDBOAdapter());
     registerAdapter(TrackedDayDBOAdapter());
     registerAdapter(UserActivityDBOAdapter());
     registerAdapter(UserDBOAdapter());
@@ -48,6 +52,8 @@ extension IsolatedHiveRegistrar on IsolatedHiveInterface {
     registerAdapter(MealSourceDBOAdapter());
     registerAdapter(PhysicalActivityDBOAdapter());
     registerAdapter(PhysicalActivityTypeDBOAdapter());
+    registerAdapter(RecipeDBOAdapter());
+    registerAdapter(RecipeIngredientDBOAdapter());
     registerAdapter(TrackedDayDBOAdapter());
     registerAdapter(UserActivityDBOAdapter());
     registerAdapter(UserDBOAdapter());

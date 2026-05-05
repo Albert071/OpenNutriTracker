@@ -52,6 +52,15 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m14(count, size) => "${count} елементів · ${size}";
 
+  static String m15(count) => "${count} інгредієнт(ів)";
+
+  static String m16(count) =>
+      "Імпортувати цей рецепт з ${count} інгредієнт(ами)?";
+
+  static String m17(count) => "Вибрано: ${count}";
+
+  static String m18(count) => "Видалити ${count} рецепт(ів)?";
+
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "activityExample": MessageLookupByLibrary.simpleMessage(
@@ -64,6 +73,8 @@ class MessageLookup extends MessageLookupByLibrary {
             "Інформація надана\n \"2024 Compendium\n of Physical Activities\""),
         "additionalInfoLabelCustom":
             MessageLookupByLibrary.simpleMessage("Власний елемент їжі"),
+        "additionalInfoLabelRecipe":
+            MessageLookupByLibrary.simpleMessage("Власний рецепт"),
         "additionalInfoLabelFDC": MessageLookupByLibrary.simpleMessage(
             "Більше інформації на\nFoodData Central"),
         "additionalInfoLabelOFF": MessageLookupByLibrary.simpleMessage(
@@ -204,9 +215,11 @@ class MessageLookup extends MessageLookupByLibrary {
         "csvImportPartialLabel": m13,
         "csvImportSuccessLabel": m12,
         "downloadSampleCsvAction":
-            MessageLookupByLibrary.simpleMessage("Зразок CSV"),
+            MessageLookupByLibrary.simpleMessage("Зразкові страви (csv)"),
+        "downloadSampleRecipesCsvAction":
+            MessageLookupByLibrary.simpleMessage("Зразкові рецепти (csv)"),
         "importMealsCsvAction":
-            MessageLookupByLibrary.simpleMessage("Імпортувати страви (CSV)"),
+            MessageLookupByLibrary.simpleMessage("Імпортувати страви (csv)"),
         "exportAction": MessageLookupByLibrary.simpleMessage("Експортувати"),
         "exportImportDescription": MessageLookupByLibrary.simpleMessage(
             "Ви можете експортувати дані додатка у zip-файл і імпортувати їх пізніше. Це корисно, якщо ви хочете зробити резервну копію або перенести дані на інший пристрій. Додаток не використовує жодних хмарних сервісів для зберігання ваших даних."),
@@ -709,6 +722,90 @@ class MessageLookup extends MessageLookupByLibrary {
         "readLabel": MessageLookupByLibrary.simpleMessage(
             "Я прочитав і приймаю політику конфіденційності."),
         "recentlyAddedLabel": MessageLookupByLibrary.simpleMessage("Нещодавно"),
+        "recipesLabel": MessageLookupByLibrary.simpleMessage("Рецепти"),
+        "recipesEmptyLabel":
+            MessageLookupByLibrary.simpleMessage("Поки немає рецептів"),
+        "recipesEmptyHint": MessageLookupByLibrary.simpleMessage(
+            "Створіть страву з кількох інгредієнтів і використовуйте її як будь-який інший продукт."),
+        "createRecipeTitle":
+            MessageLookupByLibrary.simpleMessage("Створити рецепт"),
+        "newCustomMealLabel":
+            MessageLookupByLibrary.simpleMessage("Новий власний продукт"),
+        "discardChangesTitle":
+            MessageLookupByLibrary.simpleMessage("Скасувати зміни?"),
+        "discardChangesContent": MessageLookupByLibrary.simpleMessage(
+            "Ваші незбережені зміни будуть втрачені."),
+        "discardChangesConfirmLabel":
+            MessageLookupByLibrary.simpleMessage("Скасувати"),
+        "editRecipeTitle":
+            MessageLookupByLibrary.simpleMessage("Редагувати рецепт"),
+        "recipeNameLabel":
+            MessageLookupByLibrary.simpleMessage("Назва рецепта"),
+        "recipeDescriptionLabel":
+            MessageLookupByLibrary.simpleMessage("Опис (необов'язково)"),
+        "recipeServingsCountLabel":
+            MessageLookupByLibrary.simpleMessage("Порції (необов'язково)"),
+        "recipeServingsCountHelper": MessageLookupByLibrary.simpleMessage(
+            "Дозволяє реєструвати цей рецепт у порціях замість грамів."),
+        "recipeIngredientsLabel":
+            MessageLookupByLibrary.simpleMessage("Інгредієнти"),
+        "recipeAddIngredientLabel":
+            MessageLookupByLibrary.simpleMessage("Додати інгредієнт"),
+        "recipeNoIngredientsLabel":
+            MessageLookupByLibrary.simpleMessage("Поки немає інгредієнтів"),
+        "recipeTotalWeightLabel":
+            MessageLookupByLibrary.simpleMessage("Загальна вага (г)"),
+        "recipeTotalWeightHelper": MessageLookupByLibrary.simpleMessage(
+            "За замовчуванням сума інгредієнтів. Рідини приблизно як 1 мл ≈ 1 г."),
+        "recipeNutritionPreviewLabel":
+            MessageLookupByLibrary.simpleMessage("Поживність (загалом)"),
+        "recipeNutritionPer100Label":
+            MessageLookupByLibrary.simpleMessage("На 100 г"),
+        "recipeIngredientAmountLabel":
+            MessageLookupByLibrary.simpleMessage("Кількість"),
+        "recipeIngredientUnitLabel":
+            MessageLookupByLibrary.simpleMessage("Одиниця"),
+        "recipeSaveLabel":
+            MessageLookupByLibrary.simpleMessage("Зберегти рецепт"),
+        "recipeSaveErrorLabel":
+            MessageLookupByLibrary.simpleMessage("Не вдалося зберегти рецепт."),
+        "recipeNameRequiredLabel":
+            MessageLookupByLibrary.simpleMessage("Рецепт потребує назви"),
+        "recipeNeedsIngredientsLabel": MessageLookupByLibrary.simpleMessage(
+            "Додайте хоча б один інгредієнт"),
+        "recipeInvalidTotalWeightLabel": MessageLookupByLibrary.simpleMessage(
+            "Загальна вага має бути більшою за нуль"),
+        "shareRecipeLabel":
+            MessageLookupByLibrary.simpleMessage("Поділитися рецептом"),
+        "duplicateRecipeLabel":
+            MessageLookupByLibrary.simpleMessage("Дублювати"),
+        "duplicateRecipeNameSuffix":
+            MessageLookupByLibrary.simpleMessage("(копія)"),
+        "recipeTagsLabel": MessageLookupByLibrary.simpleMessage("Теги"),
+        "recipeTagsHelper": MessageLookupByLibrary.simpleMessage(
+            "Через кому, напр. \"сніданок, веганське\""),
+        "recipesFilterAllLabel":
+            MessageLookupByLibrary.simpleMessage("Усі"),
+        "importRecipesCsvAction": MessageLookupByLibrary.simpleMessage(
+            "Імпортувати рецепти (csv)"),
+        "selectionCountLabel": m17,
+        "deleteSelectedRecipesConfirmTitle": m18,
+        "importRecipeLabel":
+            MessageLookupByLibrary.simpleMessage("Імпортувати рецепт"),
+        "importRecipeSuccessLabel":
+            MessageLookupByLibrary.simpleMessage("Рецепт імпортовано"),
+        "importRecipeErrorLabel": MessageLookupByLibrary.simpleMessage(
+            "Не вдалося розпізнати код рецепта"),
+        "recipesLoadErrorLabel": MessageLookupByLibrary.simpleMessage(
+            "Не вдалося завантажити рецепти. Спробуйте пізніше."),
+        "importRecipeConfirmContent": m16,
+        "recipeDeleteConfirmTitle":
+            MessageLookupByLibrary.simpleMessage("Видалити рецепт?"),
+        "recipeDeleteConfirmContent": MessageLookupByLibrary.simpleMessage(
+            "Попередні записи щоденника з цього рецепта залишаться."),
+        "recipeLogCtaLabel":
+            MessageLookupByLibrary.simpleMessage("Записати цей рецепт"),
+        "recipeIngredientCountLabel": m15,
         "reportErrorDialogText": MessageLookupByLibrary.simpleMessage(
             "Бажаєте повідомити про помилку розробнику?"),
         "retryLabel": MessageLookupByLibrary.simpleMessage("Повторити"),

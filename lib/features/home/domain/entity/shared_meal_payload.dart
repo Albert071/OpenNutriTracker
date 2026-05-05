@@ -1,10 +1,12 @@
 import 'dart:convert';
 import 'dart:io' show gzip;
 
+import 'package:opennutritracker/core/data/repository/recipe_repository.dart';
 import 'package:opennutritracker/core/domain/entity/intake_entity.dart';
 import 'package:opennutritracker/core/utils/id_generator.dart';
 import 'package:opennutritracker/features/add_meal/domain/entity/meal_entity.dart';
 import 'package:opennutritracker/features/add_meal/domain/entity/meal_nutriments_entity.dart';
+import 'package:opennutritracker/features/recipes/domain/entity/shared_recipe_payload.dart';
 
 class SharedMealParseException implements Exception {
   final String message;
@@ -46,7 +48,13 @@ class SharedMealOffRef {
   List<dynamic> toArray() => [barcode, _compact(amount), unit];
 }
 
-// Array field order: [name, brands, unit, amount, ec, cb, ft, pr, sg, sf, fb, thumbUrl, imgUrl]
+// Array field order: [name, brands, unit, amount, ec, cb, ft, pr, sg, sf, fb,
+//                     thumbUrl, imgUrl, source, code]
+//
+// `source` is 'custom' or 'fdc' — added in v2. Null/absent means 'custom' so
+// v1 payloads still parse correctly. `code` (added in v2) lets cached FDC
+// items round-trip with their fdcId so the receiver can dedupe future
+// searches against the same id.
 class SharedMealItem {
   final String? name;
   final String? brands;
@@ -61,6 +69,8 @@ class SharedMealItem {
   final double? fiber100;
   final String? thumbnailImageUrl;
   final String? mainImageUrl;
+  final MealSourceEntity source;
+  final String? code;
 
   const SharedMealItem({
     required this.name,
@@ -76,6 +86,8 @@ class SharedMealItem {
     required this.fiber100,
     required this.thumbnailImageUrl,
     required this.mainImageUrl,
+    required this.source,
+    required this.code,
   });
 
   factory SharedMealItem.fromIntakeEntity(IntakeEntity intake) {
@@ -93,12 +105,18 @@ class SharedMealItem {
       fiber100: intake.meal.nutriments.fiber100,
       thumbnailImageUrl: intake.meal.thumbnailImageUrl,
       mainImageUrl: intake.meal.mainImageUrl,
+      source: intake.meal.source,
+      code: intake.meal.code,
     );
   }
 
   factory SharedMealItem.fromArray(List<dynamic> a) {
     num? atNum(int i) => a.length > i ? a[i] as num? : null;
     String? atStr(int i) => a.length > i ? a[i] as String? : null;
+    final sourceStr = atStr(13);
+    final source = sourceStr == 'fdc'
+        ? MealSourceEntity.fdc
+        : MealSourceEntity.custom;
     return SharedMealItem(
       name: a[0] as String?,
       brands: a[1] as String?,
@@ -113,6 +131,8 @@ class SharedMealItem {
       fiber100: atNum(10)?.toDouble(),
       thumbnailImageUrl: atStr(11),
       mainImageUrl: atStr(12),
+      source: source,
+      code: atStr(14),
     );
   }
 
@@ -131,12 +151,19 @@ class SharedMealItem {
       _compact(fiber100),
       thumbnailImageUrl,
       mainImageUrl,
+      source == MealSourceEntity.fdc ? 'fdc' : 'custom',
+      code,
     ];
   }
 
   MealEntity toMealEntity() {
     return MealEntity(
-      code: IdGenerator.getUniqueID(),
+      // FDC items keep their original code so the receiver's cache can dedupe
+      // future searches; custom items get a fresh UUID since they're a new
+      // entry in the receiver's library.
+      code: source == MealSourceEntity.fdc && code != null
+          ? code
+          : IdGenerator.getUniqueID(),
       name: name,
       brands: brands,
       thumbnailImageUrl: thumbnailImageUrl,
@@ -156,36 +183,109 @@ class SharedMealItem {
         saturatedFat100: saturatedFat100,
         fiber100: fiber100,
       ),
-      source: MealSourceEntity.custom,
+      source: source,
     );
   }
 }
 
+// One recipe embedded inside a meal share. Carries the full SharedRecipePayload
+// (so the receiver gets the ingredient breakdown) plus the amount and unit
+// from the original intake.
+class SharedMealRecipeItem {
+  final SharedRecipePayload recipe;
+  final double amount;
+  final String unit;
+
+  const SharedMealRecipeItem({
+    required this.recipe,
+    required this.amount,
+    required this.unit,
+  });
+
+  factory SharedMealRecipeItem.fromArray(List<dynamic> a) {
+    return SharedMealRecipeItem(
+      amount: (a[0] as num).toDouble(),
+      unit: (a[1] as String?) ?? 'g',
+      recipe: SharedRecipePayload.fromJsonArray(a[2] as List<dynamic>),
+    );
+  }
+
+  List<dynamic> toArray() => [
+        _compact(amount),
+        unit,
+        recipe.toJsonArray(),
+      ];
+}
+
 class SharedMealPayload {
-  static const int _currentVersion = 1;
+  // v1: [version, offRefs, items]                — no source on items, no recipes
+  // v2: [version, offRefs, items, recipes]       — items carry source ('custom'|'fdc'),
+  //                                                 recipes are full embedded recipe payloads
+  static const int _currentVersion = 2;
+  static const int _minSupportedVersion = 1;
 
   final int version;
   final List<SharedMealOffRef> offRefs;
   final List<SharedMealItem> items;
+  final List<SharedMealRecipeItem> recipes;
 
-  int get totalCount => offRefs.length + items.length;
+  int get totalCount => offRefs.length + items.length + recipes.length;
 
-  const SharedMealPayload(
-      {required this.version, required this.offRefs, required this.items});
+  const SharedMealPayload({
+    required this.version,
+    required this.offRefs,
+    required this.items,
+    required this.recipes,
+  });
 
-  factory SharedMealPayload.fromIntakeList(List<IntakeEntity> intakes) {
+  /// Build a payload from a list of diary intakes. Each intake routes by
+  /// `meal.source`:
+  ///   - off + code      → offRef (barcode-only; receiver fetches + caches)
+  ///   - fdc             → SharedMealItem with source='fdc' (snapshot;
+  ///                       receiver caches in RemoteSearchCacheDataSource)
+  ///   - recipe + code   → recipes bucket (full embedded recipe via
+  ///                       [recipeRepository] lookup; receiver saves to
+  ///                       RecipeRepository). Falls back to a custom
+  ///                       SharedMealItem when the repository or recipe
+  ///                       isn't found.
+  ///   - custom / other  → SharedMealItem with source='custom' (saved to
+  ///                       CustomMealDataSource on receive)
+  factory SharedMealPayload.fromIntakeList(
+    List<IntakeEntity> intakes, {
+    RecipeRepository? recipeRepository,
+  }) {
+    final offRefs = <SharedMealOffRef>[];
+    final items = <SharedMealItem>[];
+    final recipes = <SharedMealRecipeItem>[];
+
+    for (final intake in intakes) {
+      final meal = intake.meal;
+      if (meal.source == MealSourceEntity.off && meal.code != null) {
+        offRefs.add(SharedMealOffRef.fromIntakeEntity(intake));
+      } else if (meal.source == MealSourceEntity.recipe &&
+          meal.code != null &&
+          recipeRepository != null) {
+        final recipe = recipeRepository.getRecipeById(meal.code!);
+        if (recipe != null) {
+          recipes.add(SharedMealRecipeItem(
+            recipe: SharedRecipePayload.fromRecipe(recipe),
+            amount: intake.amount,
+            unit: intake.unit,
+          ));
+          continue;
+        }
+        // Recipe template gone: degrade to a custom snapshot from the intake.
+        items.add(SharedMealItem.fromIntakeEntity(intake));
+      } else {
+        items.add(SharedMealItem.fromIntakeEntity(intake));
+      }
+    }
+
     return SharedMealPayload(
       version: _currentVersion,
-      offRefs: intakes
-          .where((i) =>
-              i.meal.source == MealSourceEntity.off && i.meal.code != null)
-          .map(SharedMealOffRef.fromIntakeEntity)
-          .toList(),
-      items: intakes
-          .where((i) =>
-              i.meal.source != MealSourceEntity.off || i.meal.code == null)
-          .map(SharedMealItem.fromIntakeEntity)
-          .toList(),
+      offRefs: offRefs,
+      items: items,
+      recipes: recipes,
     );
   }
 
@@ -205,12 +305,16 @@ class SharedMealPayload {
       }
 
       final version = decoded[0] as int;
-      if (version != _currentVersion) {
+      if (version < _minSupportedVersion || version > _currentVersion) {
         throw SharedMealParseException('Unsupported payload version: $version');
       }
 
       final rawOffRefs = decoded[1] as List<dynamic>;
       final rawItems = decoded[2] as List<dynamic>;
+      // recipes bucket is v2+; older payloads simply don't have it.
+      final rawRecipes =
+          decoded.length > 3 ? decoded[3] as List<dynamic> : const [];
+
       return SharedMealPayload(
         version: version,
         offRefs: rawOffRefs
@@ -218,6 +322,9 @@ class SharedMealPayload {
             .toList(),
         items: rawItems
             .map((e) => SharedMealItem.fromArray(e as List<dynamic>))
+            .toList(),
+        recipes: rawRecipes
+            .map((e) => SharedMealRecipeItem.fromArray(e as List<dynamic>))
             .toList(),
       );
     } on SharedMealParseException {
@@ -232,6 +339,7 @@ class SharedMealPayload {
       version,
       offRefs.map((r) => r.toArray()).toList(),
       items.map((i) => i.toArray()).toList(),
+      recipes.map((r) => r.toArray()).toList(),
     ]);
     return base64Url.encode(gzip.encode(utf8.encode(json)));
   }

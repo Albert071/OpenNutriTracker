@@ -8,6 +8,7 @@ import 'package:opennutritracker/core/utils/navigation_options.dart';
 import 'package:opennutritracker/features/add_meal/domain/entity/meal_entity.dart';
 import 'package:opennutritracker/features/add_meal/presentation/add_meal_type.dart';
 import 'package:opennutritracker/features/meal_detail/meal_detail_screen.dart';
+import 'package:opennutritracker/generated/l10n.dart';
 
 class MealItemCard extends StatelessWidget {
   final DateTime day;
@@ -25,10 +26,16 @@ class MealItemCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isRecipe = mealEntity.source == MealSourceEntity.recipe;
     return Card(
       elevation: 0,
       shape: RoundedRectangleBorder(
-        side: BorderSide(color: Theme.of(context).colorScheme.outline),
+        side: BorderSide(
+          color: isRecipe
+              ? Theme.of(context).colorScheme.primary
+              : Theme.of(context).colorScheme.outline,
+          width: isRecipe ? 1.5 : 1.0,
+        ),
         borderRadius: const BorderRadius.all(Radius.circular(12)),
       ),
       child: InkWell(
@@ -52,8 +59,19 @@ class MealItemCard extends StatelessWidget {
                       child: Container(
                         width: 60,
                         height: 60,
-                        color: Theme.of(context).colorScheme.secondaryContainer,
-                        child: const Icon(Icons.restaurant_outlined),
+                        color: isRecipe
+                            ? Theme.of(context).colorScheme.primaryContainer
+                            : Theme.of(context).colorScheme.secondaryContainer,
+                        child: Icon(
+                          isRecipe
+                              ? Icons.menu_book
+                              : Icons.restaurant_outlined,
+                          color: isRecipe
+                              ? Theme.of(context)
+                                  .colorScheme
+                                  .onPrimaryContainer
+                              : null,
+                        ),
                       ),
                     ),
               title: AutoSizeText.rich(
@@ -77,13 +95,39 @@ class MealItemCard extends StatelessWidget {
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
               ),
-              subtitle: mealEntity.mealQuantity != null
-                  ? MealValueUnitText(
-                      value: double.parse(mealEntity.mealQuantity ?? "0"),
-                      meal: mealEntity,
-                      usesImperialUnits: usesImperialUnits,
+              subtitle: isRecipe
+                  ? Row(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 8, vertical: 2),
+                          decoration: BoxDecoration(
+                            color: Theme.of(context)
+                                .colorScheme
+                                .primaryContainer,
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Text(
+                            S.of(context).additionalInfoLabelRecipe,
+                            style: Theme.of(context)
+                                .textTheme
+                                .labelSmall
+                                ?.copyWith(
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .onPrimaryContainer,
+                                ),
+                          ),
+                        ),
+                      ],
                     )
-                  : const SizedBox(),
+                  : (mealEntity.mealQuantity != null
+                      ? MealValueUnitText(
+                          value: double.parse(mealEntity.mealQuantity ?? "0"),
+                          meal: mealEntity,
+                          usesImperialUnits: usesImperialUnits,
+                        )
+                      : const SizedBox()),
               trailing: IconButton(
                 style: IconButton.styleFrom(
                   foregroundColor: Theme.of(context).colorScheme.onSurface,

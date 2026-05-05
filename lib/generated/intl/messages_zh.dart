@@ -50,6 +50,14 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m14(count, size) => "${count} 项 · ${size}";
 
+  static String m15(count) => "${count} 种食材";
+
+  static String m16(count) => "导入这道含有 ${count} 种食材的食谱？";
+
+  static String m17(count) => "已选 ${count} 项";
+
+  static String m18(count) => "删除 ${count} 个食谱？";
+
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "activityExample":
@@ -61,6 +69,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("信息由\n\'2024年体力活动指南\'\n提供"),
         "additionalInfoLabelCustom":
             MessageLookupByLibrary.simpleMessage("自定义餐食项目"),
+        "additionalInfoLabelRecipe":
+            MessageLookupByLibrary.simpleMessage("自定义食谱"),
         "additionalInfoLabelFDC":
             MessageLookupByLibrary.simpleMessage("更多信息请查看\nFoodData Central"),
         "additionalInfoLabelOFF":
@@ -189,9 +199,11 @@ class MessageLookup extends MessageLookupByLibrary {
         "csvImportPartialLabel": m13,
         "csvImportSuccessLabel": m12,
         "downloadSampleCsvAction":
-            MessageLookupByLibrary.simpleMessage("示例 CSV"),
+            MessageLookupByLibrary.simpleMessage("示例餐食 (csv)"),
+        "downloadSampleRecipesCsvAction":
+            MessageLookupByLibrary.simpleMessage("示例食谱 (csv)"),
         "importMealsCsvAction":
-            MessageLookupByLibrary.simpleMessage("导入餐食 (CSV)"),
+            MessageLookupByLibrary.simpleMessage("导入餐食 (csv)"),
         "exportAction": MessageLookupByLibrary.simpleMessage("导出"),
         "exportImportDescription": MessageLookupByLibrary.simpleMessage(
             "您可以将应用数据导出到zip文件并稍后导入。这在您想要备份数据或传输到另一台设备时很有用。\n\n应用不会使用任何云服务存储您的数据。"),
@@ -601,6 +613,81 @@ class MessageLookup extends MessageLookupByLibrary {
         "quantityLabel": MessageLookupByLibrary.simpleMessage("数量"),
         "readLabel": MessageLookupByLibrary.simpleMessage("我已阅读并接受隐私政策。"),
         "recentlyAddedLabel": MessageLookupByLibrary.simpleMessage("最近"),
+        "recipesLabel": MessageLookupByLibrary.simpleMessage("食谱"),
+        "recipesEmptyLabel": MessageLookupByLibrary.simpleMessage("暂无食谱"),
+        "recipesEmptyHint": MessageLookupByLibrary.simpleMessage(
+            "用多种食材组合一道餐品，像普通食物一样重复使用。"),
+        "createRecipeTitle": MessageLookupByLibrary.simpleMessage("创建食谱"),
+        "newCustomMealLabel":
+            MessageLookupByLibrary.simpleMessage("新建自定义食物"),
+        "discardChangesTitle":
+            MessageLookupByLibrary.simpleMessage("放弃更改？"),
+        "discardChangesContent":
+            MessageLookupByLibrary.simpleMessage("您未保存的更改将丢失。"),
+        "discardChangesConfirmLabel":
+            MessageLookupByLibrary.simpleMessage("放弃"),
+        "editRecipeTitle": MessageLookupByLibrary.simpleMessage("编辑食谱"),
+        "recipeNameLabel": MessageLookupByLibrary.simpleMessage("食谱名称"),
+        "recipeDescriptionLabel":
+            MessageLookupByLibrary.simpleMessage("描述（可选）"),
+        "recipeServingsCountLabel":
+            MessageLookupByLibrary.simpleMessage("份数（可选）"),
+        "recipeServingsCountHelper":
+            MessageLookupByLibrary.simpleMessage("允许按份记录此食谱，而非按克。"),
+        "recipeIngredientsLabel": MessageLookupByLibrary.simpleMessage("食材"),
+        "recipeAddIngredientLabel":
+            MessageLookupByLibrary.simpleMessage("添加食材"),
+        "recipeNoIngredientsLabel":
+            MessageLookupByLibrary.simpleMessage("暂无食材"),
+        "recipeTotalWeightLabel":
+            MessageLookupByLibrary.simpleMessage("总重量（克）"),
+        "recipeTotalWeightHelper": MessageLookupByLibrary.simpleMessage(
+            "默认值为食材之和。液体按 1 毫升 ≈ 1 克近似计算。"),
+        "recipeNutritionPreviewLabel":
+            MessageLookupByLibrary.simpleMessage("营养（总计）"),
+        "recipeNutritionPer100Label":
+            MessageLookupByLibrary.simpleMessage("每 100 克"),
+        "recipeIngredientAmountLabel":
+            MessageLookupByLibrary.simpleMessage("数量"),
+        "recipeIngredientUnitLabel":
+            MessageLookupByLibrary.simpleMessage("单位"),
+        "recipeSaveLabel": MessageLookupByLibrary.simpleMessage("保存食谱"),
+        "recipeSaveErrorLabel":
+            MessageLookupByLibrary.simpleMessage("无法保存食谱。"),
+        "recipeNameRequiredLabel":
+            MessageLookupByLibrary.simpleMessage("食谱需要一个名称"),
+        "recipeNeedsIngredientsLabel":
+            MessageLookupByLibrary.simpleMessage("至少添加一种食材"),
+        "recipeInvalidTotalWeightLabel":
+            MessageLookupByLibrary.simpleMessage("总重量必须大于零"),
+        "shareRecipeLabel": MessageLookupByLibrary.simpleMessage("分享食谱"),
+        "duplicateRecipeLabel":
+            MessageLookupByLibrary.simpleMessage("复制"),
+        "duplicateRecipeNameSuffix":
+            MessageLookupByLibrary.simpleMessage("（副本）"),
+        "recipeTagsLabel": MessageLookupByLibrary.simpleMessage("标签"),
+        "recipeTagsHelper":
+            MessageLookupByLibrary.simpleMessage("用逗号分隔，例如\"早餐，素食\""),
+        "recipesFilterAllLabel":
+            MessageLookupByLibrary.simpleMessage("全部"),
+        "importRecipesCsvAction":
+            MessageLookupByLibrary.simpleMessage("导入食谱 (csv)"),
+        "selectionCountLabel": m17,
+        "deleteSelectedRecipesConfirmTitle": m18,
+        "importRecipeLabel": MessageLookupByLibrary.simpleMessage("导入食谱"),
+        "importRecipeSuccessLabel":
+            MessageLookupByLibrary.simpleMessage("食谱已导入"),
+        "importRecipeErrorLabel":
+            MessageLookupByLibrary.simpleMessage("无法解析食谱代码"),
+        "recipesLoadErrorLabel":
+            MessageLookupByLibrary.simpleMessage("无法加载食谱。请稍后重试。"),
+        "importRecipeConfirmContent": m16,
+        "recipeDeleteConfirmTitle":
+            MessageLookupByLibrary.simpleMessage("删除食谱？"),
+        "recipeDeleteConfirmContent":
+            MessageLookupByLibrary.simpleMessage("从此食谱记录的历史日记条目将保留。"),
+        "recipeLogCtaLabel": MessageLookupByLibrary.simpleMessage("记录此食谱"),
+        "recipeIngredientCountLabel": m15,
         "reportErrorDialogText":
             MessageLookupByLibrary.simpleMessage("您想向开发者报告错误吗？"),
         "retryLabel": MessageLookupByLibrary.simpleMessage("重试"),

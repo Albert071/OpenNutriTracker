@@ -1,7 +1,9 @@
 import 'package:logging/logging.dart';
 import 'package:opennutritracker/core/data/data_source/remote_search_cache_data_source.dart';
 import 'package:opennutritracker/core/data/data_source/custom_meal_data_source.dart';
+import 'package:opennutritracker/core/data/data_source/recipe_data_source.dart';
 import 'package:opennutritracker/core/data/dbo/meal_dbo.dart';
+import 'package:opennutritracker/core/domain/entity/recipe_entity.dart';
 import 'package:opennutritracker/core/domain/usecase/get_intake_usecase.dart';
 import 'package:opennutritracker/features/add_meal/data/repository/products_repository.dart';
 import 'package:opennutritracker/features/add_meal/domain/entity/meal_entity.dart';
@@ -29,12 +31,14 @@ class SearchProductsUseCase {
   final GetIntakeUsecase _getIntakeUsecase;
   final CustomMealDataSource _customMealDataSource;
   final RemoteSearchCacheDataSource _cachedOffMealDataSource;
+  final RecipeDataSource _recipeDataSource;
 
   SearchProductsUseCase(
     this._productsRepository,
     this._getIntakeUsecase,
     this._customMealDataSource,
     this._cachedOffMealDataSource,
+    this._recipeDataSource,
   );
 
   Future<SearchProductsResult> searchOFFProductsByString(
@@ -110,17 +114,28 @@ class SearchProductsUseCase {
     // Local sources of matches, in priority order:
     //  1. Custom-meal box: the user's own templates (created or CSV-
     //     imported). Covers entries that haven't been logged as intake.
-    //  2. Recent intake history: custom-meal copies the user has logged
+    //  2. Recipes: user-authored composite meals — sit at the top of the
+    //     list (alongside #1 / above cached + remote) so users find their
+    //     own creations before scrolling into remote-cache hits. The
+    //     MealItemCard renders a "Recipe" chip + accent border so they're
+    //     visually distinguishable from cached OFF/FDC entries.
+    //  3. Recent intake history: custom-meal copies the user has logged
     //     even after the original template was deleted.
-    //  3. Cached OFF/FDC results: products we previously fetched from the
+    //  4. Cached OFF/FDC results: products we previously fetched from the
     //     network. Lets repeat searches and offline use work without a
     //     round-trip — and means freshly-imported users will hit increasing
     //     local hit-rates as they use the app over weeks.
-    // All three are passed through the same dedup helper alongside fresh
+    // All four are passed through the same dedup helper alongside fresh
     // remote results.
     final fromCustomMealBox = _customMealDataSource
         .getAllCustomMeals()
         .map(MealEntity.fromMealDBO)
+        .where((meal) => _mealMatchesSearch(meal, normalizedSearchString))
+        .toList();
+
+    final fromRecipes = _recipeDataSource
+        .getAllRecipes()
+        .map((dbo) => RecipeEntity.fromDBO(dbo).toMealEntity())
         .where((meal) => _mealMatchesSearch(meal, normalizedSearchString))
         .toList();
 
@@ -149,6 +164,7 @@ class SearchProductsUseCase {
     return SearchProductsResult(
       meals: _deduplicateMeals([
         ...fromCustomMealBox,
+        ...fromRecipes,
         ...fromIntakeHistory,
         ...fromOffCache,
         ...remoteResults,
