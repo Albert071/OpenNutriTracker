@@ -96,8 +96,9 @@
   "exportImportErrorLabel": "Errore di esportazione / importazione",
   "exportAction": "Esporta",
   "importAction": "Importa",
-  "downloadSampleCsvAction": "CSV di esempio",
-  "importMealsCsvAction": "Importa pasti (CSV)",
+  "downloadSampleCsvAction": "Pasti di esempio (csv)",
+  "downloadSampleRecipesCsvAction": "Ricette di esempio (csv)",
+  "importMealsCsvAction": "Importa pasti (csv)",
   "csvImportSuccessLabel": "Importati {count} pasti dal file CSV.",
   "@csvImportSuccessLabel": {"placeholders": {"count": {"type": "int"}}},
   "csvImportPartialLabel": "Importati {imported} pasti; {skipped} righe ignorate per dati non validi.",
@@ -241,7 +242,7 @@
   "@selectionCountLabel": {
     "placeholders": {"count": {"type": "int"}}
   },
-  "importRecipesCsvAction": "Importa ricette",
+  "importRecipesCsvAction": "Importa ricette (csv)",
   "deleteSelectedRecipesConfirmTitle": "Eliminare {count} ricetta/e?",
   "@deleteSelectedRecipesConfirmTitle": {
     "placeholders": {"count": {"type": "int"}}

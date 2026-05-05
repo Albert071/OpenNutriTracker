@@ -219,10 +219,12 @@ class MessageLookup extends MessageLookupByLibrary {
             "CSV-Datei konnte nicht gelesen werden. Format prüfen und erneut versuchen."),
         "csvImportPartialLabel": m13,
         "csvImportSuccessLabel": m12,
-        "downloadSampleCsvAction":
-            MessageLookupByLibrary.simpleMessage("Beispiel-CSV"),
+        "downloadSampleCsvAction": MessageLookupByLibrary.simpleMessage(
+            "Beispiel-Mahlzeiten (csv)"),
+        "downloadSampleRecipesCsvAction":
+            MessageLookupByLibrary.simpleMessage("Beispiel-Rezepte (csv)"),
         "importMealsCsvAction":
-            MessageLookupByLibrary.simpleMessage("Mahlzeiten importieren (CSV)"),
+            MessageLookupByLibrary.simpleMessage("Mahlzeiten importieren (csv)"),
         "exportAction": MessageLookupByLibrary.simpleMessage("Exportieren"),
         "exportImportDescription": MessageLookupByLibrary.simpleMessage(
             "Sie können die App-Daten in eine Zip-Datei exportieren und später importieren. Dies ist nützlich, wenn Sie Ihre Daten sichern oder auf ein anderes Gerät übertragen möchten.\n\nDie App nutzt keinen Cloud-Dienst, um Ihre Daten zu speichern."),
@@ -790,8 +792,8 @@ class MessageLookup extends MessageLookupByLibrary {
             "Kommagetrennt, z. B. \"Frühstück, vegan\""),
         "recipesFilterAllLabel":
             MessageLookupByLibrary.simpleMessage("Alle"),
-        "importRecipesCsvAction":
-            MessageLookupByLibrary.simpleMessage("Rezepte importieren"),
+        "importRecipesCsvAction": MessageLookupByLibrary.simpleMessage(
+            "Rezepte importieren (csv)"),
         "selectionCountLabel": m17,
         "deleteSelectedRecipesConfirmTitle": m18,
         "importRecipeLabel":

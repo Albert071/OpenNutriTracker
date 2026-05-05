@@ -108,8 +108,9 @@
   "exportImportErrorLabel": "Fehler beim Export/Import",
   "exportAction": "Exportieren",
   "importAction": "Importieren",
-  "downloadSampleCsvAction": "Beispiel-CSV",
-  "importMealsCsvAction": "Mahlzeiten importieren (CSV)",
+  "downloadSampleCsvAction": "Beispiel-Mahlzeiten (csv)",
+  "downloadSampleRecipesCsvAction": "Beispiel-Rezepte (csv)",
+  "importMealsCsvAction": "Mahlzeiten importieren (csv)",
   "csvImportSuccessLabel": "{count} Mahlzeit(en) aus der CSV-Datei importiert.",
   "@csvImportSuccessLabel": {"placeholders": {"count": {"type": "int"}}},
   "csvImportPartialLabel": "{imported} Mahlzeit(en) importiert; {skipped} Zeile(n) wegen ungültiger Daten übersprungen.",
@@ -255,7 +256,7 @@
   "@selectionCountLabel": {
     "placeholders": {"count": {"type": "int"}}
   },
-  "importRecipesCsvAction": "Rezepte importieren",
+  "importRecipesCsvAction": "Rezepte importieren (csv)",
   "deleteSelectedRecipesConfirmTitle": "{count} Rezept(e) löschen?",
   "@deleteSelectedRecipesConfirmTitle": {
     "placeholders": {"count": {"type": "int"}}

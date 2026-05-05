@@ -530,10 +530,10 @@ class S {
     );
   }
 
-  /// `Import recipes`
+  /// `Import recipes (csv)`
   String get importRecipesCsvAction {
     return Intl.message(
-      'Import recipes',
+      'Import recipes (csv)',
       name: 'importRecipesCsvAction',
       desc: '',
       args: [],
@@ -1524,8 +1524,17 @@ class S {
 
   String get downloadSampleCsvAction {
     return Intl.message(
-      'Sample CSV',
+      'Sample meals (csv)',
       name: 'downloadSampleCsvAction',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get downloadSampleRecipesCsvAction {
+    return Intl.message(
+      'Sample recipes (csv)',
+      name: 'downloadSampleRecipesCsvAction',
       desc: '',
       args: [],
     );
@@ -1533,7 +1542,7 @@ class S {
 
   String get importMealsCsvAction {
     return Intl.message(
-      'Import meals (CSV)',
+      'Import meals (csv)',
       name: 'importMealsCsvAction',
       desc: '',
       args: [],

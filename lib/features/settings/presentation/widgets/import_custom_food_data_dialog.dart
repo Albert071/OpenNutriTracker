@@ -130,6 +130,11 @@ class ImportCustomFoodDataDialog extends StatelessWidget {
           child: Text(S.of(context).importMealsCsvAction),
         ),
         TextButton(
+          onPressed: () =>
+              exportImportBloc.add(DownloadSampleRecipesCsvEvent()),
+          child: Text(S.of(context).downloadSampleRecipesCsvAction),
+        ),
+        TextButton(
           onPressed: () => exportImportBloc.add(ImportRecipesCsvEvent()),
           child: Text(S.of(context).importRecipesCsvAction),
         ),

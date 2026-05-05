@@ -199,9 +199,11 @@ class MessageLookup extends MessageLookupByLibrary {
         "csvImportPartialLabel": m13,
         "csvImportSuccessLabel": m12,
         "downloadSampleCsvAction":
-            MessageLookupByLibrary.simpleMessage("示例 CSV"),
+            MessageLookupByLibrary.simpleMessage("示例餐食 (csv)"),
+        "downloadSampleRecipesCsvAction":
+            MessageLookupByLibrary.simpleMessage("示例食谱 (csv)"),
         "importMealsCsvAction":
-            MessageLookupByLibrary.simpleMessage("导入餐食 (CSV)"),
+            MessageLookupByLibrary.simpleMessage("导入餐食 (csv)"),
         "exportAction": MessageLookupByLibrary.simpleMessage("导出"),
         "exportImportDescription": MessageLookupByLibrary.simpleMessage(
             "您可以将应用数据导出到zip文件并稍后导入。这在您想要备份数据或传输到另一台设备时很有用。\n\n应用不会使用任何云服务存储您的数据。"),
@@ -669,7 +671,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "recipesFilterAllLabel":
             MessageLookupByLibrary.simpleMessage("全部"),
         "importRecipesCsvAction":
-            MessageLookupByLibrary.simpleMessage("导入食谱"),
+            MessageLookupByLibrary.simpleMessage("导入食谱 (csv)"),
         "selectionCountLabel": m17,
         "deleteSelectedRecipesConfirmTitle": m18,
         "importRecipeLabel": MessageLookupByLibrary.simpleMessage("导入食谱"),

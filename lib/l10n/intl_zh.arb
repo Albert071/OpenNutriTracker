@@ -97,8 +97,9 @@
   "exportImportErrorLabel": "导出/导入错误",
   "exportAction": "导出",
   "importAction": "导入",
-  "downloadSampleCsvAction": "示例 CSV",
-  "importMealsCsvAction": "导入餐食 (CSV)",
+  "downloadSampleCsvAction": "示例餐食 (csv)",
+  "downloadSampleRecipesCsvAction": "示例食谱 (csv)",
+  "importMealsCsvAction": "导入餐食 (csv)",
   "csvImportSuccessLabel": "已从 CSV 文件导入 {count} 项餐食。",
   "@csvImportSuccessLabel": {"placeholders": {"count": {"type": "int"}}},
   "csvImportPartialLabel": "已导入 {imported} 项餐食；因数据无效跳过 {skipped} 行。",
@@ -243,7 +244,7 @@
   "@selectionCountLabel": {
     "placeholders": {"count": {"type": "int"}}
   },
-  "importRecipesCsvAction": "导入食谱",
+  "importRecipesCsvAction": "导入食谱 (csv)",
   "deleteSelectedRecipesConfirmTitle": "删除 {count} 个食谱？",
   "@deleteSelectedRecipesConfirmTitle": {
     "placeholders": {"count": {"type": "int"}}

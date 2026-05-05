@@ -213,9 +213,11 @@ class MessageLookup extends MessageLookupByLibrary {
         "csvImportPartialLabel": m13,
         "csvImportSuccessLabel": m12,
         "downloadSampleCsvAction":
-            MessageLookupByLibrary.simpleMessage("Vzorové CSV"),
+            MessageLookupByLibrary.simpleMessage("Vzorová jídla (csv)"),
+        "downloadSampleRecipesCsvAction":
+            MessageLookupByLibrary.simpleMessage("Vzorové recepty (csv)"),
         "importMealsCsvAction":
-            MessageLookupByLibrary.simpleMessage("Importovat jídla (CSV)"),
+            MessageLookupByLibrary.simpleMessage("Importovat jídla (csv)"),
         "exportAction": MessageLookupByLibrary.simpleMessage("Export"),
         "exportImportDescription": MessageLookupByLibrary.simpleMessage(
             "Můžete uložit data z aplikace do .zip archívu a později je znovu importovat. To je užitečné, pokud potřebujete data zálohovat, nebo přenést na jiné zařízení.\n\nAplikace pro ukládání dat nepoužívá žádné cloudové služby."),
@@ -778,7 +780,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "recipesFilterAllLabel":
             MessageLookupByLibrary.simpleMessage("Vše"),
         "importRecipesCsvAction":
-            MessageLookupByLibrary.simpleMessage("Importovat recepty"),
+            MessageLookupByLibrary.simpleMessage("Importovat recepty (csv)"),
         "selectionCountLabel": m17,
         "deleteSelectedRecipesConfirmTitle": m18,
         "importRecipeLabel":

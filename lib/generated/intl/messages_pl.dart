@@ -213,10 +213,12 @@ class MessageLookup extends MessageLookupByLibrary {
             "Nie można odczytać pliku CSV. Sprawdź format i spróbuj ponownie."),
         "csvImportPartialLabel": m13,
         "csvImportSuccessLabel": m12,
-        "downloadSampleCsvAction":
-            MessageLookupByLibrary.simpleMessage("Przykładowy CSV"),
+        "downloadSampleCsvAction": MessageLookupByLibrary.simpleMessage(
+            "Przykładowe posiłki (csv)"),
+        "downloadSampleRecipesCsvAction": MessageLookupByLibrary.simpleMessage(
+            "Przykładowe przepisy (csv)"),
         "importMealsCsvAction":
-            MessageLookupByLibrary.simpleMessage("Importuj posiłki (CSV)"),
+            MessageLookupByLibrary.simpleMessage("Importuj posiłki (csv)"),
         "exportAction": MessageLookupByLibrary.simpleMessage("Eksportuj"),
         "exportImportDescription": MessageLookupByLibrary.simpleMessage(
             "Możesz wyeksportować dane aplikacji do pliku zip i zaimportować je później. Jest to przydatne, jeśli chcesz wykonać kopię zapasową danych lub przenieść je na inne urządzenie.\n\nAplikacja nie korzysta z żadnej usługi chmurowej do przechowywania danych."),
@@ -784,7 +786,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "recipesFilterAllLabel":
             MessageLookupByLibrary.simpleMessage("Wszystkie"),
         "importRecipesCsvAction":
-            MessageLookupByLibrary.simpleMessage("Importuj przepisy"),
+            MessageLookupByLibrary.simpleMessage("Importuj przepisy (csv)"),
         "selectionCountLabel": m17,
         "deleteSelectedRecipesConfirmTitle": m18,
         "importRecipeLabel":

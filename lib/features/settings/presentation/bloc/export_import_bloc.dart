@@ -117,5 +117,16 @@ class ExportImportBloc extends Bloc<ExportImportEvent, ExportImportState> {
         emit(ExportImportError());
       }
     });
+
+    on<DownloadSampleRecipesCsvEvent>((event, emit) async {
+      try {
+        emit(ExportImportLoadingState());
+        final saved =
+            await _downloadSampleCsvUsecase.downloadRecipeSample();
+        emit(saved ? ExportImportSuccess() : ExportImportInitial());
+      } catch (e) {
+        emit(ExportImportError());
+      }
+    });
   }
 }

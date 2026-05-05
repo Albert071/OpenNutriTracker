@@ -215,9 +215,11 @@ class MessageLookup extends MessageLookupByLibrary {
         "csvImportPartialLabel": m13,
         "csvImportSuccessLabel": m12,
         "downloadSampleCsvAction":
-            MessageLookupByLibrary.simpleMessage("Зразок CSV"),
+            MessageLookupByLibrary.simpleMessage("Зразкові страви (csv)"),
+        "downloadSampleRecipesCsvAction":
+            MessageLookupByLibrary.simpleMessage("Зразкові рецепти (csv)"),
         "importMealsCsvAction":
-            MessageLookupByLibrary.simpleMessage("Імпортувати страви (CSV)"),
+            MessageLookupByLibrary.simpleMessage("Імпортувати страви (csv)"),
         "exportAction": MessageLookupByLibrary.simpleMessage("Експортувати"),
         "exportImportDescription": MessageLookupByLibrary.simpleMessage(
             "Ви можете експортувати дані додатка у zip-файл і імпортувати їх пізніше. Це корисно, якщо ви хочете зробити резервну копію або перенести дані на інший пристрій. Додаток не використовує жодних хмарних сервісів для зберігання ваших даних."),
@@ -784,8 +786,8 @@ class MessageLookup extends MessageLookupByLibrary {
             "Через кому, напр. \"сніданок, веганське\""),
         "recipesFilterAllLabel":
             MessageLookupByLibrary.simpleMessage("Усі"),
-        "importRecipesCsvAction":
-            MessageLookupByLibrary.simpleMessage("Імпортувати рецепти"),
+        "importRecipesCsvAction": MessageLookupByLibrary.simpleMessage(
+            "Імпортувати рецепти (csv)"),
         "selectionCountLabel": m17,
         "deleteSelectedRecipesConfirmTitle": m18,
         "importRecipeLabel":

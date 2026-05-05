@@ -50,7 +50,7 @@
   "@selectionCountLabel": {
     "placeholders": {"count": {"type": "int"}}
   },
-  "importRecipesCsvAction": "Import recipes",
+  "importRecipesCsvAction": "Import recipes (csv)",
   "deleteSelectedRecipesConfirmTitle": "Delete {count} recipe(s)?",
   "@deleteSelectedRecipesConfirmTitle": {
     "placeholders": {"count": {"type": "int"}}
@@ -178,8 +178,9 @@
   "exportImportErrorLabel": "Export / Import error",
   "exportAction": "Export",
   "importAction": "Import",
-  "downloadSampleCsvAction": "Sample CSV",
-  "importMealsCsvAction": "Import meals (CSV)",
+  "downloadSampleCsvAction": "Sample meals (csv)",
+  "downloadSampleRecipesCsvAction": "Sample recipes (csv)",
+  "importMealsCsvAction": "Import meals (csv)",
   "csvImportSuccessLabel": "Imported {count} meal(s) from the CSV file.",
   "@csvImportSuccessLabel": {
     "placeholders": {

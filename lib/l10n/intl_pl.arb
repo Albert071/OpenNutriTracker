@@ -96,8 +96,9 @@
   "exportImportErrorLabel": "Błąd eksportu / importu",
   "exportAction": "Eksportuj",
   "importAction": "Importuj",
-  "downloadSampleCsvAction": "Przykładowy CSV",
-  "importMealsCsvAction": "Importuj posiłki (CSV)",
+  "downloadSampleCsvAction": "Przykładowe posiłki (csv)",
+  "downloadSampleRecipesCsvAction": "Przykładowe przepisy (csv)",
+  "importMealsCsvAction": "Importuj posiłki (csv)",
   "csvImportSuccessLabel": "Zaimportowano {count} posiłk(ów) z pliku CSV.",
   "@csvImportSuccessLabel": {"placeholders": {"count": {"type": "int"}}},
   "csvImportPartialLabel": "Zaimportowano {imported} posiłk(ów); pominięto {skipped} wiersz(y) z powodu nieprawidłowych danych.",
@@ -208,7 +209,7 @@
   "@selectionCountLabel": {
     "placeholders": {"count": {"type": "int"}}
   },
-  "importRecipesCsvAction": "Importuj przepisy",
+  "importRecipesCsvAction": "Importuj przepisy (csv)",
   "deleteSelectedRecipesConfirmTitle": "Usunąć {count} przepis(ów)?",
   "@deleteSelectedRecipesConfirmTitle": {
     "placeholders": {"count": {"type": "int"}}

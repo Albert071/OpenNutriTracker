@@ -217,9 +217,11 @@ class MessageLookup extends MessageLookupByLibrary {
         "csvImportPartialLabel": m13,
         "csvImportSuccessLabel": m12,
         "downloadSampleCsvAction":
-            MessageLookupByLibrary.simpleMessage("Örnek CSV"),
+            MessageLookupByLibrary.simpleMessage("Örnek yemekler (csv)"),
+        "downloadSampleRecipesCsvAction":
+            MessageLookupByLibrary.simpleMessage("Örnek tarifler (csv)"),
         "importMealsCsvAction":
-            MessageLookupByLibrary.simpleMessage("Yemekleri içe aktar (CSV)"),
+            MessageLookupByLibrary.simpleMessage("Yemekleri içe aktar (csv)"),
         "exportAction": MessageLookupByLibrary.simpleMessage("Dışa Aktar"),
         "exportImportDescription": MessageLookupByLibrary.simpleMessage(
             "Uygulama verilerini bir zip dosyasına dışa aktarabilir ve daha sonra içe aktarabilirsiniz. Bu, verilerinizi yedeklemek veya başka bir cihaza aktarmak istiyorsanız kullanışlıdır.\n\nUygulama, verilerinizi saklamak için herhangi bir bulut hizmeti kullanmaz."),
@@ -771,7 +773,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "recipesFilterAllLabel":
             MessageLookupByLibrary.simpleMessage("Tümü"),
         "importRecipesCsvAction":
-            MessageLookupByLibrary.simpleMessage("Tarifleri içe aktar"),
+            MessageLookupByLibrary.simpleMessage("Tarifleri içe aktar (csv)"),
         "selectionCountLabel": m17,
         "deleteSelectedRecipesConfirmTitle": m18,
         "importRecipeLabel":

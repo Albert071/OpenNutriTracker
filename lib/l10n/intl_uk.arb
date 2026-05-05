@@ -96,8 +96,9 @@
   "exportImportErrorLabel": "Помилка експорту / імпорту",
   "exportAction": "Експортувати",
   "importAction": "Імпортувати",
-  "downloadSampleCsvAction": "Зразок CSV",
-  "importMealsCsvAction": "Імпортувати страви (CSV)",
+  "downloadSampleCsvAction": "Зразкові страви (csv)",
+  "downloadSampleRecipesCsvAction": "Зразкові рецепти (csv)",
+  "importMealsCsvAction": "Імпортувати страви (csv)",
   "csvImportSuccessLabel": "З CSV файлу імпортовано {count} страв.",
   "@csvImportSuccessLabel": {"placeholders": {"count": {"type": "int"}}},
   "csvImportPartialLabel": "Імпортовано {imported} страв; {skipped} рядків пропущено через неправильні дані.",
@@ -241,7 +242,7 @@
   "@selectionCountLabel": {
     "placeholders": {"count": {"type": "int"}}
   },
-  "importRecipesCsvAction": "Імпортувати рецепти",
+  "importRecipesCsvAction": "Імпортувати рецепти (csv)",
   "deleteSelectedRecipesConfirmTitle": "Видалити {count} рецепт(ів)?",
   "@deleteSelectedRecipesConfirmTitle": {
     "placeholders": {"count": {"type": "int"}}

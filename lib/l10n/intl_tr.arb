@@ -110,8 +110,9 @@
   "exportImportErrorLabel": "Dışa Aktarma / İçe Aktarma hatası",
   "exportAction": "Dışa Aktar",
   "importAction": "İçe Aktar",
-  "downloadSampleCsvAction": "Örnek CSV",
-  "importMealsCsvAction": "Yemekleri içe aktar (CSV)",
+  "downloadSampleCsvAction": "Örnek yemekler (csv)",
+  "downloadSampleRecipesCsvAction": "Örnek tarifler (csv)",
+  "importMealsCsvAction": "Yemekleri içe aktar (csv)",
   "csvImportSuccessLabel": "CSV dosyasından {count} öğün içe aktarıldı.",
   "@csvImportSuccessLabel": {"placeholders": {"count": {"type": "int"}}},
   "csvImportPartialLabel": "{imported} öğün içe aktarıldı; geçersiz veri nedeniyle {skipped} satır atlandı.",
@@ -254,7 +255,7 @@
   "@selectionCountLabel": {
     "placeholders": {"count": {"type": "int"}}
   },
-  "importRecipesCsvAction": "Tarifleri içe aktar",
+  "importRecipesCsvAction": "Tarifleri içe aktar (csv)",
   "deleteSelectedRecipesConfirmTitle": "{count} tarif silinsin mi?",
   "@deleteSelectedRecipesConfirmTitle": {
     "placeholders": {"count": {"type": "int"}}

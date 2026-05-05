@@ -215,9 +215,11 @@ class MessageLookup extends MessageLookupByLibrary {
         "csvImportPartialLabel": m13,
         "csvImportSuccessLabel": m12,
         "downloadSampleCsvAction":
-            MessageLookupByLibrary.simpleMessage("CSV di esempio"),
+            MessageLookupByLibrary.simpleMessage("Pasti di esempio (csv)"),
+        "downloadSampleRecipesCsvAction": MessageLookupByLibrary.simpleMessage(
+            "Ricette di esempio (csv)"),
         "importMealsCsvAction":
-            MessageLookupByLibrary.simpleMessage("Importa pasti (CSV)"),
+            MessageLookupByLibrary.simpleMessage("Importa pasti (csv)"),
         "exportAction": MessageLookupByLibrary.simpleMessage("Esporta"),
         "exportImportDescription": MessageLookupByLibrary.simpleMessage(
             "Puoi esportare i dati dell\'app in un file zip e importarli successivamente. Utile per backup o trasferimento su un altro dispositivo.\n\nL\'app non utilizza servizi cloud per memorizzare i tuoi dati."),
@@ -784,7 +786,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "recipesFilterAllLabel":
             MessageLookupByLibrary.simpleMessage("Tutti"),
         "importRecipesCsvAction":
-            MessageLookupByLibrary.simpleMessage("Importa ricette"),
+            MessageLookupByLibrary.simpleMessage("Importa ricette (csv)"),
         "selectionCountLabel": m17,
         "deleteSelectedRecipesConfirmTitle": m18,
         "importRecipeLabel":

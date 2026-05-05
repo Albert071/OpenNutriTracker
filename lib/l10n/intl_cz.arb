@@ -96,8 +96,9 @@
   "exportImportErrorLabel": "Export / Import selhal",
   "exportAction": "Export",
   "importAction": "Import",
-  "downloadSampleCsvAction": "Vzorové CSV",
-  "importMealsCsvAction": "Importovat jídla (CSV)",
+  "downloadSampleCsvAction": "Vzorová jídla (csv)",
+  "downloadSampleRecipesCsvAction": "Vzorové recepty (csv)",
+  "importMealsCsvAction": "Importovat jídla (csv)",
   "csvImportSuccessLabel": "Importováno {count} jídel z CSV souboru.",
   "@csvImportSuccessLabel": {"placeholders": {"count": {"type": "int"}}},
   "csvImportPartialLabel": "Importováno {imported} jídel; {skipped} řádků přeskočeno kvůli neplatným datům.",
@@ -241,7 +242,7 @@
   "@selectionCountLabel": {
     "placeholders": {"count": {"type": "int"}}
   },
-  "importRecipesCsvAction": "Importovat recepty",
+  "importRecipesCsvAction": "Importovat recepty (csv)",
   "deleteSelectedRecipesConfirmTitle": "Smazat {count} recept(ů)?",
   "@deleteSelectedRecipesConfirmTitle": {
     "placeholders": {"count": {"type": "int"}}
