@@ -2134,6 +2134,16 @@ class S {
     );
   }
 
+  /// `Meal name must contain at least one letter`
+  String get mealNameValidationError {
+    return Intl.message(
+      'Meal name must contain at least one letter',
+      name: 'mealNameValidationError',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Brands`
   String get mealBrandsLabel {
     return Intl.message(

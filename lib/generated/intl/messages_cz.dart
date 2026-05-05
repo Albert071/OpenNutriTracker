@@ -268,6 +268,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "mealFatLabel": MessageLookupByLibrary.simpleMessage("tuků na"),
         "mealKcalLabel": MessageLookupByLibrary.simpleMessage("kcal na"),
         "mealNameLabel": MessageLookupByLibrary.simpleMessage("Název jídla"),
+        "mealNameValidationError": MessageLookupByLibrary.simpleMessage(
+            "Název jídla musí obsahovat alespoň jedno písmeno"),
         "mealNutrientsPerQtyLabel": m10,
         "mealNutrientsTotalLabel":
             MessageLookupByLibrary.simpleMessage("Celkové množství"),

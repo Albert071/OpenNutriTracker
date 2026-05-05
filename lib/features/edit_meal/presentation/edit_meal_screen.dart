@@ -7,6 +7,7 @@ import 'package:opennutritracker/core/domain/entity/intake_type_entity.dart';
 import 'package:opennutritracker/core/utils/calc/unit_calc.dart';
 import 'package:opennutritracker/core/utils/custom_text_input_formatter.dart';
 import 'package:opennutritracker/core/utils/extensions.dart';
+import 'package:opennutritracker/core/utils/food_name_validator.dart';
 import 'package:opennutritracker/core/utils/locator.dart';
 import 'package:opennutritracker/core/utils/navigation_options.dart';
 import 'package:opennutritracker/features/add_meal/domain/entity/meal_entity.dart';
@@ -332,18 +333,10 @@ class _EditMealScreenState extends State<EditMealScreen> {
 
   Future<void> _onSavePressed(bool usesImperialUnits) async {
     try {
-      // Validate that custom meals have a name
-      if (_nameTextController.text.trim().isEmpty) {
+      // Validate meal name: non-empty and contains at least one letter (#211, #214)
+      if (!FoodNameValidator.isValid(_nameTextController.text)) {
         ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('${S.of(context).mealNameLabel} is required')));
-        return;
-      }
-      
-      // Validate name contains at least one letter (#211)
-      final name = _nameTextController.text.trim();
-      if (!RegExp(r'[a-zA-Z]').hasMatch(name)) {
-        ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('${S.of(context).mealNameLabel} must contain at least one letter')));
+            SnackBar(content: Text(S.of(context).mealNameValidationError)));
         return;
       }
 

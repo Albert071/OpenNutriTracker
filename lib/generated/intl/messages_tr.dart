@@ -272,6 +272,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "mealFatLabel": MessageLookupByLibrary.simpleMessage("yağ başına"),
         "mealKcalLabel": MessageLookupByLibrary.simpleMessage("kcal başına"),
         "mealNameLabel": MessageLookupByLibrary.simpleMessage("Yemek adı"),
+        "mealNameValidationError": MessageLookupByLibrary.simpleMessage(
+            "Yemek adı en az bir harf içermelidir"),
         "mealNutrientsPerQtyLabel": m10,
         "mealNutrientsTotalLabel":
             MessageLookupByLibrary.simpleMessage("Toplam miktar"),

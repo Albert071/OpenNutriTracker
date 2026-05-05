@@ -219,6 +219,7 @@
   "infoAddedActivityLabel": "Vložena nová aktivita",
   "editMealLabel": "Upravit jídlo",
   "mealNameLabel": "Název jídla",
+  "mealNameValidationError": "Název jídla musí obsahovat alespoň jedno písmeno",
   "mealBrandsLabel": "Výrobce, značka",
   "mealSizeLabel": "Velikost jídla (g/ml)",
   "mealSizeLabelImperial": "Velikost jídla (oz/fl oz)",

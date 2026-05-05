@@ -271,6 +271,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "mealFatLabel": MessageLookupByLibrary.simpleMessage("grassi per"),
         "mealKcalLabel": MessageLookupByLibrary.simpleMessage("kcal per"),
         "mealNameLabel": MessageLookupByLibrary.simpleMessage("Nome pasto"),
+        "mealNameValidationError": MessageLookupByLibrary.simpleMessage(
+            "Il nome del pasto deve contenere almeno una lettera"),
         "mealNutrientsPerQtyLabel": m10,
         "mealNutrientsTotalLabel":
             MessageLookupByLibrary.simpleMessage("Quantità totale"),

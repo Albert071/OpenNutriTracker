@@ -221,6 +221,7 @@
   "infoAddedActivityLabel": "添加了新活动",
   "editMealLabel": "编辑餐食",
   "mealNameLabel": "餐食名称",
+  "mealNameValidationError": "餐食名称必须至少包含一个字母",
   "mealBrandsLabel": "品牌",
   "mealSizeLabel": "餐食大小 (克/毫升)",
   "mealSizeLabelImperial": "餐食大小 (盎司/液量盎司)",

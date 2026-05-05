@@ -231,6 +231,7 @@
   "infoAddedActivityLabel": "Neue Aktivität hinzugefügt",
   "editMealLabel": "Mahlzeit bearbeiten",
   "mealNameLabel": "Mahlzeitenname",
+  "mealNameValidationError": "Mahlzeitenname muss mindestens einen Buchstaben enthalten",
   "mealBrandsLabel": "Marken",
   "mealSizeLabel": "Mahlzeitsgröße (g/ml)",
   "mealSizeLabelImperial": "Mahlzeitsgröße (oz/fl oz)",

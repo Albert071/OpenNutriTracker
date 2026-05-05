@@ -232,6 +232,7 @@
   "infoAddedActivityLabel": "Yeni aktivite eklendi",
   "editMealLabel": "Yemeği Düzenle",
   "mealNameLabel": "Yemek adı",
+  "mealNameValidationError": "Yemek adı en az bir harf içermelidir",
   "mealBrandsLabel": "Markalar",
   "mealSizeLabel": "Yemek boyutu (g/ml)",
   "mealSizeLabelImperial": "Yemek boyutu (oz/fl oz)",

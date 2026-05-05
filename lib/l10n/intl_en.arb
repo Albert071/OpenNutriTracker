@@ -260,6 +260,7 @@
   "infoAddedActivityLabel": "Added new activity",
   "editMealLabel": "Edit meal",
   "mealNameLabel": "Meal name",
+  "mealNameValidationError": "Meal name must contain at least one letter",
   "mealBrandsLabel": "Brands",
   "mealSizeLabel": "Meal size (g/ml)",
   "mealSizeLabelImperial": "Meal size (oz/fl oz)",

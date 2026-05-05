@@ -186,6 +186,7 @@
   "infoAddedActivityLabel": "Dodano nową aktywność",
   "editMealLabel": "Edytuj posiłek",
   "mealNameLabel": "Nazwa posiłku",
+  "mealNameValidationError": "Nazwa posiłku musi zawierać co najmniej jedną literę",
   "mealBrandsLabel": "Marki",
   "mealSizeLabel": "Rozmiar posiłku (g/ml)",
   "mealSizeLabelImperial": "Rozmiar posiłku (oz/fl oz)",

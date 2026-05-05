@@ -270,6 +270,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "mealFatLabel": MessageLookupByLibrary.simpleMessage("жири на"),
         "mealKcalLabel": MessageLookupByLibrary.simpleMessage("ккал на"),
         "mealNameLabel": MessageLookupByLibrary.simpleMessage("Назва страви"),
+        "mealNameValidationError": MessageLookupByLibrary.simpleMessage(
+            "Назва страви повинна містити принаймні одну літеру"),
         "mealNutrientsPerQtyLabel": m10,
         "mealNutrientsTotalLabel":
             MessageLookupByLibrary.simpleMessage("Загальна кількість"),

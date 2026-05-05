@@ -219,6 +219,7 @@
   "infoAddedActivityLabel": "Додано нову активність",
   "editMealLabel": "Редагувати страву",
   "mealNameLabel": "Назва страви",
+  "mealNameValidationError": "Назва страви повинна містити принаймні одну літеру",
   "mealBrandsLabel": "Бренди",
   "mealSizeLabel": "Розмір страви (г/мл)",
   "mealSizeLabelImperial": "Розмір страви (унція/рідка унція)",
