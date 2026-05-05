@@ -12,18 +12,14 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+  linux-checks:
     runs-on: ubuntu-latest
     timeout-minutes: 30
-
+    permissions:
+      contents: read
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
-      
-      - uses: actions/setup-java@v2
-        with:
-          distribution: 'zulu'
-          java-version: '11'
+        uses: actions/checkout@v4
 
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
@@ -34,7 +30,7 @@ jobs:
 
       - name: Setup Just
         uses: taiki-e/install-action@just
-          
+
       - name: Cache Flutter packages
         uses: actions/cache@v4
         with:
@@ -43,6 +39,123 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-pub-cache-
 
+      # The envied package obfuscates `.env` values into env.g.dart at compile
+      # time. CI doesn't have access to the real secrets and the test suite
+      # never hits Sentry / Supabase / FDC at runtime, so we stub them. Real
+      # values must come from a developer's local .env when building for
+      # release.
+      - name: Generate stub .env for CI
+        run: |
+          cat > .env <<'EOF'
+          FDC_API_KEY="ci-stub"
+          SENTRY_DNS="https://stub@sentry.io/0"
+          SUPABASE_PROJECT_URL="https://stub.supabase.co"
+          SUPABASE_PROJECT_ANON_KEY="ci-stub"
+          EOF
+
+      # `just ci` would also run `dart format --set-exit-if-changed`, but the
+      # codebase currently has accumulated pre-existing format drift from the
+      # period when CI was disabled. We run the rest of `just ci` (intl
+      # check, build_runner, analyze, test) and leave the format pass for a
+      # dedicated follow-up PR.
+      - name: Install Flutter packages
+        run: just install
+
+      - name: Verify generated intl files
+        run: just check_intl
+
+      - name: Generate code (env.g.dart, Hive adapters, JSON serializers)
+        run: just build
+
+      - name: Static analysis
+        run: flutter analyze
+
+      - name: Run tests
+        run: just test
+
+  ios-build:
+    runs-on: macos-latest
+    timeout-minutes: 45
+    needs: linux-checks
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          # Check out the PR head so auto-commit lands on the right branch.
+          # Falls back to github.ref for push and workflow_dispatch.
+          ref: ${{ github.event.pull_request.head.ref || github.ref }}
+          repository: ${{ github.event.pull_request.head.repo.full_name || github.repository }}
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.41.7'
+          channel: 'stable'
+          cache: true
+
+      - name: Cache Flutter packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.pub-cache
+          key: ${{ runner.os }}-pub-cache-${{ hashFiles('**/pubspec.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-pub-cache-
+
+      - name: Cache CocoaPods
+        uses: actions/cache@v4
+        with:
+          path: ios/Pods
+          key: ${{ runner.os }}-pods-${{ hashFiles('ios/Podfile.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-pods-
+
+      - name: Generate stub .env for CI
+        run: |
+          cat > .env <<'EOF'
+          FDC_API_KEY="ci-stub"
+          SENTRY_DNS="https://stub@sentry.io/0"
+          SUPABASE_PROJECT_URL="https://stub.supabase.co"
+          SUPABASE_PROJECT_ANON_KEY="ci-stub"
+          EOF
+
+      - name: Install Flutter packages
+        run: flutter pub get
+
+      - name: Generate code
+        run: dart run build_runner build --delete-conflicting-outputs
+
+      - name: Pod install
+        run: cd ios && pod install
+
+      # Same-repo PRs only — fork PRs run with a read-only token so this
+      # step would fail to push. Fork contributors get the lockfile via
+      # the artifact uploaded below.
+      - name: Auto-commit refreshed Podfile.lock
+        if: >-
+          github.event_name == 'pull_request' &&
+          github.event.pull_request.head.repo.full_name == github.repository
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          file_pattern: 'ios/Podfile.lock'
+          commit_message: 'chore(ios): refresh Podfile.lock via CI'
+
+      - name: Upload Podfile.lock artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ios-podfile-lock
+          path: ios/Podfile.lock
+
+      - name: Build iOS (no codesign)
+        run: flutter build ios --no-codesign --release
+
+# Historical reference — the original single-step `just ci` invocation that
+# was used before this workflow was split into linux-checks + ios-build.
+# Kept here so reviewers can see how the secrets-templated form would look
+# if/when real secrets are configured in repo Settings → Secrets and the
+# stub .env approach above is replaced.
+#
 #      - name: Run CI
 #        run: just ci
 #        env:
