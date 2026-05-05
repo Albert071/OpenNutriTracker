@@ -63,4 +63,8 @@ class AddConfigUsecase {
   Future<void> setSelectedLocale(String? locale) async {
     _configRepository.setSelectedLocale(locale);
   }
+
+  Future<void> setConfigShowMicronutrients(bool show) async {
+    _configRepository.setConfigShowMicronutrients(show);
+  }
 }

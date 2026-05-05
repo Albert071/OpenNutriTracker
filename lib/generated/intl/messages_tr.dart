@@ -95,6 +95,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "buttonSaveLabel": MessageLookupByLibrary.simpleMessage("Kaydet"),
         "buttonStartLabel": MessageLookupByLibrary.simpleMessage("BAŞLA"),
         "buttonYesLabel": MessageLookupByLibrary.simpleMessage("EVET"),
+        "calciumLabel": MessageLookupByLibrary.simpleMessage("kalsiyum"),
         "calculationsMacronutrientsDistributionLabel":
             MessageLookupByLibrary.simpleMessage("Makro besin dağılımı"),
         "calculationsMacrosDistribution": m1,
@@ -108,6 +109,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("karbonhidrat"),
         "carbsLabel": MessageLookupByLibrary.simpleMessage("karbonhidrat"),
         "carbsLabelShort": MessageLookupByLibrary.simpleMessage("k"),
+        "cholesterolLabel": MessageLookupByLibrary.simpleMessage("kolesterol"),
         "chooseWeeklyWeightGoalLabel":
             MessageLookupByLibrary.simpleMessage("Haftalık kilo oranı"),
         "chooseWeightGoalLabel":
@@ -176,6 +178,14 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Özel yemek silinsin mi?"),
         "customMealsEmptyLabel": MessageLookupByLibrary.simpleMessage(
             "Henüz özel yemek kaydedilmedi."),
+        "ironLabel": MessageLookupByLibrary.simpleMessage("demir"),
+        "magnesiumLabel": MessageLookupByLibrary.simpleMessage("magnezyum"),
+        "micronutrientsLabel": MessageLookupByLibrary.simpleMessage("Mikro besinler"),
+        "monounsaturatedFatLabel": MessageLookupByLibrary.simpleMessage("tekli doymamış yağ"),
+        "niacinLabel": MessageLookupByLibrary.simpleMessage("niasin (B3)"),
+        "phosphorusLabel": MessageLookupByLibrary.simpleMessage("fosfor"),
+        "polyunsaturatedFatLabel": MessageLookupByLibrary.simpleMessage("çoklu doymamış yağ"),
+        "potassiumLabel": MessageLookupByLibrary.simpleMessage("potasyum"),
         "settingsCustomMealsLabel":
             MessageLookupByLibrary.simpleMessage("Özel Yemekler"),
         "clearOffCacheConfirmContent": MessageLookupByLibrary.simpleMessage(
@@ -738,6 +748,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Aktivite takibini göster"),
         "settingsShowMealMacros":
             MessageLookupByLibrary.simpleMessage("Öğün makrolarını göster"),
+        "settingsShowMicronutrientsLabel": MessageLookupByLibrary.simpleMessage("Mikro besinleri göster"),
         "settingsSourceCodeLabel":
             MessageLookupByLibrary.simpleMessage("Kaynak Kodu"),
         "settingsSystemLabel": MessageLookupByLibrary.simpleMessage("Sistem"),
@@ -753,9 +764,16 @@ class MessageLookup extends MessageLookupByLibrary {
         "snackExample": MessageLookupByLibrary.simpleMessage(
             "ör. elma, dondurma, çikolata ..."),
         "snackLabel": MessageLookupByLibrary.simpleMessage("Atıştırmalık"),
+        "sodiumLabel": MessageLookupByLibrary.simpleMessage("sodyum"),
         "sugarLabel": MessageLookupByLibrary.simpleMessage("şeker"),
         "suppliedLabel": MessageLookupByLibrary.simpleMessage("tüketilen"),
+        "transFatLabel": MessageLookupByLibrary.simpleMessage("trans yağ"),
         "unitLabel": MessageLookupByLibrary.simpleMessage("Birim"),
+        "vitaminALabel": MessageLookupByLibrary.simpleMessage("A vitamini"),
+        "vitaminB12Label": MessageLookupByLibrary.simpleMessage("B12 vitamini"),
+        "vitaminB6Label": MessageLookupByLibrary.simpleMessage("B6 vitamini"),
+        "vitaminCLabel": MessageLookupByLibrary.simpleMessage("C vitamini"),
+        "vitaminDLabel": MessageLookupByLibrary.simpleMessage("D vitamini"),
         "warningLabel": MessageLookupByLibrary.simpleMessage("Uyarı"),
         "weeklyWeightGoalKgPerWeek": m8,
         "weeklyWeightGoalLabel":
@@ -764,6 +782,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "weeklyWeightGoalNoneLabel":
             MessageLookupByLibrary.simpleMessage("Ayarlanmadı"),
         "weightLabel": MessageLookupByLibrary.simpleMessage("Kilo"),
-        "yearsLabel": m3
+        "yearsLabel": m3,
+        "zincLabel": MessageLookupByLibrary.simpleMessage("çinko"),
       };
 }

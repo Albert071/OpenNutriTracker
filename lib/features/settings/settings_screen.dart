@@ -112,6 +112,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     _homeBloc.add(LoadItemsEvent());
                   },
                 ),
+                SwitchListTile(
+                  secondary: const Icon(Icons.science_outlined),
+                  title: Text(S.of(context).settingsShowMicronutrientsLabel),
+                  value: state.showMicronutrients,
+                  onChanged: (bool value) {
+                    _settingsBloc.setShowMicronutrients(value);
+                    _settingsBloc.add(LoadSettingsEvent());
+                  },
+                ),
                 const Divider(),
                 // App
                 ListTile(

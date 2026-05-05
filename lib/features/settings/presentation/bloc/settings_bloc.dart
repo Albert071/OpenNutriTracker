@@ -56,6 +56,7 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
           selectedLocale: userConfig.selectedLocale,
           offCacheCount: offCacheCount,
           offCacheSizeBytes: offCacheSizeBytes,
+          showMicronutrients: userConfig.showMicronutrients,
         ),
       );
     });
@@ -98,6 +99,10 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
 
   void setSelectedLocale(String? locale) {
     _addConfigUsecase.setSelectedLocale(locale);
+  }
+
+  void setShowMicronutrients(bool show) {
+    _addConfigUsecase.setConfigShowMicronutrients(show);
   }
 
 

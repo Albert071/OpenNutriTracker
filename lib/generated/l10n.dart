@@ -778,6 +778,16 @@ class S {
     );
   }
 
+  /// `Show Micronutrients`
+  String get settingsShowMicronutrientsLabel {
+    return Intl.message(
+      'Show Micronutrients',
+      name: 'settingsShowMicronutrientsLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Distance`
   String get settingsDistanceLabel {
     return Intl.message(
@@ -1719,6 +1729,186 @@ class S {
     return Intl.message(
       'fiber',
       name: 'fiberLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `monounsaturated fat`
+  String get monounsaturatedFatLabel {
+    return Intl.message(
+      'monounsaturated fat',
+      name: 'monounsaturatedFatLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `polyunsaturated fat`
+  String get polyunsaturatedFatLabel {
+    return Intl.message(
+      'polyunsaturated fat',
+      name: 'polyunsaturatedFatLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `trans fat`
+  String get transFatLabel {
+    return Intl.message(
+      'trans fat',
+      name: 'transFatLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `cholesterol`
+  String get cholesterolLabel {
+    return Intl.message(
+      'cholesterol',
+      name: 'cholesterolLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `sodium`
+  String get sodiumLabel {
+    return Intl.message(
+      'sodium',
+      name: 'sodiumLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `potassium`
+  String get potassiumLabel {
+    return Intl.message(
+      'potassium',
+      name: 'potassiumLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `magnesium`
+  String get magnesiumLabel {
+    return Intl.message(
+      'magnesium',
+      name: 'magnesiumLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `calcium`
+  String get calciumLabel {
+    return Intl.message(
+      'calcium',
+      name: 'calciumLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `iron`
+  String get ironLabel {
+    return Intl.message(
+      'iron',
+      name: 'ironLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `zinc`
+  String get zincLabel {
+    return Intl.message(
+      'zinc',
+      name: 'zincLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `phosphorus`
+  String get phosphorusLabel {
+    return Intl.message(
+      'phosphorus',
+      name: 'phosphorusLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `vitamin A`
+  String get vitaminALabel {
+    return Intl.message(
+      'vitamin A',
+      name: 'vitaminALabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `vitamin C`
+  String get vitaminCLabel {
+    return Intl.message(
+      'vitamin C',
+      name: 'vitaminCLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `vitamin D`
+  String get vitaminDLabel {
+    return Intl.message(
+      'vitamin D',
+      name: 'vitaminDLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `vitamin B6`
+  String get vitaminB6Label {
+    return Intl.message(
+      'vitamin B6',
+      name: 'vitaminB6Label',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `vitamin B12`
+  String get vitaminB12Label {
+    return Intl.message(
+      'vitamin B12',
+      name: 'vitaminB12Label',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `niacin (B3)`
+  String get niacinLabel {
+    return Intl.message(
+      'niacin (B3)',
+      name: 'niacinLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Micronutrients`
+  String get micronutrientsLabel {
+    return Intl.message(
+      'Micronutrients',
+      name: 'micronutrientsLabel',
       desc: '',
       args: [],
     );

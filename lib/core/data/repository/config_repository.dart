@@ -90,4 +90,8 @@ class ConfigRepository {
   Future<void> setSelectedLocale(String? locale) async {
     _configDataSource.setSelectedLocale(locale);
   }
+
+  Future<void> setConfigShowMicronutrients(bool show) async {
+    _configDataSource.setConfigShowMicronutrients(show);
+  }
 }

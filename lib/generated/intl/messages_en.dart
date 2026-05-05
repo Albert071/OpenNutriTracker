@@ -96,6 +96,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "buttonSaveLabel": MessageLookupByLibrary.simpleMessage("Save"),
         "buttonStartLabel": MessageLookupByLibrary.simpleMessage("START"),
         "buttonYesLabel": MessageLookupByLibrary.simpleMessage("YES"),
+        "calciumLabel": MessageLookupByLibrary.simpleMessage("calcium"),
         "calculationsMacronutrientsDistributionLabel":
             MessageLookupByLibrary.simpleMessage("Macros distribution"),
         "calculationsMacrosDistribution": m1,
@@ -109,6 +110,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("carbohydrate"),
         "carbsLabel": MessageLookupByLibrary.simpleMessage("carbs"),
         "carbsLabelShort": MessageLookupByLibrary.simpleMessage("c"),
+        "cholesterolLabel": MessageLookupByLibrary.simpleMessage("cholesterol"),
         "chooseWeeklyWeightGoalLabel":
             MessageLookupByLibrary.simpleMessage("Weekly weight rate"),
         "chooseWeightGoalLabel":
@@ -198,6 +200,14 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Delete custom meal?"),
         "customMealsEmptyLabel":
             MessageLookupByLibrary.simpleMessage("No custom meals saved yet."),
+        "ironLabel": MessageLookupByLibrary.simpleMessage("iron"),
+        "magnesiumLabel": MessageLookupByLibrary.simpleMessage("magnesium"),
+        "micronutrientsLabel": MessageLookupByLibrary.simpleMessage("Micronutrients"),
+        "monounsaturatedFatLabel": MessageLookupByLibrary.simpleMessage("monounsaturated fat"),
+        "niacinLabel": MessageLookupByLibrary.simpleMessage("niacin (B3)"),
+        "phosphorusLabel": MessageLookupByLibrary.simpleMessage("phosphorus"),
+        "polyunsaturatedFatLabel": MessageLookupByLibrary.simpleMessage("polyunsaturated fat"),
+        "potassiumLabel": MessageLookupByLibrary.simpleMessage("potassium"),
         "settingsCustomMealsLabel":
             MessageLookupByLibrary.simpleMessage("Custom Meals"),
         "exportImportDescription": MessageLookupByLibrary.simpleMessage(
@@ -777,6 +787,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Show Activity Tracking"),
         "settingsShowMealMacros":
             MessageLookupByLibrary.simpleMessage("Show Meal Macros"),
+        "settingsShowMicronutrientsLabel": MessageLookupByLibrary.simpleMessage("Show Micronutrients"),
         "settingsSourceCodeLabel":
             MessageLookupByLibrary.simpleMessage("Source Code"),
         "settingsSystemLabel": MessageLookupByLibrary.simpleMessage("System"),
@@ -793,9 +804,16 @@ class MessageLookup extends MessageLookupByLibrary {
         "snackExample": MessageLookupByLibrary.simpleMessage(
             "e.g. apple, ice cream, chocolate ..."),
         "snackLabel": MessageLookupByLibrary.simpleMessage("Snack"),
+        "sodiumLabel": MessageLookupByLibrary.simpleMessage("sodium"),
         "sugarLabel": MessageLookupByLibrary.simpleMessage("sugar"),
         "suppliedLabel": MessageLookupByLibrary.simpleMessage("supplied"),
+        "transFatLabel": MessageLookupByLibrary.simpleMessage("trans fat"),
         "unitLabel": MessageLookupByLibrary.simpleMessage("Unit"),
+        "vitaminALabel": MessageLookupByLibrary.simpleMessage("vitamin A"),
+        "vitaminB12Label": MessageLookupByLibrary.simpleMessage("vitamin B12"),
+        "vitaminB6Label": MessageLookupByLibrary.simpleMessage("vitamin B6"),
+        "vitaminCLabel": MessageLookupByLibrary.simpleMessage("vitamin C"),
+        "vitaminDLabel": MessageLookupByLibrary.simpleMessage("vitamin D"),
         "warningLabel": MessageLookupByLibrary.simpleMessage("Warning"),
         "weeklyWeightGoalKgPerWeek": m8,
         "weeklyWeightGoalLabel":
@@ -804,6 +822,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "weeklyWeightGoalNoneLabel":
             MessageLookupByLibrary.simpleMessage("Not set"),
         "weightLabel": MessageLookupByLibrary.simpleMessage("Weight"),
-        "yearsLabel": m3
+        "yearsLabel": m3,
+        "zincLabel": MessageLookupByLibrary.simpleMessage("zinc"),
       };
 }

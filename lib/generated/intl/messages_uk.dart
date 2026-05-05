@@ -94,6 +94,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "buttonSaveLabel": MessageLookupByLibrary.simpleMessage("Зберегти"),
         "buttonStartLabel": MessageLookupByLibrary.simpleMessage("Почати"),
         "buttonYesLabel": MessageLookupByLibrary.simpleMessage("Так"),
+        "calciumLabel": MessageLookupByLibrary.simpleMessage("кальцій"),
         "calculationsMacronutrientsDistributionLabel":
             MessageLookupByLibrary.simpleMessage("Розподіл макроелементів"),
         "calculationsMacrosDistribution": m1,
@@ -106,6 +107,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "carbohydrateLabel": MessageLookupByLibrary.simpleMessage("вуглеводи"),
         "carbsLabel": MessageLookupByLibrary.simpleMessage("вуглеводи"),
         "carbsLabelShort": MessageLookupByLibrary.simpleMessage("в"),
+        "cholesterolLabel": MessageLookupByLibrary.simpleMessage("холестерин"),
         "chooseWeeklyWeightGoalLabel":
             MessageLookupByLibrary.simpleMessage("Тижневий темп ваги"),
         "chooseWeightGoalLabel":
@@ -174,6 +176,14 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Видалити власну страву?"),
         "customMealsEmptyLabel": MessageLookupByLibrary.simpleMessage(
             "Ще немає збережених власних страв."),
+        "ironLabel": MessageLookupByLibrary.simpleMessage("залізо"),
+        "magnesiumLabel": MessageLookupByLibrary.simpleMessage("магній"),
+        "micronutrientsLabel": MessageLookupByLibrary.simpleMessage("Мікроелементи"),
+        "monounsaturatedFatLabel": MessageLookupByLibrary.simpleMessage("мононенасичені жири"),
+        "niacinLabel": MessageLookupByLibrary.simpleMessage("ніацин (B3)"),
+        "phosphorusLabel": MessageLookupByLibrary.simpleMessage("фосфор"),
+        "polyunsaturatedFatLabel": MessageLookupByLibrary.simpleMessage("поліненасичені жири"),
+        "potassiumLabel": MessageLookupByLibrary.simpleMessage("калій"),
         "settingsCustomMealsLabel":
             MessageLookupByLibrary.simpleMessage("Власні страви"),
         "clearOffCacheConfirmContent": MessageLookupByLibrary.simpleMessage(
@@ -756,6 +766,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Показати відстеження активності"),
         "settingsShowMealMacros":
             MessageLookupByLibrary.simpleMessage("Показати макроси страви"),
+        "settingsShowMicronutrientsLabel": MessageLookupByLibrary.simpleMessage("Показувати мікроелементи"),
         "settingsSourceCodeLabel":
             MessageLookupByLibrary.simpleMessage("Вихідний код"),
         "settingsSystemLabel": MessageLookupByLibrary.simpleMessage("Система"),
@@ -774,9 +785,16 @@ class MessageLookup extends MessageLookupByLibrary {
         "snackExample": MessageLookupByLibrary.simpleMessage(
             "наприклад, яблуко, морозиво, шоколад ..."),
         "snackLabel": MessageLookupByLibrary.simpleMessage("Перекус"),
+        "sodiumLabel": MessageLookupByLibrary.simpleMessage("натрій"),
         "sugarLabel": MessageLookupByLibrary.simpleMessage("цукор"),
         "suppliedLabel": MessageLookupByLibrary.simpleMessage("спожито"),
+        "transFatLabel": MessageLookupByLibrary.simpleMessage("трансжири"),
         "unitLabel": MessageLookupByLibrary.simpleMessage("Одиниця"),
+        "vitaminALabel": MessageLookupByLibrary.simpleMessage("вітамін A"),
+        "vitaminB12Label": MessageLookupByLibrary.simpleMessage("вітамін B12"),
+        "vitaminB6Label": MessageLookupByLibrary.simpleMessage("вітамін B6"),
+        "vitaminCLabel": MessageLookupByLibrary.simpleMessage("вітамін C"),
+        "vitaminDLabel": MessageLookupByLibrary.simpleMessage("вітамін D"),
         "weeklyWeightGoalKgPerWeek": m8,
         "weeklyWeightGoalLabel":
             MessageLookupByLibrary.simpleMessage("Тижневий темп"),
@@ -784,6 +802,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "weeklyWeightGoalNoneLabel":
             MessageLookupByLibrary.simpleMessage("Не встановлено"),
         "weightLabel": MessageLookupByLibrary.simpleMessage("Вага"),
-        "yearsLabel": m3
+        "yearsLabel": m3,
+        "zincLabel": MessageLookupByLibrary.simpleMessage("цинк"),
       };
 }

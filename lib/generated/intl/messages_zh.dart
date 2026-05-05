@@ -90,6 +90,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "buttonSaveLabel": MessageLookupByLibrary.simpleMessage("保存"),
         "buttonStartLabel": MessageLookupByLibrary.simpleMessage("开始"),
         "buttonYesLabel": MessageLookupByLibrary.simpleMessage("是"),
+        "calciumLabel": MessageLookupByLibrary.simpleMessage("钙"),
         "calculationsMacronutrientsDistributionLabel":
             MessageLookupByLibrary.simpleMessage("宏量营养素分布"),
         "calculationsMacrosDistribution": m1,
@@ -102,6 +103,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "carbohydrateLabel": MessageLookupByLibrary.simpleMessage("碳水化合物"),
         "carbsLabel": MessageLookupByLibrary.simpleMessage("碳水"),
         "carbsLabelShort": MessageLookupByLibrary.simpleMessage("碳"),
+        "cholesterolLabel": MessageLookupByLibrary.simpleMessage("胆固醇"),
         "chooseWeeklyWeightGoalLabel":
             MessageLookupByLibrary.simpleMessage("每周体重速率"),
         "chooseWeightGoalLabel": MessageLookupByLibrary.simpleMessage("选择体重目标"),
@@ -159,6 +161,14 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("删除自定义餐食？"),
         "customMealsEmptyLabel":
             MessageLookupByLibrary.simpleMessage("尚未保存自定义餐食。"),
+        "ironLabel": MessageLookupByLibrary.simpleMessage("铁"),
+        "magnesiumLabel": MessageLookupByLibrary.simpleMessage("镁"),
+        "micronutrientsLabel": MessageLookupByLibrary.simpleMessage("微量营养素"),
+        "monounsaturatedFatLabel": MessageLookupByLibrary.simpleMessage("单不饱和脂肪"),
+        "niacinLabel": MessageLookupByLibrary.simpleMessage("烟酸 (B3)"),
+        "phosphorusLabel": MessageLookupByLibrary.simpleMessage("磷"),
+        "polyunsaturatedFatLabel": MessageLookupByLibrary.simpleMessage("多不饱和脂肪"),
+        "potassiumLabel": MessageLookupByLibrary.simpleMessage("钾"),
         "settingsCustomMealsLabel":
             MessageLookupByLibrary.simpleMessage("自定义餐食"),
         "clearOffCacheConfirmContent": MessageLookupByLibrary.simpleMessage(
@@ -634,6 +644,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("显示活动追踪"),
         "settingsShowMealMacros":
             MessageLookupByLibrary.simpleMessage("显示餐食宏量"),
+        "settingsShowMicronutrientsLabel": MessageLookupByLibrary.simpleMessage("显示微量营养素"),
         "settingsSourceCodeLabel": MessageLookupByLibrary.simpleMessage("源代码"),
         "settingsSystemLabel": MessageLookupByLibrary.simpleMessage("系统"),
         "settingsThemeDarkLabel": MessageLookupByLibrary.simpleMessage("深色"),
@@ -648,9 +659,16 @@ class MessageLookup extends MessageLookupByLibrary {
         "snackExample":
             MessageLookupByLibrary.simpleMessage("例如：苹果、冰淇淋、巧克力..."),
         "snackLabel": MessageLookupByLibrary.simpleMessage("零食"),
+        "sodiumLabel": MessageLookupByLibrary.simpleMessage("钠"),
         "sugarLabel": MessageLookupByLibrary.simpleMessage("糖"),
         "suppliedLabel": MessageLookupByLibrary.simpleMessage("提供"),
+        "transFatLabel": MessageLookupByLibrary.simpleMessage("反式脂肪"),
         "unitLabel": MessageLookupByLibrary.simpleMessage("单位"),
+        "vitaminALabel": MessageLookupByLibrary.simpleMessage("维生素 A"),
+        "vitaminB12Label": MessageLookupByLibrary.simpleMessage("维生素 B12"),
+        "vitaminB6Label": MessageLookupByLibrary.simpleMessage("维生素 B6"),
+        "vitaminCLabel": MessageLookupByLibrary.simpleMessage("维生素 C"),
+        "vitaminDLabel": MessageLookupByLibrary.simpleMessage("维生素 D"),
         "weeklyWeightGoalKgPerWeek": m8,
         "weeklyWeightGoalLabel":
             MessageLookupByLibrary.simpleMessage("每周速率"),
@@ -658,6 +676,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "weeklyWeightGoalNoneLabel":
             MessageLookupByLibrary.simpleMessage("未设置"),
         "weightLabel": MessageLookupByLibrary.simpleMessage("体重"),
-        "yearsLabel": m3
+        "yearsLabel": m3,
+        "zincLabel": MessageLookupByLibrary.simpleMessage("锌"),
       };
 }

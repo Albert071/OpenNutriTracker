@@ -94,6 +94,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "buttonSaveLabel": MessageLookupByLibrary.simpleMessage("Uložit"),
         "buttonStartLabel": MessageLookupByLibrary.simpleMessage("START"),
         "buttonYesLabel": MessageLookupByLibrary.simpleMessage("ANO"),
+        "calciumLabel": MessageLookupByLibrary.simpleMessage("vápník"),
         "calculationsMacronutrientsDistributionLabel":
             MessageLookupByLibrary.simpleMessage("Poměr nutričních složek"),
         "calculationsMacrosDistribution": m1,
@@ -106,6 +107,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "carbohydrateLabel": MessageLookupByLibrary.simpleMessage("sacharidy"),
         "carbsLabel": MessageLookupByLibrary.simpleMessage("sacharidy"),
         "carbsLabelShort": MessageLookupByLibrary.simpleMessage("s"),
+        "cholesterolLabel": MessageLookupByLibrary.simpleMessage("cholesterol"),
         "chooseWeeklyWeightGoalLabel":
             MessageLookupByLibrary.simpleMessage("Týdenní tempo hmotnosti"),
         "chooseWeightGoalLabel":
@@ -172,6 +174,14 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Smazat vlastní jídlo?"),
         "customMealsEmptyLabel": MessageLookupByLibrary.simpleMessage(
             "Zatím žádná vlastní jídla uložena."),
+        "ironLabel": MessageLookupByLibrary.simpleMessage("železo"),
+        "magnesiumLabel": MessageLookupByLibrary.simpleMessage("hořčík"),
+        "micronutrientsLabel": MessageLookupByLibrary.simpleMessage("Mikroživiny"),
+        "monounsaturatedFatLabel": MessageLookupByLibrary.simpleMessage("mononenasycené tuky"),
+        "niacinLabel": MessageLookupByLibrary.simpleMessage("niacin (B3)"),
+        "phosphorusLabel": MessageLookupByLibrary.simpleMessage("fosfor"),
+        "polyunsaturatedFatLabel": MessageLookupByLibrary.simpleMessage("polynenasycené tuky"),
+        "potassiumLabel": MessageLookupByLibrary.simpleMessage("draslík"),
         "settingsCustomMealsLabel":
             MessageLookupByLibrary.simpleMessage("Vlastní jídla"),
         "clearOffCacheConfirmContent": MessageLookupByLibrary.simpleMessage(
@@ -749,6 +759,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Zobrazit sledování aktivity"),
         "settingsShowMealMacros":
             MessageLookupByLibrary.simpleMessage("Zobrazit makra jídla"),
+        "settingsShowMicronutrientsLabel": MessageLookupByLibrary.simpleMessage("Zobrazit mikroživiny"),
         "settingsSourceCodeLabel":
             MessageLookupByLibrary.simpleMessage("Zdrojový kód"),
         "settingsSystemLabel": MessageLookupByLibrary.simpleMessage("Systém"),
@@ -765,9 +776,16 @@ class MessageLookup extends MessageLookupByLibrary {
         "snackExample": MessageLookupByLibrary.simpleMessage(
             "např. jablko, zmrzlina, čokoláda..."),
         "snackLabel": MessageLookupByLibrary.simpleMessage("Svačina"),
+        "sodiumLabel": MessageLookupByLibrary.simpleMessage("sodík"),
         "sugarLabel": MessageLookupByLibrary.simpleMessage("cukry"),
         "suppliedLabel": MessageLookupByLibrary.simpleMessage("přijato"),
+        "transFatLabel": MessageLookupByLibrary.simpleMessage("trans tuky"),
         "unitLabel": MessageLookupByLibrary.simpleMessage("Jednotka"),
+        "vitaminALabel": MessageLookupByLibrary.simpleMessage("vitamin A"),
+        "vitaminB12Label": MessageLookupByLibrary.simpleMessage("vitamin B12"),
+        "vitaminB6Label": MessageLookupByLibrary.simpleMessage("vitamin B6"),
+        "vitaminCLabel": MessageLookupByLibrary.simpleMessage("vitamin C"),
+        "vitaminDLabel": MessageLookupByLibrary.simpleMessage("vitamin D"),
         "weeklyWeightGoalKgPerWeek": m8,
         "weeklyWeightGoalLabel":
             MessageLookupByLibrary.simpleMessage("Týdenní tempo"),
@@ -775,6 +793,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "weeklyWeightGoalNoneLabel":
             MessageLookupByLibrary.simpleMessage("Nenastaveno"),
         "weightLabel": MessageLookupByLibrary.simpleMessage("Hmotnost"),
-        "yearsLabel": m3
+        "yearsLabel": m3,
+        "zincLabel": MessageLookupByLibrary.simpleMessage("zinek"),
       };
 }

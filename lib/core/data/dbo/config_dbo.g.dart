@@ -29,6 +29,7 @@ class ConfigDBOAdapter extends TypeAdapter<ConfigDBO> {
         notificationHour: (fields[11] as num?)?.toInt(),
         notificationMinute: (fields[12] as num?)?.toInt(),
         selectedLocale: fields[13] as String?,
+        showMicronutrients: fields[15] as bool?,
       )
       ..userCarbGoalPct = (fields[6] as num?)?.toDouble()
       ..userProteinGoalPct = (fields[7] as num?)?.toDouble()
@@ -38,7 +39,7 @@ class ConfigDBOAdapter extends TypeAdapter<ConfigDBO> {
   @override
   void write(BinaryWriter writer, ConfigDBO obj) {
     writer
-      ..writeByte(15)
+      ..writeByte(16)
       ..writeByte(0)
       ..write(obj.hasAcceptedDisclaimer)
       ..writeByte(1)
@@ -68,7 +69,9 @@ class ConfigDBOAdapter extends TypeAdapter<ConfigDBO> {
       ..writeByte(13)
       ..write(obj.selectedLocale)
       ..writeByte(14)
-      ..write(obj.showMealMacros);
+      ..write(obj.showMealMacros)
+      ..writeByte(15)
+      ..write(obj.showMicronutrients);
   }
 
   @override
@@ -100,6 +103,7 @@ ConfigDBO _$ConfigDBOFromJson(Map<String, dynamic> json) =>
         notificationHour: (json['notificationHour'] as num?)?.toInt(),
         notificationMinute: (json['notificationMinute'] as num?)?.toInt(),
         selectedLocale: json['selectedLocale'] as String?,
+        showMicronutrients: json['showMicronutrients'] as bool?,
       )
       ..userCarbGoalPct = (json['userCarbGoalPct'] as num?)?.toDouble()
       ..userProteinGoalPct = (json['userProteinGoalPct'] as num?)?.toDouble()
@@ -116,11 +120,12 @@ Map<String, dynamic> _$ConfigDBOToJson(ConfigDBO instance) => <String, dynamic>{
   'userProteinGoalPct': instance.userProteinGoalPct,
   'userFatGoalPct': instance.userFatGoalPct,
   'showActivityTracking': instance.showActivityTracking,
-  'showMealMacros': instance.showMealMacros,
   'notificationsEnabled': instance.notificationsEnabled,
   'notificationHour': instance.notificationHour,
   'notificationMinute': instance.notificationMinute,
   'selectedLocale': instance.selectedLocale,
+  'showMealMacros': instance.showMealMacros,
+  'showMicronutrients': instance.showMicronutrients,
 };
 
 const _$AppThemeDBOEnumMap = {

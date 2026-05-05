@@ -27,6 +27,7 @@ class SettingsLoadedState extends SettingsState {
   final String? selectedLocale;
   final int offCacheCount;
   final int offCacheSizeBytes;
+  final bool showMicronutrients; // #237
 
   const SettingsLoadedState(
     this.versionNumber,
@@ -41,6 +42,7 @@ class SettingsLoadedState extends SettingsState {
     this.selectedLocale,
     this.offCacheCount = 0,
     this.offCacheSizeBytes = 0,
+    this.showMicronutrients = false,
   });
 
   @override
@@ -57,5 +59,6 @@ class SettingsLoadedState extends SettingsState {
         selectedLocale,
         offCacheCount,
         offCacheSizeBytes,
+        showMicronutrients,
       ];
 }

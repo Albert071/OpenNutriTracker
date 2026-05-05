@@ -38,6 +38,8 @@ class ConfigDBO extends HiveObject {
   String? selectedLocale;
   @HiveField(14)
   bool? showMealMacros;
+  @HiveField(15)
+  bool? showMicronutrients; // #237: null means default (false)
 
   ConfigDBO(
     this.hasAcceptedDisclaimer,
@@ -52,6 +54,7 @@ class ConfigDBO extends HiveObject {
     this.notificationHour,
     this.notificationMinute,
     this.selectedLocale,
+    this.showMicronutrients,
   });
 
   factory ConfigDBO.empty() =>

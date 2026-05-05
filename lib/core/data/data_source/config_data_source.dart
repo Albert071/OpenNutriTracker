@@ -134,6 +134,13 @@ class ConfigDataSource {
     config?.save();
   }
 
+  Future<void> setConfigShowMicronutrients(bool show) async {
+    _log.fine('Updating config showMicronutrients to $show');
+    final config = _configBox.get(_configKey);
+    config?.showMicronutrients = show;
+    config?.save();
+  }
+
 
   Future<ConfigDBO> getConfig() async {
     return _configBox.get(_configKey) ?? ConfigDBO.empty();

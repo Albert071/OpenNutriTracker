@@ -94,6 +94,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "buttonSaveLabel": MessageLookupByLibrary.simpleMessage("Salva"),
         "buttonStartLabel": MessageLookupByLibrary.simpleMessage("INIZIA"),
         "buttonYesLabel": MessageLookupByLibrary.simpleMessage("SI"),
+        "calciumLabel": MessageLookupByLibrary.simpleMessage("calcio"),
         "calculationsMacronutrientsDistributionLabel":
             MessageLookupByLibrary.simpleMessage(
                 "Distribuzione dei macronutrienti"),
@@ -108,6 +109,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("carboidrati"),
         "carbsLabel": MessageLookupByLibrary.simpleMessage("carboidrati"),
         "carbsLabelShort": MessageLookupByLibrary.simpleMessage("c"),
+        "cholesterolLabel": MessageLookupByLibrary.simpleMessage("colesterolo"),
         "chooseWeeklyWeightGoalLabel":
             MessageLookupByLibrary.simpleMessage("Ritmo peso settimanale"),
         "chooseWeightGoalLabel":
@@ -174,6 +176,14 @@ class MessageLookup extends MessageLookupByLibrary {
             "Eliminare il pasto personalizzato?"),
         "customMealsEmptyLabel": MessageLookupByLibrary.simpleMessage(
             "Nessun pasto personalizzato salvato."),
+        "ironLabel": MessageLookupByLibrary.simpleMessage("ferro"),
+        "magnesiumLabel": MessageLookupByLibrary.simpleMessage("magnesio"),
+        "micronutrientsLabel": MessageLookupByLibrary.simpleMessage("Micronutrienti"),
+        "monounsaturatedFatLabel": MessageLookupByLibrary.simpleMessage("grassi monoinsaturi"),
+        "niacinLabel": MessageLookupByLibrary.simpleMessage("niacina (B3)"),
+        "phosphorusLabel": MessageLookupByLibrary.simpleMessage("fosforo"),
+        "polyunsaturatedFatLabel": MessageLookupByLibrary.simpleMessage("grassi polinsaturi"),
+        "potassiumLabel": MessageLookupByLibrary.simpleMessage("potassio"),
         "settingsCustomMealsLabel":
             MessageLookupByLibrary.simpleMessage("Pasti personalizzati"),
         "clearOffCacheConfirmContent": MessageLookupByLibrary.simpleMessage(
@@ -756,6 +766,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Mostra tracciamento attività"),
         "settingsShowMealMacros":
             MessageLookupByLibrary.simpleMessage("Mostra macro pasto"),
+        "settingsShowMicronutrientsLabel": MessageLookupByLibrary.simpleMessage("Mostra micronutrienti"),
         "settingsSourceCodeLabel":
             MessageLookupByLibrary.simpleMessage("Codice sorgente"),
         "settingsSystemLabel": MessageLookupByLibrary.simpleMessage("Sistema"),
@@ -774,9 +785,16 @@ class MessageLookup extends MessageLookupByLibrary {
         "snackExample": MessageLookupByLibrary.simpleMessage(
             "es. mela, gelato, cioccolato ..."),
         "snackLabel": MessageLookupByLibrary.simpleMessage("Spuntino"),
+        "sodiumLabel": MessageLookupByLibrary.simpleMessage("sodio"),
         "sugarLabel": MessageLookupByLibrary.simpleMessage("zuccheri"),
         "suppliedLabel": MessageLookupByLibrary.simpleMessage("assunte"),
+        "transFatLabel": MessageLookupByLibrary.simpleMessage("grassi trans"),
         "unitLabel": MessageLookupByLibrary.simpleMessage("Unità"),
+        "vitaminALabel": MessageLookupByLibrary.simpleMessage("vitamina A"),
+        "vitaminB12Label": MessageLookupByLibrary.simpleMessage("vitamina B12"),
+        "vitaminB6Label": MessageLookupByLibrary.simpleMessage("vitamina B6"),
+        "vitaminCLabel": MessageLookupByLibrary.simpleMessage("vitamina C"),
+        "vitaminDLabel": MessageLookupByLibrary.simpleMessage("vitamina D"),
         "weeklyWeightGoalKgPerWeek": m8,
         "weeklyWeightGoalLabel":
             MessageLookupByLibrary.simpleMessage("Ritmo settimanale"),
@@ -784,6 +802,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "weeklyWeightGoalNoneLabel":
             MessageLookupByLibrary.simpleMessage("Non impostato"),
         "weightLabel": MessageLookupByLibrary.simpleMessage("Peso"),
-        "yearsLabel": m3
+        "yearsLabel": m3,
+        "zincLabel": MessageLookupByLibrary.simpleMessage("zinco"),
       };
 }

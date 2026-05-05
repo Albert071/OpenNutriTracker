@@ -15,6 +15,26 @@ class MealNutrimentsEntity extends Equatable {
   final double? sugars100;
   final double? saturatedFat100;
   final double? fiber100;
+  // #237: Extended lipid profile
+  final double? monounsaturatedFat100;
+  final double? polyunsaturatedFat100;
+  final double? transFat100;
+  final double? cholesterol100;
+  // #237: Minerals (mg per 100g)
+  final double? sodium100;
+  final double? potassium100;
+  final double? magnesium100;
+  final double? calcium100;
+  final double? iron100;
+  final double? zinc100;
+  final double? phosphorus100;
+  // #237: Vitamins
+  final double? vitaminA100; // µg RAE
+  final double? vitaminC100; // mg
+  final double? vitaminD100; // µg
+  final double? vitaminB6100; // mg
+  final double? vitaminB12100; // µg
+  final double? niacin100; // mg (B3)
 
   double? get energyPerUnit => _getValuePerUnit(energyKcal100);
 
@@ -24,6 +44,27 @@ class MealNutrimentsEntity extends Equatable {
 
   double? get proteinsPerUnit => _getValuePerUnit(proteins100);
 
+  /// Returns true when at least one of the extended micronutrient fields
+  /// (lipid profile / minerals / vitamins from #237) has a value.
+  bool get hasMicronutrientData =>
+      monounsaturatedFat100 != null ||
+      polyunsaturatedFat100 != null ||
+      transFat100 != null ||
+      cholesterol100 != null ||
+      sodium100 != null ||
+      potassium100 != null ||
+      magnesium100 != null ||
+      calcium100 != null ||
+      iron100 != null ||
+      zinc100 != null ||
+      phosphorus100 != null ||
+      vitaminA100 != null ||
+      vitaminC100 != null ||
+      vitaminD100 != null ||
+      vitaminB6100 != null ||
+      vitaminB12100 != null ||
+      niacin100 != null;
+
   const MealNutrimentsEntity({
     required this.energyKcal100,
     required this.carbohydrates100,
@@ -32,6 +73,23 @@ class MealNutrimentsEntity extends Equatable {
     required this.sugars100,
     required this.saturatedFat100,
     required this.fiber100,
+    this.monounsaturatedFat100,
+    this.polyunsaturatedFat100,
+    this.transFat100,
+    this.cholesterol100,
+    this.sodium100,
+    this.potassium100,
+    this.magnesium100,
+    this.calcium100,
+    this.iron100,
+    this.zinc100,
+    this.phosphorus100,
+    this.vitaminA100,
+    this.vitaminC100,
+    this.vitaminD100,
+    this.vitaminB6100,
+    this.vitaminB12100,
+    this.niacin100,
   });
 
   factory MealNutrimentsEntity.empty() => const MealNutrimentsEntity(
@@ -55,6 +113,23 @@ class MealNutrimentsEntity extends Equatable {
       sugars100: nutriments.sugars100,
       saturatedFat100: nutriments.saturatedFat100,
       fiber100: nutriments.fiber100,
+      monounsaturatedFat100: nutriments.monounsaturatedFat100,
+      polyunsaturatedFat100: nutriments.polyunsaturatedFat100,
+      transFat100: nutriments.transFat100,
+      cholesterol100: nutriments.cholesterol100,
+      sodium100: nutriments.sodium100,
+      potassium100: nutriments.potassium100,
+      magnesium100: nutriments.magnesium100,
+      calcium100: nutriments.calcium100,
+      iron100: nutriments.iron100,
+      zinc100: nutriments.zinc100,
+      phosphorus100: nutriments.phosphorus100,
+      vitaminA100: nutriments.vitaminA100,
+      vitaminC100: nutriments.vitaminC100,
+      vitaminD100: nutriments.vitaminD100,
+      vitaminB6100: nutriments.vitaminB6100,
+      vitaminB12100: nutriments.vitaminB12100,
+      niacin100: nutriments.niacin100,
     );
   }
 
@@ -77,79 +152,76 @@ class MealNutrimentsEntity extends Equatable {
       saturatedFat100:
           (offNutriments.saturated_fat_100g as Object?).asDoubleOrNull(),
       fiber100: (offNutriments.fiber_100g as Object?).asDoubleOrNull(),
+      // #237: Extended lipid profile
+      monounsaturatedFat100:
+          (offNutriments.monounsaturated_fat_100g as Object?).asDoubleOrNull(),
+      polyunsaturatedFat100:
+          (offNutriments.polyunsaturated_fat_100g as Object?).asDoubleOrNull(),
+      transFat100: (offNutriments.trans_fat_100g as Object?).asDoubleOrNull(),
+      cholesterol100:
+          (offNutriments.cholesterol_100g as Object?).asDoubleOrNull(),
+      // #237: Minerals
+      sodium100: (offNutriments.sodium_100g as Object?).asDoubleOrNull(),
+      potassium100: (offNutriments.potassium_100g as Object?).asDoubleOrNull(),
+      magnesium100: (offNutriments.magnesium_100g as Object?).asDoubleOrNull(),
+      calcium100: (offNutriments.calcium_100g as Object?).asDoubleOrNull(),
+      iron100: (offNutriments.iron_100g as Object?).asDoubleOrNull(),
+      zinc100: (offNutriments.zinc_100g as Object?).asDoubleOrNull(),
+      phosphorus100:
+          (offNutriments.phosphorus_100g as Object?).asDoubleOrNull(),
+      // #237: Vitamins
+      vitaminA100: (offNutriments.vitamin_a_100g as Object?).asDoubleOrNull(),
+      vitaminC100: (offNutriments.vitamin_c_100g as Object?).asDoubleOrNull(),
+      vitaminD100: (offNutriments.vitamin_d_100g as Object?).asDoubleOrNull(),
+      vitaminB6100: (offNutriments.vitamin_b6_100g as Object?).asDoubleOrNull(),
+      vitaminB12100:
+          (offNutriments.vitamin_b12_100g as Object?).asDoubleOrNull(),
+      niacin100: (offNutriments.niacin_100g as Object?).asDoubleOrNull(),
     );
   }
 
   factory MealNutrimentsEntity.fromFDCNutriments(
     List<FDCFoodNutrimentDTO> fdcNutriment,
   ) {
+    double? fdcAmount(int nutrientId) => fdcNutriment
+        .firstWhereOrNull((nutriment) => nutriment.nutrientId == nutrientId)
+        ?.amount;
+
     // FDC Food nutriments can have different values for Energy [Energy,
     // Energy (Atwater General Factors), Energy (Atwater Specific Factors)].
     // Prefer the most-precise Atwater value; fall back to raw total last.
-    final energyTotal = fdcNutriment
-            .firstWhereOrNull(
-              (nutriment) =>
-                  nutriment.nutrientId == FDCConst.fdcKcalAtwaterSpecificId,
-            )
-            ?.amount ??
-        fdcNutriment
-            .firstWhereOrNull(
-              (nutriment) =>
-                  nutriment.nutrientId == FDCConst.fdcKcalAtwaterGeneralId,
-            )
-            ?.amount ??
-        fdcNutriment
-            .firstWhereOrNull(
-              (nutriment) => nutriment.nutrientId == FDCConst.fdcTotalKcalId,
-            )
-            ?.amount;
-
-    final carbsTotal = fdcNutriment
-        .firstWhereOrNull(
-          (nutriment) => nutriment.nutrientId == FDCConst.fdcTotalCarbsId,
-        )
-        ?.amount;
-
-    final fatTotal = fdcNutriment
-        .firstWhereOrNull(
-          (nutriment) => nutriment.nutrientId == FDCConst.fdcTotalFatId,
-        )
-        ?.amount;
-
-    final proteinsTotal = fdcNutriment
-        .firstWhereOrNull(
-          (nutriment) => nutriment.nutrientId == FDCConst.fdcTotalProteinsId,
-        )
-        ?.amount;
-
-    final sugarTotal = fdcNutriment
-        .firstWhereOrNull(
-          (nutriment) => nutriment.nutrientId == FDCConst.fdcTotalSugarId,
-        )
-        ?.amount;
-
-    final saturatedFatTotal = fdcNutriment
-        .firstWhereOrNull(
-          (nutriment) =>
-              nutriment.nutrientId == FDCConst.fdcTotalSaturatedFatId,
-        )
-        ?.amount;
-
-    final fiberTotal = fdcNutriment
-        .firstWhereOrNull(
-          (nutriment) =>
-              nutriment.nutrientId == FDCConst.fdcTotalDietaryFiberId,
-        )
-        ?.amount;
+    final energyTotal = fdcAmount(FDCConst.fdcKcalAtwaterSpecificId) ??
+        fdcAmount(FDCConst.fdcKcalAtwaterGeneralId) ??
+        fdcAmount(FDCConst.fdcTotalKcalId);
 
     return MealNutrimentsEntity(
       energyKcal100: energyTotal,
-      carbohydrates100: carbsTotal,
-      fat100: fatTotal,
-      proteins100: proteinsTotal,
-      sugars100: sugarTotal,
-      saturatedFat100: saturatedFatTotal,
-      fiber100: fiberTotal,
+      carbohydrates100: fdcAmount(FDCConst.fdcTotalCarbsId),
+      fat100: fdcAmount(FDCConst.fdcTotalFatId),
+      proteins100: fdcAmount(FDCConst.fdcTotalProteinsId),
+      sugars100: fdcAmount(FDCConst.fdcTotalSugarId),
+      saturatedFat100: fdcAmount(FDCConst.fdcTotalSaturatedFatId),
+      fiber100: fdcAmount(FDCConst.fdcTotalDietaryFiberId),
+      // #237: Extended lipid profile
+      monounsaturatedFat100: fdcAmount(FDCConst.fdcMonounsaturatedFatId),
+      polyunsaturatedFat100: fdcAmount(FDCConst.fdcPolyunsaturatedFatId),
+      transFat100: fdcAmount(FDCConst.fdcTransFatId),
+      cholesterol100: fdcAmount(FDCConst.fdcCholesterolId),
+      // #237: Minerals
+      sodium100: fdcAmount(FDCConst.fdcSodiumId),
+      potassium100: fdcAmount(FDCConst.fdcPotassiumId),
+      magnesium100: fdcAmount(FDCConst.fdcMagnesiumId),
+      calcium100: fdcAmount(FDCConst.fdcCalciumId),
+      iron100: fdcAmount(FDCConst.fdcIronId),
+      zinc100: fdcAmount(FDCConst.fdcZincId),
+      phosphorus100: fdcAmount(FDCConst.fdcPhosphorusId),
+      // #237: Vitamins
+      vitaminA100: fdcAmount(FDCConst.fdcVitaminAId),
+      vitaminC100: fdcAmount(FDCConst.fdcVitaminCId),
+      vitaminD100: fdcAmount(FDCConst.fdcVitaminDId),
+      vitaminB6100: fdcAmount(FDCConst.fdcVitaminB6Id),
+      vitaminB12100: fdcAmount(FDCConst.fdcVitaminB12Id),
+      niacin100: fdcAmount(FDCConst.fdcNiacinId),
     );
   }
 

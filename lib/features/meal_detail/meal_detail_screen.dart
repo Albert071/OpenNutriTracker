@@ -6,6 +6,7 @@ import 'package:logging/logging.dart';
 import 'package:opennutritracker/core/domain/entity/intake_type_entity.dart';
 import 'package:opennutritracker/core/presentation/widgets/meal_value_unit_text.dart';
 import 'package:opennutritracker/core/presentation/widgets/image_full_screen.dart';
+import 'package:opennutritracker/core/domain/usecase/get_config_usecase.dart';
 import 'package:opennutritracker/core/utils/locator.dart';
 import 'package:opennutritracker/core/utils/navigation_options.dart';
 import 'package:opennutritracker/features/add_meal/domain/entity/meal_entity.dart';
@@ -44,6 +45,7 @@ class _MealDetailScreenState extends State<MealDetailScreen> {
 
   final quantityTextController = TextEditingController();
   late bool _usesImperialUnits;
+  bool _showMicronutrients = false;
 
   String _initialUnit = "";
   String _initialQuantity = "";
@@ -51,8 +53,15 @@ class _MealDetailScreenState extends State<MealDetailScreen> {
   @override
   void initState() {
     _mealDetailBloc = locator<MealDetailBloc>();
-
+    _loadMicronutrientSetting();
     super.initState();
+  }
+
+  Future<void> _loadMicronutrientSetting() async {
+    final config = await locator<GetConfigUsecase>().getConfig();
+    if (mounted) {
+      setState(() => _showMicronutrients = config.showMicronutrients);
+    }
   }
 
   @override
@@ -281,6 +290,7 @@ class _MealDetailScreenState extends State<MealDetailScreen> {
                     usesImperialUnits: _usesImperialUnits,
                     servingQuantity: meal.servingQuantity,
                     servingUnit: meal.servingUnit,
+                    showMicronutrients: _showMicronutrients,
                   ),
                   const SizedBox(height: 32.0),
                   MealInfoButton(url: meal.url, source: meal.source),

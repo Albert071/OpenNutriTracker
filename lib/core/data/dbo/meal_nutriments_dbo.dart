@@ -21,6 +21,43 @@ class MealNutrimentsDBO extends HiveObject {
   final double? saturatedFat100;
   @HiveField(6)
   final double? fiber100;
+  // #237: Extended lipid profile
+  @HiveField(7)
+  final double? monounsaturatedFat100;
+  @HiveField(8)
+  final double? polyunsaturatedFat100;
+  @HiveField(9)
+  final double? transFat100;
+  @HiveField(10)
+  final double? cholesterol100;
+  // #237: Minerals (mg per 100g)
+  @HiveField(11)
+  final double? sodium100;
+  @HiveField(12)
+  final double? potassium100;
+  @HiveField(13)
+  final double? magnesium100;
+  @HiveField(14)
+  final double? calcium100;
+  @HiveField(15)
+  final double? iron100;
+  @HiveField(16)
+  final double? zinc100;
+  @HiveField(17)
+  final double? phosphorus100;
+  // #237: Vitamins
+  @HiveField(18)
+  final double? vitaminA100; // µg RAE
+  @HiveField(19)
+  final double? vitaminC100; // mg
+  @HiveField(20)
+  final double? vitaminD100; // µg
+  @HiveField(21)
+  final double? vitaminB6100; // mg
+  @HiveField(22)
+  final double? vitaminB12100; // µg
+  @HiveField(23)
+  final double? niacin100; // mg (B3)
 
   MealNutrimentsDBO({
     required this.energyKcal100,
@@ -30,6 +67,23 @@ class MealNutrimentsDBO extends HiveObject {
     required this.sugars100,
     required this.saturatedFat100,
     required this.fiber100,
+    this.monounsaturatedFat100,
+    this.polyunsaturatedFat100,
+    this.transFat100,
+    this.cholesterol100,
+    this.sodium100,
+    this.potassium100,
+    this.magnesium100,
+    this.calcium100,
+    this.iron100,
+    this.zinc100,
+    this.phosphorus100,
+    this.vitaminA100,
+    this.vitaminC100,
+    this.vitaminD100,
+    this.vitaminB6100,
+    this.vitaminB12100,
+    this.niacin100,
   });
 
   factory MealNutrimentsDBO.fromProductNutrimentsEntity(
@@ -43,6 +97,23 @@ class MealNutrimentsDBO extends HiveObject {
       sugars100: nutriments.sugars100,
       saturatedFat100: nutriments.saturatedFat100,
       fiber100: nutriments.fiber100,
+      monounsaturatedFat100: nutriments.monounsaturatedFat100,
+      polyunsaturatedFat100: nutriments.polyunsaturatedFat100,
+      transFat100: nutriments.transFat100,
+      cholesterol100: nutriments.cholesterol100,
+      sodium100: nutriments.sodium100,
+      potassium100: nutriments.potassium100,
+      magnesium100: nutriments.magnesium100,
+      calcium100: nutriments.calcium100,
+      iron100: nutriments.iron100,
+      zinc100: nutriments.zinc100,
+      phosphorus100: nutriments.phosphorus100,
+      vitaminA100: nutriments.vitaminA100,
+      vitaminC100: nutriments.vitaminC100,
+      vitaminD100: nutriments.vitaminD100,
+      vitaminB6100: nutriments.vitaminB6100,
+      vitaminB12100: nutriments.vitaminB12100,
+      niacin100: nutriments.niacin100,
     );
   }
 

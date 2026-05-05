@@ -187,6 +187,26 @@ class FDCConst {
   static const fdcTotalSugarId = 1063;
   static const fdcTotalSaturatedFatId = 1258;
   static const fdcTotalDietaryFiberId = 1079;
+  // #237: Extended lipid profile
+  static const fdcMonounsaturatedFatId = 645;
+  static const fdcPolyunsaturatedFatId = 646;
+  static const fdcTransFatId = 605;
+  static const fdcCholesterolId = 601;
+  // #237: Minerals
+  static const fdcSodiumId = 307;
+  static const fdcPotassiumId = 306;
+  static const fdcMagnesiumId = 304;
+  static const fdcCalciumId = 301;
+  static const fdcIronId = 303;
+  static const fdcZincId = 309;
+  static const fdcPhosphorusId = 305;
+  // #237: Vitamins
+  static const fdcVitaminAId = 318; // µg RAE
+  static const fdcVitaminCId = 401; // mg
+  static const fdcVitaminDId = 328; // µg
+  static const fdcVitaminB6Id = 415; // mg
+  static const fdcVitaminB12Id = 418; // µg
+  static const fdcNiacinId = 406; // mg (B3)
 
   // Measure unit codes
   static const fdcPortionServingId = 1049;
