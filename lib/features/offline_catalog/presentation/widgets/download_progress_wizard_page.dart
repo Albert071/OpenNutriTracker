@@ -1,23 +1,92 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:logging/logging.dart';
 import 'package:opennutritracker/features/offline_catalog/domain/entity/catalog_stats_entity.dart';
 import 'package:opennutritracker/features/offline_catalog/domain/entity/download_progress.dart';
 import 'package:opennutritracker/features/offline_catalog/presentation/bloc/offline_catalog_bloc.dart';
 import 'package:opennutritracker/generated/l10n.dart';
+import 'package:wakelock_plus/wakelock_plus.dart';
 
 /// Combined download + done page. While the bloc is in
 /// [OfflineCatalogPhase.building] we show progress, pause, and cancel.
 /// On [OfflineCatalogPhase.paused] we show a Resume CTA. On
 /// [OfflineCatalogPhase.ready] we show the success summary and a
 /// Done button.
-class DownloadProgressWizardPage extends StatelessWidget {
+///
+/// While the bloc is actively working (downloading or parsing) we
+/// also hold a screen wakelock so a long build isn't interrupted by
+/// the OS dimming the display — particularly important on iOS,
+/// where backgrounding a wakelock-less app suspends it within ~30s
+/// and kills the in-flight download. The wakelock is released the
+/// moment the page leaves an active phase OR the page itself is
+/// unmounted (the user navigated away from the wizard).
+class DownloadProgressWizardPage extends StatefulWidget {
   final VoidCallback onDone;
 
   const DownloadProgressWizardPage({super.key, required this.onDone});
 
   @override
+  State<DownloadProgressWizardPage> createState() =>
+      _DownloadProgressWizardPageState();
+}
+
+class _DownloadProgressWizardPageState
+    extends State<DownloadProgressWizardPage> {
+  static final _log = Logger('DownloadProgressWizardPage');
+
+  /// Track the current wakelock state so we don't issue redundant
+  /// enable / disable calls per bloc emission. The plugin handles
+  /// repeats fine, but it surfaces noisy logs on some platforms.
+  bool _wakelockHeld = false;
+
+  @override
+  void dispose() {
+    // Belt-and-braces: always release on unmount, even if the bloc
+    // listener didn't get a chance to.
+    if (_wakelockHeld) {
+      WakelockPlus.disable().catchError((Object e) {
+        _log.warning('Failed to release wakelock on dispose: $e');
+      });
+      _wakelockHeld = false;
+    }
+    super.dispose();
+  }
+
+  bool _shouldHoldWakelock(OfflineCatalogPhase phase) {
+    // The bloc folds the CSV download AND the subsequent parse
+    // into a single `building` phase (the [DownloadProgress.phase]
+    // enum tracks the sub-phase, but the wakelock decision doesn't
+    // care which sub-phase is active — both are long-running and
+    // both need the screen alive).
+    return phase == OfflineCatalogPhase.building ||
+        phase == OfflineCatalogPhase.refreshing;
+  }
+
+  Future<void> _syncWakelock(OfflineCatalogPhase phase) async {
+    final wantHold = _shouldHoldWakelock(phase);
+    if (wantHold == _wakelockHeld) return;
+    try {
+      if (wantHold) {
+        await WakelockPlus.enable();
+        _wakelockHeld = true;
+      } else {
+        await WakelockPlus.disable();
+        _wakelockHeld = false;
+      }
+    } catch (e) {
+      // Wakelock failures are never fatal — worst case the screen
+      // sleeps and the user has to come back and resume. We log
+      // and move on.
+      _log.warning('Failed to ${wantHold ? "enable" : "disable"} '
+          'wakelock: $e');
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return BlocBuilder<OfflineCatalogBloc, OfflineCatalogState>(
+    return BlocConsumer<OfflineCatalogBloc, OfflineCatalogState>(
+      listenWhen: (previous, current) => previous.phase != current.phase,
+      listener: (context, state) => _syncWakelock(state.phase),
       builder: (context, state) {
         return Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -34,7 +103,7 @@ class DownloadProgressWizardPage extends StatelessWidget {
       case OfflineCatalogPhase.paused:
         return _PausedView(progress: state.progress);
       case OfflineCatalogPhase.ready:
-        return _DoneView(stats: state.stats, onDone: onDone);
+        return _DoneView(stats: state.stats, onDone: widget.onDone);
       case OfflineCatalogPhase.error:
         return _ErrorView(
           message: state.errorMessage,
@@ -67,14 +136,28 @@ class _BuildingView extends StatelessWidget {
         const SizedBox(height: 24),
         if (p != null) _buildProgressBlock(context, p) else _buildSpinner(),
         const SizedBox(height: 32),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        // Wrap rather than Row so the Pause / Cancel buttons reflow
+        // gracefully on narrow widths instead of clipping. The 2 px
+        // overflow we used to see at intrinsic sizing is gone now
+        // because Wrap measures its children honestly.
+        Wrap(
+          alignment: WrapAlignment.spaceEvenly,
+          spacing: 12,
+          runSpacing: 8,
           children: [
             OutlinedButton.icon(
               onPressed: () {
                 context
                     .read<OfflineCatalogBloc>()
                     .add(const PauseCatalogBuildEvent());
+                // Pop back to settings so the user gets a clear
+                // "the action took effect" signal — the settings
+                // tile updates its subtitle to "Download paused —
+                // tap to resume", and resume is one tap away from
+                // there. Staying on the wizard with a near-
+                // identical body would feel like Pause did
+                // nothing.
+                Navigator.of(context).maybePop();
               },
               icon: const Icon(Icons.pause),
               label: Text(s.offlineCatalogPause),
@@ -150,7 +233,11 @@ class _BuildingView extends StatelessWidget {
               context
                   .read<OfflineCatalogBloc>()
                   .add(const CancelCatalogBuildEvent());
+              // Close the dialog and the wizard. The user is back
+              // at settings with the catalog cleanly reset to
+              // "Not built — tap to set up".
               Navigator.of(dialogContext).pop();
+              Navigator.of(context).maybePop();
             },
             child: Text(s.offlineCatalogDiscard),
           ),

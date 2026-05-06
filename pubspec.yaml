@@ -54,6 +54,12 @@ dependencies:
   file_picker: ^11.0.2
   crypto: ^3.0.3
   sqflite: ^2.4.1
+  # Keeps the screen awake while the offline-catalog wizard's
+  # download / parse phases are active. Cross-platform (Android,
+  # iOS, desktop); the desktop implementations are no-ops, which
+  # is fine — the win is on phones where a long build would
+  # otherwise sleep the screen and (on iOS) suspend the app.
+  wakelock_plus: ^1.2.8
   # Desktop FFI bindings for sqflite — only activated at runtime on
   # Linux / macOS / Windows (see main.dart). On Android and iOS the
   # plain `sqflite` plugin handles it natively, and this package adds
