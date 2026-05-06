@@ -221,19 +221,33 @@ class OfflineCatalogRepository {
     );
 
     _log.info('Catalog build phase 2: parse + filter');
-    await for (final p in _csvDump.parseAndFilter(
-      filter: filters,
-      cancellation: cancellation,
-      onBatch: (batch) async => _local.upsertBatch(batch),
-    )) {
-      yield DownloadProgress(
-        phase: DownloadPhase.parsing,
-        bytesDone: p.bytesDone,
-        bytesTotal: p.bytesTotal,
-        rowsKept: p.rowsKept,
-        rowsScanned: p.rowsScanned,
-        elapsed: stopwatch.elapsed,
-      );
+    // Bulk-insert mode: sqlite pragmas relax to favour throughput
+    // (synchronous=OFF, journal_mode=MEMORY) and FTS5 per-row
+    // updates are suspended for the duration of the parse. The
+    // FTS index is rebuilt in one bulk INSERT at the end. On
+    // success we restore safe pragmas + rebuild; on cancel /
+    // failure we restore safe pragmas but skip the FTS rebuild,
+    // leaving the index empty until the next successful build.
+    await _local.beginBulkInsertSession();
+    var parseSucceeded = false;
+    try {
+      await for (final p in _csvDump.parseAndFilter(
+        filter: filters,
+        cancellation: cancellation,
+        onBatch: (batch) async => _local.upsertBatch(batch),
+      )) {
+        yield DownloadProgress(
+          phase: DownloadPhase.parsing,
+          bytesDone: p.bytesDone,
+          bytesTotal: p.bytesTotal,
+          rowsKept: p.rowsKept,
+          rowsScanned: p.rowsScanned,
+          elapsed: stopwatch.elapsed,
+        );
+      }
+      parseSucceeded = true;
+    } finally {
+      await _local.endBulkInsertSession(rebuildFts: parseSucceeded);
     }
     cancellation.throwIfCancelled();
 

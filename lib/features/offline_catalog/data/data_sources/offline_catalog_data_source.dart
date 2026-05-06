@@ -58,6 +58,14 @@ class OfflineCatalogDataSource {
   String? _dbPath;
   Future<Database>? _opening;
 
+  /// True between [beginBulkInsertSession] and [endBulkInsertSession].
+  /// While set, [upsertBatch] skips its per-row FTS5 delete-and-
+  /// reinsert (the FTS index is rebuilt from scratch by
+  /// [endBulkInsertSession]) and the data source uses fast-but-
+  /// non-durable sqlite pragmas. See those two methods for the full
+  /// trade.
+  bool _bulkSessionActive = false;
+
   /// Resolve the database file path. Visible for tests; production
   /// callers should rely on [_database] which uses this internally.
   Future<String> resolveDbPath() async {
@@ -179,6 +187,83 @@ class OfflineCatalogDataSource {
     );
   }
 
+  /// Switch the database into "bulk insert" mode for the duration
+  /// of a build's parse phase. The trade is durability for speed:
+  ///
+  /// * `synchronous=OFF` — sqlite stops fsyncing on every commit.
+  ///   A power loss mid-build can lose recent rows. Fine for our
+  ///   workload because (a) the build cursor will detect the crash
+  ///   on next launch and we'll rebuild from the gzip on disk,
+  ///   and (b) the cancelled-build sweep cleans up partial state
+  ///   anyway.
+  /// * `journal_mode=MEMORY` — the rollback journal lives in RAM
+  ///   instead of being fsynced to disk. Same trade.
+  /// * Per-row FTS5 work is suspended. [upsertBatch] checks
+  ///   [_bulkSessionActive] and skips the FTS delete + insert pair
+  ///   for every row. The index is rebuilt in one pass by
+  ///   [endBulkInsertSession] when the build completes
+  ///   successfully.
+  ///
+  /// Must be balanced with exactly one [endBulkInsertSession] call
+  /// — even on failure paths.
+  Future<void> beginBulkInsertSession() async {
+    if (_bulkSessionActive) return;
+    final db = await _database();
+    // journal_mode change must happen outside any transaction —
+    // sqflite's `execute` runs at the connection level.
+    await db.execute('PRAGMA journal_mode=MEMORY');
+    await db.execute('PRAGMA synchronous=OFF');
+    _bulkSessionActive = true;
+    _log.info('Bulk insert session begun (FTS suspended, '
+        'pragmas relaxed)');
+  }
+
+  /// Close the bulk-insert session and (when [rebuildFts] is true)
+  /// rebuild the FTS5 index in a single bulk INSERT from the
+  /// products table. Always restores the safe pragmas.
+  ///
+  /// On a successful build the caller passes `rebuildFts: true`.
+  /// On a cancel / error path the caller passes `rebuildFts: false`
+  /// — the FTS index is left empty and the next successful build
+  /// will repopulate it. (Search returns zero results in the
+  /// meantime, which is honest about what's actually on disk.)
+  Future<void> endBulkInsertSession({required bool rebuildFts}) async {
+    if (!_bulkSessionActive) return;
+    final db = await _database();
+    try {
+      if (rebuildFts) {
+        // Wipe whatever's left in the FTS index (could be stale
+        // from before the session) and repopulate from the products
+        // table in a single statement. SQLite's bulk INSERT INTO ...
+        // SELECT is dramatically faster than per-row inserts even
+        // when the row count matches.
+        await db.execute('DELETE FROM $_kTableProductsFts');
+        await db.rawInsert(
+          'INSERT INTO $_kTableProductsFts ('
+          '$_kColCode, $_kColProductName, $_kColProductNameEn, '
+          '$_kColProductNameDe, $_kColProductNameFr, $_kColBrands'
+          ') '
+          'SELECT $_kColCode, '
+          'COALESCE($_kColProductName, \'\'), '
+          'COALESCE($_kColProductNameEn, \'\'), '
+          'COALESCE($_kColProductNameDe, \'\'), '
+          'COALESCE($_kColProductNameFr, \'\'), '
+          'COALESCE($_kColBrands, \'\') '
+          'FROM $_kTableProducts',
+        );
+        _log.info('FTS5 index rebuilt from products table');
+      }
+    } finally {
+      // Always restore the safe pragmas even if the FTS rebuild
+      // threw. Leaving synchronous=OFF in effect across normal
+      // operation would put user data at risk.
+      await db.execute('PRAGMA synchronous=NORMAL');
+      await db.execute('PRAGMA journal_mode=WAL');
+      _bulkSessionActive = false;
+      _log.info('Bulk insert session ended (pragmas restored)');
+    }
+  }
+
   Future<void> close() async {
     final db = _db;
     if (db != null && db.isOpen) {
@@ -267,7 +352,8 @@ class OfflineCatalogDataSource {
         }
 
         // Full-write path: new code, or row's `last_modified_t`
-        // differs (typically newer). Replace the row + reindex FTS.
+        // differs (typically newer). Replace the row + (outside a
+        // bulk session) reindex FTS.
         final json = jsonEncode(dto.toJson());
         batch.insert(
           _kTableProducts,
@@ -284,6 +370,11 @@ class OfflineCatalogDataSource {
           },
           conflictAlgorithm: ConflictAlgorithm.replace,
         );
+        // Inside a bulk-insert session the FTS index is rebuilt in
+        // one shot at the end (see [endBulkInsertSession]), so we
+        // skip the per-row FTS work — that's where the bulk of the
+        // parse-phase speedup comes from.
+        if (_bulkSessionActive) continue;
         // FTS5 has no native "upsert" — delete + insert keeps it in
         // sync with the products table on every write.
         batch.delete(
