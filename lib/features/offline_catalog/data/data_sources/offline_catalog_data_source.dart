@@ -252,6 +252,45 @@ class OfflineCatalogDataSource {
     });
   }
 
+  /// Delete rows whose [_kColFetchedAt] is strictly older than
+  /// [cutoffMillis]. Used by the build path as a sweep step after a
+  /// successful refresh / filter-change rerun:
+  ///
+  /// 1. Build start time is captured.
+  /// 2. Every row written during the build picks up a `fetched_at`
+  ///    that's >= build start.
+  /// 3. After the parse phase completes, this method drops any row
+  ///    whose `fetched_at` is older than the build start — those are
+  ///    products that no longer pass the user's filters, or that OFF
+  ///    has dropped from its dataset since the previous build.
+  ///
+  /// Returns the number of rows removed. The matching FTS5 entries
+  /// are deleted in the same transaction so the index never points
+  /// at gone rows.
+  Future<int> deleteStaleRows(int cutoffMillis) async {
+    final db = await _database();
+    return await db.transaction((txn) async {
+      // FTS5 has no foreign-key cascade — we delete from it
+      // explicitly, looking up the codes we're about to drop from
+      // the main table.
+      await txn.rawDelete(
+        '''
+          DELETE FROM $_kTableProductsFts
+          WHERE $_kColCode IN (
+            SELECT $_kColCode FROM $_kTableProducts
+            WHERE $_kColFetchedAt < ?
+          )
+        ''',
+        [cutoffMillis],
+      );
+      return await txn.delete(
+        _kTableProducts,
+        where: '$_kColFetchedAt < ?',
+        whereArgs: [cutoffMillis],
+      );
+    });
+  }
+
   /// Delete rows whose code is in [codes]. Used by the refresh path to
   /// drop products OFF has marked obsolete.
   Future<void> deleteByCodes(Iterable<String> codes) async {

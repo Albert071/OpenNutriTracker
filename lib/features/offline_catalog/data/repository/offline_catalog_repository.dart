@@ -96,6 +96,12 @@ class OfflineCatalogRepository {
   /// Phase 2 — parse + filter. Yields [DownloadProgress] with
   /// `phase = parsing` and rows-kept counter. Cancellation checked
   /// every ~200 rows.
+  /// CSV dumps are republished by OFF roughly daily. A cached gzip
+  /// younger than this window is reused as-is when the user runs
+  /// the wizard again — we skip the re-download and go straight to
+  /// the parse phase, since the data on disk is fresh enough.
+  static const _cachedDumpFreshness = Duration(hours: 24);
+
   Stream<DownloadProgress> build({
     required CatalogFilterEntity filters,
     required CancellationToken cancellation,
@@ -103,6 +109,22 @@ class OfflineCatalogRepository {
     final filtersJson = _serialiseFilters(filters);
     final filtersHash = _hashFilters(filtersJson);
     final stopwatch = Stopwatch()..start();
+
+    // The build's start time stamps every row that survives the
+    // parse via [OfflineCatalogDataSource.upsertBatch]'s `fetched_at`
+    // write. After the parse completes we drop any row whose
+    // `fetched_at` predates this — those are leftover from a prior
+    // build that the new filter set (or new dump contents) would
+    // not have kept. This handles two distinct user flows:
+    //
+    //   1. Refresh — same filters, fresher OFF dump. Stale entries
+    //      that have been removed from OFF or no longer pass the
+    //      always-on filters get swept.
+    //   2. Filter change — different countries, toggles, recency.
+    //      Rows that match the old filters but not the new ones
+    //      get swept, while rows that match both are simply
+    //      re-stamped (kept).
+    final buildStartedAtMillis = DateTime.now().millisecondsSinceEpoch;
 
     // Persist the filter set so the resume / refresh paths can find
     // what the catalog was built for.
@@ -115,18 +137,38 @@ class OfflineCatalogRepository {
       jsonEncode({'phase': 'downloading', 'filtersHash': filtersHash}),
     );
 
-    _log.info('Catalog build phase 1: download');
-    await for (final p in _csvDump.downloadResumable(
-      cancellation: cancellation,
-    )) {
+    // Skip the download phase entirely when a fresh-enough gzip is
+    // already on disk. The user's wizard run still gets the most
+    // recent OFF data they have access to without paying for a
+    // second 1+ GB transfer.
+    final cacheIsFresh = await _isCachedDumpFresh();
+    if (cacheIsFresh) {
+      _log.info('Catalog build phase 1: skipped (cached dump is fresh)');
+      // Emit a single 100% progress event so the UI doesn't sit on
+      // 0% for the duration of the (skipped) download phase.
+      final cachedSize = await _csvDump.downloadedBytes();
       yield DownloadProgress(
         phase: DownloadPhase.downloading,
-        bytesDone: p.bytesDone,
-        bytesTotal: p.bytesTotal,
+        bytesDone: cachedSize,
+        bytesTotal: cachedSize,
         rowsKept: 0,
         rowsScanned: 0,
         elapsed: stopwatch.elapsed,
       );
+    } else {
+      _log.info('Catalog build phase 1: download');
+      await for (final p in _csvDump.downloadResumable(
+        cancellation: cancellation,
+      )) {
+        yield DownloadProgress(
+          phase: DownloadPhase.downloading,
+          bytesDone: p.bytesDone,
+          bytesTotal: p.bytesTotal,
+          rowsKept: 0,
+          rowsScanned: 0,
+          elapsed: stopwatch.elapsed,
+        );
+      }
     }
     cancellation.throwIfCancelled();
 
@@ -152,7 +194,14 @@ class OfflineCatalogRepository {
     }
     cancellation.throwIfCancelled();
 
-    // Phase 3 — cleanup. Drop the cached gzip; the catalog is sealed.
+    // Phase 3 — sweep stale rows from any prior build, then clean
+    // up the cached gzip. Order matters: the sweep happens before
+    // the cursor is cleared so an interruption between the two
+    // still leaves the catalogue in a consistent state.
+    final sweptCount = await _local.deleteStaleRows(buildStartedAtMillis);
+    if (sweptCount > 0) {
+      _log.info('Swept $sweptCount stale rows from prior build');
+    }
     await _csvDump.deleteCachedFile();
     final stored = await _local.count();
     await _local.setMeta(OfflineCatalogDataSource.metaKeyBuildCursor, null);
@@ -165,6 +214,23 @@ class OfflineCatalogRepository {
       stored.toString(),
     );
     _log.info('Catalog build complete: $stored rows on disk');
+  }
+
+  Future<bool> _isCachedDumpFresh() async {
+    if (!await _csvDump.hasLocalFile()) return false;
+    final file = await _csvDump.resolveLocalFile();
+    final mtime = await file.lastModified();
+    final age = DateTime.now().difference(mtime);
+    if (age > _cachedDumpFreshness) return false;
+    // Sanity check: the file must be the FULL dump (not a partial
+    // download from an interrupted session). HEAD the URL and
+    // compare lengths. If the HEAD fails we err on the side of
+    // re-downloading rather than reusing potentially-incomplete
+    // data.
+    final localBytes = await file.length();
+    final remoteBytes = await _csvDump.headTotalBytes();
+    if (remoteBytes == null) return false;
+    return localBytes >= remoteBytes;
   }
 
   /// Incremental refresh against the same filter set last used.
