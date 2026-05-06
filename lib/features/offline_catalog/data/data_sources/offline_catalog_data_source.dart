@@ -192,17 +192,82 @@ class OfflineCatalogDataSource {
   /// transaction so a partially-written page never lands on disk; the
   /// builder also commits its [metaKeyBuildCursor] inside the same
   /// transaction so resume is atomic.
+  ///
+  /// **Refresh short-circuit.** OFF stamps every product with a
+  /// `last_modified_t` (epoch seconds). When the incoming row's
+  /// value matches what we already have stored for the same `code`,
+  /// the data is unchanged and we skip the JSON write + FTS reindex
+  /// — we just bump `fetched_at` so the post-build stale-row sweep
+  /// doesn't drop the row. On a typical refresh against a UK
+  /// catalogue this turns ~30k full row replacements into ~30k
+  /// cheap "touch" updates, with full writes only for rows OFF
+  /// has actually changed.
   Future<void> upsertBatch(
     Iterable<OFFProductDTO> products, {
     Map<String, String>? metaUpdates,
   }) async {
+    final productsList = products.toList(growable: false);
     final db = await _database();
     final now = DateTime.now().millisecondsSinceEpoch;
+
     await db.transaction((txn) async {
-      final batch = txn.batch();
-      for (final dto in products) {
+      // Pre-fetch existing `last_modified_t` for the codes in this
+      // batch in a single SELECT. Lookups in subsequent loop
+      // iterations are O(1) against the resulting Map.
+      final codes = <String>[];
+      for (final dto in productsList) {
         final code = dto.code;
         if (code == null || code.isEmpty) continue;
+        codes.add(code);
+      }
+      final existingLastModified = <String, int?>{};
+      if (codes.isNotEmpty) {
+        // Avoid a single SELECT with thousands of placeholders by
+        // chunking. SQLite tolerates large IN lists but most drivers
+        // cap parameter counts at 999; we stay safely under that.
+        const chunkSize = 500;
+        for (var i = 0; i < codes.length; i += chunkSize) {
+          final slice = codes.sublist(
+            i,
+            i + chunkSize > codes.length ? codes.length : i + chunkSize,
+          );
+          final placeholders = List.filled(slice.length, '?').join(',');
+          final rows = await txn.rawQuery(
+            'SELECT $_kColCode, $_kColLastModifiedT '
+            'FROM $_kTableProducts '
+            'WHERE $_kColCode IN ($placeholders)',
+            slice,
+          );
+          for (final row in rows) {
+            existingLastModified[row[_kColCode] as String] =
+                row[_kColLastModifiedT] as int?;
+          }
+        }
+      }
+
+      final batch = txn.batch();
+      final touchOnlyCodes = <String>[];
+
+      for (final dto in productsList) {
+        final code = dto.code;
+        if (code == null || code.isEmpty) continue;
+
+        final incomingLm = _coerceInt(dto.last_modified_t);
+        final existingLm = existingLastModified[code];
+
+        // Touch-only path: row is in the catalog already, with the
+        // same `last_modified_t`. The data hasn't changed; we just
+        // re-stamp `fetched_at` so the sweep keeps it.
+        final unchanged = incomingLm != null &&
+            existingLm != null &&
+            incomingLm == existingLm;
+        if (unchanged) {
+          touchOnlyCodes.add(code);
+          continue;
+        }
+
+        // Full-write path: new code, or row's `last_modified_t`
+        // differs (typically newer). Replace the row + reindex FTS.
         final json = jsonEncode(dto.toJson());
         batch.insert(
           _kTableProducts,
@@ -214,11 +279,7 @@ class OfflineCatalogDataSource {
             _kColProductNameFr: dto.product_name_fr,
             _kColBrands: dto.brands,
             _kColData: json,
-            // last_modified_t is not on the DTO yet — the bulk loader
-            // requests it as an extra `fields=` value and stamps it via
-            // [upsertBatchWithLastModified] below. Leaving it null here
-            // keeps this overload usable from tests and one-off paths.
-            _kColLastModifiedT: null,
+            _kColLastModifiedT: incomingLm,
             _kColFetchedAt: now,
           },
           conflictAlgorithm: ConflictAlgorithm.replace,
@@ -239,6 +300,28 @@ class OfflineCatalogDataSource {
           _kColBrands: dto.brands ?? '',
         });
       }
+
+      // Single bulk UPDATE to bump fetched_at on all touch-only
+      // codes. Drives the sweep's "did we see this row again this
+      // build?" signal without rewriting any data or FTS state.
+      if (touchOnlyCodes.isNotEmpty) {
+        const chunkSize = 500;
+        for (var i = 0; i < touchOnlyCodes.length; i += chunkSize) {
+          final slice = touchOnlyCodes.sublist(
+            i,
+            i + chunkSize > touchOnlyCodes.length
+                ? touchOnlyCodes.length
+                : i + chunkSize,
+          );
+          final placeholders = List.filled(slice.length, '?').join(',');
+          batch.rawUpdate(
+            'UPDATE $_kTableProducts SET $_kColFetchedAt = ? '
+            'WHERE $_kColCode IN ($placeholders)',
+            [now, ...slice],
+          );
+        }
+      }
+
       if (metaUpdates != null) {
         for (final entry in metaUpdates.entries) {
           batch.insert(
@@ -420,6 +503,18 @@ class OfflineCatalogDataSource {
 
   OFFProductDTO _decodeProduct(String json) =>
       OFFProductDTO.fromJson(jsonDecode(json) as Map<String, dynamic>);
+
+  /// Coerce the stringly-/dynamically-typed `last_modified_t` value
+  /// off an [OFFProductDTO] to a clean int. CSV rows arrive as
+  /// strings, live API responses as ints; either becomes a Dart int
+  /// here so the comparison in [upsertBatch] is type-safe.
+  static int? _coerceInt(dynamic v) {
+    if (v == null) return null;
+    if (v is int) return v;
+    if (v is double) return v.toInt();
+    if (v is String) return int.tryParse(v);
+    return null;
+  }
 
   /// Strip FTS5 query special characters and append `*` to every
   /// non-empty token for prefix matching as the user types.

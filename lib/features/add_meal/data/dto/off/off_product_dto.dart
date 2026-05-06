@@ -31,6 +31,15 @@ class OFFProductDTO {
 
   final OFFProductNutrimentsDTO? nutriments;
 
+  /// Epoch seconds when OFF last modified the product entry. Only
+  /// the offline-catalog bulk path (CSV dump) populates this — the
+  /// live API request projection does not include it because the
+  /// search and meal-detail screens don't need it. The catalog
+  /// uses it as a cheap "did this row actually change since last
+  /// build?" signal so refresh runs can skip rewriting unchanged
+  /// products.
+  final dynamic last_modified_t;
+
   String? getLocaleName(SupportedLanguage supportedLanguage) {
     String? localeName;
     switch (supportedLanguage) {
@@ -74,6 +83,7 @@ class OFFProductDTO {
     required this.serving_quantity,
     required this.serving_size,
     required this.nutriments,
+    this.last_modified_t,
   });
 
   factory OFFProductDTO.fromJson(Map<String, dynamic> json) =>

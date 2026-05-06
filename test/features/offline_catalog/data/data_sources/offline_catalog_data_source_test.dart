@@ -7,7 +7,13 @@ import 'package:opennutritracker/features/offline_catalog/data/data_sources/offl
 import 'package:path/path.dart' as p;
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
-OFFProductDTO _dto(String code, {String name = 'Test'}) => OFFProductDTO(
+OFFProductDTO _dto(
+  String code, {
+  String name = 'Test',
+  int? lastModifiedT,
+  num? kcal = 100,
+}) =>
+    OFFProductDTO(
       code: code,
       product_name: name,
       product_name_en: null,
@@ -25,7 +31,7 @@ OFFProductDTO _dto(String code, {String name = 'Test'}) => OFFProductDTO(
       serving_quantity: null,
       serving_size: null,
       nutriments: OFFProductNutrimentsDTO(
-        energy_kcal_100g: 100,
+        energy_kcal_100g: kcal,
         carbohydrates_100g: null,
         fat_100g: null,
         proteins_100g: null,
@@ -33,6 +39,7 @@ OFFProductDTO _dto(String code, {String name = 'Test'}) => OFFProductDTO(
         saturated_fat_100g: null,
         fiber_100g: null,
       ),
+      last_modified_t: lastModifiedT,
     );
 
 void main() {
@@ -146,6 +153,185 @@ void main() {
       expect(survivor, isNotNull);
       expect(survivor!.product_name, 'new version');
     });
+  });
+
+  group('OfflineCatalogDataSource.upsertBatch (last_modified_t short-circuit)',
+      () {
+    late Directory tmp;
+    late OfflineCatalogDataSource source;
+
+    setUp(() async {
+      tmp = await Directory.systemTemp.createTemp('offline-catalog-lm-');
+      source = _TestDataSource(p.join(tmp.path, 'test_catalog.db'));
+    });
+
+    tearDown(() async {
+      await source.close();
+      if (await tmp.exists()) {
+        await tmp.delete(recursive: true);
+      }
+    });
+
+    test('full-writes a brand-new row', () async {
+      await source.upsertBatch(
+        [_dto('aaa', name: 'fresh', lastModifiedT: 1700000000)],
+      );
+      final stored = await source.getByCode('aaa');
+      expect(stored, isNotNull);
+      expect(stored!.product_name, 'fresh');
+      expect(stored.last_modified_t, 1700000000);
+    });
+
+    test(
+      're-upserting with an unchanged last_modified_t is touch-only — '
+      'data is preserved, only fetched_at advances',
+      () async {
+        // First write: stash the original product data.
+        await source.upsertBatch(
+          [
+            _dto(
+              'aaa',
+              name: 'original name',
+              kcal: 480,
+              lastModifiedT: 1700000000,
+            ),
+          ],
+        );
+        await Future.delayed(const Duration(milliseconds: 30));
+        final boundary = DateTime.now().millisecondsSinceEpoch;
+        await Future.delayed(const Duration(milliseconds: 30));
+
+        // Second write: SAME last_modified_t but diverging data.
+        // The short-circuit should detect the row is unchanged
+        // upstream and skip the data write — so the divergent
+        // payload here is intentionally never persisted.
+        await source.upsertBatch(
+          [
+            _dto(
+              'aaa',
+              name: 'POISONED PAYLOAD',
+              kcal: 1,
+              lastModifiedT: 1700000000,
+            ),
+          ],
+        );
+
+        final stored = await source.getByCode('aaa');
+        expect(
+          stored!.product_name,
+          'original name',
+          reason: 'data write should be skipped on unchanged last_modified_t',
+        );
+        expect(stored.nutriments?.energy_kcal_100g, 480);
+
+        // But the row WAS touched — so a sweep cutting at the
+        // boundary keeps it.
+        final removed = await source.deleteStaleRows(boundary);
+        expect(removed, 0);
+        expect(await source.count(), 1);
+      },
+    );
+
+    test(
+      're-upserting with a newer last_modified_t triggers a full write '
+      'and the new payload lands',
+      () async {
+        await source.upsertBatch(
+          [_dto('aaa', name: 'old', kcal: 480, lastModifiedT: 1700000000)],
+        );
+        await source.upsertBatch(
+          [_dto('aaa', name: 'updated', kcal: 475, lastModifiedT: 1800000000)],
+        );
+
+        final stored = await source.getByCode('aaa');
+        expect(stored!.product_name, 'updated');
+        expect(stored.nutriments?.energy_kcal_100g, 475);
+        expect(stored.last_modified_t, 1800000000);
+      },
+    );
+
+    test(
+      'falls back to full-write when the existing row has no '
+      'last_modified_t (legacy row written before this column was '
+      'populated)',
+      () async {
+        // Simulate a pre-optimisation row by writing without a
+        // last_modified_t, then re-upserting with one. The first
+        // write goes through the same code path and stores null;
+        // the second should detect the null and full-write so the
+        // column is backfilled going forward.
+        await source.upsertBatch([_dto('aaa', name: 'legacy')]);
+        await source.upsertBatch(
+          [_dto('aaa', name: 'modern', lastModifiedT: 1800000000)],
+        );
+
+        final stored = await source.getByCode('aaa');
+        expect(stored!.product_name, 'modern');
+        expect(stored.last_modified_t, 1800000000);
+      },
+    );
+
+    test(
+      'falls back to full-write when the incoming row has no '
+      'last_modified_t (e.g. live API path with no projection of '
+      'that field)',
+      () async {
+        await source.upsertBatch(
+          [_dto('aaa', name: 'old', lastModifiedT: 1700000000)],
+        );
+        // Live API path — no last_modified_t.
+        await source.upsertBatch([_dto('aaa', name: 'live api refresh')]);
+
+        final stored = await source.getByCode('aaa');
+        expect(stored!.product_name, 'live api refresh');
+      },
+    );
+
+    test(
+      'mixed batch — partitions correctly between touch-only and '
+      'full-write rows',
+      () async {
+        // Seed three rows with distinct last_modified_t.
+        await source.upsertBatch([
+          _dto('unchanged', name: 'old A', lastModifiedT: 1700000000),
+          _dto('changed', name: 'old B', lastModifiedT: 1700000000),
+          _dto('disappearing', name: 'old C', lastModifiedT: 1700000000),
+        ]);
+        await Future.delayed(const Duration(milliseconds: 30));
+        final boundary = DateTime.now().millisecondsSinceEpoch;
+        await Future.delayed(const Duration(milliseconds: 30));
+
+        // Refresh batch:
+        // - 'unchanged' arrives with the same last_modified_t →
+        //   touch-only.
+        // - 'changed' arrives with a newer last_modified_t →
+        //   full-write.
+        // - 'new' is a brand-new code → full-write.
+        // - 'disappearing' is absent from the batch — the sweep
+        //   will catch it.
+        await source.upsertBatch([
+          _dto('unchanged',
+              name: 'POISON unchanged', lastModifiedT: 1700000000),
+          _dto('changed', name: 'new B', lastModifiedT: 1800000000),
+          _dto('new', name: 'new D', lastModifiedT: 1800000000),
+        ]);
+        await source.deleteStaleRows(boundary);
+
+        final unchanged = await source.getByCode('unchanged');
+        final changed = await source.getByCode('changed');
+        final newRow = await source.getByCode('new');
+        final disappearing = await source.getByCode('disappearing');
+
+        expect(unchanged?.product_name, 'old A',
+            reason: 'unchanged row keeps its original payload');
+        expect(changed?.product_name, 'new B',
+            reason: 'changed row picks up the newer payload');
+        expect(newRow?.product_name, 'new D',
+            reason: 'new row is added');
+        expect(disappearing, isNull,
+            reason: 'absent row is swept');
+      },
+    );
   });
 }
 

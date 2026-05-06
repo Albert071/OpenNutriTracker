@@ -556,6 +556,11 @@ class OffCsvDumpDataSource {
       'serving_quantity': _toDouble(_cell(row, idx, 'serving_quantity')),
       'serving_size': _cell(row, idx, 'serving_size'),
       'nutriments': nutriments,
+      // OFF's per-row last-modified epoch. The catalog data source
+      // uses this to short-circuit upserts on refresh: if the row
+      // already exists with the same value, we just bump fetched_at
+      // and skip the (much costlier) data write + FTS reindex.
+      'last_modified_t': _toInt(_cell(row, idx, 'last_modified_t')),
     };
 
     try {
