@@ -10,7 +10,7 @@ class UserActivityRepository {
   Future<void> addUserActivity(UserActivityEntity activityEntity) async {
     final activityDBO = UserActivityDBO.fromUserActivityEntity(activityEntity);
 
-    _userActivityDataSource.addUserActivity(activityDBO);
+    await _userActivityDataSource.addUserActivity(activityDBO);
   }
 
   Future<void> addAllUserActivityDBOs(

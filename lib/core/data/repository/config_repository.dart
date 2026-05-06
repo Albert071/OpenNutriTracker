@@ -11,11 +11,11 @@ class ConfigRepository {
 
   Future<void> updateConfig(ConfigEntity configEntity) async {
     final configDBO = ConfigDBO.fromConfigEntity(configEntity);
-    _configDataSource.addConfig(configDBO);
+    await _configDataSource.addConfig(configDBO);
   }
 
   Future<void> setConfigDisclaimer(bool hasAcceptedDisclaimer) async {
-    _configDataSource.setConfigDisclaimer(hasAcceptedDisclaimer);
+    await _configDataSource.setConfigDisclaimer(hasAcceptedDisclaimer);
   }
 
   Future<void> setConfigHasAcceptedAnonymousData(
@@ -60,29 +60,29 @@ class ConfigRepository {
   }
 
   Future<void> setConfigKcalAdjustment(double kcalAdjustment) async {
-    _configDataSource.setConfigKcalAdjustment(kcalAdjustment);
+    await _configDataSource.setConfigKcalAdjustment(kcalAdjustment);
   }
 
   Future<void> setConfigShowActivityTracking(bool show) async {
-    _configDataSource.setConfigShowActivityTracking(show);
+    await _configDataSource.setConfigShowActivityTracking(show);
   }
 
   Future<void> setConfigShowMealMacros(bool show) async {
-    _configDataSource.setConfigShowMealMacros(show);
+    await _configDataSource.setConfigShowMealMacros(show);
   }
 
   Future<void> setUserMacroPct(double carbs, double protein, double fat) async {
-    _configDataSource.setConfigCarbGoalPct(carbs);
-    _configDataSource.setConfigProteinGoalPct(protein);
-    _configDataSource.setConfigFatGoalPct(fat);
+    await _configDataSource.setConfigCarbGoalPct(carbs);
+    await _configDataSource.setConfigProteinGoalPct(protein);
+    await _configDataSource.setConfigFatGoalPct(fat);
   }
 
   Future<void> setNotificationsEnabled(bool enabled) async {
-    _configDataSource.setNotificationsEnabled(enabled);
+    await _configDataSource.setNotificationsEnabled(enabled);
   }
 
   Future<void> setNotificationTime(int hour, int minute) async {
-    _configDataSource.setNotificationTime(hour, minute);
+    await _configDataSource.setNotificationTime(hour, minute);
   }
 
   Future<String?> getSelectedLocale() async {
@@ -90,10 +90,10 @@ class ConfigRepository {
   }
 
   Future<void> setSelectedLocale(String? locale) async {
-    _configDataSource.setSelectedLocale(locale);
+    await _configDataSource.setSelectedLocale(locale);
   }
 
   Future<void> setConfigShowMicronutrients(bool show) async {
-    _configDataSource.setConfigShowMicronutrients(show);
+    await _configDataSource.setConfigShowMicronutrients(show);
   }
 }

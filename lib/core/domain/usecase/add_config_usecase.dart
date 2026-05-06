@@ -32,7 +32,7 @@ class AddConfigUsecase {
   }
 
   Future<void> setConfigKcalAdjustment(double kcalAdjustment) async {
-    _configRepository.setConfigKcalAdjustment(kcalAdjustment);
+    await _configRepository.setConfigKcalAdjustment(kcalAdjustment);
   }
 
   Future<void> setConfigMacroGoalPct(
@@ -40,7 +40,11 @@ class AddConfigUsecase {
     double proteinGoalPct,
     double fatPctGoal,
   ) async {
-    _configRepository.setUserMacroPct(carbGoalPct, proteinGoalPct, fatPctGoal);
+    await _configRepository.setUserMacroPct(
+      carbGoalPct,
+      proteinGoalPct,
+      fatPctGoal,
+    );
   }
 
 

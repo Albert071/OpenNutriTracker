@@ -126,16 +126,16 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
     return config.userFatGoalPct;
   }
 
-  void setKcalAdjustment(double kcalAdjustment) {
-    _addConfigUsecase.setConfigKcalAdjustment(kcalAdjustment);
+  Future<void> setKcalAdjustment(double kcalAdjustment) async {
+    await _addConfigUsecase.setConfigKcalAdjustment(kcalAdjustment);
   }
 
-  void setMacroGoals(
+  Future<void> setMacroGoals(
     double carbGoalPct,
     double proteinGoalPct,
     double fatGoalPct,
-  ) {
-    _addConfigUsecase.setConfigMacroGoalPct(
+  ) async {
+    await _addConfigUsecase.setConfigMacroGoalPct(
       carbGoalPct.toInt() / 100,
       proteinGoalPct.toInt() / 100,
       fatGoalPct.toInt() / 100,

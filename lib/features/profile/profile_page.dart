@@ -257,7 +257,7 @@ class _ProfilePageState extends State<ProfilePage> {
     } else {
       userEntity.weeklyWeightGoalKg = result;
     }
-    _profileBloc.updateUser(userEntity);
+    await _profileBloc.updateUser(userEntity);
   }
 
   Future<void> _showSetGoalDialog(
@@ -349,16 +349,36 @@ class _ProfilePageState extends State<ProfilePage> {
     );
     if (selectedGender == null) return;
     userEntity.gender = selectedGender;
-    if (selectedGender != UserGenderEntity.nonBinary) {
-      // Drop any previously set hormone profile when switching back to a binary
-      // gender — the field is meaningless outside of nonBinary.
+
+    // Switching to non-binary: prompt for hormone profile and persist BOTH
+    // fields in a single updateUser call. Issuing two saves (one for the
+    // gender, one for the profile) used to race — by the time the home
+    // recomputed kcal, only the gender write had landed and the profile
+    // was still null, so every choice rendered as "averaged".
+    if (selectedGender == UserGenderEntity.nonBinary) {
+      if (context.mounted) {
+        final selected = await showDialog<CaloriesProfileEntity>(
+          context: context,
+          builder: (BuildContext context) => CaloriesProfileInfoDialog(
+            initialProfile:
+                userEntity.caloriesProfile ?? CaloriesProfileEntity.averaged,
+          ),
+        );
+        if (selected != null) {
+          userEntity.caloriesProfile = selected;
+        } else {
+          // User cancelled the picker but is now non-binary — store the
+          // implicit default explicitly so reads don't keep falling back.
+          userEntity.caloriesProfile ??= CaloriesProfileEntity.averaged;
+        }
+      }
+    } else {
+      // Switching back to binary — drop any previously set hormone profile.
+      // The field is meaningless outside of nonBinary.
       userEntity.caloriesProfile = null;
     }
-    _profileBloc.updateUser(userEntity);
 
-    if (selectedGender == UserGenderEntity.nonBinary && context.mounted) {
-      await _showCaloriesProfileDialog(context, userEntity);
-    }
+    await _profileBloc.updateUser(userEntity);
   }
 
   Future<void> _showCaloriesProfileDialog(

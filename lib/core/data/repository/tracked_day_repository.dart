@@ -44,15 +44,15 @@ class TrackedDayRepository {
   }
 
   Future<void> updateDayCalorieGoal(DateTime day, double calorieGoal) async {
-    _trackedDayDataSource.updateDayCalorieGoal(day, calorieGoal);
+    await _trackedDayDataSource.updateDayCalorieGoal(day, calorieGoal);
   }
 
   Future<void> increaseDayCalorieGoal(DateTime day, double amount) async {
-    _trackedDayDataSource.increaseDayCalorieGoal(day, amount);
+    await _trackedDayDataSource.increaseDayCalorieGoal(day, amount);
   }
 
   Future<void> reduceDayCalorieGoal(DateTime day, double amount) async {
-    _trackedDayDataSource.reduceDayCalorieGoal(day, amount);
+    await _trackedDayDataSource.reduceDayCalorieGoal(day, amount);
   }
 
   Future<void> addNewTrackedDay(
@@ -62,7 +62,7 @@ class TrackedDayRepository {
     double totalFatGoal,
     double totalProteinGoal,
   ) async {
-    _trackedDayDataSource.saveTrackedDay(
+    await _trackedDayDataSource.saveTrackedDay(
       TrackedDayDBO(
         day: day,
         calorieGoal: totalKcalGoal,
@@ -83,7 +83,7 @@ class TrackedDayRepository {
 
   Future<void> addDayTrackedCalories(DateTime day, double addCalories) async {
     if (await _trackedDayDataSource.hasTrackedDay(day)) {
-      _trackedDayDataSource.addDayCaloriesTracked(day, addCalories);
+      await _trackedDayDataSource.addDayCaloriesTracked(day, addCalories);
     }
   }
 
@@ -92,7 +92,7 @@ class TrackedDayRepository {
     double addCalories,
   ) async {
     if (await _trackedDayDataSource.hasTrackedDay(day)) {
-      _trackedDayDataSource.decreaseDayCaloriesTracked(day, addCalories);
+      await _trackedDayDataSource.decreaseDayCaloriesTracked(day, addCalories);
     }
   }
 
@@ -102,7 +102,7 @@ class TrackedDayRepository {
     double? fatGoal,
     double? proteinGoal,
   }) async {
-    _trackedDayDataSource.updateDayMacroGoals(
+    await _trackedDayDataSource.updateDayMacroGoals(
       day,
       carbsGoal: carbGoal,
       fatGoal: fatGoal,
@@ -116,7 +116,7 @@ class TrackedDayRepository {
     double? fatGoal,
     double? proteinGoal,
   }) async {
-    _trackedDayDataSource.increaseDayMacroGoal(
+    await _trackedDayDataSource.increaseDayMacroGoal(
       day,
       carbsAmount: carbGoal,
       fatAmount: fatGoal,
@@ -130,7 +130,7 @@ class TrackedDayRepository {
     double? fatGoal,
     double? proteinGoal,
   }) async {
-    _trackedDayDataSource.reduceDayMacroGoal(
+    await _trackedDayDataSource.reduceDayMacroGoal(
       day,
       carbsAmount: carbGoal,
       fatAmount: fatGoal,
@@ -144,7 +144,7 @@ class TrackedDayRepository {
     double? fatTracked,
     double? proteinTracked,
   }) async {
-    _trackedDayDataSource.addDayMacroTracked(
+    await _trackedDayDataSource.addDayMacroTracked(
       day,
       carbsAmount: carbsTracked,
       fatAmount: fatTracked,
@@ -158,7 +158,7 @@ class TrackedDayRepository {
     double? fatTracked,
     double? proteinTracked,
   }) async {
-    _trackedDayDataSource.removeDayMacroTracked(
+    await _trackedDayDataSource.removeDayMacroTracked(
       day,
       carbsAmount: carbsTracked,
       fatAmount: fatTracked,

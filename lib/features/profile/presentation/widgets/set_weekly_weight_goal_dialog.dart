@@ -86,12 +86,13 @@ class _SetWeeklyWeightGoalDialogState
           onPressed: () => Navigator.of(context).pop(null),
           child: Text(S.of(context).dialogCancelLabel),
         ),
-        if (widget.currentGoalKg != null)
-          TextButton(
-            onPressed: () =>
-                Navigator.of(context).pop(_kClearSentinel),
-            child: Text(S.of(context).buttonResetLabel),
-          ),
+        // Always offer Reset — users need a way to fall back to the
+        // overall weight goal (lose / maintain / gain) even if they
+        // opened the slider once and never set an explicit weekly rate.
+        TextButton(
+          onPressed: () => Navigator.of(context).pop(_kClearSentinel),
+          child: Text(S.of(context).buttonResetLabel),
+        ),
         TextButton(
           onPressed: () => Navigator.of(context).pop(_selectedKg),
           child: Text(S.of(context).dialogOKLabel),

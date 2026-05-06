@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:opennutritracker/core/domain/usecase/add_user_usecase.dart';
 import 'package:opennutritracker/core/domain/usecase/get_user_usecase.dart';
 import 'package:opennutritracker/core/utils/locator.dart';
-import 'package:opennutritracker/features/home/presentation/bloc/home_bloc.dart';
+import 'package:opennutritracker/features/profile/presentation/bloc/profile_bloc.dart';
 import 'package:opennutritracker/features/profile/presentation/widgets/set_weight_dialog.dart';
 import 'package:opennutritracker/generated/l10n.dart';
 
@@ -72,11 +71,11 @@ class QuickWeightWidget extends StatelessWidget {
 
     final user = await locator<GetUserUsecase>().getUserData();
     user.weightKG = newWeightKg;
-    await locator<AddUserUsecase>().addUser(user);
 
-    // Refresh home kcal goal (weight affects TDEE). The state emit will
-    // flow back through BlocBuilder and rebuild this widget with the new
-    // weight — no local cache needed.
-    locator<HomeBloc>().add(const LoadItemsEvent());
+    // Route through ProfileBloc.updateUser so the profile screen, diary,
+    // and home all refresh in one go. Going through AddUserUsecase
+    // directly would update Hive but leave the profile screen showing the
+    // pre-edit weight until the next manual reload.
+    await locator<ProfileBloc>().updateUser(user);
   }
 }
