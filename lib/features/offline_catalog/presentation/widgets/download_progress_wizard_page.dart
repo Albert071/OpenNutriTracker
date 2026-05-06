@@ -181,28 +181,41 @@ class _BuildingView extends StatelessWidget {
     final theme = Theme.of(context);
     final s = S.of(context);
     final isDownloading = p.phase == DownloadPhase.downloading;
-    final headline = isDownloading
-        // "Downloaded X MB of Y MB"
-        ? s.offlineCatalogDownloadingProgress(
-            _formatBytes(p.bytesDone),
-            _formatBytes(p.bytesTotal),
-          )
-        // "X products kept (Y rows scanned)"
-        : s.offlineCatalogDownloadingProgress(
-            _n(p.rowsKept),
-            _n(p.rowsScanned),
-          );
-    final phaseLabel = isDownloading
-        ? s.offlineCatalogTileBuilding
-        : s.offlineCatalogTileRefreshing;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         LinearProgressIndicator(value: p.fraction, minHeight: 8),
         const SizedBox(height: 16),
-        Text(headline, style: theme.textTheme.titleMedium),
-        const SizedBox(height: 4),
-        Text(phaseLabel, style: theme.textTheme.bodySmall),
+        if (isDownloading) ...[
+          // Download phase: bytes downloaded vs total — both
+          // numbers describe the same thing (download progress).
+          Text(
+            s.offlineCatalogDownloadingProgress(
+              _formatBytes(p.bytesDone),
+              _formatBytes(p.bytesTotal),
+            ),
+            style: theme.textTheme.titleMedium,
+          ),
+          const SizedBox(height: 4),
+          Text(s.offlineCatalogTileBuilding,
+              style: theme.textTheme.bodySmall),
+        ] else ...[
+          // Parse phase: the two numbers are independent — kept is
+          // what survives the filter, scanned is everything we've
+          // read so far. Show them on separate lines so the user
+          // doesn't read them as a fraction.
+          // l10n: offlineCatalogParsingKept
+          Text(
+            '${_n(p.rowsKept)} products kept',
+            style: theme.textTheme.titleMedium,
+          ),
+          const SizedBox(height: 4),
+          // l10n: offlineCatalogParsingScanned
+          Text(
+            '${_n(p.rowsScanned)} rows scanned from the OFF dump',
+            style: theme.textTheme.bodySmall,
+          ),
+        ],
         if (p.estimatedRemaining != null && p.bytesTotal > 0) ...[
           const SizedBox(height: 4),
           Text(
