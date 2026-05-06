@@ -181,6 +181,17 @@ class ConfigDataSource {
     await config?.save();
   }
 
+  Future<bool> getCatalogAutoDisableNoticeAcknowledged() async {
+    final config = _configBox.get(_configKey);
+    return config?.catalogAutoDisableNoticeAcknowledged ?? false;
+  }
+
+  Future<void> setCatalogAutoDisableNoticeAcknowledged(bool value) async {
+    final config = _configBox.get(_configKey);
+    config?.catalogAutoDisableNoticeAcknowledged = value;
+    await config?.save();
+  }
+
   Future<ConfigDBO> getConfig() async {
     return _configBox.get(_configKey) ?? ConfigDBO.empty();
   }

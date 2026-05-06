@@ -116,4 +116,10 @@ class ConfigRepository {
 
   Future<void> setCatalogAutoDisabled(bool value) =>
       _configDataSource.setCatalogAutoDisabled(value);
+
+  Future<bool> getCatalogAutoDisableNoticeAcknowledged() =>
+      _configDataSource.getCatalogAutoDisableNoticeAcknowledged();
+
+  Future<void> setCatalogAutoDisableNoticeAcknowledged(bool value) =>
+      _configDataSource.setCatalogAutoDisableNoticeAcknowledged(value);
 }

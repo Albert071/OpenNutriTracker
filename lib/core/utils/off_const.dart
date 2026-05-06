@@ -32,6 +32,7 @@ class OFFConst {
   static const _offServingQuantityTag = "serving_quantity";
   static const _offServingSizeTag = "serving_size";
   static const _offNutrimentsTag = "nutriments";
+  static const _offLastModifiedTTag = "last_modified_t";
 
   static const _returnFields = [
     _offCodeTag,
@@ -49,6 +50,11 @@ class OFFConst {
     _offServingQuantityTag,
     _offServingSizeTag,
     _offNutrimentsTag,
+    // Carries through to OFFProductDTO.last_modified_t which the
+    // offline catalog uses to short-circuit upserts on refresh.
+    // The live search and meal-detail screens don't read it, so
+    // this is effectively a free-cost addition for them.
+    _offLastModifiedTTag,
   ];
 
   static String _getReturnFields() => _returnFields.join(",");

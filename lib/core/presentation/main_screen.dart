@@ -54,6 +54,14 @@ class _MainScreenState extends State<MainScreen> {
       _kCrashCounterResetDelay,
       _resetCrashCounter,
     );
+    // Surface the crash-safety auto-disable as a snackbar exactly
+    // once per event. We schedule via post-frame so the
+    // ScaffoldMessenger is mounted and the home shell has had a
+    // chance to draw — popping a snackbar before the user sees
+    // the screen would feel jarring.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _maybeShowCatalogAutoDisableNotice();
+    });
   }
 
   @override
@@ -70,6 +78,39 @@ class _MainScreenState extends State<MainScreen> {
     // disabled" banner until the user actively chooses to re-
     // enable. Clearing it here would silently flip the catalog
     // back on the user without their knowledge.
+  }
+
+  Future<void> _maybeShowCatalogAutoDisableNotice() async {
+    final configRepo = locator<ConfigRepository>();
+    final autoDisabled = await configRepo.getCatalogAutoDisabled();
+    if (!autoDisabled) return;
+    final acknowledged =
+        await configRepo.getCatalogAutoDisableNoticeAcknowledged();
+    if (acknowledged) return;
+    if (!mounted) return;
+    final messenger = ScaffoldMessenger.of(context);
+    messenger.showSnackBar(
+      SnackBar(
+        // l10n: offlineCatalogAutoDisableNotice
+        content: const Text(
+          'Offline food catalog paused after repeated crashes — your '
+          'downloaded data is safe.',
+        ),
+        duration: const Duration(seconds: 8),
+        action: SnackBarAction(
+          // l10n: offlineCatalogAutoDisableNoticeAction
+          label: 'Settings',
+          onPressed: () => Navigator.of(context).pushNamed(
+            NavigationOptions.settingsRoute,
+          ),
+        ),
+      ),
+    );
+    // Mark acknowledged whether the user takes the action or just
+    // lets the snackbar dismiss itself. The settings tile's banner
+    // remains the persistent affordance — the snackbar's job is
+    // just to make sure the user knows something happened.
+    await configRepo.setCatalogAutoDisableNoticeAcknowledged(true);
   }
 
   @override

@@ -53,6 +53,12 @@ class ConfigDBO extends HiveObject {
   int? catalogConsecutiveCrashes;
   @HiveField(18)
   bool? catalogAutoDisabled;
+  /// True once the user has been told (via snackbar on Home) that
+  /// the catalog was auto-disabled. Reset to false at the moment
+  /// of auto-disable so the next launch shows the notice exactly
+  /// once. Subsequent launches don't nag.
+  @HiveField(19)
+  bool? catalogAutoDisableNoticeAcknowledged;
 
   ConfigDBO(
     this.hasAcceptedDisclaimer,
@@ -71,6 +77,7 @@ class ConfigDBO extends HiveObject {
     this.offlineCatalogEnabled,
     this.catalogConsecutiveCrashes,
     this.catalogAutoDisabled,
+    this.catalogAutoDisableNoticeAcknowledged,
   });
 
   factory ConfigDBO.empty() =>

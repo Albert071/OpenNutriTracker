@@ -33,6 +33,7 @@ class ConfigDBOAdapter extends TypeAdapter<ConfigDBO> {
         offlineCatalogEnabled: fields[16] as bool?,
         catalogConsecutiveCrashes: (fields[17] as num?)?.toInt(),
         catalogAutoDisabled: fields[18] as bool?,
+        catalogAutoDisableNoticeAcknowledged: fields[19] as bool?,
       )
       ..userCarbGoalPct = (fields[6] as num?)?.toDouble()
       ..userProteinGoalPct = (fields[7] as num?)?.toDouble()
@@ -42,7 +43,7 @@ class ConfigDBOAdapter extends TypeAdapter<ConfigDBO> {
   @override
   void write(BinaryWriter writer, ConfigDBO obj) {
     writer
-      ..writeByte(19)
+      ..writeByte(20)
       ..writeByte(0)
       ..write(obj.hasAcceptedDisclaimer)
       ..writeByte(1)
@@ -80,7 +81,9 @@ class ConfigDBOAdapter extends TypeAdapter<ConfigDBO> {
       ..writeByte(17)
       ..write(obj.catalogConsecutiveCrashes)
       ..writeByte(18)
-      ..write(obj.catalogAutoDisabled);
+      ..write(obj.catalogAutoDisabled)
+      ..writeByte(19)
+      ..write(obj.catalogAutoDisableNoticeAcknowledged);
   }
 
   @override
@@ -117,6 +120,8 @@ ConfigDBO _$ConfigDBOFromJson(Map<String, dynamic> json) =>
         catalogConsecutiveCrashes: (json['catalogConsecutiveCrashes'] as num?)
             ?.toInt(),
         catalogAutoDisabled: json['catalogAutoDisabled'] as bool?,
+        catalogAutoDisableNoticeAcknowledged:
+            json['catalogAutoDisableNoticeAcknowledged'] as bool?,
       )
       ..userCarbGoalPct = (json['userCarbGoalPct'] as num?)?.toDouble()
       ..userProteinGoalPct = (json['userProteinGoalPct'] as num?)?.toDouble()
@@ -142,6 +147,8 @@ Map<String, dynamic> _$ConfigDBOToJson(ConfigDBO instance) => <String, dynamic>{
   'offlineCatalogEnabled': instance.offlineCatalogEnabled,
   'catalogConsecutiveCrashes': instance.catalogConsecutiveCrashes,
   'catalogAutoDisabled': instance.catalogAutoDisabled,
+  'catalogAutoDisableNoticeAcknowledged':
+      instance.catalogAutoDisableNoticeAcknowledged,
 };
 
 const _$AppThemeDBOEnumMap = {

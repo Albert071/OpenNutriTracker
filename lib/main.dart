@@ -124,8 +124,16 @@ Future<void> _applyCrashSafetySwitch(ConfigRepository configRepo) async {
   // the catalog off and the auto-disable banner showing — the user
   // re-enables explicitly from settings. Otherwise: increment.
   if (priorCount >= 2) {
+    final wasAlreadyAutoDisabled = await configRepo.getCatalogAutoDisabled();
     await configRepo.setOfflineCatalogEnabled(false);
     await configRepo.setCatalogAutoDisabled(true);
+    // Only on the *first* launch where we trip the threshold do we
+    // arm the home-screen notice. Subsequent launches re-enter this
+    // branch (the catalog stays off until the user re-enables) but
+    // we don't want to nag every time — once is enough.
+    if (!wasAlreadyAutoDisabled) {
+      await configRepo.setCatalogAutoDisableNoticeAcknowledged(false);
+    }
   }
   await configRepo.setCatalogConsecutiveCrashes(priorCount + 1);
 }
