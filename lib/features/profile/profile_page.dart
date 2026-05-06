@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:opennutritracker/core/domain/entity/calories_profile_entity.dart';
 import 'package:opennutritracker/core/domain/entity/user_bmi_entity.dart';
 import 'package:opennutritracker/core/domain/entity/user_entity.dart';
 import 'package:opennutritracker/core/domain/entity/user_gender_entity.dart';
 import 'package:opennutritracker/core/domain/entity/user_pal_entity.dart';
 import 'package:opennutritracker/core/domain/entity/user_weight_goal_entity.dart';
+import 'package:opennutritracker/core/presentation/widgets/calories_profile_info_dialog.dart';
 import 'package:opennutritracker/core/utils/calc/unit_calc.dart';
 import 'package:opennutritracker/core/utils/locator.dart';
 import 'package:opennutritracker/features/profile/presentation/bloc/profile_bloc.dart';
@@ -183,12 +185,31 @@ class _ProfilePageState extends State<ProfilePage> {
           ),
           leading: SizedBox(
             height: double.infinity,
-            child: Icon(user.gender.getIcon()),
+            child: user.gender.getIcon(),
           ),
           onTap: () {
             _showSetGenderDialog(context, user);
           },
         ),
+        if (user.gender == UserGenderEntity.nonBinary)
+          ListTile(
+            title: Text(
+              S.of(context).caloriesProfileInfoTitle,
+              style: Theme.of(context).textTheme.titleLarge,
+            ),
+            subtitle: Text(
+              (user.caloriesProfile ?? CaloriesProfileEntity.averaged)
+                  .getName(context),
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
+            leading: const SizedBox(
+              height: double.infinity,
+              child: Icon(Icons.tune_outlined),
+            ),
+            onTap: () {
+              _showCaloriesProfileDialog(context, user);
+            },
+          ),
       ],
     );
   }
@@ -326,10 +347,33 @@ class _ProfilePageState extends State<ProfilePage> {
       context: context,
       builder: (BuildContext context) => const SetGenderDialog(),
     );
-    if (selectedGender != null) {
-      userEntity.gender = selectedGender;
-
-      _profileBloc.updateUser(userEntity);
+    if (selectedGender == null) return;
+    userEntity.gender = selectedGender;
+    if (selectedGender != UserGenderEntity.nonBinary) {
+      // Drop any previously set hormone profile when switching back to a binary
+      // gender — the field is meaningless outside of nonBinary.
+      userEntity.caloriesProfile = null;
     }
+    _profileBloc.updateUser(userEntity);
+
+    if (selectedGender == UserGenderEntity.nonBinary && context.mounted) {
+      await _showCaloriesProfileDialog(context, userEntity);
+    }
+  }
+
+  Future<void> _showCaloriesProfileDialog(
+    BuildContext context,
+    UserEntity userEntity,
+  ) async {
+    final selected = await showDialog<CaloriesProfileEntity>(
+      context: context,
+      builder: (BuildContext context) => CaloriesProfileInfoDialog(
+        initialProfile:
+            userEntity.caloriesProfile ?? CaloriesProfileEntity.averaged,
+      ),
+    );
+    if (selected == null) return;
+    userEntity.caloriesProfile = selected;
+    _profileBloc.updateUser(userEntity);
   }
 }

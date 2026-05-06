@@ -1,3 +1,4 @@
+import 'package:opennutritracker/core/domain/entity/calories_profile_entity.dart';
 import 'package:opennutritracker/core/domain/entity/user_entity.dart';
 import 'package:opennutritracker/core/domain/entity/user_gender_entity.dart';
 import 'package:opennutritracker/core/utils/calc/bmr_calc.dart';
@@ -24,29 +25,51 @@ class TDEECalc {
   /// Washington, DC: The National Academies Press.
   /// https://doi.org/10.17226/10490.
   /// https://nap.nationalacademies.org/catalog/10490/dietary-reference-intakes-for-energy-carbohydrate-fiber-fat-fatty-acids-cholesterol-protein-and-amino-acids
+  ///
+  /// For non-binary users without an explicit hormone profile, the result is
+  /// the mean of the male / female reference outputs. Users on HRT (or who
+  /// otherwise want a more accurate starting point) can opt into the
+  /// estrogen-typical or testosterone-typical reference via the calorie-profile
+  /// setting; either choice routes through the existing male/female formula.
   static double getTDEEKcalIOM2005(UserEntity userEntity) {
-    double tdeeKcal;
-    if (userEntity.gender == UserGenderEntity.male) {
-      tdeeKcal = 864 -
-          9.72 * userEntity.age +
-          PalCalc.getPAValueFromPALValue(
-                userEntity,
-                PalCalc.getPALValueFromActivityCategory(userEntity),
-              ) *
-              14.2 *
-              userEntity.weightKG +
-          503 * (userEntity.heightCM / 100);
-    } else {
-      tdeeKcal = 387 -
-          7.31 * userEntity.age +
-          PalCalc.getPAValueFromPALValue(
-                userEntity,
-                PalCalc.getPALValueFromActivityCategory(userEntity),
-              ) *
-              10.9 *
-              userEntity.weightKG +
-          660.7 * (userEntity.heightCM / 100);
+    switch (userEntity.gender) {
+      case UserGenderEntity.male:
+        return _iom2005MaleKcal(userEntity);
+      case UserGenderEntity.female:
+        return _iom2005FemaleKcal(userEntity);
+      case UserGenderEntity.nonBinary:
+        switch (userEntity.caloriesProfile ?? CaloriesProfileEntity.averaged) {
+          case CaloriesProfileEntity.averaged:
+            return (_iom2005MaleKcal(userEntity) + _iom2005FemaleKcal(userEntity)) / 2;
+          case CaloriesProfileEntity.estrogenTypical:
+            return _iom2005FemaleKcal(userEntity);
+          case CaloriesProfileEntity.testosteroneTypical:
+            return _iom2005MaleKcal(userEntity);
+        }
     }
-    return tdeeKcal;
+  }
+
+  static double _iom2005MaleKcal(UserEntity userEntity) {
+    return 864 -
+        9.72 * userEntity.age +
+        PalCalc.getPAValueFromPALValue(
+              userEntity,
+              PalCalc.getPALValueFromActivityCategory(userEntity),
+            ) *
+            14.2 *
+            userEntity.weightKG +
+        503 * (userEntity.heightCM / 100);
+  }
+
+  static double _iom2005FemaleKcal(UserEntity userEntity) {
+    return 387 -
+        7.31 * userEntity.age +
+        PalCalc.getPAValueFromPALValue(
+              userEntity,
+              PalCalc.getPALValueFromActivityCategory(userEntity),
+            ) *
+            10.9 *
+            userEntity.weightKG +
+        660.7 * (userEntity.heightCM / 100);
   }
 }

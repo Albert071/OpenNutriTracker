@@ -22,6 +22,12 @@ class SetGenderDialog extends StatelessWidget {
             Navigator.pop(context, UserGenderEntity.female);
           },
         ),
+        SimpleDialogOption(
+          child: Text(S.of(context).genderNonBinaryLabel),
+          onPressed: () {
+            Navigator.pop(context, UserGenderEntity.nonBinary);
+          },
+        ),
       ],
     );
   }

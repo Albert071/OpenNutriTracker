@@ -110,6 +110,16 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("医学研究所方程式"),
         "calculationsTDEELabel":
             MessageLookupByLibrary.simpleMessage("TDEE方程式"),
+        "caloriesProfileAveragedLabel":
+            MessageLookupByLibrary.simpleMessage("平均参考(默认)"),
+        "caloriesProfileEstrogenTypicalLabel":
+            MessageLookupByLibrary.simpleMessage("雌激素型参考"),
+        "caloriesProfileInfoBody": MessageLookupByLibrary.simpleMessage(
+            "对于非二元性别用户,我们默认使用平均的热量参考值。如果你正在接受激素治疗(HRT)或希望获得更准确的起点,可以在此设置你的激素特征。此选项仅影响热量计算,不会被分享或在应用其他位置显示。"),
+        "caloriesProfileInfoTitle":
+            MessageLookupByLibrary.simpleMessage("热量参考"),
+        "caloriesProfileTestosteroneTypicalLabel":
+            MessageLookupByLibrary.simpleMessage("睾酮型参考"),
         "carbohydrateLabel": MessageLookupByLibrary.simpleMessage("碳水化合物"),
         "carbsLabel": MessageLookupByLibrary.simpleMessage("碳水"),
         "carbsLabelShort": MessageLookupByLibrary.simpleMessage("碳"),
@@ -222,9 +232,10 @@ class MessageLookup extends MessageLookupByLibrary {
         "fiberLabel": MessageLookupByLibrary.simpleMessage("膳食纤维"),
         "flOzUnit": MessageLookupByLibrary.simpleMessage("fl.oz"),
         "ftLabel": MessageLookupByLibrary.simpleMessage("英尺"),
-        "genderFemaleLabel": MessageLookupByLibrary.simpleMessage("♀ 女性"),
+        "genderFemaleLabel": MessageLookupByLibrary.simpleMessage("女性"),
         "genderLabel": MessageLookupByLibrary.simpleMessage("性别"),
-        "genderMaleLabel": MessageLookupByLibrary.simpleMessage("♂ 男性"),
+        "genderMaleLabel": MessageLookupByLibrary.simpleMessage("男性"),
+        "genderNonBinaryLabel": MessageLookupByLibrary.simpleMessage("非二元"),
         "goalGainWeight": MessageLookupByLibrary.simpleMessage("增重"),
         "goalLabel": MessageLookupByLibrary.simpleMessage("目标"),
         "goalLoseWeight": MessageLookupByLibrary.simpleMessage("减重"),
@@ -329,6 +340,8 @@ class MessageLookup extends MessageLookupByLibrary {
             "开始使用前，应用需要一些关于您的信息来计算您的每日卡路里目标。\n所有关于您的信息都安全存储在您的设备上。"),
         "onboardingKcalPerDayLabel":
             MessageLookupByLibrary.simpleMessage("每日卡路里"),
+        "onboardingNonBinaryDisclaimer": MessageLookupByLibrary.simpleMessage(
+            "我们使用男性和女性参考公式的平均值来估算你的每日热量。你可以随时在 设置 → 计算 中进行调整。"),
         "onboardingOverviewLabel": MessageLookupByLibrary.simpleMessage("概览"),
         "onboardingSaveUserError":
             MessageLookupByLibrary.simpleMessage("输入错误，请重试"),

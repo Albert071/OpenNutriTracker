@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:introduction_screen/introduction_screen.dart';
+import 'package:opennutritracker/core/domain/entity/calories_profile_entity.dart';
 import 'package:opennutritracker/core/utils/locator.dart';
 import 'package:opennutritracker/core/utils/navigation_options.dart';
 import 'package:opennutritracker/features/onboarding/domain/entity/user_activity_selection_entity.dart';
@@ -123,6 +124,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           bodyWidget: OnboardingFirstPageBody(
             setPageContent: _setFirstPageData,
             initialGender: selection.gender,
+            initialCaloriesProfile: selection.caloriesProfile,
             initialBirthday: selection.birthday,
           ),
           footer: HighlightButton(
@@ -225,10 +227,12 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   void _setFirstPageData(
     bool active,
     UserGenderSelectionEntity? selectedGender,
+    CaloriesProfileEntity? selectedCaloriesProfile,
     DateTime? selectedBirthday,
   ) {
     setState(() {
       _onboardingBloc.userSelection.gender = selectedGender;
+      _onboardingBloc.userSelection.caloriesProfile = selectedCaloriesProfile;
       _onboardingBloc.userSelection.birthday = selectedBirthday;
 
       _firstPageButtonActive = active;

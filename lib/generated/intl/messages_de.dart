@@ -118,6 +118,16 @@ class MessageLookup extends MessageLookupByLibrary {
             "Institute of Medicine Gleichung"),
         "calculationsTDEELabel":
             MessageLookupByLibrary.simpleMessage("TDEE-Gleichung"),
+        "caloriesProfileAveragedLabel":
+            MessageLookupByLibrary.simpleMessage("Gemittelte Referenz (Standard)"),
+        "caloriesProfileEstrogenTypicalLabel":
+            MessageLookupByLibrary.simpleMessage("Östrogen-typische Referenz"),
+        "caloriesProfileInfoBody": MessageLookupByLibrary.simpleMessage(
+            "Für nicht-binäre Nutzer:innen verwenden wir standardmäßig einen gemittelten Kalorienwert. Wenn du eine HRT machst oder einen genaueren Ausgangswert möchtest, kannst du hier dein Hormonprofil festlegen. Diese Angabe wirkt sich nur auf die Kalorienberechnung aus – sie wird nirgendwo geteilt oder anderswo in der App angezeigt."),
+        "caloriesProfileInfoTitle":
+            MessageLookupByLibrary.simpleMessage("Kalorienreferenz"),
+        "caloriesProfileTestosteroneTypicalLabel":
+            MessageLookupByLibrary.simpleMessage("Testosteron-typische Referenz"),
         "carbohydrateLabel":
             MessageLookupByLibrary.simpleMessage("Kohlenhydrate"),
         "carbsLabel": MessageLookupByLibrary.simpleMessage("Kohlenhydrate"),
@@ -242,9 +252,11 @@ class MessageLookup extends MessageLookupByLibrary {
         "fatLabelShort": MessageLookupByLibrary.simpleMessage("f"),
         "fiberLabel": MessageLookupByLibrary.simpleMessage("Ballaststoffe"),
         "flOzUnit": MessageLookupByLibrary.simpleMessage("fl.oz"),
-        "genderFemaleLabel": MessageLookupByLibrary.simpleMessage("♀ weiblich"),
+        "genderFemaleLabel": MessageLookupByLibrary.simpleMessage("weiblich"),
         "genderLabel": MessageLookupByLibrary.simpleMessage("Geschlecht"),
-        "genderMaleLabel": MessageLookupByLibrary.simpleMessage("♂ männlich"),
+        "genderMaleLabel": MessageLookupByLibrary.simpleMessage("männlich"),
+        "genderNonBinaryLabel":
+            MessageLookupByLibrary.simpleMessage("nicht-binär"),
         "goalGainWeight":
             MessageLookupByLibrary.simpleMessage("Gewicht zunehmen"),
         "goalLabel": MessageLookupByLibrary.simpleMessage("Ziel"),
@@ -369,6 +381,8 @@ class MessageLookup extends MessageLookupByLibrary {
             "Um loszulegen, benötigt die App einige Informationen über Sie, um Ihr tägliches Kalorienziel zu berechnen. Alle Informationen über Sie werden sicher auf Ihrem Gerät gespeichert."),
         "onboardingKcalPerDayLabel":
             MessageLookupByLibrary.simpleMessage("kcal pro Tag"),
+        "onboardingNonBinaryDisclaimer": MessageLookupByLibrary.simpleMessage(
+            "Wir schätzen deine täglichen Kalorien als Durchschnitt der männlichen und weiblichen Referenzformeln. Du kannst dies jederzeit unter Einstellungen → Berechnungen anpassen."),
         "onboardingOverviewLabel":
             MessageLookupByLibrary.simpleMessage("Übersicht"),
         "onboardingSaveUserError": MessageLookupByLibrary.simpleMessage(

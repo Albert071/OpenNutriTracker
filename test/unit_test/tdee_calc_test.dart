@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:opennutritracker/core/domain/entity/calories_profile_entity.dart';
 import 'package:opennutritracker/core/domain/entity/user_entity.dart';
 import 'package:opennutritracker/core/domain/entity/user_gender_entity.dart';
 import 'package:opennutritracker/core/domain/entity/user_pal_entity.dart';
@@ -50,5 +51,68 @@ void main() {
     int expectedTdee = 2087;
 
     expect(userTdee.toInt(), expectedTdee);
+  });
+
+  group('IOM TDEE non-binary calculations', () {
+    UserEntity baseUser({
+      required UserGenderEntity gender,
+      CaloriesProfileEntity? profile,
+    }) {
+      return UserEntity(
+        birthday: DateTime(
+          DateTime.now().year - 25,
+          DateTime.now().month,
+          DateTime.now().day - 1,
+        ),
+        heightCM: 180.0,
+        weightKG: 80.0,
+        gender: gender,
+        goal: UserWeightGoalEntity.maintainWeight,
+        pal: UserPALEntity.sedentary,
+        caloriesProfile: profile,
+      );
+    }
+
+    test('non-binary defaults to the mean of male and female outputs', () {
+      final maleTdee =
+          TDEECalc.getTDEEKcalIOM2005(baseUser(gender: UserGenderEntity.male));
+      final femaleTdee =
+          TDEECalc.getTDEEKcalIOM2005(baseUser(gender: UserGenderEntity.female));
+      final nonBinaryDefault =
+          TDEECalc.getTDEEKcalIOM2005(baseUser(gender: UserGenderEntity.nonBinary));
+
+      expect(nonBinaryDefault, closeTo((maleTdee + femaleTdee) / 2, 0.001));
+    });
+
+    test('non-binary with averaged profile equals the default', () {
+      final averaged = TDEECalc.getTDEEKcalIOM2005(baseUser(
+        gender: UserGenderEntity.nonBinary,
+        profile: CaloriesProfileEntity.averaged,
+      ));
+      final defaulted = TDEECalc.getTDEEKcalIOM2005(
+          baseUser(gender: UserGenderEntity.nonBinary));
+      expect(averaged, closeTo(defaulted, 0.001));
+    });
+
+    test('non-binary with estrogen-typical profile matches female formula', () {
+      final estrogen = TDEECalc.getTDEEKcalIOM2005(baseUser(
+        gender: UserGenderEntity.nonBinary,
+        profile: CaloriesProfileEntity.estrogenTypical,
+      ));
+      final female =
+          TDEECalc.getTDEEKcalIOM2005(baseUser(gender: UserGenderEntity.female));
+      expect(estrogen, closeTo(female, 0.001));
+    });
+
+    test('non-binary with testosterone-typical profile matches male formula',
+        () {
+      final testosterone = TDEECalc.getTDEEKcalIOM2005(baseUser(
+        gender: UserGenderEntity.nonBinary,
+        profile: CaloriesProfileEntity.testosteroneTypical,
+      ));
+      final male =
+          TDEECalc.getTDEEKcalIOM2005(baseUser(gender: UserGenderEntity.male));
+      expect(testosterone, closeTo(male, 0.001));
+    });
   });
 }

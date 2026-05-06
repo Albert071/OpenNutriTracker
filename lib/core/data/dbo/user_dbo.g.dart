@@ -24,13 +24,14 @@ class UserDBOAdapter extends TypeAdapter<UserDBO> {
       goal: fields[4] as UserWeightGoalDBO,
       pal: fields[5] as UserPALDBO,
       weeklyWeightGoalKg: (fields[6] as num?)?.toDouble(),
+      caloriesProfile: fields[7] as CaloriesProfileDBO?,
     );
   }
 
   @override
   void write(BinaryWriter writer, UserDBO obj) {
     writer
-      ..writeByte(7)
+      ..writeByte(8)
       ..writeByte(0)
       ..write(obj.birthday)
       ..writeByte(1)
@@ -44,7 +45,9 @@ class UserDBOAdapter extends TypeAdapter<UserDBO> {
       ..writeByte(5)
       ..write(obj.pal)
       ..writeByte(6)
-      ..write(obj.weeklyWeightGoalKg);
+      ..write(obj.weeklyWeightGoalKg)
+      ..writeByte(7)
+      ..write(obj.caloriesProfile);
   }
 
   @override

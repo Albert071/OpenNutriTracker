@@ -115,6 +115,16 @@ class MessageLookup extends MessageLookupByLibrary {
             "Розрахунок Інституту Медицини"),
         "calculationsTDEELabel":
             MessageLookupByLibrary.simpleMessage("Розрахунок TDEE"),
+        "caloriesProfileAveragedLabel": MessageLookupByLibrary.simpleMessage(
+            "Усереднена референція (за замовчуванням)"),
+        "caloriesProfileEstrogenTypicalLabel":
+            MessageLookupByLibrary.simpleMessage("Естрогенова референція"),
+        "caloriesProfileInfoBody": MessageLookupByLibrary.simpleMessage(
+            "Для небінарних користувачів ми за замовчуванням використовуємо усереднену калорійну референцію. Якщо ви проходите ГЗТ або хочете точнішу початкову точку, тут можна обрати свій гормональний профіль. Цей вибір впливає лише на розрахунок калорій — він ніде не передається й не показується в інших частинах застосунку."),
+        "caloriesProfileInfoTitle":
+            MessageLookupByLibrary.simpleMessage("Калорійна референція"),
+        "caloriesProfileTestosteroneTypicalLabel":
+            MessageLookupByLibrary.simpleMessage("Тестостеронова референція"),
         "carbohydrateLabel": MessageLookupByLibrary.simpleMessage("вуглеводи"),
         "carbsLabel": MessageLookupByLibrary.simpleMessage("вуглеводи"),
         "carbsLabelShort": MessageLookupByLibrary.simpleMessage("в"),
@@ -238,9 +248,11 @@ class MessageLookup extends MessageLookupByLibrary {
         "fiberLabel": MessageLookupByLibrary.simpleMessage("клітковина"),
         "flOzUnit": MessageLookupByLibrary.simpleMessage("рідка унція"),
         "ftLabel": MessageLookupByLibrary.simpleMessage("фут"),
-        "genderFemaleLabel": MessageLookupByLibrary.simpleMessage("♀ жінка"),
+        "genderFemaleLabel": MessageLookupByLibrary.simpleMessage("жінка"),
         "genderLabel": MessageLookupByLibrary.simpleMessage("Стать"),
-        "genderMaleLabel": MessageLookupByLibrary.simpleMessage("♂ чоловік"),
+        "genderMaleLabel": MessageLookupByLibrary.simpleMessage("чоловік"),
+        "genderNonBinaryLabel":
+            MessageLookupByLibrary.simpleMessage("небінарний"),
         "goalGainWeight": MessageLookupByLibrary.simpleMessage("Набрати вагу"),
         "goalLabel": MessageLookupByLibrary.simpleMessage("Ціль"),
         "goalLoseWeight": MessageLookupByLibrary.simpleMessage("Схуднути"),
@@ -359,6 +371,8 @@ class MessageLookup extends MessageLookupByLibrary {
             "Для початку додаток потребує деяку інформацію про вас, щоб розрахувати вашу щоденну ціль калорій.\nВся інформація про вас зберігається безпечно на вашому пристрої."),
         "onboardingKcalPerDayLabel":
             MessageLookupByLibrary.simpleMessage("ккал на день"),
+        "onboardingNonBinaryDisclaimer": MessageLookupByLibrary.simpleMessage(
+            "Ми оцінюємо твоє денне споживання калорій як середнє значення між чоловічою та жіночою референтними формулами. Ти можеш скоригувати це у Налаштування → Розрахунки."),
         "onboardingOverviewLabel":
             MessageLookupByLibrary.simpleMessage("Огляд"),
         "onboardingSaveUserError": MessageLookupByLibrary.simpleMessage(

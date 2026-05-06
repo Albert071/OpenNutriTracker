@@ -116,6 +116,16 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Tıp Enstitüsü Denklemi"),
         "calculationsTDEELabel":
             MessageLookupByLibrary.simpleMessage("TDEE denklemi"),
+        "caloriesProfileAveragedLabel":
+            MessageLookupByLibrary.simpleMessage("Ortalanmış referans (varsayılan)"),
+        "caloriesProfileEstrogenTypicalLabel":
+            MessageLookupByLibrary.simpleMessage("Östrojen tipi referans"),
+        "caloriesProfileInfoBody": MessageLookupByLibrary.simpleMessage(
+            "İkili olmayan kullanıcılar için varsayılan olarak ortalanmış bir kalori referansı kullanırız. HRT alıyorsanız veya daha doğru bir başlangıç noktası istiyorsanız hormon profilinizi buradan ayarlayabilirsiniz. Bu seçim yalnızca kalori hesaplamasını etkiler — uygulamada başka bir yerde paylaşılmaz veya gösterilmez."),
+        "caloriesProfileInfoTitle":
+            MessageLookupByLibrary.simpleMessage("Kalori referansı"),
+        "caloriesProfileTestosteroneTypicalLabel":
+            MessageLookupByLibrary.simpleMessage("Testosteron tipi referans"),
         "carbohydrateLabel":
             MessageLookupByLibrary.simpleMessage("karbonhidrat"),
         "carbsLabel": MessageLookupByLibrary.simpleMessage("karbonhidrat"),
@@ -240,9 +250,11 @@ class MessageLookup extends MessageLookupByLibrary {
         "fiberLabel": MessageLookupByLibrary.simpleMessage("lif"),
         "flOzUnit": MessageLookupByLibrary.simpleMessage("fl.oz"),
         "ftLabel": MessageLookupByLibrary.simpleMessage("ft"),
-        "genderFemaleLabel": MessageLookupByLibrary.simpleMessage("♀ kadın"),
+        "genderFemaleLabel": MessageLookupByLibrary.simpleMessage("kadın"),
         "genderLabel": MessageLookupByLibrary.simpleMessage("Cinsiyet"),
-        "genderMaleLabel": MessageLookupByLibrary.simpleMessage("♂ erkek"),
+        "genderMaleLabel": MessageLookupByLibrary.simpleMessage("erkek"),
+        "genderNonBinaryLabel":
+            MessageLookupByLibrary.simpleMessage("ikili olmayan"),
         "goalGainWeight": MessageLookupByLibrary.simpleMessage("Kilo Al"),
         "goalLabel": MessageLookupByLibrary.simpleMessage("Hedef"),
         "goalLoseWeight": MessageLookupByLibrary.simpleMessage("Kilo Ver"),
@@ -362,6 +374,8 @@ class MessageLookup extends MessageLookupByLibrary {
             "Başlamak için, uygulamanın günlük kalori hedefinizi hesaplamak için hakkınızda bazı bilgilere ihtiyacı var.\nHakkınızdaki tüm bilgiler cihazınızda güvenli bir şekilde saklanır."),
         "onboardingKcalPerDayLabel":
             MessageLookupByLibrary.simpleMessage("günlük kcal"),
+        "onboardingNonBinaryDisclaimer": MessageLookupByLibrary.simpleMessage(
+            "Günlük kalori ihtiyacını erkek ve kadın referans formüllerinin ortalaması olarak hesaplıyoruz. Ayarlar → Hesaplamalar bölümünden istediğin zaman ince ayar yapabilirsin."),
         "onboardingOverviewLabel":
             MessageLookupByLibrary.simpleMessage("Genel Bakış"),
         "onboardingSaveUserError": MessageLookupByLibrary.simpleMessage(

@@ -54,7 +54,7 @@ void main() {
     testWidgets('reflects initialGender on the correct ChoiceChip',
         (tester) async {
       await tester.pumpWidget(wrap(OnboardingFirstPageBody(
-        setPageContent: (_, _, _) {},
+        setPageContent: (_, _, _, _) {},
         initialGender: UserGenderSelectionEntity.genderFemale,
       )));
       await tester.pumpAndSettle();
@@ -68,7 +68,7 @@ void main() {
         (tester) async {
       final birthday = DateTime(1990, 6, 15);
       await tester.pumpWidget(wrap(OnboardingFirstPageBody(
-        setPageContent: (_, _, _) {},
+        setPageContent: (_, _, _, _) {},
         initialBirthday: birthday,
       )));
       await tester.pumpAndSettle();
@@ -165,7 +165,7 @@ void main() {
     testWidgets('first page: no chip selected, date field empty',
         (tester) async {
       await tester.pumpWidget(wrap(OnboardingFirstPageBody(
-        setPageContent: (_, _, _) {},
+        setPageContent: (_, _, _, _) {},
       )));
       await tester.pumpAndSettle();
 

@@ -3123,21 +3123,91 @@ class S {
     );
   }
 
-  /// `♂ male`
+  /// `male`
   String get genderMaleLabel {
     return Intl.message(
-      '♂ male',
+      'male',
       name: 'genderMaleLabel',
       desc: '',
       args: [],
     );
   }
 
-  /// `♀ female`
+  /// `female`
   String get genderFemaleLabel {
     return Intl.message(
-      '♀ female',
+      'female',
       name: 'genderFemaleLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `non-binary`
+  String get genderNonBinaryLabel {
+    return Intl.message(
+      'non-binary',
+      name: 'genderNonBinaryLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Calorie reference`
+  String get caloriesProfileInfoTitle {
+    return Intl.message(
+      'Calorie reference',
+      name: 'caloriesProfileInfoTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `We use an averaged calorie reference for non-binary users by default. ...`
+  String get caloriesProfileInfoBody {
+    return Intl.message(
+      "We use an averaged calorie reference for non-binary users by default. If you're on HRT or want a more accurate starting point, you can set your hormone profile here. This affects only the calorie calculation — it isn't shared anywhere or shown elsewhere in the app.",
+      name: 'caloriesProfileInfoBody',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Averaged reference (default)`
+  String get caloriesProfileAveragedLabel {
+    return Intl.message(
+      'Averaged reference (default)',
+      name: 'caloriesProfileAveragedLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Estrogen-typical reference`
+  String get caloriesProfileEstrogenTypicalLabel {
+    return Intl.message(
+      'Estrogen-typical reference',
+      name: 'caloriesProfileEstrogenTypicalLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Testosterone-typical reference`
+  String get caloriesProfileTestosteroneTypicalLabel {
+    return Intl.message(
+      'Testosterone-typical reference',
+      name: 'caloriesProfileTestosteroneTypicalLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `We estimate your daily calories using an average of the male and female reference formulas. ...`
+  String get onboardingNonBinaryDisclaimer {
+    return Intl.message(
+      'We estimate your daily calories using an average of the male and female reference formulas. You can fine-tune this anytime in Settings → Calculations.',
+      name: 'onboardingNonBinaryDisclaimer',
       desc: '',
       args: [],
     );

@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:opennutritracker/core/domain/entity/calories_profile_entity.dart';
+import 'package:opennutritracker/core/domain/entity/user_entity.dart';
+import 'package:opennutritracker/core/domain/entity/user_gender_entity.dart';
+import 'package:opennutritracker/core/presentation/widgets/calories_profile_info_dialog.dart';
 import 'package:opennutritracker/features/diary/presentation/bloc/calendar_day_bloc.dart';
 import 'package:opennutritracker/features/diary/presentation/bloc/diary_bloc.dart';
 import 'package:opennutritracker/features/home/presentation/bloc/home_bloc.dart';
@@ -47,6 +51,8 @@ class _CalculationsDialogState extends State<CalculationsDialog> {
   late TextEditingController _proteinController;
   late TextEditingController _fatController;
 
+  UserEntity? _user;
+
   @override
   void initState() {
     super.initState();
@@ -80,6 +86,7 @@ class _CalculationsDialogState extends State<CalculationsDialog> {
     final userCarbsPct = await widget.settingsBloc.getUserCarbGoalPct();
     final userProteinPct = await widget.settingsBloc.getUserProteinGoalPct();
     final userFatPct = await widget.settingsBloc.getUserFatGoalPct();
+    final user = await widget.profileBloc.getUser();
 
     setState(() {
       _kcalAdjustmentSelection = kcalAdjustment;
@@ -87,6 +94,7 @@ class _CalculationsDialogState extends State<CalculationsDialog> {
       _proteinPctSelection =
           (userProteinPct ?? _defaultProteinPctSelection) * 100;
       _fatPctSelection = (userFatPct ?? _defaultFatPctSelection) * 100;
+      _user = user;
     });
     _kcalAdjustmentController.text =
         _kcalAdjustmentSelection.round().toString();
@@ -165,6 +173,20 @@ class _CalculationsDialogState extends State<CalculationsDialog> {
               onChanged: null,
             ),
             const SizedBox(height: 32),
+            if (_user?.gender == UserGenderEntity.nonBinary) ...[
+              ListTile(
+                contentPadding: EdgeInsets.zero,
+                leading: const Icon(Icons.tune_outlined),
+                title: Text(S.of(context).caloriesProfileInfoTitle),
+                subtitle: Text(
+                  (_user?.caloriesProfile ?? CaloriesProfileEntity.averaged)
+                      .getName(context),
+                ),
+                trailing: const Icon(Icons.chevron_right),
+                onTap: _openCaloriesProfileDialog,
+              ),
+              const SizedBox(height: 8),
+            ],
             // ── Kcal adjustment ──────────────────────────────────────────────
             Row(
               children: [
@@ -439,5 +461,23 @@ class _CalculationsDialogState extends State<CalculationsDialog> {
     widget.calendarDayBloc.add(RefreshCalendarDayEvent());
 
     Navigator.of(context).pop();
+  }
+
+  Future<void> _openCaloriesProfileDialog() async {
+    final user = _user;
+    if (user == null) return;
+    final selected = await showDialog<CaloriesProfileEntity>(
+      context: context,
+      builder: (context) => CaloriesProfileInfoDialog(
+        initialProfile:
+            user.caloriesProfile ?? CaloriesProfileEntity.averaged,
+      ),
+    );
+    if (selected == null) return;
+    user.caloriesProfile = selected;
+    widget.profileBloc.updateUser(user);
+    setState(() {
+      _user = user;
+    });
   }
 }

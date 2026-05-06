@@ -1,1 +1,1 @@
-enum UserGenderSelectionEntity { genderMale, genderFemale }
+enum UserGenderSelectionEntity { genderMale, genderFemale, genderNonBinary }

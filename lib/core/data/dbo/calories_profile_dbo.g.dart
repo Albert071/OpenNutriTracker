@@ -1,37 +1,37 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'user_gender_dbo.dart';
+part of 'calories_profile_dbo.dart';
 
 // **************************************************************************
 // TypeAdapterGenerator
 // **************************************************************************
 
-class UserGenderDBOAdapter extends TypeAdapter<UserGenderDBO> {
+class CaloriesProfileDBOAdapter extends TypeAdapter<CaloriesProfileDBO> {
   @override
-  final typeId = 6;
+  final typeId = 18;
 
   @override
-  UserGenderDBO read(BinaryReader reader) {
+  CaloriesProfileDBO read(BinaryReader reader) {
     switch (reader.readByte()) {
       case 0:
-        return UserGenderDBO.male;
+        return CaloriesProfileDBO.averaged;
       case 1:
-        return UserGenderDBO.female;
+        return CaloriesProfileDBO.estrogenTypical;
       case 2:
-        return UserGenderDBO.nonBinary;
+        return CaloriesProfileDBO.testosteroneTypical;
       default:
-        return UserGenderDBO.male;
+        return CaloriesProfileDBO.averaged;
     }
   }
 
   @override
-  void write(BinaryWriter writer, UserGenderDBO obj) {
+  void write(BinaryWriter writer, CaloriesProfileDBO obj) {
     switch (obj) {
-      case UserGenderDBO.male:
+      case CaloriesProfileDBO.averaged:
         writer.writeByte(0);
-      case UserGenderDBO.female:
+      case CaloriesProfileDBO.estrogenTypical:
         writer.writeByte(1);
-      case UserGenderDBO.nonBinary:
+      case CaloriesProfileDBO.testosteroneTypical:
         writer.writeByte(2);
     }
   }
@@ -42,7 +42,7 @@ class UserGenderDBOAdapter extends TypeAdapter<UserGenderDBO> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is UserGenderDBOAdapter &&
+      other is CaloriesProfileDBOAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }

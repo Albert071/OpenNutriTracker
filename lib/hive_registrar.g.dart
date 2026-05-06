@@ -5,6 +5,7 @@
 import 'package:hive_ce/hive_ce.dart';
 import 'package:opennutritracker/core/data/data_source/user_activity_dbo.dart';
 import 'package:opennutritracker/core/data/dbo/app_theme_dbo.dart';
+import 'package:opennutritracker/core/data/dbo/calories_profile_dbo.dart';
 import 'package:opennutritracker/core/data/dbo/config_dbo.dart';
 import 'package:opennutritracker/core/data/dbo/intake_dbo.dart';
 import 'package:opennutritracker/core/data/dbo/intake_type_dbo.dart';
@@ -22,6 +23,7 @@ import 'package:opennutritracker/core/data/dbo/user_weight_goal_dbo.dart';
 extension HiveRegistrar on HiveInterface {
   void registerAdapters() {
     registerAdapter(AppThemeDBOAdapter());
+    registerAdapter(CaloriesProfileDBOAdapter());
     registerAdapter(ConfigDBOAdapter());
     registerAdapter(IntakeDBOAdapter());
     registerAdapter(IntakeTypeDBOAdapter());
@@ -44,6 +46,7 @@ extension HiveRegistrar on HiveInterface {
 extension IsolatedHiveRegistrar on IsolatedHiveInterface {
   void registerAdapters() {
     registerAdapter(AppThemeDBOAdapter());
+    registerAdapter(CaloriesProfileDBOAdapter());
     registerAdapter(ConfigDBOAdapter());
     registerAdapter(IntakeDBOAdapter());
     registerAdapter(IntakeTypeDBOAdapter());

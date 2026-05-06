@@ -115,6 +115,16 @@ class MessageLookup extends MessageLookupByLibrary {
             "Výpočet Institute of Medicine"),
         "calculationsTDEELabel":
             MessageLookupByLibrary.simpleMessage("Výpočet TDEE"),
+        "caloriesProfileAveragedLabel": MessageLookupByLibrary.simpleMessage(
+            "Zprůměrovaná reference (výchozí)"),
+        "caloriesProfileEstrogenTypicalLabel":
+            MessageLookupByLibrary.simpleMessage("Estrogenní reference"),
+        "caloriesProfileInfoBody": MessageLookupByLibrary.simpleMessage(
+            "Pro nebinární uživatele používáme ve výchozím nastavení zprůměrovanou kalorickou referenci. Pokud užíváte HRT nebo chcete přesnější výchozí hodnotu, můžete zde nastavit svůj hormonální profil. Tato volba ovlivňuje pouze výpočet kalorií – nikde se nesdílí ani jinde v aplikaci nezobrazuje."),
+        "caloriesProfileInfoTitle":
+            MessageLookupByLibrary.simpleMessage("Kalorická reference"),
+        "caloriesProfileTestosteroneTypicalLabel":
+            MessageLookupByLibrary.simpleMessage("Testosteronová reference"),
         "carbohydrateLabel": MessageLookupByLibrary.simpleMessage("sacharidy"),
         "carbsLabel": MessageLookupByLibrary.simpleMessage("sacharidy"),
         "carbsLabelShort": MessageLookupByLibrary.simpleMessage("s"),
@@ -236,9 +246,11 @@ class MessageLookup extends MessageLookupByLibrary {
         "fiberLabel": MessageLookupByLibrary.simpleMessage("vláknina"),
         "flOzUnit": MessageLookupByLibrary.simpleMessage("fl.oz"),
         "ftLabel": MessageLookupByLibrary.simpleMessage("ft"),
-        "genderFemaleLabel": MessageLookupByLibrary.simpleMessage("♀ žena"),
+        "genderFemaleLabel": MessageLookupByLibrary.simpleMessage("žena"),
         "genderLabel": MessageLookupByLibrary.simpleMessage("Pohlaví"),
-        "genderMaleLabel": MessageLookupByLibrary.simpleMessage("♂ muž"),
+        "genderMaleLabel": MessageLookupByLibrary.simpleMessage("muž"),
+        "genderNonBinaryLabel":
+            MessageLookupByLibrary.simpleMessage("nebinární"),
         "goalGainWeight": MessageLookupByLibrary.simpleMessage("Přibrat"),
         "goalLabel": MessageLookupByLibrary.simpleMessage("Cíl"),
         "goalLoseWeight": MessageLookupByLibrary.simpleMessage("Zhubnout"),
@@ -355,6 +367,8 @@ class MessageLookup extends MessageLookupByLibrary {
             "Než začnete, aplikace o Vás potřebuje zadat několik údajů, aby mohla spočítat Váš denní kalorický cíl.\nVeškeré osobní údaje jsou bezpečně uloženy pouze ve Vašem zařízení."),
         "onboardingKcalPerDayLabel":
             MessageLookupByLibrary.simpleMessage("kcal denně"),
+        "onboardingNonBinaryDisclaimer": MessageLookupByLibrary.simpleMessage(
+            "Tvůj denní kalorický příjem odhadujeme jako průměr mužského a ženského referenčního vzorce. Kdykoli to můžeš upravit v Nastavení → Výpočty."),
         "onboardingOverviewLabel":
             MessageLookupByLibrary.simpleMessage("Přehled"),
         "onboardingSaveUserError": MessageLookupByLibrary.simpleMessage(

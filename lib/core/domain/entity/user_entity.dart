@@ -1,4 +1,5 @@
 import 'package:opennutritracker/core/data/dbo/user_dbo.dart';
+import 'package:opennutritracker/core/domain/entity/calories_profile_entity.dart';
 import 'package:opennutritracker/core/domain/entity/user_gender_entity.dart';
 import 'package:opennutritracker/core/domain/entity/user_pal_entity.dart';
 import 'package:opennutritracker/core/domain/entity/user_weight_goal_entity.dart';
@@ -12,6 +13,12 @@ class UserEntity {
   UserPALEntity pal;
   double? weeklyWeightGoalKg;
 
+  /// Optional calorie-reference profile. Only meaningful when [gender] is
+  /// [UserGenderEntity.nonBinary]; for binary users this is `null` and the
+  /// existing male/female formulas apply directly. When null for non-binary
+  /// users, the calc layer treats it as [CaloriesProfileEntity.averaged].
+  CaloriesProfileEntity? caloriesProfile;
+
   UserEntity({
     required this.birthday,
     required this.heightCM,
@@ -20,6 +27,7 @@ class UserEntity {
     required this.goal,
     required this.pal,
     this.weeklyWeightGoalKg,
+    this.caloriesProfile,
   });
 
   factory UserEntity.fromUserDBO(UserDBO userDBO) {
@@ -31,6 +39,9 @@ class UserEntity {
       goal: UserWeightGoalEntity.fromUserWeightGoalDBO(userDBO.goal),
       pal: UserPALEntity.fromUserPALDBO(userDBO.pal),
       weeklyWeightGoalKg: userDBO.weeklyWeightGoalKg,
+      caloriesProfile: userDBO.caloriesProfile == null
+          ? null
+          : CaloriesProfileEntity.fromDBO(userDBO.caloriesProfile!),
     );
   }
 
