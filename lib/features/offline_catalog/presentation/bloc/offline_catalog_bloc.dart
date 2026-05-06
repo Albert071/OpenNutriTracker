@@ -97,11 +97,37 @@ class OfflineCatalogBloc extends Bloc<OfflineCatalogEvent, OfflineCatalogState> 
     ));
   }
 
+  /// Catalog "lifecycle" phases — active operations or meaningful
+  /// end states. When we're in one of these, wizard-auxiliary
+  /// events (country taxonomy fetch, estimate probe) MUST NOT
+  /// overwrite the lifecycle state with a transient phase like
+  /// `loadingCountries`. Otherwise the download page would lose
+  /// its PausedView / BuildingView and fall through to a bare
+  /// spinner — which is exactly the hang we hit when reopening
+  /// the wizard onto a paused build.
+  ///
+  /// Notably `idle` is NOT in this set: idle means "no catalog
+  /// yet" and the wizard's normal flow (region page → estimate
+  /// page → start build) should be allowed to transition through
+  /// loadingCountries / estimating / etc. as it always did.
+  static bool _isLifecyclePhase(OfflineCatalogPhase phase) {
+    return phase == OfflineCatalogPhase.building ||
+        phase == OfflineCatalogPhase.paused ||
+        phase == OfflineCatalogPhase.refreshing ||
+        phase == OfflineCatalogPhase.ready ||
+        phase == OfflineCatalogPhase.error;
+  }
+
   Future<void> _onLoadCountries(
     LoadCountriesEvent event,
     Emitter<OfflineCatalogState> emit,
   ) async {
-    emit(state.copyWith(phase: OfflineCatalogPhase.loadingCountries));
+    final preservePhase = _isLifecyclePhase(state.phase);
+    emit(state.copyWith(
+      phase: preservePhase
+          ? state.phase
+          : OfflineCatalogPhase.loadingCountries,
+    ));
     try {
       final countries = await _getCountries(
         locale: event.locale,
@@ -113,13 +139,22 @@ class OfflineCatalogBloc extends Bloc<OfflineCatalogEvent, OfflineCatalogState> 
       // that case.
       final fromFallback = countries.length <= 12;
       emit(state.copyWith(
-        phase: OfflineCatalogPhase.countriesLoaded,
+        phase: preservePhase
+            ? state.phase
+            : OfflineCatalogPhase.countriesLoaded,
         countries: countries,
         countriesFromFallback: fromFallback,
-        clearError: true,
+        // Clearing the error when we have a meaningful lifecycle
+        // phase would mask catalog-side errors that the user still
+        // needs to see.
+        clearError: !preservePhase,
       ));
     } catch (e, stack) {
       _log.warning('LoadCountries failed', e, stack);
+      // If we have a meaningful lifecycle running, swallow this —
+      // the user is dealing with the catalog, not the country
+      // picker, and we don't want a taxonomy 503 to derail them.
+      if (preservePhase) return;
       emit(state.copyWith(
         phase: OfflineCatalogPhase.error,
         errorMessage: e.toString(),
@@ -132,6 +167,15 @@ class OfflineCatalogBloc extends Bloc<OfflineCatalogEvent, OfflineCatalogState> 
     EstimateCatalogEvent event,
     Emitter<OfflineCatalogState> emit,
   ) async {
+    // Same lifecycle protection as _onLoadCountries — never let an
+    // estimate probe overwrite a paused / building / ready state.
+    if (_isLifecyclePhase(state.phase)) {
+      _log.fine(
+        'Skipping estimate; catalog lifecycle phase ${state.phase} '
+        'is in flight',
+      );
+      return;
+    }
     emit(state.copyWith(
       phase: OfflineCatalogPhase.estimating,
       activeFilters: event.filters,
