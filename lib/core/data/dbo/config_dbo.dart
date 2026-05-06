@@ -42,6 +42,17 @@ class ConfigDBO extends HiveObject {
   bool? showMicronutrients; // #237: null means default (false)
   @HiveField(16)
   bool? offlineCatalogEnabled;
+  // Crash-safety switch for the offline catalog.
+  // [catalogConsecutiveCrashes] is incremented at every app start
+  // and reset to 0 once the app has been stable for ~30 seconds.
+  // When it reaches 2 the boot logic flips
+  // [offlineCatalogEnabled] to false and sets
+  // [catalogAutoDisabled] to true so settings can surface the
+  // reason and offer a one-tap re-enable.
+  @HiveField(17)
+  int? catalogConsecutiveCrashes;
+  @HiveField(18)
+  bool? catalogAutoDisabled;
 
   ConfigDBO(
     this.hasAcceptedDisclaimer,
@@ -58,6 +69,8 @@ class ConfigDBO extends HiveObject {
     this.selectedLocale,
     this.showMicronutrients,
     this.offlineCatalogEnabled,
+    this.catalogConsecutiveCrashes,
+    this.catalogAutoDisabled,
   });
 
   factory ConfigDBO.empty() =>

@@ -447,6 +447,21 @@ class OfflineCatalogDataSource {
     return (result.first['c'] as int?) ?? 0;
   }
 
+  /// Count rows whose [_kColFetchedAt] is at or after [sinceMillis].
+  /// Used by the repository's wipe-protection guard to verify that
+  /// a build wrote enough rows before the sweep applies — a tiny
+  /// "kept" count vs a large pre-existing catalogue means something
+  /// went wrong upstream (typically an OFF schema change).
+  Future<int> countWrittenSince(int sinceMillis) async {
+    final db = await _database();
+    final result = await db.rawQuery(
+      'SELECT COUNT(*) AS c FROM $_kTableProducts '
+      'WHERE $_kColFetchedAt >= ?',
+      [sinceMillis],
+    );
+    return (result.first['c'] as int?) ?? 0;
+  }
+
   /// On-disk size in bytes. Sums the .db file plus any WAL/SHM
   /// sidecars SQLite may have spilled to. Returns 0 when the file
   /// doesn't exist yet (catalog never built).

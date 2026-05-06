@@ -159,6 +159,28 @@ class ConfigDataSource {
     return config?.offlineCatalogEnabled ?? false;
   }
 
+  Future<int> getCatalogConsecutiveCrashes() async {
+    final config = _configBox.get(_configKey);
+    return config?.catalogConsecutiveCrashes ?? 0;
+  }
+
+  Future<void> setCatalogConsecutiveCrashes(int value) async {
+    final config = _configBox.get(_configKey);
+    config?.catalogConsecutiveCrashes = value;
+    await config?.save();
+  }
+
+  Future<bool> getCatalogAutoDisabled() async {
+    final config = _configBox.get(_configKey);
+    return config?.catalogAutoDisabled ?? false;
+  }
+
+  Future<void> setCatalogAutoDisabled(bool value) async {
+    final config = _configBox.get(_configKey);
+    config?.catalogAutoDisabled = value;
+    await config?.save();
+  }
+
   Future<ConfigDBO> getConfig() async {
     return _configBox.get(_configKey) ?? ConfigDBO.empty();
   }

@@ -13,6 +13,26 @@ import 'package:opennutritracker/features/offline_catalog/domain/entity/catalog_
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 
+/// Raised when the cache directory doesn't have enough free space
+/// to hold the OFF dump download. Surfaced as a recoverable error
+/// so the user can free space and retry.
+class DiskSpaceException implements Exception {
+  final int bytesNeeded;
+  final String underlying;
+
+  const DiskSpaceException({
+    required this.bytesNeeded,
+    required this.underlying,
+  });
+
+  @override
+  String toString() {
+    final mb = (bytesNeeded / (1024 * 1024)).toStringAsFixed(0);
+    return 'Not enough free space on the device to download the Open Food '
+        'Facts dump. Need at least $mb MB. ($underlying)';
+  }
+}
+
 /// Bytes-level progress emitted by [OffCsvDumpDataSource.downloadResumable].
 class CsvDownloadProgress {
   final int bytesDone;
@@ -139,6 +159,64 @@ class OffCsvDumpDataSource {
     final file = await resolveLocalFile();
     if (!await file.exists()) return 0;
     return file.length();
+  }
+
+  /// Best-effort pre-flight check that the cache directory has at
+  /// least [bytesNeeded] of free space. Writes a sentinel file of
+  /// the requested size and rolls it back; if that succeeds the
+  /// real download has at least the same headroom. If the write
+  /// fails (typically `errno=ENOSPC`), throws
+  /// [DiskSpaceException] so the build aborts cleanly with a
+  /// human-readable message rather than crashing partway through
+  /// a multi-hundred-MB download.
+  ///
+  /// Pass the **largest** size we expect to need on disk
+  /// concurrently — that's the gzip itself plus a margin. We don't
+  /// pre-flight the decoded stream because it never lands as a
+  /// file; it streams through the parser.
+  Future<void> preflightDiskSpace(int bytesNeeded) async {
+    final dir = await getApplicationCacheDirectory();
+    final sentinel = File(p.join(dir.path, '.ont_disk_probe'));
+    try {
+      // Write in 1 MB chunks so we don't allocate a huge buffer
+      // up-front; intermediate failures fail fast at the right
+      // boundary.
+      final sink = sentinel.openWrite();
+      try {
+        const chunk = 1024 * 1024;
+        final buf = List<int>.filled(chunk, 0);
+        var written = 0;
+        while (written < bytesNeeded) {
+          final remaining = bytesNeeded - written;
+          if (remaining >= chunk) {
+            sink.add(buf);
+            written += chunk;
+          } else {
+            sink.add(List<int>.filled(remaining, 0));
+            written += remaining;
+          }
+        }
+        await sink.flush();
+      } finally {
+        await sink.close();
+      }
+    } catch (e) {
+      // Anything that fails the sentinel write is treated as a
+      // disk-space problem. Permission issues would be the same
+      // failure surface; either way we abort.
+      try {
+        if (await sentinel.exists()) await sentinel.delete();
+      } catch (_) {/* best effort cleanup */}
+      throw DiskSpaceException(
+        bytesNeeded: bytesNeeded,
+        underlying: e.toString(),
+      );
+    }
+    // Roll back regardless — we only wanted to know the write
+    // would succeed.
+    try {
+      if (await sentinel.exists()) await sentinel.delete();
+    } catch (_) {/* best effort cleanup */}
   }
 
   /// Resumable streaming download to [resolveLocalFile]. Yields one

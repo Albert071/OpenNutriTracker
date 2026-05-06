@@ -165,7 +165,16 @@ class OfflineCatalogBloc extends Bloc<OfflineCatalogEvent, OfflineCatalogState> 
     ResumeCatalogBuildEvent event,
     Emitter<OfflineCatalogState> emit,
   ) async {
-    final filters = state.activeFilters ?? await _build.getPersistedFilters();
+    // Resume always uses the on-disk filter set captured when the
+    // paused build was originally started. The bloc deliberately
+    // ignores [state.activeFilters] here — that's the user's
+    // current wizard selection, which may have drifted away from
+    // what's actually being resumed (paused with UK selected,
+    // navigated back, picked France, hit Resume → without this
+    // pin, we'd silently swap mid-build). If the user wants
+    // different filters, they have to Cancel and start over from
+    // the wizard.
+    final filters = await _build.getPersistedFilters();
     if (filters == null) {
       emit(state.copyWith(
         phase: OfflineCatalogPhase.error,

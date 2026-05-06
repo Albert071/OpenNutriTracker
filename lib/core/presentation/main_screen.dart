@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:opennutritracker/core/data/repository/config_repository.dart';
 import 'package:opennutritracker/core/presentation/widgets/add_item_bottom_sheet.dart';
 import 'package:opennutritracker/core/utils/locator.dart';
 import 'package:opennutritracker/core/utils/navigation_options.dart';
@@ -23,10 +26,51 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
+  /// Boot-time crash counter is reset after the home shell has
+  /// been mounted for this long without the app dying. Long enough
+  /// to be confident the offline-catalog code paths the user
+  /// might trigger on launch (settings tile load, scanner cache
+  /// peek) are stable; short enough that a quick "open and
+  /// close" by the user before the timer fires doesn't keep us
+  /// stuck on a non-crashing launch.
+  static const Duration _kCrashCounterResetDelay = Duration(seconds: 30);
+
   int _selectedPageIndex = 0;
+
+  Timer? _crashCounterResetTimer;
 
   late List<Widget> _bodyPages;
   late List<PreferredSizeWidget> _appbarPages;
+
+  @override
+  void initState() {
+    super.initState();
+    // Schedule the second half of the crash safety switch. If the
+    // app dies before this fires we'll come back next launch with
+    // the counter still elevated; once it does fire we know the
+    // launch was healthy and reset the count plus clear the auto-
+    // disable flag.
+    _crashCounterResetTimer = Timer(
+      _kCrashCounterResetDelay,
+      _resetCrashCounter,
+    );
+  }
+
+  @override
+  void dispose() {
+    _crashCounterResetTimer?.cancel();
+    super.dispose();
+  }
+
+  Future<void> _resetCrashCounter() async {
+    final configRepo = locator<ConfigRepository>();
+    await configRepo.setCatalogConsecutiveCrashes(0);
+    // We deliberately leave [catalogAutoDisabled] alone here — it
+    // stays true so the settings tile keeps showing the "auto-
+    // disabled" banner until the user actively chooses to re-
+    // enable. Clearing it here would silently flip the catalog
+    // back on the user without their knowledge.
+  }
 
   @override
   void didChangeDependencies() {

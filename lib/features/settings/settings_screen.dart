@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:opennutritracker/core/data/repository/config_repository.dart';
 import 'package:opennutritracker/core/domain/entity/app_theme_entity.dart';
 import 'package:opennutritracker/core/presentation/widgets/app_banner_version.dart';
 import 'package:opennutritracker/core/presentation/widgets/disclaimer_dialog.dart';
@@ -701,13 +702,43 @@ class _OfflineCatalogTile extends StatefulWidget {
 
 class _OfflineCatalogTileState extends State<_OfflineCatalogTile> {
   late OfflineCatalogBloc _bloc;
+  late ConfigRepository _configRepo;
+
+  /// Cached snapshot of the auto-disabled flag from
+  /// [ConfigRepository]. Polled in initState and refreshed after
+  /// the user re-enables — that's all we need; this widget is
+  /// short-lived (the user navigates away before the value can
+  /// drift in any meaningful way).
+  bool _autoDisabled = false;
 
   @override
   void initState() {
     super.initState();
     _bloc = locator<OfflineCatalogBloc>();
+    _configRepo = locator<ConfigRepository>();
     // Read current state so the subtitle is correct on first paint.
     _bloc.add(const LoadCatalogStatusEvent());
+    _loadAutoDisabledFlag();
+  }
+
+  Future<void> _loadAutoDisabledFlag() async {
+    final value = await _configRepo.getCatalogAutoDisabled();
+    if (!mounted) return;
+    setState(() => _autoDisabled = value);
+  }
+
+  Future<void> _reenable() async {
+    await _configRepo.setOfflineCatalogEnabled(true);
+    await _configRepo.setCatalogAutoDisabled(false);
+    await _configRepo.setCatalogConsecutiveCrashes(0);
+    if (!mounted) return;
+    setState(() => _autoDisabled = false);
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        // l10n: offlineCatalogReenabledSnack
+        content: const Text('Offline catalog re-enabled'),
+      ),
+    );
   }
 
   void _openWizard() {
@@ -747,19 +778,90 @@ class _OfflineCatalogTileState extends State<_OfflineCatalogTile> {
     return BlocBuilder<OfflineCatalogBloc, OfflineCatalogState>(
       bloc: _bloc,
       builder: (context, state) {
-        return ListTile(
-          leading: const Icon(Icons.travel_explore_outlined),
-          title: Text(S.of(context).offlineCatalogTitle),
-          subtitle: Text(_subtitleFor(context, state)),
-          trailing: _trailingFor(context, state),
-          onTap: _openWizard,
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (_autoDisabled) _buildAutoDisabledBanner(context),
+            ListTile(
+              leading: const Icon(Icons.travel_explore_outlined),
+              title: Text(S.of(context).offlineCatalogTitle),
+              subtitle: Text(_subtitleFor(context, state)),
+              trailing: _trailingFor(context, state),
+              onTap: _openWizard,
+            ),
+          ],
         );
       },
     );
   }
 
+  Widget _buildAutoDisabledBanner(BuildContext context) {
+    final theme = Theme.of(context);
+    return Container(
+      margin: const EdgeInsets.fromLTRB(16, 8, 16, 0),
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: theme.colorScheme.errorContainer,
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Icon(Icons.warning_amber_rounded, color: theme.colorScheme.error),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // l10n: offlineCatalogAutoDisabledTitle
+                Text(
+                  'Offline catalog turned off',
+                  style: theme.textTheme.titleSmall,
+                ),
+                const SizedBox(height: 4),
+                // l10n: offlineCatalogAutoDisabledBody
+                const Text(
+                  'The app crashed twice in a row, so we paused the '
+                  'offline catalog to keep things running. Your '
+                  'downloaded products are still on disk — re-enable '
+                  'when you\'re ready, or delete and rebuild from the '
+                  'tile below.',
+                ),
+                const SizedBox(height: 8),
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: TextButton.icon(
+                    onPressed: _reenable,
+                    icon: const Icon(Icons.power_settings_new),
+                    // l10n: offlineCatalogReenableAction
+                    label: const Text('Re-enable'),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   String _subtitleFor(BuildContext context, OfflineCatalogState state) {
     final s = S.of(context);
+    // When the catalog is auto-disabled by the crash safety switch
+    // we shadow the usual "ready / X products" subtitle with the
+    // disabled state plus the data-still-on-disk hint, so even a
+    // user who scrolls past the banner still sees that the catalog
+    // is paused (not gone).
+    if (_autoDisabled) {
+      final stats = state.stats ?? CatalogStatsEntity.empty;
+      if (stats.isPopulated) {
+        // l10n: offlineCatalogTileAutoDisabledWithData
+        return 'Paused after repeated crashes — '
+            '${stats.productCount} products kept on disk';
+      }
+      // l10n: offlineCatalogTileAutoDisabled
+      return 'Paused after repeated crashes — tap to set up again';
+    }
     switch (state.phase) {
       case OfflineCatalogPhase.building:
         final p = state.progress;

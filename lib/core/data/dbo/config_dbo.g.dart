@@ -31,6 +31,8 @@ class ConfigDBOAdapter extends TypeAdapter<ConfigDBO> {
         selectedLocale: fields[13] as String?,
         showMicronutrients: fields[15] as bool?,
         offlineCatalogEnabled: fields[16] as bool?,
+        catalogConsecutiveCrashes: (fields[17] as num?)?.toInt(),
+        catalogAutoDisabled: fields[18] as bool?,
       )
       ..userCarbGoalPct = (fields[6] as num?)?.toDouble()
       ..userProteinGoalPct = (fields[7] as num?)?.toDouble()
@@ -40,7 +42,7 @@ class ConfigDBOAdapter extends TypeAdapter<ConfigDBO> {
   @override
   void write(BinaryWriter writer, ConfigDBO obj) {
     writer
-      ..writeByte(17)
+      ..writeByte(19)
       ..writeByte(0)
       ..write(obj.hasAcceptedDisclaimer)
       ..writeByte(1)
@@ -74,7 +76,11 @@ class ConfigDBOAdapter extends TypeAdapter<ConfigDBO> {
       ..writeByte(15)
       ..write(obj.showMicronutrients)
       ..writeByte(16)
-      ..write(obj.offlineCatalogEnabled);
+      ..write(obj.offlineCatalogEnabled)
+      ..writeByte(17)
+      ..write(obj.catalogConsecutiveCrashes)
+      ..writeByte(18)
+      ..write(obj.catalogAutoDisabled);
   }
 
   @override
@@ -108,6 +114,9 @@ ConfigDBO _$ConfigDBOFromJson(Map<String, dynamic> json) =>
         selectedLocale: json['selectedLocale'] as String?,
         showMicronutrients: json['showMicronutrients'] as bool?,
         offlineCatalogEnabled: json['offlineCatalogEnabled'] as bool?,
+        catalogConsecutiveCrashes: (json['catalogConsecutiveCrashes'] as num?)
+            ?.toInt(),
+        catalogAutoDisabled: json['catalogAutoDisabled'] as bool?,
       )
       ..userCarbGoalPct = (json['userCarbGoalPct'] as num?)?.toDouble()
       ..userProteinGoalPct = (json['userProteinGoalPct'] as num?)?.toDouble()
@@ -131,6 +140,8 @@ Map<String, dynamic> _$ConfigDBOToJson(ConfigDBO instance) => <String, dynamic>{
   'showMealMacros': instance.showMealMacros,
   'showMicronutrients': instance.showMicronutrients,
   'offlineCatalogEnabled': instance.offlineCatalogEnabled,
+  'catalogConsecutiveCrashes': instance.catalogConsecutiveCrashes,
+  'catalogAutoDisabled': instance.catalogAutoDisabled,
 };
 
 const _$AppThemeDBOEnumMap = {

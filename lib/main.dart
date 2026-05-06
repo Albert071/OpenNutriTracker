@@ -60,6 +60,17 @@ Future<void> main() async {
   final isUserInitialized = await locator<UserDataSource>().hasUserData();
   final configRepo = locator<ConfigRepository>();
 
+  // Crash safety switch for the offline catalog. We bump a counter
+  // at every launch and reset it once the app has been stable for
+  // ~30 seconds (see [MainScreen]). Two crashes in a row means
+  // something in the catalog code path is killing the app at
+  // launch-time — most likely a corrupted sqlite or a wedge in the
+  // search / scanner integration. We disable the catalog WITHOUT
+  // deleting it so the user can re-enable from settings once
+  // they've updated the app or chosen to rebuild. The catalog
+  // file stays put.
+  await _applyCrashSafetySwitch(configRepo);
+
   // #312: Restore scheduled notifications after app start / device reboot
   final config = await configRepo.getConfig();
   if (config.notificationsEnabled) {
@@ -89,6 +100,34 @@ Future<void> main() async {
     log.info('Starting App ...');
     runAppWithChangeNotifiers(isUserInitialized, savedAppTheme, savedLocale);
   }
+}
+
+/// Boot-time half of the crash safety switch.
+///
+/// We presume each launch is going to crash until proven otherwise,
+/// so we increment [ConfigRepository.getCatalogConsecutiveCrashes]
+/// before the app starts rendering. The other half (the reset) lives
+/// on [MainScreen]: when the home screen has been mounted for
+/// `_kCrashCounterResetDelay` seconds we trust the launch and reset
+/// the counter back to zero. If the app dies before the reset fires
+/// the counter persists, and on the third crashy launch in a row
+/// (counter would otherwise hit 3) we flip the catalog off and
+/// surface a banner in settings.
+///
+/// Two specifically catches the typical iOS "killed during init"
+/// pattern — a single crash is usually transient (OOM during a
+/// background coalesce, etc.); a second consecutive one is a
+/// strong signal that something persistent is breaking us.
+Future<void> _applyCrashSafetySwitch(ConfigRepository configRepo) async {
+  final priorCount = await configRepo.getCatalogConsecutiveCrashes();
+  // If we already exceeded the threshold on a previous boot we keep
+  // the catalog off and the auto-disable banner showing — the user
+  // re-enables explicitly from settings. Otherwise: increment.
+  if (priorCount >= 2) {
+    await configRepo.setOfflineCatalogEnabled(false);
+    await configRepo.setCatalogAutoDisabled(true);
+  }
+  await configRepo.setCatalogConsecutiveCrashes(priorCount + 1);
 }
 
 void _runAppWithSentryReporting(

@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:crypto/crypto.dart';
 import 'package:logging/logging.dart';
 import 'package:opennutritracker/features/add_meal/data/dto/off/off_product_dto.dart';
 import 'package:opennutritracker/features/offline_catalog/data/data_sources/off_bulk_api_data_source.dart';
@@ -21,6 +22,33 @@ const int _kRoughKeptRowsForSingleCountry = 18000;
 /// Average bytes-per-row in the on-disk sqlite catalogue (JSON blob
 /// + denormalised name/brand cells + FTS index overhead).
 const int _kBytesPerRow = 1024;
+
+/// Below this kept-ratio, the post-build sweep is refused and the
+/// repository raises [CatalogSweepGuardException]. 25% means we
+/// allow legitimate filter narrowings (e.g. UK + a stricter quality
+/// gate keeping ~30% of the previous catalog) but bail when an OFF
+/// schema change or partial parse leaves us with almost nothing.
+const double _minKeptRatioForSweep = 0.25;
+
+/// Pre-existing catalogues smaller than this skip the wipe guard.
+/// On a tiny catalog the ratio is too noisy to be useful; the user
+/// can rebuild from scratch cheaply if anything goes wrong.
+const int _sweepGuardThreshold = 100;
+
+/// Raised by [OfflineCatalogRepository.build] when the post-build
+/// sweep would drop more rows than the safety threshold allows.
+/// Surfaced as a recoverable error so the user can retry on a
+/// later OFF dump or update the app.
+class CatalogSweepGuardException implements Exception {
+  const CatalogSweepGuardException();
+
+  @override
+  String toString() =>
+      'Refusing to sweep the catalog — the new build wrote far fewer '
+      'rows than expected. This usually means Open Food Facts changed '
+      'the dump schema and the app needs an update. Your existing '
+      'catalog is unchanged.';
+}
 
 /// Orchestrates the catalog lifecycle.
 ///
@@ -137,11 +165,26 @@ class OfflineCatalogRepository {
       jsonEncode({'phase': 'downloading', 'filtersHash': filtersHash}),
     );
 
+    // Pre-flight: verify the cache directory has enough free
+    // space for the gzip download. We probe with a slightly
+    // padded sentinel write so we abort here with a clear error
+    // instead of half-way through a hundreds-of-MB transfer.
+    // Skipped when a fresh-enough cached gzip already exists —
+    // that file already proves the space was there.
+    final cacheIsFresh = await _isCachedDumpFresh();
+    if (!cacheIsFresh) {
+      final remoteBytes = await _csvDump.headTotalBytes();
+      if (remoteBytes != null) {
+        // 1.1× headroom over the gzip size. We don't preflight the
+        // decoded stream — that never hits disk.
+        await _csvDump.preflightDiskSpace((remoteBytes * 1.1).round());
+      }
+    }
+
     // Skip the download phase entirely when a fresh-enough gzip is
     // already on disk. The user's wizard run still gets the most
     // recent OFF data they have access to without paying for a
     // second 1+ GB transfer.
-    final cacheIsFresh = await _isCachedDumpFresh();
     if (cacheIsFresh) {
       _log.info('Catalog build phase 1: skipped (cached dump is fresh)');
       // Emit a single 100% progress event so the UI doesn't sit on
@@ -198,6 +241,37 @@ class OfflineCatalogRepository {
     // up the cached gzip. Order matters: the sweep happens before
     // the cursor is cleared so an interruption between the two
     // still leaves the catalogue in a consistent state.
+    //
+    // **Wipe protection.** Before sweeping we check that the build
+    // didn't accidentally produce a near-empty catalogue — the kind
+    // of outcome we'd see if OFF renamed a column and our parser
+    // started silently dropping every row. A normal refresh keeps
+    // ≥ 95% of rows; a normal filter change keeps anywhere from
+    // 0% (everything dropped, e.g. user picked a country with no
+    // products) to 100% (overlap with old filters). We bail out of
+    // the sweep when the post-build kept ratio falls below
+    // [_minKeptRatioForSweep] AND the existing catalogue had at
+    // least [_sweepGuardThreshold] rows — the threshold guards
+    // first builds (no prior data) and tiny catalogs from being
+    // misclassified.
+    final preSweepTotal = await _local.count();
+    final freshlyWritten = await _local.countWrittenSince(buildStartedAtMillis);
+    final keptRatio = preSweepTotal == 0
+        ? 1.0
+        : freshlyWritten / preSweepTotal;
+    if (preSweepTotal >= _sweepGuardThreshold &&
+        keptRatio < _minKeptRatioForSweep) {
+      _log.severe(
+        'Refusing to sweep: build wrote $freshlyWritten rows but the '
+        'existing catalog had $preSweepTotal — ratio $keptRatio is '
+        'below the safety threshold $_minKeptRatioForSweep. The '
+        'parser may have failed to recognise an OFF schema change. '
+        'Catalog data is left intact.',
+      );
+      // Bail without sweeping; raise an error the bloc can surface
+      // recoverably so the user can retry or update the app.
+      throw const CatalogSweepGuardException();
+    }
     final sweptCount = await _local.deleteStaleRows(buildStartedAtMillis);
     if (sweptCount > 0) {
       _log.info('Swept $sweptCount stale rows from prior build');
@@ -378,5 +452,11 @@ class OfflineCatalogRepository {
     );
   }
 
-  String _hashFilters(String json) => json.hashCode.toRadixString(16);
+  /// SHA-1 of the canonical filter JSON. Strong enough to make
+  /// collisions effectively impossible (the alternative would be
+  /// `String.hashCode`, which has well-known collision pairs that
+  /// could in principle let a "Resume" land on a build that the
+  /// user originally started with a different filter set).
+  String _hashFilters(String json) =>
+      sha1.convert(utf8.encode(json)).toString();
 }

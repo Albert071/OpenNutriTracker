@@ -104,4 +104,16 @@ class ConfigRepository {
   Future<bool> getOfflineCatalogEnabled() async {
     return await _configDataSource.getOfflineCatalogEnabled();
   }
+
+  Future<int> getCatalogConsecutiveCrashes() =>
+      _configDataSource.getCatalogConsecutiveCrashes();
+
+  Future<void> setCatalogConsecutiveCrashes(int value) =>
+      _configDataSource.setCatalogConsecutiveCrashes(value);
+
+  Future<bool> getCatalogAutoDisabled() =>
+      _configDataSource.getCatalogAutoDisabled();
+
+  Future<void> setCatalogAutoDisabled(bool value) =>
+      _configDataSource.setCatalogAutoDisabled(value);
 }
