@@ -209,6 +209,14 @@ class OfflineCatalogBloc extends Bloc<OfflineCatalogEvent, OfflineCatalogState> 
         cancellation: token,
       )) {
         lastProgress = progress;
+        // The parser only checks cancellation between batches, so a
+        // fraction of a second can elapse between the user tapping
+        // Pause / Cancel and the parser actually stopping. During
+        // that window we'd otherwise re-emit `building` and
+        // overwrite the paused / idle state the handler just set,
+        // leaving the UI flipped back to a frozen progress bar.
+        // Drop late events whose target phase has already moved on.
+        if (state.phase != OfflineCatalogPhase.building) continue;
         final now = DateTime.now();
         if (now.difference(lastEmit) >= _progressEmitInterval) {
           lastEmit = now;
@@ -219,7 +227,9 @@ class OfflineCatalogBloc extends Bloc<OfflineCatalogEvent, OfflineCatalogState> 
         }
       }
       // Final emit so the wizard sees 100% before the phase flips.
-      if (lastProgress != null) {
+      // Same guard — if the user paused mid-stream we don't want to
+      // unwind their pause with a final 100% snapshot.
+      if (lastProgress != null && state.phase == OfflineCatalogPhase.building) {
         emit(state.copyWith(
           phase: OfflineCatalogPhase.building,
           progress: lastProgress,
@@ -299,6 +309,11 @@ class OfflineCatalogBloc extends Bloc<OfflineCatalogEvent, OfflineCatalogState> 
     DateTime lastEmit = DateTime.fromMillisecondsSinceEpoch(0);
     try {
       await for (final progress in _refresh(cancellation: token)) {
+        // Same race guard as [_runBuild]: drop late progress events
+        // that arrived after the user paused / cancelled, so they
+        // don't overwrite the post-pause state and leave the UI
+        // stuck on a frozen progress bar.
+        if (state.phase != OfflineCatalogPhase.refreshing) continue;
         final now = DateTime.now();
         if (now.difference(lastEmit) >= _progressEmitInterval) {
           lastEmit = now;
