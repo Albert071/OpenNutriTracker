@@ -54,7 +54,7 @@ See [Data Protection](https://www.iubenda.com/privacy-policy/53501884)
 - Add support for Material You themes
 
 ## Contribution
-Contributions to OpenNutriTracker are welcome! If you find any issues or have suggestions for new features, please open an issue or submit a pull request. Make sure to follow the project's code style and guidelines.
+Contributions to OpenNutriTracker are welcome! If you find any issues or have suggestions for new features, please open an issue or submit a pull request. See [CONTRIBUTING.md](CONTRIBUTING.md) for the project's conventions — including the requirement to target the `develop` branch and the steps for adding localized strings.
 
 Thanks to all the contributors:
 <a href="https://github.com/simonoppowa/OpenNutriTracker/graphs/contributors">
