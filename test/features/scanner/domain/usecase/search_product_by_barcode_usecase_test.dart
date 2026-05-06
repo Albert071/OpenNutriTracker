@@ -3,9 +3,11 @@ import 'package:opennutritracker/core/data/data_source/remote_search_cache_data_
 import 'package:opennutritracker/core/data/data_source/custom_meal_data_source.dart';
 import 'package:opennutritracker/core/data/dbo/meal_dbo.dart';
 import 'package:opennutritracker/core/data/dbo/meal_nutriments_dbo.dart';
+import 'package:opennutritracker/core/data/repository/config_repository.dart';
 import 'package:opennutritracker/features/add_meal/data/repository/products_repository.dart';
 import 'package:opennutritracker/features/add_meal/domain/entity/meal_entity.dart';
 import 'package:opennutritracker/features/add_meal/domain/entity/meal_nutriments_entity.dart';
+import 'package:opennutritracker/features/offline_catalog/domain/usecase/search_offline_catalog_usecase.dart';
 import 'package:opennutritracker/features/scanner/domain/usecase/search_product_by_barcode_usecase.dart';
 
 void main() {
@@ -13,16 +15,22 @@ void main() {
     late _FakeProductsRepository repo;
     late _FakeCustomMealDataSource customMealDataSource;
     late _FakeRemoteSearchCacheDataSource cachedOffMealDataSource;
+    late _FakeSearchOfflineCatalogUseCase offlineCatalog;
+    late _FakeConfigRepository configRepository;
     late SearchProductByBarcodeUseCase useCase;
 
     setUp(() {
       repo = _FakeProductsRepository();
       customMealDataSource = _FakeCustomMealDataSource();
       cachedOffMealDataSource = _FakeRemoteSearchCacheDataSource();
+      offlineCatalog = _FakeSearchOfflineCatalogUseCase();
+      configRepository = _FakeConfigRepository();
       useCase = SearchProductByBarcodeUseCase(
         repo,
         customMealDataSource,
         cachedOffMealDataSource,
+        offlineCatalog,
+        configRepository,
       );
     });
 
@@ -279,3 +287,29 @@ MealNutrimentsEntity _emptyNutriments() => const MealNutrimentsEntity(
       saturatedFat100: null,
       fiber100: null,
     );
+
+class _FakeSearchOfflineCatalogUseCase implements SearchOfflineCatalogUseCase {
+  MealEntity? barcodeResult;
+
+  @override
+  Future<MealEntity?> getByBarcode(String code) async => barcodeResult;
+
+  @override
+  Future<List<MealEntity>> searchByText(String query, {int limit = 50}) async =>
+      const [];
+
+  @override
+  dynamic noSuchMethod(Invocation invocation) =>
+      throw UnimplementedError('Unexpected call: ${invocation.memberName}');
+}
+
+class _FakeConfigRepository implements ConfigRepository {
+  bool catalogEnabled = false;
+
+  @override
+  Future<bool> getOfflineCatalogEnabled() async => catalogEnabled;
+
+  @override
+  dynamic noSuchMethod(Invocation invocation) =>
+      throw UnimplementedError('Unexpected call: ${invocation.memberName}');
+}

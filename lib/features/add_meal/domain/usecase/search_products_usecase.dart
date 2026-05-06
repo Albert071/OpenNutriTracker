@@ -3,10 +3,12 @@ import 'package:opennutritracker/core/data/data_source/remote_search_cache_data_
 import 'package:opennutritracker/core/data/data_source/custom_meal_data_source.dart';
 import 'package:opennutritracker/core/data/data_source/recipe_data_source.dart';
 import 'package:opennutritracker/core/data/dbo/meal_dbo.dart';
+import 'package:opennutritracker/core/data/repository/config_repository.dart';
 import 'package:opennutritracker/core/domain/entity/recipe_entity.dart';
 import 'package:opennutritracker/core/domain/usecase/get_intake_usecase.dart';
 import 'package:opennutritracker/features/add_meal/data/repository/products_repository.dart';
 import 'package:opennutritracker/features/add_meal/domain/entity/meal_entity.dart';
+import 'package:opennutritracker/features/offline_catalog/domain/usecase/search_offline_catalog_usecase.dart';
 
 /// Output of a product/food search. [meals] is the deduplicated list shown
 /// to the user (custom-meal matches first, then remote results).
@@ -32,6 +34,8 @@ class SearchProductsUseCase {
   final CustomMealDataSource _customMealDataSource;
   final RemoteSearchCacheDataSource _cachedOffMealDataSource;
   final RecipeDataSource _recipeDataSource;
+  final SearchOfflineCatalogUseCase _searchOfflineCatalog;
+  final ConfigRepository _configRepository;
 
   SearchProductsUseCase(
     this._productsRepository,
@@ -39,21 +43,43 @@ class SearchProductsUseCase {
     this._customMealDataSource,
     this._cachedOffMealDataSource,
     this._recipeDataSource,
+    this._searchOfflineCatalog,
+    this._configRepository,
   );
 
+  /// OFF word search. When the user has an offline catalog populated
+  /// and enabled, the catalog's FTS index becomes the primary source
+  /// for word search and we skip the live OFF call entirely — the
+  /// catalog is far larger than what a single live API page would
+  /// return for a query, and the offline-first promise of having
+  /// downloaded the data is that searches don't need a round trip.
+  /// Live OFF still runs the per-item refresh path on intake-add and
+  /// the barcode-miss path in the scanner, so newly-published
+  /// products keep flowing in for products the user actually logs.
   Future<SearchProductsResult> searchOFFProductsByString(
     String searchString,
   ) async {
-    final remote = await _safeRemoteCall(
-      'OFF',
-      () => _productsRepository.getOFFProductsByString(searchString),
-    );
-    // Cache the result page. Untouched entries age out after 90 days
-    // (RemoteSearchCacheDataSource.pruneStale), so this can't grow
-    // unbounded. Items the user actually selects (logs an intake of)
-    // get their timestamp refreshed and stay until 90 days after the
-    // last selection.
-    await _cacheRemoteResults(remote);
+    final catalogEnabled =
+        await _configRepository.getOfflineCatalogEnabled();
+    final List<MealEntity> remote;
+    if (catalogEnabled) {
+      remote = await _searchOfflineCatalog.searchByText(searchString);
+      _log.fine(
+        'Using offline catalog for OFF word search '
+        '("${searchString.length} chars" → ${remote.length} hits)',
+      );
+    } else {
+      remote = await _safeRemoteCall(
+        'OFF',
+        () => _productsRepository.getOFFProductsByString(searchString),
+      );
+      // Cache the result page. Untouched entries age out after 90 days
+      // (RemoteSearchCacheDataSource.pruneStale), so this can't grow
+      // unbounded. Items the user actually selects (logs an intake of)
+      // get their timestamp refreshed and stay until 90 days after the
+      // last selection.
+      await _cacheRemoteResults(remote);
+    }
     return _buildResult(searchString, remote);
   }
 

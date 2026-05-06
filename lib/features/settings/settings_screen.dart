@@ -12,6 +12,9 @@ import 'package:opennutritracker/core/utils/url_const.dart';
 import 'package:opennutritracker/features/diary/presentation/bloc/calendar_day_bloc.dart';
 import 'package:opennutritracker/features/diary/presentation/bloc/diary_bloc.dart';
 import 'package:opennutritracker/features/home/presentation/bloc/home_bloc.dart';
+import 'package:opennutritracker/features/offline_catalog/domain/entity/catalog_stats_entity.dart';
+import 'package:opennutritracker/features/offline_catalog/presentation/bloc/offline_catalog_bloc.dart';
+import 'package:opennutritracker/features/offline_catalog/presentation/offline_catalog_wizard_screen.dart';
 import 'package:opennutritracker/features/profile/presentation/bloc/profile_bloc.dart';
 import 'package:opennutritracker/features/settings/presentation/bloc/settings_bloc.dart';
 import 'package:opennutritracker/features/settings/presentation/widgets/export_import_dialog.dart';
@@ -164,6 +167,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   enabled: state.offCacheCount > 0,
                   onTap: () => _confirmClearOffCache(context),
                 ),
+                _OfflineCatalogTile(formatBytes: _formatBytes),
                 const Divider(),
                 // About
                 ListTile(
@@ -674,5 +678,165 @@ class _SettingsScreenState extends State<SettingsScreen> {
         );
       }
     }
+  }
+}
+
+/// Settings entry that surfaces the offline-catalog state and routes
+/// the user into the wizard. Lives next to the live-OFF cache row so
+/// the two related controls sit together.
+///
+/// The tile listens to [OfflineCatalogBloc] so the subtitle reflects
+/// the current state (not built / building NN% / X products, Y MB)
+/// without requiring the user to leave settings to know what's
+/// happening. Long-press / trailing menu offers refresh and delete
+/// actions when a catalog exists.
+class _OfflineCatalogTile extends StatefulWidget {
+  final String Function(int bytes) formatBytes;
+
+  const _OfflineCatalogTile({required this.formatBytes});
+
+  @override
+  State<_OfflineCatalogTile> createState() => _OfflineCatalogTileState();
+}
+
+class _OfflineCatalogTileState extends State<_OfflineCatalogTile> {
+  late OfflineCatalogBloc _bloc;
+
+  @override
+  void initState() {
+    super.initState();
+    _bloc = locator<OfflineCatalogBloc>();
+    // Read current state so the subtitle is correct on first paint.
+    _bloc.add(const LoadCatalogStatusEvent());
+  }
+
+  void _openWizard() {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => const OfflineCatalogWizardScreen(),
+      ),
+    );
+  }
+
+  Future<void> _confirmDelete(BuildContext context) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        // l10n: offlineCatalogDeleteConfirmTitle
+        title: const Text('Delete offline catalog?'),
+        // l10n: offlineCatalogDeleteConfirmBody
+        content: const Text(
+          'This removes the downloaded products from your device. '
+          'You can rebuild it any time from this screen.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(false),
+            // l10n: cancelLabel
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(true),
+            // l10n: deleteLabel
+            child: const Text('Delete'),
+          ),
+        ],
+      ),
+    );
+    if (confirmed == true) {
+      _bloc.add(const DeleteCatalogEvent());
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<OfflineCatalogBloc, OfflineCatalogState>(
+      bloc: _bloc,
+      builder: (context, state) {
+        return ListTile(
+          leading: const Icon(Icons.travel_explore_outlined),
+          // l10n: offlineCatalogTileTitle
+          title: const Text('Offline food catalog'),
+          subtitle: Text(_subtitleFor(state)),
+          trailing: _trailingFor(context, state),
+          onTap: _openWizard,
+        );
+      },
+    );
+  }
+
+  String _subtitleFor(OfflineCatalogState state) {
+    switch (state.phase) {
+      case OfflineCatalogPhase.building:
+        final p = state.progress;
+        if (p == null) return 'Building…';
+        // l10n: offlineCatalogTileBuilding (formatter)
+        return 'Building (${(p.fraction * 100).toStringAsFixed(0)}%)';
+      case OfflineCatalogPhase.refreshing:
+        // l10n: offlineCatalogTileRefreshing
+        return 'Refreshing…';
+      case OfflineCatalogPhase.paused:
+        // l10n: offlineCatalogTilePaused
+        return 'Download paused — tap to resume';
+      case OfflineCatalogPhase.ready:
+        final stats = state.stats ?? CatalogStatsEntity.empty;
+        if (!stats.isPopulated) {
+          // l10n: offlineCatalogTileNotBuilt
+          return 'Not built — tap to set up';
+        }
+        // l10n: offlineCatalogTileReady (formatter)
+        return '${stats.productCount} products, '
+            '${widget.formatBytes(stats.sizeBytes)}'
+            '${stats.lastSyncTime != null ? ' · last refreshed ${_relative(stats.lastSyncTime!)}' : ''}';
+      case OfflineCatalogPhase.idle:
+      default:
+        // l10n: offlineCatalogTileNotBuilt
+        return 'Not built — tap to set up';
+    }
+  }
+
+  Widget? _trailingFor(BuildContext context, OfflineCatalogState state) {
+    final stats = state.stats;
+    if (stats == null || !stats.isPopulated) return null;
+    if (state.phase == OfflineCatalogPhase.building ||
+        state.phase == OfflineCatalogPhase.refreshing) {
+      return null;
+    }
+    return PopupMenuButton<String>(
+      onSelected: (action) {
+        if (action == 'refresh') {
+          _bloc.add(const RefreshCatalogEvent());
+        } else if (action == 'delete') {
+          _confirmDelete(context);
+        }
+      },
+      itemBuilder: (_) => [
+        const PopupMenuItem(
+          value: 'refresh',
+          // l10n: offlineCatalogActionRefresh
+          child: ListTile(
+            leading: Icon(Icons.refresh),
+            title: Text('Refresh'),
+          ),
+        ),
+        const PopupMenuItem(
+          value: 'delete',
+          // l10n: offlineCatalogActionDelete
+          child: ListTile(
+            leading: Icon(Icons.delete_outline),
+            title: Text('Delete'),
+          ),
+        ),
+      ],
+    );
+  }
+
+  String _relative(DateTime when) {
+    final diff = DateTime.now().difference(when);
+    if (diff.inDays >= 30) return '${(diff.inDays / 30).floor()}mo ago';
+    if (diff.inDays >= 7) return '${(diff.inDays / 7).floor()}w ago';
+    if (diff.inDays >= 1) return '${diff.inDays}d ago';
+    if (diff.inHours >= 1) return '${diff.inHours}h ago';
+    return 'just now';
   }
 }

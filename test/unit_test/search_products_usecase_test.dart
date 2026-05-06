@@ -5,6 +5,7 @@ import 'package:opennutritracker/core/data/data_source/recipe_data_source.dart';
 import 'package:opennutritracker/core/data/dbo/meal_dbo.dart';
 import 'package:opennutritracker/core/data/dbo/meal_nutriments_dbo.dart';
 import 'package:opennutritracker/core/data/dbo/recipe_dbo.dart';
+import 'package:opennutritracker/core/data/repository/config_repository.dart';
 import 'package:opennutritracker/core/domain/entity/intake_entity.dart';
 import 'package:opennutritracker/core/domain/entity/intake_type_entity.dart';
 import 'package:opennutritracker/core/domain/usecase/get_intake_usecase.dart';
@@ -12,6 +13,7 @@ import 'package:opennutritracker/features/add_meal/data/repository/products_repo
 import 'package:opennutritracker/features/add_meal/domain/entity/meal_entity.dart';
 import 'package:opennutritracker/features/add_meal/domain/entity/meal_nutriments_entity.dart';
 import 'package:opennutritracker/features/add_meal/domain/usecase/search_products_usecase.dart';
+import 'package:opennutritracker/features/offline_catalog/domain/usecase/search_offline_catalog_usecase.dart';
 
 class _FakeProductsRepository implements ProductsRepository {
   final Map<String, List<MealEntity>> offResults = {};
@@ -170,6 +172,32 @@ class _FakeRemoteSearchCacheDataSource implements RemoteSearchCacheDataSource {
       throw UnimplementedError('Unexpected call: ${invocation.memberName}');
 }
 
+class _FakeSearchOfflineCatalogUseCase implements SearchOfflineCatalogUseCase {
+  final Map<String, List<MealEntity>> textResults = {};
+
+  @override
+  Future<MealEntity?> getByBarcode(String code) async => null;
+
+  @override
+  Future<List<MealEntity>> searchByText(String query, {int limit = 50}) async =>
+      textResults[query] ?? const [];
+
+  @override
+  dynamic noSuchMethod(Invocation invocation) =>
+      throw UnimplementedError('Unexpected call: ${invocation.memberName}');
+}
+
+class _FakeConfigRepository implements ConfigRepository {
+  bool catalogEnabled = false;
+
+  @override
+  Future<bool> getOfflineCatalogEnabled() async => catalogEnabled;
+
+  @override
+  dynamic noSuchMethod(Invocation invocation) =>
+      throw UnimplementedError('Unexpected call: ${invocation.memberName}');
+}
+
 void main() {
   group('SearchProductsUseCase', () {
     late _FakeProductsRepository productsRepository;
@@ -177,6 +205,8 @@ void main() {
     late _FakeCustomMealDataSource customMealDataSource;
     late _FakeRemoteSearchCacheDataSource cachedOffMealDataSource;
     late _FakeRecipeDataSource recipeDataSource;
+    late _FakeSearchOfflineCatalogUseCase offlineCatalog;
+    late _FakeConfigRepository configRepository;
     late SearchProductsUseCase useCase;
 
     setUp(() {
@@ -185,12 +215,16 @@ void main() {
       customMealDataSource = _FakeCustomMealDataSource();
       cachedOffMealDataSource = _FakeRemoteSearchCacheDataSource();
       recipeDataSource = _FakeRecipeDataSource();
+      offlineCatalog = _FakeSearchOfflineCatalogUseCase();
+      configRepository = _FakeConfigRepository();
       useCase = SearchProductsUseCase(
         productsRepository,
         getIntakeUsecase,
         customMealDataSource,
         cachedOffMealDataSource,
         recipeDataSource,
+        offlineCatalog,
+        configRepository,
       );
     });
 
@@ -602,6 +636,8 @@ void main() {
     late _FakeCustomMealDataSource customMealDataSource;
     late _FakeRemoteSearchCacheDataSource cachedOffMealDataSource;
     late _FakeRecipeDataSource recipeDataSource;
+    late _FakeSearchOfflineCatalogUseCase offlineCatalog;
+    late _FakeConfigRepository configRepository;
     late SearchProductsUseCase useCase;
 
     setUp(() {
@@ -610,12 +646,16 @@ void main() {
       customMealDataSource = _FakeCustomMealDataSource();
       cachedOffMealDataSource = _FakeRemoteSearchCacheDataSource();
       recipeDataSource = _FakeRecipeDataSource();
+      offlineCatalog = _FakeSearchOfflineCatalogUseCase();
+      configRepository = _FakeConfigRepository();
       useCase = SearchProductsUseCase(
         productsRepository,
         getIntakeUsecase,
         customMealDataSource,
         cachedOffMealDataSource,
         recipeDataSource,
+        offlineCatalog,
+        configRepository,
       );
     });
 
