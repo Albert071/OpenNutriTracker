@@ -9,7 +9,7 @@ class UserRepository {
 
   Future<void> updateUserData(UserEntity userEntity) async {
     final userDBO = UserDBO.fromUserEntity(userEntity);
-    _userDataSource.saveUserData(userDBO);
+    await _userDataSource.saveUserData(userDBO);
   }
 
   Future<bool> hasUserData() async => await _userDataSource.hasUserData();

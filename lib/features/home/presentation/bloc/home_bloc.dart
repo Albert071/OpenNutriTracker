@@ -12,6 +12,7 @@ import 'package:opennutritracker/core/domain/usecase/get_intake_usecase.dart';
 import 'package:opennutritracker/core/domain/usecase/get_kcal_goal_usecase.dart';
 import 'package:opennutritracker/core/domain/usecase/get_macro_goal_usecase.dart';
 import 'package:opennutritracker/core/domain/usecase/get_user_activity_usecase.dart';
+import 'package:opennutritracker/core/domain/usecase/get_user_usecase.dart';
 import 'package:opennutritracker/core/domain/usecase/update_intake_usecase.dart';
 import 'package:opennutritracker/core/domain/usecase/update_user_activity_usecase.dart';
 import 'package:opennutritracker/core/utils/calc/calorie_goal_calc.dart';
@@ -36,6 +37,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   final GetKcalGoalUsecase _getKcalGoalUsecase;
   final GetMacroGoalUsecase _getMacroGoalUsecase;
   final UpdateUserActivityUsecase _updateUserActivityUsecase;
+  final GetUserUsecase _getUserUsecase;
 
   DateTime currentDay = DateTime.now();
 
@@ -51,6 +53,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     this._getKcalGoalUsecase,
     this._getMacroGoalUsecase,
     this._updateUserActivityUsecase,
+    this._getUserUsecase,
   ) : super(HomeInitial()) {
     on<LoadItemsEvent>((event, emit) async {
       emit(HomeLoadingState());
@@ -108,7 +111,9 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       final totalKcalActivities =
           userActivities.map((activity) => activity.burnedKcal).toList().sum;
 
-      final totalKcalGoal = await _getKcalGoalUsecase.getKcalGoal();
+      final user = await _getUserUsecase.getUserData();
+      final totalKcalGoal =
+          await _getKcalGoalUsecase.getKcalGoal(userEntity: user);
       final totalCarbsGoal = await _getMacroGoalUsecase.getCarbsGoal(
         totalKcalGoal,
       );
@@ -144,6 +149,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           userActivityList: userActivities,
           usesImperialUnits: usesImperialUnits,
           showMealMacros: showMealMacros,
+          userWeightKg: user.weightKG,
         ),
       );
     });

@@ -18,7 +18,7 @@ class AddConfigUsecase {
   Future<void> setConfigHasAcceptedAnonymousData(
     bool hasAcceptedAnonymousData,
   ) async {
-    _configRepository.setConfigHasAcceptedAnonymousData(
+    await _configRepository.setConfigHasAcceptedAnonymousData(
       hasAcceptedAnonymousData,
     );
   }
@@ -28,7 +28,7 @@ class AddConfigUsecase {
   }
 
   Future<void> setConfigUsesImperialUnits(bool usesImperialUnits) async {
-    _configRepository.setConfigUsesImperialUnits(usesImperialUnits);
+    await _configRepository.setConfigUsesImperialUnits(usesImperialUnits);
   }
 
   Future<void> setConfigKcalAdjustment(double kcalAdjustment) async {

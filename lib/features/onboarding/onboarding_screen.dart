@@ -292,18 +292,18 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     });
   }
 
-  void _onOverviewStartButtonPressed(BuildContext context) {
+  Future<void> _onOverviewStartButtonPressed(BuildContext context) async {
     final userEntity = _onboardingBloc.userSelection.toUserEntity();
     final hasAcceptedDataCollection =
         _onboardingBloc.userSelection.acceptDataCollection;
     final usesImperialUnits = _onboardingBloc.userSelection.usesImperialUnits;
     if (userEntity != null) {
-      _onboardingBloc.saveOnboardingData(
-        context,
+      await _onboardingBloc.saveOnboardingData(
         userEntity,
         hasAcceptedDataCollection,
         usesImperialUnits,
       );
+      if (!context.mounted) return;
       Navigator.pushReplacementNamed(context, NavigationOptions.mainRoute);
     } else {
       // Error with user input

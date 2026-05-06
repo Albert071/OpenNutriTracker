@@ -34,6 +34,7 @@ class HomeLoadedState extends HomeState {
   final bool usesImperialUnits;
   final bool showActivityTracking; // #277
   final bool showMealMacros;
+  final double userWeightKg;
 
   const HomeLoadedState({
     required this.showDisclaimerDialog,
@@ -53,6 +54,7 @@ class HomeLoadedState extends HomeState {
     required this.dinnerIntakeList,
     required this.snackIntakeList,
     required this.usesImperialUnits,
+    required this.userWeightKg,
     this.showActivityTracking = true,
     this.showMealMacros = true,
   });
@@ -64,5 +66,7 @@ class HomeLoadedState extends HomeState {
         dinnerIntakeList,
         snackIntakeList,
         usesImperialUnits,
+        userWeightKg,
+        totalKcalDaily,
       ];
 }

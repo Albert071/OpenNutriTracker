@@ -6,41 +6,26 @@ import 'package:opennutritracker/features/home/presentation/bloc/home_bloc.dart'
 import 'package:opennutritracker/features/profile/presentation/widgets/set_weight_dialog.dart';
 import 'package:opennutritracker/generated/l10n.dart';
 
-/// #281: Quick weight update widget on the home/landing screen.
-/// Displays current weight as a tappable chip; opens SetWeightDialog on tap.
-class QuickWeightWidget extends StatefulWidget {
+/// #281: Quick weight update chip on the home screen.
+///
+/// Reads `weightKg` from `HomeLoadedState` (single source of truth) instead
+/// of doing its own DB read; that read used to race with onboarding's user
+/// write and silently displayed the dummy 80 kg fallback.
+class QuickWeightWidget extends StatelessWidget {
+  final double weightKg;
   final bool usesImperialUnits;
 
-  const QuickWeightWidget({super.key, required this.usesImperialUnits});
-
-  @override
-  State<QuickWeightWidget> createState() => _QuickWeightWidgetState();
-}
-
-class _QuickWeightWidgetState extends State<QuickWeightWidget> {
-  double? _weightKg;
-
-  @override
-  void initState() {
-    super.initState();
-    _loadWeight();
-  }
-
-  Future<void> _loadWeight() async {
-    final user = await locator<GetUserUsecase>().getUserData();
-    if (mounted) {
-      setState(() => _weightKg = user.weightKG);
-    }
-  }
+  const QuickWeightWidget({
+    super.key,
+    required this.weightKg,
+    required this.usesImperialUnits,
+  });
 
   @override
   Widget build(BuildContext context) {
-    if (_weightKg == null) return const SizedBox.shrink();
-
-    final displayWeight = widget.usesImperialUnits
-        ? _weightKg! * 2.20462
-        : _weightKg!;
-    final unit = widget.usesImperialUnits
+    final displayWeight =
+        usesImperialUnits ? weightKg * 2.20462 : weightKg;
+    final unit = usesImperialUnits
         ? S.of(context).lbsLabel
         : S.of(context).kgLabel;
 
@@ -69,30 +54,29 @@ class _QuickWeightWidgetState extends State<QuickWeightWidget> {
   }
 
   Future<void> _showWeightDialog(BuildContext context) async {
-    final displayWeight = widget.usesImperialUnits
-        ? _weightKg! * 2.20462
-        : _weightKg!;
+    final displayWeight =
+        usesImperialUnits ? weightKg * 2.20462 : weightKg;
 
     final newWeight = await showDialog<double>(
       context: context,
       builder: (context) => SetWeightDialog(
         userWeight: displayWeight,
-        usesImperialUnits: widget.usesImperialUnits,
+        usesImperialUnits: usesImperialUnits,
       ),
     );
 
     if (newWeight == null || !context.mounted) return;
 
     final newWeightKg =
-        widget.usesImperialUnits ? newWeight / 2.20462 : newWeight;
+        usesImperialUnits ? newWeight / 2.20462 : newWeight;
 
     final user = await locator<GetUserUsecase>().getUserData();
-    await locator<AddUserUsecase>()
-        .addUser(user..weightKG = newWeightKg);
+    user.weightKG = newWeightKg;
+    await locator<AddUserUsecase>().addUser(user);
 
-    setState(() => _weightKg = newWeightKg);
-
-    // Refresh home kcal goal (weight affects TDEE)
+    // Refresh home kcal goal (weight affects TDEE). The state emit will
+    // flow back through BlocBuilder and rebuild this widget with the new
+    // weight — no local cache needed.
     locator<HomeBloc>().add(const LoadItemsEvent());
   }
 }

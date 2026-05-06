@@ -33,7 +33,13 @@ class PalCalc {
 
   ///
   /// Returns the physical activity coefficient (PA) from the PAL value
-  /// and user gender based on IOM recommendation
+  /// and the formula's gender reference based on IOM recommendation.
+  ///
+  /// `isMaleFormula` decouples the PA constant from the user's stored
+  /// gender — needed so non-binary `averaged` TDEE feeds male PA into the
+  /// male half of the average and female PA into the female half. Picking
+  /// PA from `userEntity.gender` directly would route both halves to the
+  /// female constant for any non-binary user.
   ///
   /// Institute of Medicine. 2005. Dietary Reference Intakes for Energy,
   /// Carbohydrate, Fiber, Fat, Fatty Acids, Cholesterol, Protein,
@@ -41,21 +47,24 @@ class PalCalc {
   /// Washington, DC: The National Academies Press.
   /// https://doi.org/10.17226/10490.
   /// https://nap.nationalacademies.org/catalog/10490/dietary-reference-intakes-for-energy-carbohydrate-fiber-fat-fatty-acids-cholesterol-protein-and-amino-acids
+  static double getPAValueForFormula({
+    required double palValue,
+    required bool isMaleFormula,
+  }) {
+    if (palValue < 1.4) return 1.0;
+    if (palValue < 1.6) return isMaleFormula ? 1.12 : 1.14;
+    if (palValue < 1.9) return 1.27;
+    return isMaleFormula ? 1.54 : 1.45;
+  }
+
+  /// Convenience wrapper that picks the PA constant from the user's stored
+  /// gender. Non-binary users go through the female PA — callers that need
+  /// to compute male and female references separately (e.g. averaged TDEE)
+  /// should call [getPAValueForFormula] directly with explicit flags.
   static double getPAValueFromPALValue(UserEntity userEntity, double palValue) {
-    double paValue = 1.0;
-    if (palValue < 1.4) {
-      paValue = 1.0;
-    } else if (palValue < 1.6) {
-      userEntity.gender == UserGenderEntity.male
-          ? paValue = 1.12
-          : paValue = 1.14;
-    } else if (palValue < 1.9) {
-      paValue = 1.27;
-    } else {
-      userEntity.gender == UserGenderEntity.male
-          ? paValue = 1.54
-          : paValue = 1.45;
-    }
-    return paValue;
+    return getPAValueForFormula(
+      palValue: palValue,
+      isMaleFormula: userEntity.gender == UserGenderEntity.male,
+    );
   }
 }

@@ -1,9 +1,6 @@
 import 'package:hive_ce_flutter/hive_flutter.dart';
 import 'package:logging/logging.dart';
 import 'package:opennutritracker/core/data/dbo/user_dbo.dart';
-import 'package:opennutritracker/core/data/dbo/user_gender_dbo.dart';
-import 'package:opennutritracker/core/data/dbo/user_pal_dbo.dart';
-import 'package:opennutritracker/core/data/dbo/user_weight_goal_dbo.dart';
 
 class UserDataSource {
   static const _userKey = "UserKey";
@@ -14,21 +11,19 @@ class UserDataSource {
 
   Future<void> saveUserData(UserDBO userDBO) async {
     log.fine('Updating user in db');
-    _userBox.put(_userKey, userDBO);
+    await _userBox.put(_userKey, userDBO);
   }
 
   Future<bool> hasUserData() async => _userBox.containsKey(_userKey);
 
-  // TODO remove dummy data
   Future<UserDBO> getUserData() async {
-    return _userBox.get(_userKey) ??
-        UserDBO(
-          birthday: DateTime(2000, 1, 1),
-          heightCM: 180,
-          weightKG: 80,
-          gender: UserGenderDBO.male,
-          goal: UserWeightGoalDBO.maintainWeight,
-          pal: UserPALDBO.active,
-        );
+    final user = _userBox.get(_userKey);
+    if (user == null) {
+      throw StateError(
+        'UserDataSource.getUserData() called before user was saved — '
+        'check hasUserData() first or ensure onboarding has completed.',
+      );
+    }
+    return user;
   }
 }

@@ -475,7 +475,8 @@ class _CalculationsDialogState extends State<CalculationsDialog> {
     );
     if (selected == null) return;
     user.caloriesProfile = selected;
-    widget.profileBloc.updateUser(user);
+    await widget.profileBloc.updateUser(user);
+    if (!mounted) return;
     setState(() {
       _user = user;
     });

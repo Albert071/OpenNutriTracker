@@ -38,7 +38,7 @@ class ConfigDataSource {
     );
     final config = _configBox.get(_configKey);
     config?.hasAcceptedSendAnonymousData = hasAcceptedAnonymousData;
-    config?.save();
+    await config?.save();
   }
 
   Future<AppThemeDBO> getAppTheme() async {
@@ -57,7 +57,7 @@ class ConfigDataSource {
     _log.fine('Updating config usesImperialUnits to $usesImperialUnits');
     final config = _configBox.get(_configKey);
     config?.usesImperialUnits = usesImperialUnits;
-    config?.save();
+    await config?.save();
   }
 
   Future<double> getKcalAdjustment() async {

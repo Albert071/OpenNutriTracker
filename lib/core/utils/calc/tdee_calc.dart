@@ -50,26 +50,26 @@ class TDEECalc {
   }
 
   static double _iom2005MaleKcal(UserEntity userEntity) {
+    final palValue = PalCalc.getPALValueFromActivityCategory(userEntity);
+    final paValue = PalCalc.getPAValueForFormula(
+      palValue: palValue,
+      isMaleFormula: true,
+    );
     return 864 -
         9.72 * userEntity.age +
-        PalCalc.getPAValueFromPALValue(
-              userEntity,
-              PalCalc.getPALValueFromActivityCategory(userEntity),
-            ) *
-            14.2 *
-            userEntity.weightKG +
+        paValue * 14.2 * userEntity.weightKG +
         503 * (userEntity.heightCM / 100);
   }
 
   static double _iom2005FemaleKcal(UserEntity userEntity) {
+    final palValue = PalCalc.getPALValueFromActivityCategory(userEntity);
+    final paValue = PalCalc.getPAValueForFormula(
+      palValue: palValue,
+      isMaleFormula: false,
+    );
     return 387 -
         7.31 * userEntity.age +
-        PalCalc.getPAValueFromPALValue(
-              userEntity,
-              PalCalc.getPALValueFromActivityCategory(userEntity),
-            ) *
-            10.9 *
-            userEntity.weightKG +
+        paValue * 10.9 * userEntity.weightKG +
         660.7 * (userEntity.heightCM / 100);
   }
 }

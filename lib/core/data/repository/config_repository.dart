@@ -21,7 +21,9 @@ class ConfigRepository {
   Future<void> setConfigHasAcceptedAnonymousData(
     bool hasAcceptedAnonymousData,
   ) async {
-    _configDataSource.setConfigAcceptedAnonymousData(hasAcceptedAnonymousData);
+    await _configDataSource.setConfigAcceptedAnonymousData(
+      hasAcceptedAnonymousData,
+    );
   }
 
   Future<bool> getConfigHasAcceptedAnonymousData() async {
@@ -50,7 +52,7 @@ class ConfigRepository {
   }
 
   Future<void> setConfigUsesImperialUnits(bool usesImperialUnits) async {
-    _configDataSource.setConfigUsesImperialUnits(usesImperialUnits);
+    await _configDataSource.setConfigUsesImperialUnits(usesImperialUnits);
   }
 
   Future<double> getConfigKcalAdjustment() async {

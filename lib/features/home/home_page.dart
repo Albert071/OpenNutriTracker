@@ -77,6 +77,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
             state.userActivityList,
             state.usesImperialUnits,
             state.showMealMacros,
+            state.userWeightKg,
           );
         } else {
           return _getLoadingContent();
@@ -118,6 +119,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     List<UserActivityEntity> userActivities,
     bool usesImperialUnits,
     bool showMealMacros,
+    double userWeightKg,
   ) {
     if (showDisclaimerDialog) {
       _showDisclaimerDialog(context);
@@ -126,7 +128,10 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
       children: [
         ListView(
           children: [
-            QuickWeightWidget(usesImperialUnits: usesImperialUnits),
+            QuickWeightWidget(
+              weightKg: userWeightKg,
+              usesImperialUnits: usesImperialUnits,
+            ),
             const SizedBox(height: 8.0),
             DashboardWidget(
               totalKcalDaily: totalKcalDaily,

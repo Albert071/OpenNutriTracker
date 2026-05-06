@@ -374,6 +374,6 @@ class _ProfilePageState extends State<ProfilePage> {
     );
     if (selected == null) return;
     userEntity.caloriesProfile = selected;
-    _profileBloc.updateUser(userEntity);
+    await _profileBloc.updateUser(userEntity);
   }
 }
