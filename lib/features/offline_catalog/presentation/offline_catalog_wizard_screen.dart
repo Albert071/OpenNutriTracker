@@ -101,13 +101,34 @@ class _OfflineCatalogWizardScreenState
       // a new filter set.
       if (page != _pageEstimate) _hardCapConfirmed = false;
     });
+
+    // If the catalog is in a lifecycle phase (paused mid-build, fully
+    // ready, etc.) and we landed on a pre-download page, the user
+    // doesn't actually want this page — they want the download page
+    // where they can resume / view their catalog. This guard catches
+    // intermediate landings during the auto-jump animation as well as
+    // any back-navigation that doesn't make sense at this lifecycle
+    // stage. Defer the re-jump to after the current frame so we don't
+    // fight the in-flight page transition.
+    final phase = _bloc.state.phase;
+    final isLifecycle = phase == OfflineCatalogPhase.paused ||
+        phase == OfflineCatalogPhase.building ||
+        phase == OfflineCatalogPhase.ready ||
+        phase == OfflineCatalogPhase.refreshing;
+    if (isLifecycle && page < _pageDownload) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+        if (_currentPage < _pageDownload) _scrollTo(_pageDownload);
+      });
+      return;
+    }
+
     if (page == _pageEstimate) {
       _bloc.add(EstimateCatalogEvent(_currentFilters));
     } else if (page == _pageDownload) {
       // Only trigger a fresh start if we are not already mid-build /
       // paused / done — those phases mean the bloc is already on
       // task and we should not re-enter.
-      final phase = _bloc.state.phase;
       if (phase != OfflineCatalogPhase.building &&
           phase != OfflineCatalogPhase.paused &&
           phase != OfflineCatalogPhase.ready) {
@@ -130,11 +151,20 @@ class _OfflineCatalogWizardScreenState
             previous.phase != current.phase,
         listener: (context, state) {
           // Auto-jump to the download page when the wizard opens onto
-          // a paused build. Without this, the user would see the
-          // welcome page and be confused that "Start" is disabled.
-          if (state.phase == OfflineCatalogPhase.paused &&
-              _currentPage < _pageDownload) {
-            _scrollTo(_pageDownload);
+          // a paused or ready build. The jump is deferred to after
+          // the next frame because IntroductionScreen's PageController
+          // isn't always fully initialised when the bloc emits its
+          // first state, and a too-early animateScroll lands on an
+          // intermediate page (typically the estimate page) where
+          // the user gets stranded on a state.estimate==null spinner.
+          final wantJump = (state.phase == OfflineCatalogPhase.paused ||
+                  state.phase == OfflineCatalogPhase.ready) &&
+              _currentPage < _pageDownload;
+          if (wantJump) {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              if (!mounted) return;
+              if (_currentPage < _pageDownload) _scrollTo(_pageDownload);
+            });
           }
         },
         child: BlocProvider.value(

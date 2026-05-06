@@ -296,12 +296,13 @@ class OfflineCatalogRepository {
     final mtime = await file.lastModified();
     final age = DateTime.now().difference(mtime);
     if (age > _cachedDumpFreshness) return false;
-    // Sanity check: the file must be the FULL dump (not a partial
-    // download from an interrupted session). HEAD the URL and
-    // compare lengths. If the HEAD fails we err on the side of
-    // re-downloading rather than reusing potentially-incomplete
-    // data.
-    final localBytes = await file.length();
+    // Sanity check: every byte must be on disk (not a partial
+    // download from an interrupted session). With the parallel
+    // downloader the file is sparse-pre-allocated to its full
+    // size from the moment the first worker starts, so file.length
+    // is no longer a useful "is it complete?" signal — we ask the
+    // data source for the sidecar-aware byte count instead.
+    final localBytes = await _csvDump.downloadedBytes();
     final remoteBytes = await _csvDump.headTotalBytes();
     if (remoteBytes == null) return false;
     return localBytes >= remoteBytes;

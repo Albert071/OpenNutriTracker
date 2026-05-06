@@ -33,6 +33,92 @@ class DiskSpaceException implements Exception {
   }
 }
 
+/// One worker's slice of the parallel download. Sidecar-serialised
+/// so an interrupted download can pick up exactly where each
+/// worker stopped rather than restarting the whole 1+ GB transfer.
+class _RangeState {
+  /// Inclusive byte offset where this worker's slice starts.
+  final int start;
+
+  /// Inclusive byte offset where this worker's slice ends.
+  /// Range length is `end - start + 1`.
+  final int end;
+
+  /// Bytes this worker has successfully written. Survivor across
+  /// app restarts via the `.parts` sidecar.
+  int downloaded;
+
+  _RangeState({
+    required this.start,
+    required this.end,
+    required this.downloaded,
+  });
+
+  int get length => end - start + 1;
+  bool get isComplete => downloaded >= length;
+
+  Map<String, dynamic> toJson() => {
+        'start': start,
+        'end': end,
+        'downloaded': downloaded,
+      };
+
+  factory _RangeState.fromJson(Map<String, dynamic> json) => _RangeState(
+        start: json['start'] as int,
+        end: json['end'] as int,
+        downloaded: json['downloaded'] as int,
+      );
+}
+
+/// Whole-download state — total size + per-worker ranges. Lives
+/// next to the gzip in the cache directory as `<filename>.parts`.
+class _DownloadState {
+  final int totalBytes;
+  final List<_RangeState> ranges;
+
+  _DownloadState({required this.totalBytes, required this.ranges});
+
+  /// Sum of bytes already on disk across every range. Drives the
+  /// initial progress emission so the UI shows where we're picking
+  /// up from on a resume.
+  int get completedBytes =>
+      ranges.fold<int>(0, (acc, r) => acc + r.downloaded);
+
+  Map<String, dynamic> toJson() => {
+        'totalBytes': totalBytes,
+        'ranges': ranges.map((r) => r.toJson()).toList(),
+      };
+
+  static _DownloadState parse(String json) {
+    final map = jsonDecode(json) as Map<String, dynamic>;
+    final ranges = (map['ranges'] as List<dynamic>)
+        .map((r) => _RangeState.fromJson(r as Map<String, dynamic>))
+        .toList();
+    return _DownloadState(
+      totalBytes: map['totalBytes'] as int,
+      ranges: ranges,
+    );
+  }
+
+  /// Initial state for a brand-new download. Splits [totalBytes]
+  /// into [workerCount] approximately-equal byte ranges. The last
+  /// range absorbs any remainder so the total exactly covers the
+  /// file end.
+  factory _DownloadState.fresh({
+    required int totalBytes,
+    required int workerCount,
+  }) {
+    final perWorker = totalBytes ~/ workerCount;
+    final ranges = <_RangeState>[];
+    for (var i = 0; i < workerCount; i++) {
+      final start = i * perWorker;
+      final end = (i == workerCount - 1) ? totalBytes - 1 : start + perWorker - 1;
+      ranges.add(_RangeState(start: start, end: end, downloaded: 0));
+    }
+    return _DownloadState(totalBytes: totalBytes, ranges: ranges);
+  }
+}
+
 /// Bytes-level progress emitted by [OffCsvDumpDataSource.downloadResumable].
 class CsvDownloadProgress {
   final int bytesDone;
@@ -154,10 +240,27 @@ class OffCsvDumpDataSource {
   /// True when a partial or complete download exists on disk.
   Future<bool> hasLocalFile() async => (await resolveLocalFile()).exists();
 
-  /// Bytes already on disk for the cached gzip, or 0 when no file.
+  /// Bytes successfully downloaded for the cached gzip. Honours the
+  /// sidecar's per-range progress when present — the gzip itself is
+  /// pre-allocated to its full size as soon as the parallel
+  /// downloader starts, so `file.length()` no longer reflects how
+  /// much we've actually written.
   Future<int> downloadedBytes() async {
     final file = await resolveLocalFile();
     if (!await file.exists()) return 0;
+    final sidecar = File('${file.path}.parts');
+    if (await sidecar.exists()) {
+      try {
+        final state =
+            _DownloadState.parse(await sidecar.readAsString());
+        return state.completedBytes;
+      } catch (e) {
+        _log.warning('Failed to parse download sidecar: $e');
+        // Fall through to the conservative file-length answer.
+      }
+    }
+    // No sidecar means the download finished cleanly (we delete it
+    // on completion), so the file IS the truth.
     return file.length();
   }
 
@@ -219,16 +322,41 @@ class OffCsvDumpDataSource {
     } catch (_) {/* best effort cleanup */}
   }
 
-  /// Resumable streaming download to [resolveLocalFile]. Yields one
-  /// [CsvDownloadProgress] approximately every 64 KB of progress;
-  /// throttling to a UI-friendly cadence is the caller's job.
+  /// How many parallel HTTP connections to fan out across. Four is
+  /// the empirical sweet spot for CDNs that throttle individual
+  /// connections (which OFF's does): each connection is bounded
+  /// independently, so 4 connections move the bottleneck to the
+  /// link instead. Going higher risks tripping the CDN's
+  /// per-IP-abuse heuristics for marginal additional throughput.
+  static const _parallelDownloadWorkers = 4;
+
+  /// Resumable streaming download to [resolveLocalFile]. The OFF
+  /// gzip is split into [_parallelDownloadWorkers] non-overlapping
+  /// byte ranges; each is fetched concurrently with `Range: bytes=
+  /// A-B` and written into a sparse file at the right offset via
+  /// [RandomAccessFile.setPosition]. Aggregate progress is yielded
+  /// roughly every 256 KB of cross-worker bytes.
   ///
-  /// A cancellation interrupts cleanly after the next chunk; the
-  /// partial file stays on disk so a future call resumes from there.
+  /// **Resumability.** A sidecar `.parts` JSON file tracks how many
+  /// bytes each worker has written. An interrupted download leaves
+  /// both the sparse file and the sidecar on disk; the next call
+  /// resumes each worker from `start + downloaded` rather than
+  /// restarting from scratch. The sidecar is updated after every
+  /// chunk so a crash loses at most one chunk per worker.
+  ///
+  /// **Layout invalidation.** If the upstream file size or the
+  /// configured worker count changes between sessions, the sidecar
+  /// won't match. We wipe and start fresh in that case rather than
+  /// trying to merge.
+  ///
+  /// **Cancellation** propagates to all workers — each checks the
+  /// token between chunks and returns cleanly. The sparse file and
+  /// sidecar stay on disk so a subsequent call can resume.
   Stream<CsvDownloadProgress> downloadResumable({
     required CancellationToken cancellation,
   }) async* {
     final file = await resolveLocalFile();
+    final sidecar = File('${file.path}.parts');
     final totalBytes = await headTotalBytes();
     if (totalBytes == null) {
       throw const FormatException(
@@ -237,10 +365,15 @@ class OffCsvDumpDataSource {
       );
     }
 
-    final existing = await file.exists() ? await file.length() : 0;
-    if (existing >= totalBytes) {
-      // Already fully downloaded; nothing to do but emit a final
-      // progress event so the caller sees 100%.
+    // Load or initialise the per-range download state.
+    final state = await _loadOrInitState(
+      file: file,
+      sidecar: sidecar,
+      totalBytes: totalBytes,
+      workerCount: _parallelDownloadWorkers,
+    );
+
+    if (state.completedBytes >= totalBytes) {
       yield CsvDownloadProgress(
         bytesDone: totalBytes,
         bytesTotal: totalBytes,
@@ -248,60 +381,162 @@ class OffCsvDumpDataSource {
       return;
     }
 
-    final userAgent = await AppConst.getUserAgentString();
-    final client = ONTHttpClient(userAgent, _httpClientFactory());
-    try {
-      final request = http.Request('GET', Uri.parse(_csvUrl));
-      // `bytes=<offset>-` asks the server for everything from
-      // [offset] to end-of-file. OFF's CDN supports range requests.
-      if (existing > 0) {
-        request.headers['Range'] = 'bytes=$existing-';
-      }
-      final response = await client.send(request);
-      if (response.statusCode != 200 && response.statusCode != 206) {
-        throw HttpException(
-          'OFF csv dump returned HTTP ${response.statusCode}',
-        );
-      }
-
-      final sink = file.openWrite(mode: FileMode.writeOnlyAppend);
-      var bytesDone = existing;
-      var bytesSinceLastEmit = 0;
-      const emitInterval = 64 * 1024;
+    // Pre-allocate the sparse file if it isn't already at the
+    // target size. On Linux / macOS / Windows this just sets the
+    // file length without writing zeros — the OS materialises
+    // pages on demand as workers write into them.
+    if (!await file.exists() || await file.length() < totalBytes) {
+      final raf = await file.open(mode: FileMode.write);
       try {
+        await raf.truncate(totalBytes);
+      } finally {
+        await raf.close();
+      }
+    }
+
+    final userAgent = await AppConst.getUserAgentString();
+
+    // Shared progress channel — workers push deltas, the generator
+    // here aggregates and yields. Throttling to ~256 KB of
+    // aggregate progress across 4 workers gives a UI-friendly
+    // cadence without hammering the bloc.
+    final progressUpdates = StreamController<int>(sync: true);
+    var aggregate = state.completedBytes;
+
+    Future<void> persistSidecar() async {
+      await sidecar.writeAsString(jsonEncode(state.toJson()));
+    }
+
+    Future<void> runWorker(_RangeState range) async {
+      if (range.isComplete) return;
+      final client = ONTHttpClient(userAgent, _httpClientFactory());
+      RandomAccessFile? raf;
+      try {
+        raf = await file.open(mode: FileMode.writeOnlyAppend);
+        // FileMode.writeOnlyAppend doesn't allow setPosition on
+        // some platforms — reopen in `write` mode instead, which
+        // does. Each worker has its own RandomAccessFile so seeks
+        // don't interfere.
+        await raf.close();
+        raf = await file.open(mode: FileMode.write);
+
+        final start = range.start + range.downloaded;
+        final end = range.end; // inclusive
+        final request = http.Request('GET', Uri.parse(_csvUrl));
+        request.headers['Range'] = 'bytes=$start-$end';
+
+        final response = await client.send(request);
+        if (response.statusCode != 200 && response.statusCode != 206) {
+          throw HttpException(
+            'OFF csv dump returned HTTP ${response.statusCode} for '
+            'range $start-$end',
+          );
+        }
+
+        var localOffset = start;
         await for (final chunk in response.stream) {
-          if (cancellation.isCancelled) {
-            // Flush what we have; partial file stays on disk for
-            // resume. The CancellationException is then thrown by
-            // the caller's [throwIfCancelled].
-            break;
-          }
-          sink.add(chunk);
-          bytesDone += chunk.length;
-          bytesSinceLastEmit += chunk.length;
-          if (bytesSinceLastEmit >= emitInterval) {
-            bytesSinceLastEmit = 0;
-            yield CsvDownloadProgress(
-              bytesDone: bytesDone,
-              bytesTotal: totalBytes,
-            );
-          }
+          if (cancellation.isCancelled) break;
+          await raf.setPosition(localOffset);
+          await raf.writeFrom(chunk);
+          localOffset += chunk.length;
+          range.downloaded += chunk.length;
+          progressUpdates.add(chunk.length);
+          // Persist sidecar every chunk. A few KB of writes per
+          // chunk is cheap; the worst-case loss from a crash is
+          // one chunk's worth of redundant download.
+          await persistSidecar();
         }
       } finally {
-        await sink.flush();
-        await sink.close();
+        try {
+          await raf?.close();
+        } catch (_) {/* best effort */}
+        client.close();
       }
-
-      cancellation.throwIfCancelled();
-
-      // Final emit so the UI lands on 100%.
-      yield CsvDownloadProgress(
-        bytesDone: bytesDone,
-        bytesTotal: totalBytes,
-      );
-    } finally {
-      client.close();
     }
+
+    // Spawn all workers, set up a future that signals "all done"
+    // by closing the progress controller.
+    final workers =
+        state.ranges.map(runWorker).toList(growable: false);
+    unawaited(Future.wait(workers).whenComplete(() {
+      progressUpdates.close();
+    }));
+
+    var bytesSinceLastEmit = 0;
+    const emitInterval = 256 * 1024;
+    try {
+      await for (final delta in progressUpdates.stream) {
+        aggregate += delta;
+        bytesSinceLastEmit += delta;
+        if (bytesSinceLastEmit >= emitInterval) {
+          bytesSinceLastEmit = 0;
+          yield CsvDownloadProgress(
+            bytesDone: aggregate,
+            bytesTotal: totalBytes,
+          );
+        }
+      }
+    } finally {
+      // Make sure all workers have actually completed before we
+      // return — the controller can close before Future.wait
+      // resolves on a fast cancel path.
+      await Future.wait(workers, eagerError: false);
+    }
+
+    cancellation.throwIfCancelled();
+
+    // If every range is complete, drop the sidecar so a future
+    // build doesn't think there's resumeable state.
+    if (state.completedBytes >= totalBytes) {
+      try {
+        if (await sidecar.exists()) await sidecar.delete();
+      } catch (_) {/* best effort */}
+    }
+
+    // Final emit so the UI lands on 100% / a definite stop.
+    yield CsvDownloadProgress(
+      bytesDone: aggregate,
+      bytesTotal: totalBytes,
+    );
+  }
+
+  /// Load the per-range state from the sidecar or initialise a
+  /// fresh one. Wipes both the file and sidecar when the layout
+  /// has changed (different total size or worker count) — there's
+  /// no safe way to splice partial bytes into a layout that
+  /// disagrees with the on-disk reality.
+  Future<_DownloadState> _loadOrInitState({
+    required File file,
+    required File sidecar,
+    required int totalBytes,
+    required int workerCount,
+  }) async {
+    if (await sidecar.exists()) {
+      try {
+        final raw = await sidecar.readAsString();
+        final state = _DownloadState.parse(raw);
+        if (state.totalBytes == totalBytes &&
+            state.ranges.length == workerCount) {
+          return state;
+        }
+        _log.info(
+          'Sidecar layout mismatch (totalBytes=${state.totalBytes} vs '
+          '$totalBytes, workers=${state.ranges.length} vs '
+          '$workerCount); restarting fresh',
+        );
+      } catch (e) {
+        _log.warning('Sidecar parse failed; restarting fresh: $e');
+      }
+      // Fallthrough — drop both the sparse file and the sidecar.
+      try {
+        if (await file.exists()) await file.delete();
+        if (await sidecar.exists()) await sidecar.delete();
+      } catch (_) {/* best effort */}
+    }
+    return _DownloadState.fresh(
+      totalBytes: totalBytes,
+      workerCount: workerCount,
+    );
   }
 
   /// Stream the local gzip file through the decompress + parse +
@@ -412,6 +647,10 @@ class OffCsvDumpDataSource {
     final file = await resolveLocalFile();
     if (await file.exists()) {
       await file.delete();
+    }
+    final sidecar = File('${file.path}.parts');
+    if (await sidecar.exists()) {
+      await sidecar.delete();
     }
   }
 
