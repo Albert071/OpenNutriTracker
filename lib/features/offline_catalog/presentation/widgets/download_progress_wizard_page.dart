@@ -125,14 +125,26 @@ class _BuildingView extends StatelessWidget {
     final theme = Theme.of(context);
     final s = S.of(context);
     final p = progress;
+    // Title + body switch with the underlying phase so the user
+    // isn't told "Downloading your catalog" while we're actually
+    // chewing through the gzip and writing rows to sqlite.
+    final isParsing = p != null && p.phase == DownloadPhase.parsing;
+    final title = isParsing
+        // l10n: offlineCatalogParsingTitle
+        ? 'Building your database'
+        : s.offlineCatalogDownloadingTitle;
+    final body = isParsing
+        // l10n: offlineCatalogParsingBody
+        ? 'We\'re reading the file you just downloaded, picking out '
+            'the products that match your filters, and saving them '
+            'to your device. This usually takes about a minute.'
+        : s.offlineCatalogDownloadingBody;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(s.offlineCatalogDownloadingTitle,
-            style: theme.textTheme.headlineMedium),
+        Text(title, style: theme.textTheme.headlineMedium),
         const SizedBox(height: 8),
-        Text(s.offlineCatalogDownloadingBody,
-            style: theme.textTheme.bodyMedium),
+        Text(body, style: theme.textTheme.bodyMedium),
         const SizedBox(height: 24),
         if (p != null) _buildProgressBlock(context, p) else _buildSpinner(),
         const SizedBox(height: 32),
