@@ -93,13 +93,21 @@ class OffCsvDumpDataSource {
 
   final _log = Logger('OffCsvDumpDataSource');
   final http.Client Function() _httpClientFactory;
+  final Future<File> Function()? _localFileOverride;
 
-  OffCsvDumpDataSource({http.Client Function()? httpClientFactory})
-      : _httpClientFactory = httpClientFactory ?? http.Client.new;
+  OffCsvDumpDataSource({
+    http.Client Function()? httpClientFactory,
+    Future<File> Function()? localFileResolver,
+  })  : _httpClientFactory = httpClientFactory ?? http.Client.new,
+        _localFileOverride = localFileResolver;
 
-  /// Resolve the on-disk path for the cached gzip. Visible for tests;
-  /// production callers don't need it.
+  /// Resolve the on-disk path for the cached gzip. Production
+  /// callers go through [getApplicationCacheDirectory]; tests can
+  /// supply a [localFileResolver] override in the constructor to
+  /// point at a fixture file outside the Flutter binding.
   Future<File> resolveLocalFile() async {
+    final override = _localFileOverride;
+    if (override != null) return override();
     final dir = await getApplicationCacheDirectory();
     return File(p.join(dir.path, _localFilename));
   }
@@ -461,10 +469,15 @@ class OffCsvDumpDataSource {
 
     // User toggle: nutrition grade present.
     if (filter.requireNutritionGrade) {
-      // CSV column is `nutrition_grade_fr` historically; some dumps
-      // also expose `nutrition_grades`. Check both.
-      final grade =
-          _cell(row, idx, 'nutrition_grade_fr') ?? _cell(row, idx, 'nutrition_grades');
+      // The CSV's column is `nutriscore_grade` (verified against
+      // OFF's 2026 dump). The legacy `nutrition_grade_fr` /
+      // `nutrition_grades` names are kept as fallbacks because the
+      // API path's response surface uses `nutrition_grades`, and a
+      // future schema change might bring it back here. Trying all
+      // three is cheap.
+      final grade = _cell(row, idx, 'nutriscore_grade') ??
+          _cell(row, idx, 'nutrition_grade_fr') ??
+          _cell(row, idx, 'nutrition_grades');
       if (grade == null ||
           !_acceptedNutritionGrades.contains(grade.toLowerCase())) {
         return false;
@@ -511,18 +524,29 @@ class OffCsvDumpDataSource {
       if (n != null) nutriments[key] = n;
     }
 
+    // The CSV dump has a single `product_name` column rather than
+    // the per-language `product_name_en` / `product_name_de` / etc.
+    // that the live API exposes. We populate the generic field from
+    // the CSV and leave the localised fields null; the meal entity's
+    // `getLocaleName` fallback chain will pick up the generic name
+    // for every locale.
+    final productName = _cell(row, idx, 'product_name');
+
     final json = <String, dynamic>{
       'code': code,
-      'product_name': _cell(row, idx, 'product_name'),
-      'product_name_en': _cell(row, idx, 'product_name_en'),
-      'product_name_de': _cell(row, idx, 'product_name_de'),
-      'product_name_fr': _cell(row, idx, 'product_name_fr'),
+      'product_name': productName,
+      'product_name_en': null,
+      'product_name_de': null,
+      'product_name_fr': null,
       'brands': _cell(row, idx, 'brands'),
-      'image_front_thumb_url': _cell(row, idx, 'image_front_small_url') ??
-          _cell(row, idx, 'image_front_thumb_url') ??
-          _cell(row, idx, 'image_small_url'),
-      'image_front_url': _cell(row, idx, 'image_front_url') ??
+      // The CSV publishes `image_url` and `image_small_url` (the
+      // front photo of each product). It does NOT publish the
+      // `image_front_url` family the live API does. Map both into
+      // the DTO's image-front slots so downstream code that asks
+      // for the front-thumb or front-full URL gets the same image.
+      'image_front_thumb_url': _cell(row, idx, 'image_small_url') ??
           _cell(row, idx, 'image_url'),
+      'image_front_url': _cell(row, idx, 'image_url'),
       'image_ingredients_url': _cell(row, idx, 'image_ingredients_url'),
       'image_nutrition_url': _cell(row, idx, 'image_nutrition_url'),
       'image_url': _cell(row, idx, 'image_url'),

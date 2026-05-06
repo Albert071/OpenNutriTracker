@@ -3,18 +3,22 @@ import 'package:opennutritracker/features/offline_catalog/data/data_sources/off_
 import 'package:opennutritracker/features/offline_catalog/domain/entity/catalog_filter_entity.dart';
 
 /// Tab-separated CSV header used by these tests. Mirrors the column
-/// names the OFF dump publishes for the fields we care about. Adding
-/// columns to the production projection means adding them here too.
+/// names OFF's nightly dump publishes (verified against the 2026
+/// CSV header). Notably:
+///
+/// * The CSV has a single `product_name` column — there are no
+///   per-language variants like the live API exposes.
+/// * The nutrition grade column is `nutriscore_grade` (not
+///   `nutrition_grade_fr`).
+/// * The front image is `image_url` / `image_small_url`; there are
+///   no `image_front_*` variants.
 const _header = [
   'code',
   'product_name',
-  'product_name_en',
-  'product_name_de',
-  'product_name_fr',
   'brands',
   'categories_tags',
   'countries_tags',
-  'nutrition_grade_fr',
+  'nutriscore_grade',
   'unique_scans_n',
   'completeness',
   'last_modified_t',
@@ -23,7 +27,8 @@ const _header = [
   'quantity',
   'serving_quantity',
   'serving_size',
-  'image_front_url',
+  'image_url',
+  'image_small_url',
   'energy-kcal_100g',
   'proteins_100g',
   'carbohydrates_100g',
@@ -65,11 +70,10 @@ String _goodUkRow({
   return _row({
     'code': code,
     'product_name': 'Bourbon Biscuits',
-    'product_name_en': 'Bourbon Biscuits',
     'brands': 'Test Brand',
     'categories_tags': categories ?? '',
     'countries_tags': country ?? '',
-    'nutrition_grade_fr': grade ?? '',
+    'nutriscore_grade': grade ?? '',
     'unique_scans_n': scans ?? '',
     'completeness': completeness ?? '',
     'last_modified_t': lastModified ?? yesterday.toString(),
@@ -77,7 +81,8 @@ String _goodUkRow({
     'product_quantity': '300',
     'quantity': '300 g',
     'serving_size': '4 biscuits (28 g)',
-    'image_front_url': 'https://images.openfoodfacts.org/x/front_en.jpg',
+    'image_url': 'https://images.openfoodfacts.org/x/front.jpg',
+    'image_small_url': 'https://images.openfoodfacts.org/x/front_small.jpg',
     'energy-kcal_100g': '480',
     'proteins_100g': '6.5',
     'carbohydrates_100g': '70',
@@ -118,7 +123,9 @@ void main() {
       expect(dto.product_name, 'Bourbon Biscuits');
       expect(dto.brands, 'Test Brand');
       expect(dto.image_front_url,
-          'https://images.openfoodfacts.org/x/front_en.jpg');
+          'https://images.openfoodfacts.org/x/front.jpg');
+      expect(dto.image_front_thumb_url,
+          'https://images.openfoodfacts.org/x/front_small.jpg');
       // Nutriments survived the round-trip from the flat CSV columns
       // into the nested DTO map.
       expect(dto.nutriments, isNotNull);
