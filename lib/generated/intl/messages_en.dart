@@ -64,6 +64,38 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m18(count) => "Delete ${count} recipe(s)?";
 
+  static String m19(count) => "${count} products";
+
+  static String m20(phrase) =>
+      "Your filter set covers more than a million products. That is a lot of bandwidth and a lot of time. To continue, type \"${phrase}\" in the box below — we want you to actively choose this rather than tap through it by accident.";
+
+  static String m21(rows, total) =>
+      "Downloaded ${rows} of ${total} products";
+
+  static String m22(current, total) => "Page ${current} of ${total}";
+
+  static String m23(time) => "About ${time} left";
+
+  static String m24(rows, total) =>
+      "${rows} of ${total} products downloaded";
+
+  static String m25(count, size) =>
+      "${count} products available offline. ${size} on disk.";
+
+  static String m26(percent) => "Building (${percent}%)";
+
+  static String m27(count, size) => "${count} products, ${size}";
+
+  static String m28(when) => " · last refreshed ${when}";
+
+  static String m29(n) => "${n}mo ago";
+
+  static String m30(n) => "${n}w ago";
+
+  static String m31(n) => "${n}d ago";
+
+  static String m32(n) => "${n}h ago";
+
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "activityExample": MessageLookupByLibrary.simpleMessage(
@@ -947,5 +979,158 @@ class MessageLookup extends MessageLookupByLibrary {
         "weightLabel": MessageLookupByLibrary.simpleMessage("Weight"),
         "yearsLabel": m3,
         "zincLabel": MessageLookupByLibrary.simpleMessage("zinc"),
+        "offlineCatalogActionDelete":
+            MessageLookupByLibrary.simpleMessage("Delete"),
+        "offlineCatalogActionRefresh":
+            MessageLookupByLibrary.simpleMessage("Refresh"),
+        "offlineCatalogCancel": MessageLookupByLibrary.simpleMessage("Cancel"),
+        "offlineCatalogCancelConfirmBody": MessageLookupByLibrary.simpleMessage(
+            "This will throw away the products you have already downloaded. If you would like to come back to it later, use Pause instead."),
+        "offlineCatalogCancelConfirmKeep":
+            MessageLookupByLibrary.simpleMessage("Keep downloading"),
+        "offlineCatalogCancelConfirmTitle":
+            MessageLookupByLibrary.simpleMessage("Cancel and discard?"),
+        "offlineCatalogDeleteConfirmBody": MessageLookupByLibrary.simpleMessage(
+            "This removes the downloaded products from your device. You can rebuild it any time from this screen."),
+        "offlineCatalogDeleteConfirmTitle":
+            MessageLookupByLibrary.simpleMessage("Delete offline catalog?"),
+        "offlineCatalogDiscard":
+            MessageLookupByLibrary.simpleMessage("Discard"),
+        "offlineCatalogDoneAction":
+            MessageLookupByLibrary.simpleMessage("Done"),
+        "offlineCatalogDoneBody": MessageLookupByLibrary.simpleMessage(
+            "Searches and barcode scans will now work offline. We will still check the live database for products that are not in your catalog yet."),
+        "offlineCatalogDoneSummary": m25,
+        "offlineCatalogDoneTitle":
+            MessageLookupByLibrary.simpleMessage("Catalog ready"),
+        "offlineCatalogDownloadAction":
+            MessageLookupByLibrary.simpleMessage("Download"),
+        "offlineCatalogDownloadingBody": MessageLookupByLibrary.simpleMessage(
+            "You can leave this screen open and the download will keep going. We will save what we have downloaded so far if you pause or cancel."),
+        "offlineCatalogDownloadingEta": m23,
+        "offlineCatalogDownloadingPage": m22,
+        "offlineCatalogDownloadingProgress": m21,
+        "offlineCatalogDownloadingTitle":
+            MessageLookupByLibrary.simpleMessage("Downloading your catalog"),
+        "offlineCatalogErrorBodyFatal": MessageLookupByLibrary.simpleMessage(
+            "We could not finish this download."),
+        "offlineCatalogErrorBodyRecoverable":
+            MessageLookupByLibrary.simpleMessage(
+                "We saved everything we downloaded so far. Try again from the Resume button when you have a better connection."),
+        "offlineCatalogErrorRetry":
+            MessageLookupByLibrary.simpleMessage("Try again"),
+        "offlineCatalogErrorTitle":
+            MessageLookupByLibrary.simpleMessage("Something went wrong"),
+        "offlineCatalogEstimateBody": MessageLookupByLibrary.simpleMessage(
+            "Here is what we will download for you."),
+        "offlineCatalogEstimateError": MessageLookupByLibrary.simpleMessage(
+            "We could not reach Open Food Facts to get an estimate. Check your internet connection and try again."),
+        "offlineCatalogEstimateHardCapBody": m20,
+        "offlineCatalogEstimateHardCapPhrase":
+            MessageLookupByLibrary.simpleMessage("I understand"),
+        "offlineCatalogEstimateHardCapTitle":
+            MessageLookupByLibrary.simpleMessage(
+                "This is a very large download"),
+        "offlineCatalogEstimateRequestsLabel":
+            MessageLookupByLibrary.simpleMessage("Network requests"),
+        "offlineCatalogEstimateRowsLabel":
+            MessageLookupByLibrary.simpleMessage("Products"),
+        "offlineCatalogEstimateSizeLabel":
+            MessageLookupByLibrary.simpleMessage("Estimated size"),
+        "offlineCatalogEstimateTimeLabel":
+            MessageLookupByLibrary.simpleMessage("Estimated time"),
+        "offlineCatalogEstimateTitle":
+            MessageLookupByLibrary.simpleMessage("Ready to download"),
+        "offlineCatalogEstimateWifiHint": MessageLookupByLibrary.simpleMessage(
+            "Connect to Wi-Fi if you can. The download is paid for in cellular data otherwise."),
+        "offlineCatalogNextAction":
+            MessageLookupByLibrary.simpleMessage("Next"),
+        "offlineCatalogPause": MessageLookupByLibrary.simpleMessage("Pause"),
+        "offlineCatalogPausedBody": MessageLookupByLibrary.simpleMessage(
+            "We saved your progress. Pick up where you left off whenever you have a Wi-Fi connection."),
+        "offlineCatalogPausedProgress": m24,
+        "offlineCatalogPausedTitle":
+            MessageLookupByLibrary.simpleMessage("Download paused"),
+        "offlineCatalogProductCount": m19,
+        "offlineCatalogQualityBody": MessageLookupByLibrary.simpleMessage(
+            "These defaults give you a smaller, more useful catalog. Turn them off only if you know you want the long tail of partial entries."),
+        "offlineCatalogQualityNutritionBody":
+            MessageLookupByLibrary.simpleMessage(
+                "Drops products that have no calorie or macro information yet — useful in search results, where these would otherwise show up as blank cards."),
+        "offlineCatalogQualityNutritionLabel":
+            MessageLookupByLibrary.simpleMessage(
+                "Only entries with full nutrition data"),
+        "offlineCatalogQualityPopularityBody":
+            MessageLookupByLibrary.simpleMessage(
+                "Skips products only scanned once. The long tail of one-off submissions is unlikely to be what you are looking at in the supermarket, and dropping it cuts the catalog size by a third."),
+        "offlineCatalogQualityPopularityLabel":
+            MessageLookupByLibrary.simpleMessage("Only well-scanned products"),
+        "offlineCatalogQualityRecency10Years":
+            MessageLookupByLibrary.simpleMessage("10 years"),
+        "offlineCatalogQualityRecency3Years":
+            MessageLookupByLibrary.simpleMessage("3 years"),
+        "offlineCatalogQualityRecency5Years":
+            MessageLookupByLibrary.simpleMessage("5 years"),
+        "offlineCatalogQualityRecencyAny":
+            MessageLookupByLibrary.simpleMessage("Any"),
+        "offlineCatalogQualityRecencyBody":
+            MessageLookupByLibrary.simpleMessage(
+                "Older entries can drift — packaging changes, recipes get reformulated. Pick a window that feels right."),
+        "offlineCatalogQualityRecencyLabel":
+            MessageLookupByLibrary.simpleMessage("Updated within"),
+        "offlineCatalogQualityTitle":
+            MessageLookupByLibrary.simpleMessage("Quality filters"),
+        "offlineCatalogRegionBody": MessageLookupByLibrary.simpleMessage(
+            "Only products tagged with the countries you choose will be downloaded. Counts come from Open Food Facts and update over time."),
+        "offlineCatalogRegionEmpty":
+            MessageLookupByLibrary.simpleMessage("No countries to show"),
+        "offlineCatalogRegionFallbackNotice":
+            MessageLookupByLibrary.simpleMessage(
+                "Showing a short fallback list because we could not reach Open Food Facts. Connect to the internet and refresh to load the full country list."),
+        "offlineCatalogRegionNoMatches": MessageLookupByLibrary.simpleMessage(
+            "No countries match your search"),
+        "offlineCatalogRegionRefreshTooltip":
+            MessageLookupByLibrary.simpleMessage("Refresh country list"),
+        "offlineCatalogRegionSearchHint":
+            MessageLookupByLibrary.simpleMessage("Search countries"),
+        "offlineCatalogRegionTitle":
+            MessageLookupByLibrary.simpleMessage("Pick your countries"),
+        "offlineCatalogResume": MessageLookupByLibrary.simpleMessage("Resume"),
+        "offlineCatalogStartAction":
+            MessageLookupByLibrary.simpleMessage("Get started"),
+        "offlineCatalogTileBuilding":
+            MessageLookupByLibrary.simpleMessage("Building…"),
+        "offlineCatalogTileBuildingPercent": m26,
+        "offlineCatalogTileLastRefreshed": m28,
+        "offlineCatalogTileNotBuilt": MessageLookupByLibrary.simpleMessage(
+            "Not built — tap to set up"),
+        "offlineCatalogTilePaused": MessageLookupByLibrary.simpleMessage(
+            "Download paused — tap to resume"),
+        "offlineCatalogTileReady": m27,
+        "offlineCatalogTileRefreshing":
+            MessageLookupByLibrary.simpleMessage("Refreshing…"),
+        "offlineCatalogTimeDaysAgo": m31,
+        "offlineCatalogTimeHoursAgo": m32,
+        "offlineCatalogTimeJustNow":
+            MessageLookupByLibrary.simpleMessage("just now"),
+        "offlineCatalogTimeMonthsAgo": m29,
+        "offlineCatalogTimeWeeksAgo": m30,
+        "offlineCatalogTitle":
+            MessageLookupByLibrary.simpleMessage("Offline food catalog"),
+        "offlineCatalogWelcomeBody1": MessageLookupByLibrary.simpleMessage(
+            "We can download a copy of the Open Food Facts database so search and barcode lookups work without an internet connection."),
+        "offlineCatalogWelcomeBody2": MessageLookupByLibrary.simpleMessage(
+            "You choose the countries on the next page; we keep just the columns the app actually uses (no images on disk, no unused metadata) so the download stays as small as we can make it."),
+        "offlineCatalogWelcomeBulletHumanFood":
+            MessageLookupByLibrary.simpleMessage(
+                "The catalog covers human food only — pet food, cosmetics, and other non-food entries are filtered out for you."),
+        "offlineCatalogWelcomeBulletScreen":
+            MessageLookupByLibrary.simpleMessage(
+                "Please keep this screen open while the catalog builds. If the app is backgrounded for too long, the download will pause and you can resume it later."),
+        "offlineCatalogWelcomeBulletWifi":
+            MessageLookupByLibrary.simpleMessage(
+                "We strongly recommend a Wi-Fi connection — the download can be hundreds of megabytes depending on how many countries you pick."),
+        "offlineCatalogWelcomeTitle": MessageLookupByLibrary.simpleMessage(
+            "Build an offline food catalog"),
       };
 }

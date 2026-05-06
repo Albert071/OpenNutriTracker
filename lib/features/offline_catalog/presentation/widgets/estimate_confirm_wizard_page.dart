@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:opennutritracker/features/offline_catalog/presentation/bloc/offline_catalog_bloc.dart';
+import 'package:opennutritracker/generated/l10n.dart';
 
 /// Page 4 of the wizard. Reads the live count for the user's filter
 /// set from the bloc and shows estimated rows, on-disk size, request
@@ -21,7 +22,6 @@ class EstimateConfirmWizardPage extends StatefulWidget {
 
 class _EstimateConfirmWizardPageState extends State<EstimateConfirmWizardPage> {
   final _typedConfirmController = TextEditingController();
-  static const _confirmPhrase = 'I understand';
 
   @override
   void dispose() {
@@ -51,42 +51,32 @@ class _EstimateConfirmWizardPageState extends State<EstimateConfirmWizardPage> {
     }
     final estimate = state.estimate!;
     final theme = Theme.of(context);
+    final s = S.of(context);
     return ListView(
       children: [
-        // l10n: offlineCatalogEstimateTitle
-        Text(
-          'Ready to download',
-          style: theme.textTheme.headlineMedium,
-        ),
+        Text(s.offlineCatalogEstimateTitle,
+            style: theme.textTheme.headlineMedium),
         const SizedBox(height: 8),
-        // l10n: offlineCatalogEstimateBody
-        Text(
-          'Here is what we will download for you.',
-          style: theme.textTheme.bodyMedium,
-        ),
+        Text(s.offlineCatalogEstimateBody, style: theme.textTheme.bodyMedium),
         const SizedBox(height: 24),
         _SummaryRow(
           icon: Icons.storage,
-          // l10n: offlineCatalogEstimateRows
-          label: 'Products',
+          label: s.offlineCatalogEstimateRowsLabel,
           value: _formatRows(estimate.rows),
         ),
         _SummaryRow(
           icon: Icons.sd_storage,
-          // l10n: offlineCatalogEstimateSize
-          label: 'Estimated size',
+          label: s.offlineCatalogEstimateSizeLabel,
           value: _formatBytes(estimate.estimatedBytes),
         ),
         _SummaryRow(
           icon: Icons.cloud_download,
-          // l10n: offlineCatalogEstimateRequests
-          label: 'Network requests',
+          label: s.offlineCatalogEstimateRequestsLabel,
           value: '${estimate.requests}',
         ),
         _SummaryRow(
           icon: Icons.timer_outlined,
-          // l10n: offlineCatalogEstimateTime
-          label: 'Estimated time',
+          label: s.offlineCatalogEstimateTimeLabel,
           value: _formatDuration(Duration(seconds: estimate.etaSeconds)),
         ),
         const SizedBox(height: 24),
@@ -100,13 +90,7 @@ class _EstimateConfirmWizardPageState extends State<EstimateConfirmWizardPage> {
             children: [
               Icon(Icons.wifi, color: theme.colorScheme.primary),
               const SizedBox(width: 12),
-              const Expanded(
-                // l10n: offlineCatalogEstimateWifiHint
-                child: Text(
-                  'Connect to Wi-Fi if you can. The download is paid '
-                  'for in cellular data otherwise.',
-                ),
-              ),
+              Expanded(child: Text(s.offlineCatalogEstimateWifiHint)),
             ],
           ),
         ),
@@ -120,6 +104,8 @@ class _EstimateConfirmWizardPageState extends State<EstimateConfirmWizardPage> {
 
   Widget _buildHardCapWarning(BuildContext context) {
     final theme = Theme.of(context);
+    final s = S.of(context);
+    final phrase = s.offlineCatalogEstimateHardCapPhrase;
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
@@ -133,35 +119,27 @@ class _EstimateConfirmWizardPageState extends State<EstimateConfirmWizardPage> {
             children: [
               Icon(Icons.warning, color: theme.colorScheme.error),
               const SizedBox(width: 12),
-              // l10n: offlineCatalogEstimateHardCapTitle
-              const Expanded(
+              Expanded(
                 child: Text(
-                  'This is a very large download',
-                  style: TextStyle(fontWeight: FontWeight.bold),
+                  s.offlineCatalogEstimateHardCapTitle,
+                  style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
               ),
             ],
           ),
           const SizedBox(height: 8),
-          // l10n: offlineCatalogEstimateHardCapBody
-          Text(
-            'Your filter set covers more than a million products. '
-            'That is a lot of bandwidth and a lot of time. To '
-            'continue, type "$_confirmPhrase" in the box below — '
-            'we want you to actively choose this rather than tap '
-            'through it by accident.',
-          ),
+          Text(s.offlineCatalogEstimateHardCapBody(phrase)),
           const SizedBox(height: 12),
           TextField(
             controller: _typedConfirmController,
             decoration: InputDecoration(
-              hintText: _confirmPhrase,
+              hintText: phrase,
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
               ),
             ),
             onChanged: (value) {
-              widget.onConfirmedChanged(value.trim() == _confirmPhrase);
+              widget.onConfirmedChanged(value.trim() == phrase);
             },
           ),
         ],
@@ -248,10 +226,8 @@ class _ErrorView extends StatelessWidget {
             Icon(Icons.error_outline,
                 size: 48, color: theme.colorScheme.error),
             const SizedBox(height: 16),
-            // l10n: offlineCatalogEstimateError
-            const Text(
-              'We could not reach Open Food Facts to get an estimate. '
-              'Check your internet connection and try again.',
+            Text(
+              S.of(context).offlineCatalogEstimateError,
               textAlign: TextAlign.center,
             ),
             if (message != null) ...[

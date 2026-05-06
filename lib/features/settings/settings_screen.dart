@@ -719,26 +719,20 @@ class _OfflineCatalogTileState extends State<_OfflineCatalogTile> {
   }
 
   Future<void> _confirmDelete(BuildContext context) async {
+    final s = S.of(context);
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (dialogContext) => AlertDialog(
-        // l10n: offlineCatalogDeleteConfirmTitle
-        title: const Text('Delete offline catalog?'),
-        // l10n: offlineCatalogDeleteConfirmBody
-        content: const Text(
-          'This removes the downloaded products from your device. '
-          'You can rebuild it any time from this screen.',
-        ),
+        title: Text(s.offlineCatalogDeleteConfirmTitle),
+        content: Text(s.offlineCatalogDeleteConfirmBody),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(dialogContext).pop(false),
-            // l10n: cancelLabel
-            child: const Text('Cancel'),
+            child: Text(s.offlineCatalogCancel),
           ),
           TextButton(
             onPressed: () => Navigator.of(dialogContext).pop(true),
-            // l10n: deleteLabel
-            child: const Text('Delete'),
+            child: Text(s.offlineCatalogActionDelete),
           ),
         ],
       ),
@@ -755,9 +749,8 @@ class _OfflineCatalogTileState extends State<_OfflineCatalogTile> {
       builder: (context, state) {
         return ListTile(
           leading: const Icon(Icons.travel_explore_outlined),
-          // l10n: offlineCatalogTileTitle
-          title: const Text('Offline food catalog'),
-          subtitle: Text(_subtitleFor(state)),
+          title: Text(S.of(context).offlineCatalogTitle),
+          subtitle: Text(_subtitleFor(context, state)),
           trailing: _trailingFor(context, state),
           onTap: _openWizard,
         );
@@ -765,33 +758,34 @@ class _OfflineCatalogTileState extends State<_OfflineCatalogTile> {
     );
   }
 
-  String _subtitleFor(OfflineCatalogState state) {
+  String _subtitleFor(BuildContext context, OfflineCatalogState state) {
+    final s = S.of(context);
     switch (state.phase) {
       case OfflineCatalogPhase.building:
         final p = state.progress;
-        if (p == null) return 'Building…';
-        // l10n: offlineCatalogTileBuilding (formatter)
-        return 'Building (${(p.fraction * 100).toStringAsFixed(0)}%)';
+        if (p == null) return s.offlineCatalogTileBuilding;
+        return s.offlineCatalogTileBuildingPercent(
+          (p.fraction * 100).toStringAsFixed(0),
+        );
       case OfflineCatalogPhase.refreshing:
-        // l10n: offlineCatalogTileRefreshing
-        return 'Refreshing…';
+        return s.offlineCatalogTileRefreshing;
       case OfflineCatalogPhase.paused:
-        // l10n: offlineCatalogTilePaused
-        return 'Download paused — tap to resume';
+        return s.offlineCatalogTilePaused;
       case OfflineCatalogPhase.ready:
         final stats = state.stats ?? CatalogStatsEntity.empty;
-        if (!stats.isPopulated) {
-          // l10n: offlineCatalogTileNotBuilt
-          return 'Not built — tap to set up';
-        }
-        // l10n: offlineCatalogTileReady (formatter)
-        return '${stats.productCount} products, '
-            '${widget.formatBytes(stats.sizeBytes)}'
-            '${stats.lastSyncTime != null ? ' · last refreshed ${_relative(stats.lastSyncTime!)}' : ''}';
+        if (!stats.isPopulated) return s.offlineCatalogTileNotBuilt;
+        final base = s.offlineCatalogTileReady(
+          stats.productCount,
+          widget.formatBytes(stats.sizeBytes),
+        );
+        if (stats.lastSyncTime == null) return base;
+        return base +
+            s.offlineCatalogTileLastRefreshed(
+              _relative(context, stats.lastSyncTime!),
+            );
       case OfflineCatalogPhase.idle:
       default:
-        // l10n: offlineCatalogTileNotBuilt
-        return 'Not built — tap to set up';
+        return s.offlineCatalogTileNotBuilt;
     }
   }
 
@@ -802,6 +796,7 @@ class _OfflineCatalogTileState extends State<_OfflineCatalogTile> {
         state.phase == OfflineCatalogPhase.refreshing) {
       return null;
     }
+    final s = S.of(context);
     return PopupMenuButton<String>(
       onSelected: (action) {
         if (action == 'refresh') {
@@ -811,32 +806,39 @@ class _OfflineCatalogTileState extends State<_OfflineCatalogTile> {
         }
       },
       itemBuilder: (_) => [
-        const PopupMenuItem(
+        PopupMenuItem(
           value: 'refresh',
-          // l10n: offlineCatalogActionRefresh
           child: ListTile(
-            leading: Icon(Icons.refresh),
-            title: Text('Refresh'),
+            leading: const Icon(Icons.refresh),
+            title: Text(s.offlineCatalogActionRefresh),
           ),
         ),
-        const PopupMenuItem(
+        PopupMenuItem(
           value: 'delete',
-          // l10n: offlineCatalogActionDelete
           child: ListTile(
-            leading: Icon(Icons.delete_outline),
-            title: Text('Delete'),
+            leading: const Icon(Icons.delete_outline),
+            title: Text(s.offlineCatalogActionDelete),
           ),
         ),
       ],
     );
   }
 
-  String _relative(DateTime when) {
+  String _relative(BuildContext context, DateTime when) {
+    final s = S.of(context);
     final diff = DateTime.now().difference(when);
-    if (diff.inDays >= 30) return '${(diff.inDays / 30).floor()}mo ago';
-    if (diff.inDays >= 7) return '${(diff.inDays / 7).floor()}w ago';
-    if (diff.inDays >= 1) return '${diff.inDays}d ago';
-    if (diff.inHours >= 1) return '${diff.inHours}h ago';
-    return 'just now';
+    if (diff.inDays >= 30) {
+      return s.offlineCatalogTimeMonthsAgo((diff.inDays / 30).floor());
+    }
+    if (diff.inDays >= 7) {
+      return s.offlineCatalogTimeWeeksAgo((diff.inDays / 7).floor());
+    }
+    if (diff.inDays >= 1) {
+      return s.offlineCatalogTimeDaysAgo(diff.inDays);
+    }
+    if (diff.inHours >= 1) {
+      return s.offlineCatalogTimeHoursAgo(diff.inHours);
+    }
+    return s.offlineCatalogTimeJustNow;
   }
 }

@@ -63,6 +63,38 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m18(count) => "${count} tarif silinsin mi?";
 
+  static String m19(count) => "${count} ürün";
+
+  static String m20(phrase) =>
+      "Filtrelerin bir milyondan fazla ürünü kapsıyor. Bu çok bant genişliği ve çok zaman demek. Devam etmek için aşağıdaki kutuya „${phrase}\" yaz — bunu yanlışlıkla geçmek yerine bilinçli olarak seçmeni istiyoruz.";
+
+  static String m21(rows, total) =>
+      "${total} ürünün ${rows} tanesi indirildi";
+
+  static String m22(current, total) => "Sayfa ${current} / ${total}";
+
+  static String m23(time) => "Yaklaşık ${time} kaldı";
+
+  static String m24(rows, total) =>
+      "${total} ürünün ${rows} tanesi indirildi";
+
+  static String m25(count, size) =>
+      "${count} ürün çevrimdışı kullanılabilir. Cihazda ${size}.";
+
+  static String m26(percent) => "Oluşturuluyor (%${percent})";
+
+  static String m27(count, size) => "${count} ürün, ${size}";
+
+  static String m28(when) => " · son yenileme ${when}";
+
+  static String m29(n) => "${n} ay önce";
+
+  static String m30(n) => "${n} hf. önce";
+
+  static String m31(n) => "${n} g önce";
+
+  static String m32(n) => "${n} sa. önce";
+
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "activityExample": MessageLookupByLibrary.simpleMessage(
@@ -907,5 +939,161 @@ class MessageLookup extends MessageLookupByLibrary {
         "weightLabel": MessageLookupByLibrary.simpleMessage("Kilo"),
         "yearsLabel": m3,
         "zincLabel": MessageLookupByLibrary.simpleMessage("çinko"),
+        "offlineCatalogActionDelete":
+            MessageLookupByLibrary.simpleMessage("Sil"),
+        "offlineCatalogActionRefresh":
+            MessageLookupByLibrary.simpleMessage("Yenile"),
+        "offlineCatalogCancel": MessageLookupByLibrary.simpleMessage("İptal"),
+        "offlineCatalogCancelConfirmBody": MessageLookupByLibrary.simpleMessage(
+            "Bu, halihazırda indirilen ürünleri silecek. Sonra dönmek istersen onun yerine Duraklat\'ı kullan."),
+        "offlineCatalogCancelConfirmKeep":
+            MessageLookupByLibrary.simpleMessage("İndirmeye devam et"),
+        "offlineCatalogCancelConfirmTitle":
+            MessageLookupByLibrary.simpleMessage("İptal edip atılsın mı?"),
+        "offlineCatalogDeleteConfirmBody": MessageLookupByLibrary.simpleMessage(
+            "Bu, indirilen ürünleri cihazından kaldırır. Katalogu istediğin zaman bu ekrandan yeniden oluşturabilirsin."),
+        "offlineCatalogDeleteConfirmTitle":
+            MessageLookupByLibrary.simpleMessage(
+                "Çevrimdışı katalog silinsin mi?"),
+        "offlineCatalogDiscard": MessageLookupByLibrary.simpleMessage("At"),
+        "offlineCatalogDoneAction":
+            MessageLookupByLibrary.simpleMessage("Tamam"),
+        "offlineCatalogDoneBody": MessageLookupByLibrary.simpleMessage(
+            "Aramalar ve barkod okumaları artık çevrimdışı çalışıyor. Kataloğunda henüz olmayan ürünler için canlı veritabanını kontrol etmeye devam ederiz."),
+        "offlineCatalogDoneSummary": m25,
+        "offlineCatalogDoneTitle":
+            MessageLookupByLibrary.simpleMessage("Katalog hazır"),
+        "offlineCatalogDownloadAction":
+            MessageLookupByLibrary.simpleMessage("İndir"),
+        "offlineCatalogDownloadingBody": MessageLookupByLibrary.simpleMessage(
+            "Bu ekranı açık bırakabilirsin, indirme devam eder. Duraklatır veya iptal edersen şu ana kadar indirilenleri kaydederiz."),
+        "offlineCatalogDownloadingEta": m23,
+        "offlineCatalogDownloadingPage": m22,
+        "offlineCatalogDownloadingProgress": m21,
+        "offlineCatalogDownloadingTitle":
+            MessageLookupByLibrary.simpleMessage("Kataloğun indiriliyor"),
+        "offlineCatalogErrorBodyFatal": MessageLookupByLibrary.simpleMessage(
+            "Bu indirme tamamlanamadı."),
+        "offlineCatalogErrorBodyRecoverable":
+            MessageLookupByLibrary.simpleMessage(
+                "Şu ana kadar indirdiğimiz her şeyi kaydettik. Daha iyi bir bağlantın olduğunda Devam et tuşuyla yeniden dene."),
+        "offlineCatalogErrorRetry":
+            MessageLookupByLibrary.simpleMessage("Yeniden dene"),
+        "offlineCatalogErrorTitle":
+            MessageLookupByLibrary.simpleMessage("Bir şeyler ters gitti"),
+        "offlineCatalogEstimateBody": MessageLookupByLibrary.simpleMessage(
+            "Senin için indireceğimiz şey şu."),
+        "offlineCatalogEstimateError": MessageLookupByLibrary.simpleMessage(
+            "Tahmin almak için Open Food Facts\'a ulaşamadık. İnternet bağlantını kontrol et ve yeniden dene."),
+        "offlineCatalogEstimateHardCapBody": m20,
+        "offlineCatalogEstimateHardCapPhrase":
+            MessageLookupByLibrary.simpleMessage("Anlıyorum"),
+        "offlineCatalogEstimateHardCapTitle":
+            MessageLookupByLibrary.simpleMessage(
+                "Bu çok büyük bir indirme"),
+        "offlineCatalogEstimateRequestsLabel":
+            MessageLookupByLibrary.simpleMessage("Ağ istekleri"),
+        "offlineCatalogEstimateRowsLabel":
+            MessageLookupByLibrary.simpleMessage("Ürünler"),
+        "offlineCatalogEstimateSizeLabel":
+            MessageLookupByLibrary.simpleMessage("Tahmini boyut"),
+        "offlineCatalogEstimateTimeLabel":
+            MessageLookupByLibrary.simpleMessage("Tahmini süre"),
+        "offlineCatalogEstimateTitle":
+            MessageLookupByLibrary.simpleMessage("İndirmeye hazır"),
+        "offlineCatalogEstimateWifiHint": MessageLookupByLibrary.simpleMessage(
+            "Mümkünse Wi-Fi\'ye bağlan. Aksi takdirde indirme mobil veri kotandan düşer."),
+        "offlineCatalogNextAction":
+            MessageLookupByLibrary.simpleMessage("İleri"),
+        "offlineCatalogPause":
+            MessageLookupByLibrary.simpleMessage("Duraklat"),
+        "offlineCatalogPausedBody": MessageLookupByLibrary.simpleMessage(
+            "İlerlemeni kaydettik. Wi-Fi bağlantın olduğunda kaldığın yerden devam et."),
+        "offlineCatalogPausedProgress": m24,
+        "offlineCatalogPausedTitle":
+            MessageLookupByLibrary.simpleMessage("İndirme duraklatıldı"),
+        "offlineCatalogProductCount": m19,
+        "offlineCatalogQualityBody": MessageLookupByLibrary.simpleMessage(
+            "Bu varsayılanlar daha küçük ve daha kullanışlı bir katalog verir. Yalnızca eksik girdileri de istediğinden eminsen kapat."),
+        "offlineCatalogQualityNutritionBody":
+            MessageLookupByLibrary.simpleMessage(
+                "Kalori veya makro besin bilgisi olmayan ürünleri çıkarır — arama sonuçlarında işine yarar, aksi takdirde boş kartlar olarak görünürlerdi."),
+        "offlineCatalogQualityNutritionLabel":
+            MessageLookupByLibrary.simpleMessage(
+                "Yalnızca tam besin değerine sahip girdiler"),
+        "offlineCatalogQualityPopularityBody":
+            MessageLookupByLibrary.simpleMessage(
+                "Sadece bir kez taranmış ürünleri atlar. Tek seferlik girişlerin uzun kuyruğu süpermarkette önünde duranı pek karşılamaz; bunu çıkarmak katalog boyutunu yaklaşık üçte bir azaltır."),
+        "offlineCatalogQualityPopularityLabel":
+            MessageLookupByLibrary.simpleMessage(
+                "Yalnızca sık taranan ürünler"),
+        "offlineCatalogQualityRecency10Years":
+            MessageLookupByLibrary.simpleMessage("10 yıl"),
+        "offlineCatalogQualityRecency3Years":
+            MessageLookupByLibrary.simpleMessage("3 yıl"),
+        "offlineCatalogQualityRecency5Years":
+            MessageLookupByLibrary.simpleMessage("5 yıl"),
+        "offlineCatalogQualityRecencyAny":
+            MessageLookupByLibrary.simpleMessage("Herhangi"),
+        "offlineCatalogQualityRecencyBody":
+            MessageLookupByLibrary.simpleMessage(
+                "Eski girdiler güncelliğini yitirebilir — ambalajlar değişir, tarifler yenilenir. Sana uygun bir aralık seç."),
+        "offlineCatalogQualityRecencyLabel":
+            MessageLookupByLibrary.simpleMessage("Şu süre içinde güncellenmiş"),
+        "offlineCatalogQualityTitle":
+            MessageLookupByLibrary.simpleMessage("Kalite filtreleri"),
+        "offlineCatalogRegionBody": MessageLookupByLibrary.simpleMessage(
+            "Yalnızca seçtiğin ülkelerle etiketlenmiş ürünler indirilir. Sayılar Open Food Facts\'tan gelir ve zaman içinde değişir."),
+        "offlineCatalogRegionEmpty":
+            MessageLookupByLibrary.simpleMessage("Gösterilecek ülke yok"),
+        "offlineCatalogRegionFallbackNotice":
+            MessageLookupByLibrary.simpleMessage(
+                "Open Food Facts\'a ulaşamadığımız için kısa bir yedek listesi gösteriyoruz. İnternete bağlan ve tüm ülke listesini yüklemek için yenile."),
+        "offlineCatalogRegionNoMatches": MessageLookupByLibrary.simpleMessage(
+            "Aramanla eşleşen ülke yok"),
+        "offlineCatalogRegionRefreshTooltip":
+            MessageLookupByLibrary.simpleMessage("Ülke listesini yenile"),
+        "offlineCatalogRegionSearchHint":
+            MessageLookupByLibrary.simpleMessage("Ülkelerde ara"),
+        "offlineCatalogRegionTitle":
+            MessageLookupByLibrary.simpleMessage("Ülkelerini seç"),
+        "offlineCatalogResume":
+            MessageLookupByLibrary.simpleMessage("Devam et"),
+        "offlineCatalogStartAction":
+            MessageLookupByLibrary.simpleMessage("Başla"),
+        "offlineCatalogTileBuilding":
+            MessageLookupByLibrary.simpleMessage("Oluşturuluyor…"),
+        "offlineCatalogTileBuildingPercent": m26,
+        "offlineCatalogTileLastRefreshed": m28,
+        "offlineCatalogTileNotBuilt": MessageLookupByLibrary.simpleMessage(
+            "Oluşturulmadı — kurmak için dokun"),
+        "offlineCatalogTilePaused": MessageLookupByLibrary.simpleMessage(
+            "İndirme duraklatıldı — devam etmek için dokun"),
+        "offlineCatalogTileReady": m27,
+        "offlineCatalogTileRefreshing":
+            MessageLookupByLibrary.simpleMessage("Yenileniyor…"),
+        "offlineCatalogTimeDaysAgo": m31,
+        "offlineCatalogTimeHoursAgo": m32,
+        "offlineCatalogTimeJustNow":
+            MessageLookupByLibrary.simpleMessage("az önce"),
+        "offlineCatalogTimeMonthsAgo": m29,
+        "offlineCatalogTimeWeeksAgo": m30,
+        "offlineCatalogTitle": MessageLookupByLibrary.simpleMessage(
+            "Çevrimdışı yiyecek kataloğu"),
+        "offlineCatalogWelcomeBody1": MessageLookupByLibrary.simpleMessage(
+            "Open Food Facts veritabanının bir kopyasını indirebiliriz, böylece arama ve barkod okuma internet bağlantısı olmadan da çalışır."),
+        "offlineCatalogWelcomeBody2": MessageLookupByLibrary.simpleMessage(
+            "Ülkeleri sonraki sayfada seçeceksin; indirmenin olabildiğince küçük kalması için yalnızca uygulamanın gerçekten kullandığı sütunları saklarız (cihazda görsel yok, kullanılmayan üst veri yok)."),
+        "offlineCatalogWelcomeBulletHumanFood":
+            MessageLookupByLibrary.simpleMessage(
+                "Katalog yalnızca insan yiyeceklerini kapsar — evcil hayvan maması, kozmetik ve diğer yiyecek olmayan ürünler senin için filtrelenir."),
+        "offlineCatalogWelcomeBulletScreen":
+            MessageLookupByLibrary.simpleMessage(
+                "Katalog oluşturulurken lütfen bu ekranı açık tut. Uygulama uzun süre arka planda kalırsa indirme duraklatılır ve sonra devam edebilirsin."),
+        "offlineCatalogWelcomeBulletWifi":
+            MessageLookupByLibrary.simpleMessage(
+                "Wi-Fi bağlantısı şiddetle önerilir — seçtiğin ülke sayısına bağlı olarak indirme yüzlerce megabayt olabilir."),
+        "offlineCatalogWelcomeTitle": MessageLookupByLibrary.simpleMessage(
+            "Çevrimdışı yiyecek kataloğu oluştur"),
       };
 }

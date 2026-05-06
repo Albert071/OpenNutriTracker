@@ -61,6 +61,38 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m18(count) => "Видалити ${count} рецепт(ів)?";
 
+  static String m19(count) => "${count} продуктів";
+
+  static String m20(phrase) =>
+      "Твої фільтри охоплюють понад мільйон продуктів. Це багато трафіку та багато часу. Щоб продовжити, введи „${phrase}\" у поле нижче — ми хочемо, щоб ти обрав це свідомо, а не випадково.";
+
+  static String m21(rows, total) =>
+      "Завантажено ${rows} з ${total} продуктів";
+
+  static String m22(current, total) => "Сторінка ${current} з ${total}";
+
+  static String m23(time) => "Залишилося приблизно ${time}";
+
+  static String m24(rows, total) =>
+      "Завантажено ${rows} з ${total} продуктів";
+
+  static String m25(count, size) =>
+      "${count} продуктів доступні офлайн. ${size} на пристрої.";
+
+  static String m26(percent) => "Створюється (${percent}%)";
+
+  static String m27(count, size) => "${count} продуктів, ${size}";
+
+  static String m28(when) => " · востаннє оновлено ${when}";
+
+  static String m29(n) => "${n} міс. тому";
+
+  static String m30(n) => "${n} тижн. тому";
+
+  static String m31(n) => "${n} дн. тому";
+
+  static String m32(n) => "${n} год. тому";
+
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "activityExample": MessageLookupByLibrary.simpleMessage(
@@ -927,5 +959,162 @@ class MessageLookup extends MessageLookupByLibrary {
         "weightLabel": MessageLookupByLibrary.simpleMessage("Вага"),
         "yearsLabel": m3,
         "zincLabel": MessageLookupByLibrary.simpleMessage("цинк"),
+        "offlineCatalogActionDelete":
+            MessageLookupByLibrary.simpleMessage("Видалити"),
+        "offlineCatalogActionRefresh":
+            MessageLookupByLibrary.simpleMessage("Оновити"),
+        "offlineCatalogCancel":
+            MessageLookupByLibrary.simpleMessage("Скасувати"),
+        "offlineCatalogCancelConfirmBody": MessageLookupByLibrary.simpleMessage(
+            "Це втратить вже завантажені продукти. Якщо хочеш повернутися до цього пізніше, скористайся «Призупинити»."),
+        "offlineCatalogCancelConfirmKeep":
+            MessageLookupByLibrary.simpleMessage("Продовжити завантаження"),
+        "offlineCatalogCancelConfirmTitle":
+            MessageLookupByLibrary.simpleMessage("Скасувати та відхилити?"),
+        "offlineCatalogDeleteConfirmBody": MessageLookupByLibrary.simpleMessage(
+            "Це видалить завантажені продукти з твого пристрою. Ти можеш створити каталог заново будь-коли з цього екрана."),
+        "offlineCatalogDeleteConfirmTitle":
+            MessageLookupByLibrary.simpleMessage("Видалити офлайн-каталог?"),
+        "offlineCatalogDiscard":
+            MessageLookupByLibrary.simpleMessage("Відхилити"),
+        "offlineCatalogDoneAction":
+            MessageLookupByLibrary.simpleMessage("Готово"),
+        "offlineCatalogDoneBody": MessageLookupByLibrary.simpleMessage(
+            "Пошук і сканування штрих-кодів тепер працюють офлайн. Для продуктів, яких ще немає у твоєму каталозі, ми все одно перевіримо живу базу."),
+        "offlineCatalogDoneSummary": m25,
+        "offlineCatalogDoneTitle":
+            MessageLookupByLibrary.simpleMessage("Каталог готовий"),
+        "offlineCatalogDownloadAction":
+            MessageLookupByLibrary.simpleMessage("Завантажити"),
+        "offlineCatalogDownloadingBody": MessageLookupByLibrary.simpleMessage(
+            "Можеш залишити цей екран відкритим, завантаження триватиме. Якщо призупиниш або скасуєш, ми збережемо те, що завантажено досі."),
+        "offlineCatalogDownloadingEta": m23,
+        "offlineCatalogDownloadingPage": m22,
+        "offlineCatalogDownloadingProgress": m21,
+        "offlineCatalogDownloadingTitle":
+            MessageLookupByLibrary.simpleMessage("Завантажуємо твій каталог"),
+        "offlineCatalogErrorBodyFatal": MessageLookupByLibrary.simpleMessage(
+            "Не вдалося завершити це завантаження."),
+        "offlineCatalogErrorBodyRecoverable":
+            MessageLookupByLibrary.simpleMessage(
+                "Все, що було завантажено досі, ми зберегли. Спробуй ще раз кнопкою «Продовжити», коли матимеш краще з\'єднання."),
+        "offlineCatalogErrorRetry":
+            MessageLookupByLibrary.simpleMessage("Спробувати знову"),
+        "offlineCatalogErrorTitle":
+            MessageLookupByLibrary.simpleMessage("Щось пішло не так"),
+        "offlineCatalogEstimateBody": MessageLookupByLibrary.simpleMessage(
+            "Ось що ми для тебе завантажимо."),
+        "offlineCatalogEstimateError": MessageLookupByLibrary.simpleMessage(
+            "Не вдалося зв\'язатися з Open Food Facts для отримання оцінки. Перевір з\'єднання з інтернетом і спробуй ще раз."),
+        "offlineCatalogEstimateHardCapBody": m20,
+        "offlineCatalogEstimateHardCapPhrase":
+            MessageLookupByLibrary.simpleMessage("Розумію"),
+        "offlineCatalogEstimateHardCapTitle":
+            MessageLookupByLibrary.simpleMessage(
+                "Це дуже велике завантаження"),
+        "offlineCatalogEstimateRequestsLabel":
+            MessageLookupByLibrary.simpleMessage("Мережеві запити"),
+        "offlineCatalogEstimateRowsLabel":
+            MessageLookupByLibrary.simpleMessage("Продукти"),
+        "offlineCatalogEstimateSizeLabel":
+            MessageLookupByLibrary.simpleMessage("Орієнтовний розмір"),
+        "offlineCatalogEstimateTimeLabel":
+            MessageLookupByLibrary.simpleMessage("Орієнтовний час"),
+        "offlineCatalogEstimateTitle":
+            MessageLookupByLibrary.simpleMessage("Готово до завантаження"),
+        "offlineCatalogEstimateWifiHint": MessageLookupByLibrary.simpleMessage(
+            "Якщо можеш, підключися до Wi-Fi. Інакше завантаження зарахується до твоїх мобільних даних."),
+        "offlineCatalogNextAction":
+            MessageLookupByLibrary.simpleMessage("Далі"),
+        "offlineCatalogPause":
+            MessageLookupByLibrary.simpleMessage("Призупинити"),
+        "offlineCatalogPausedBody": MessageLookupByLibrary.simpleMessage(
+            "Твій прогрес збережено. Продовжуй з того місця, де зупинився, коли матимеш Wi-Fi."),
+        "offlineCatalogPausedProgress": m24,
+        "offlineCatalogPausedTitle":
+            MessageLookupByLibrary.simpleMessage("Завантаження призупинено"),
+        "offlineCatalogProductCount": m19,
+        "offlineCatalogQualityBody": MessageLookupByLibrary.simpleMessage(
+            "Ці типові налаштування дають менший і кориснішіший каталог. Вимикай їх лише якщо свідомо хочеш бачити неповні записи."),
+        "offlineCatalogQualityNutritionBody":
+            MessageLookupByLibrary.simpleMessage(
+                "Пропускає продукти без даних про калорії або макронутрієнти — корисно в результатах пошуку, де інакше вони з\'являлися б як порожні картки."),
+        "offlineCatalogQualityNutritionLabel":
+            MessageLookupByLibrary.simpleMessage(
+                "Лише записи з повними поживними даними"),
+        "offlineCatalogQualityPopularityBody":
+            MessageLookupByLibrary.simpleMessage(
+                "Пропускає продукти, скановані лише раз. Довгий хвіст одноразових записів рідко відповідає тому, що ти бачиш у супермаркеті, і його видалення зменшує каталог приблизно на третину."),
+        "offlineCatalogQualityPopularityLabel":
+            MessageLookupByLibrary.simpleMessage(
+                "Лише часто скановані продукти"),
+        "offlineCatalogQualityRecency10Years":
+            MessageLookupByLibrary.simpleMessage("10 років"),
+        "offlineCatalogQualityRecency3Years":
+            MessageLookupByLibrary.simpleMessage("3 роки"),
+        "offlineCatalogQualityRecency5Years":
+            MessageLookupByLibrary.simpleMessage("5 років"),
+        "offlineCatalogQualityRecencyAny":
+            MessageLookupByLibrary.simpleMessage("Будь-який"),
+        "offlineCatalogQualityRecencyBody":
+            MessageLookupByLibrary.simpleMessage(
+                "Старіші записи можуть застаріти — упаковки змінюються, рецептури переробляються. Обери проміжок, який тобі підходить."),
+        "offlineCatalogQualityRecencyLabel":
+            MessageLookupByLibrary.simpleMessage("Оновлено за останні"),
+        "offlineCatalogQualityTitle":
+            MessageLookupByLibrary.simpleMessage("Фільтри якості"),
+        "offlineCatalogRegionBody": MessageLookupByLibrary.simpleMessage(
+            "Завантажаться лише продукти, позначені обраними країнами. Підрахунки беруться з Open Food Facts і змінюються з часом."),
+        "offlineCatalogRegionEmpty":
+            MessageLookupByLibrary.simpleMessage("Немає країн для показу"),
+        "offlineCatalogRegionFallbackNotice":
+            MessageLookupByLibrary.simpleMessage(
+                "Показуємо короткий резервний список, бо не змогли зв\'язатися з Open Food Facts. Підключися до інтернету та оновлю, щоб завантажити повний список країн."),
+        "offlineCatalogRegionNoMatches": MessageLookupByLibrary.simpleMessage(
+            "Жодна країна не відповідає пошуку"),
+        "offlineCatalogRegionRefreshTooltip":
+            MessageLookupByLibrary.simpleMessage("Оновити список країн"),
+        "offlineCatalogRegionSearchHint":
+            MessageLookupByLibrary.simpleMessage("Шукати країни"),
+        "offlineCatalogRegionTitle":
+            MessageLookupByLibrary.simpleMessage("Обери країни"),
+        "offlineCatalogResume":
+            MessageLookupByLibrary.simpleMessage("Продовжити"),
+        "offlineCatalogStartAction":
+            MessageLookupByLibrary.simpleMessage("Почати"),
+        "offlineCatalogTileBuilding":
+            MessageLookupByLibrary.simpleMessage("Створюється…"),
+        "offlineCatalogTileBuildingPercent": m26,
+        "offlineCatalogTileLastRefreshed": m28,
+        "offlineCatalogTileNotBuilt": MessageLookupByLibrary.simpleMessage(
+            "Не створено — торкнися, щоб налаштувати"),
+        "offlineCatalogTilePaused": MessageLookupByLibrary.simpleMessage(
+            "Завантаження призупинено — торкнися, щоб продовжити"),
+        "offlineCatalogTileReady": m27,
+        "offlineCatalogTileRefreshing":
+            MessageLookupByLibrary.simpleMessage("Оновлюється…"),
+        "offlineCatalogTimeDaysAgo": m31,
+        "offlineCatalogTimeHoursAgo": m32,
+        "offlineCatalogTimeJustNow":
+            MessageLookupByLibrary.simpleMessage("щойно"),
+        "offlineCatalogTimeMonthsAgo": m29,
+        "offlineCatalogTimeWeeksAgo": m30,
+        "offlineCatalogTitle": MessageLookupByLibrary.simpleMessage(
+            "Офлайн-каталог продуктів"),
+        "offlineCatalogWelcomeBody1": MessageLookupByLibrary.simpleMessage(
+            "Ми можемо завантажити копію бази Open Food Facts, щоб пошук і сканування штрих-кодів працювали без підключення до інтернету."),
+        "offlineCatalogWelcomeBody2": MessageLookupByLibrary.simpleMessage(
+            "Країни ти обереш на наступній сторінці; ми зберігаємо лише стовпці, які реально використовує застосунок (без зображень на пристрої, без зайвих метаданих), щоб завантаження було якнайменшим."),
+        "offlineCatalogWelcomeBulletHumanFood":
+            MessageLookupByLibrary.simpleMessage(
+                "Каталог містить тільки їжу для людей — корм для тварин, косметику та інші непродовольчі товари ми відфільтровуємо за тебе."),
+        "offlineCatalogWelcomeBulletScreen":
+            MessageLookupByLibrary.simpleMessage(
+                "Будь ласка, не закривай цей екран, поки створюється каталог. Якщо застосунок надовго піде у фон, завантаження призупиниться, і ти зможеш продовжити пізніше."),
+        "offlineCatalogWelcomeBulletWifi":
+            MessageLookupByLibrary.simpleMessage(
+                "Наполегливо радимо з\'єднання Wi-Fi — завантаження може займати сотні мегабайтів залежно від кількості обраних країн."),
+        "offlineCatalogWelcomeTitle": MessageLookupByLibrary.simpleMessage(
+            "Створити офлайн-каталог продуктів"),
       };
 }

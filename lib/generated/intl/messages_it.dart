@@ -61,6 +61,38 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m18(count) => "Eliminare ${count} ricetta/e?";
 
+  static String m19(count) => "${count} prodotti";
+
+  static String m20(phrase) =>
+      "I tuoi filtri coprono più di un milione di prodotti. È molta banda e molto tempo. Per continuare, digita \"${phrase}\" nel riquadro qui sotto — vogliamo che tu scelga questa opzione attivamente, non per errore.";
+
+  static String m21(rows, total) =>
+      "Scaricati ${rows} di ${total} prodotti";
+
+  static String m22(current, total) => "Pagina ${current} di ${total}";
+
+  static String m23(time) => "Circa ${time} rimanenti";
+
+  static String m24(rows, total) =>
+      "${rows} di ${total} prodotti scaricati";
+
+  static String m25(count, size) =>
+      "${count} prodotti disponibili offline. ${size} sul dispositivo.";
+
+  static String m26(percent) => "Creazione (${percent}%)";
+
+  static String m27(count, size) => "${count} prodotti, ${size}";
+
+  static String m28(when) => " · ultimo aggiornamento ${when}";
+
+  static String m29(n) => "${n} mesi fa";
+
+  static String m30(n) => "${n} sett. fa";
+
+  static String m31(n) => "${n} g fa";
+
+  static String m32(n) => "${n} ore fa";
+
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "activityExample": MessageLookupByLibrary.simpleMessage(
@@ -927,5 +959,161 @@ class MessageLookup extends MessageLookupByLibrary {
         "weightLabel": MessageLookupByLibrary.simpleMessage("Peso"),
         "yearsLabel": m3,
         "zincLabel": MessageLookupByLibrary.simpleMessage("zinco"),
+        "offlineCatalogActionDelete":
+            MessageLookupByLibrary.simpleMessage("Elimina"),
+        "offlineCatalogActionRefresh":
+            MessageLookupByLibrary.simpleMessage("Aggiorna"),
+        "offlineCatalogCancel": MessageLookupByLibrary.simpleMessage("Annulla"),
+        "offlineCatalogCancelConfirmBody": MessageLookupByLibrary.simpleMessage(
+            "Così perderai i prodotti già scaricati. Se vuoi tornarci più tardi, usa Pausa invece."),
+        "offlineCatalogCancelConfirmKeep":
+            MessageLookupByLibrary.simpleMessage("Continua a scaricare"),
+        "offlineCatalogCancelConfirmTitle":
+            MessageLookupByLibrary.simpleMessage("Annullare e scartare?"),
+        "offlineCatalogDeleteConfirmBody": MessageLookupByLibrary.simpleMessage(
+            "Questo rimuove i prodotti scaricati dal tuo dispositivo. Puoi ricreare il catalogo in qualsiasi momento da questa schermata."),
+        "offlineCatalogDeleteConfirmTitle":
+            MessageLookupByLibrary.simpleMessage(
+                "Eliminare il catalogo offline?"),
+        "offlineCatalogDiscard":
+            MessageLookupByLibrary.simpleMessage("Scarta"),
+        "offlineCatalogDoneAction":
+            MessageLookupByLibrary.simpleMessage("Fatto"),
+        "offlineCatalogDoneBody": MessageLookupByLibrary.simpleMessage(
+            "Ricerche e scansioni dei codici a barre ora funzionano offline. Continueremo a controllare il database online per i prodotti non ancora nel tuo catalogo."),
+        "offlineCatalogDoneSummary": m25,
+        "offlineCatalogDoneTitle":
+            MessageLookupByLibrary.simpleMessage("Catalogo pronto"),
+        "offlineCatalogDownloadAction":
+            MessageLookupByLibrary.simpleMessage("Scarica"),
+        "offlineCatalogDownloadingBody": MessageLookupByLibrary.simpleMessage(
+            "Puoi tenere questa schermata aperta e il download continuerà. Se metti in pausa o annulli, salveremo ciò che è stato scaricato finora."),
+        "offlineCatalogDownloadingEta": m23,
+        "offlineCatalogDownloadingPage": m22,
+        "offlineCatalogDownloadingProgress": m21,
+        "offlineCatalogDownloadingTitle": MessageLookupByLibrary.simpleMessage(
+            "Stiamo scaricando il tuo catalogo"),
+        "offlineCatalogErrorBodyFatal": MessageLookupByLibrary.simpleMessage(
+            "Non è stato possibile completare questo download."),
+        "offlineCatalogErrorBodyRecoverable":
+            MessageLookupByLibrary.simpleMessage(
+                "Abbiamo salvato tutto ciò che è stato scaricato finora. Riprova dal pulsante Riprendi quando avrai una connessione migliore."),
+        "offlineCatalogErrorRetry":
+            MessageLookupByLibrary.simpleMessage("Riprova"),
+        "offlineCatalogErrorTitle":
+            MessageLookupByLibrary.simpleMessage("Qualcosa è andato storto"),
+        "offlineCatalogEstimateBody": MessageLookupByLibrary.simpleMessage(
+            "Ecco cosa scaricheremo per te."),
+        "offlineCatalogEstimateError": MessageLookupByLibrary.simpleMessage(
+            "Non siamo riusciti a contattare Open Food Facts per ottenere una stima. Controlla la tua connessione internet e riprova."),
+        "offlineCatalogEstimateHardCapBody": m20,
+        "offlineCatalogEstimateHardCapPhrase":
+            MessageLookupByLibrary.simpleMessage("Ho capito"),
+        "offlineCatalogEstimateHardCapTitle":
+            MessageLookupByLibrary.simpleMessage(
+                "Questo download è molto grande"),
+        "offlineCatalogEstimateRequestsLabel":
+            MessageLookupByLibrary.simpleMessage("Richieste di rete"),
+        "offlineCatalogEstimateRowsLabel":
+            MessageLookupByLibrary.simpleMessage("Prodotti"),
+        "offlineCatalogEstimateSizeLabel":
+            MessageLookupByLibrary.simpleMessage("Dimensione stimata"),
+        "offlineCatalogEstimateTimeLabel":
+            MessageLookupByLibrary.simpleMessage("Tempo stimato"),
+        "offlineCatalogEstimateTitle":
+            MessageLookupByLibrary.simpleMessage("Pronto per il download"),
+        "offlineCatalogEstimateWifiHint": MessageLookupByLibrary.simpleMessage(
+            "Se possibile collegati al Wi-Fi. Altrimenti il download verrà conteggiato sul tuo traffico dati cellulare."),
+        "offlineCatalogNextAction":
+            MessageLookupByLibrary.simpleMessage("Avanti"),
+        "offlineCatalogPause": MessageLookupByLibrary.simpleMessage("Pausa"),
+        "offlineCatalogPausedBody": MessageLookupByLibrary.simpleMessage(
+            "Abbiamo salvato i tuoi progressi. Riprenderai da dove avevi lasciato quando avrai una connessione Wi-Fi."),
+        "offlineCatalogPausedProgress": m24,
+        "offlineCatalogPausedTitle":
+            MessageLookupByLibrary.simpleMessage("Download in pausa"),
+        "offlineCatalogProductCount": m19,
+        "offlineCatalogQualityBody": MessageLookupByLibrary.simpleMessage(
+            "Queste impostazioni predefinite ti danno un catalogo più piccolo e utile. Disattivale solo se vuoi davvero anche le voci incomplete."),
+        "offlineCatalogQualityNutritionBody":
+            MessageLookupByLibrary.simpleMessage(
+                "Esclude i prodotti senza informazioni su calorie o macronutrienti — utile nei risultati di ricerca, dove altrimenti apparirebbero come schede vuote."),
+        "offlineCatalogQualityNutritionLabel":
+            MessageLookupByLibrary.simpleMessage(
+                "Solo voci con dati nutrizionali completi"),
+        "offlineCatalogQualityPopularityBody":
+            MessageLookupByLibrary.simpleMessage(
+                "Salta i prodotti scansionati una sola volta. La lunga coda di voci occasionali raramente è ciò che hai davanti al supermercato, ed escluderla riduce le dimensioni del catalogo di circa un terzo."),
+        "offlineCatalogQualityPopularityLabel":
+            MessageLookupByLibrary.simpleMessage(
+                "Solo prodotti scansionati spesso"),
+        "offlineCatalogQualityRecency10Years":
+            MessageLookupByLibrary.simpleMessage("10 anni"),
+        "offlineCatalogQualityRecency3Years":
+            MessageLookupByLibrary.simpleMessage("3 anni"),
+        "offlineCatalogQualityRecency5Years":
+            MessageLookupByLibrary.simpleMessage("5 anni"),
+        "offlineCatalogQualityRecencyAny":
+            MessageLookupByLibrary.simpleMessage("Qualunque"),
+        "offlineCatalogQualityRecencyBody":
+            MessageLookupByLibrary.simpleMessage(
+                "Le voci più vecchie possono diventare imprecise — le confezioni cambiano, le ricette vengono riformulate. Scegli un periodo che ti sembri giusto."),
+        "offlineCatalogQualityRecencyLabel":
+            MessageLookupByLibrary.simpleMessage("Aggiornati negli ultimi"),
+        "offlineCatalogQualityTitle":
+            MessageLookupByLibrary.simpleMessage("Filtri qualità"),
+        "offlineCatalogRegionBody": MessageLookupByLibrary.simpleMessage(
+            "Verranno scaricati solo i prodotti taggati con i paesi che scegli. I conteggi provengono da Open Food Facts e cambiano nel tempo."),
+        "offlineCatalogRegionEmpty":
+            MessageLookupByLibrary.simpleMessage("Nessun paese da mostrare"),
+        "offlineCatalogRegionFallbackNotice":
+            MessageLookupByLibrary.simpleMessage(
+                "Stiamo mostrando un breve elenco di riserva perché non siamo riusciti a contattare Open Food Facts. Connettiti a internet e aggiorna per caricare l\'elenco completo dei paesi."),
+        "offlineCatalogRegionNoMatches": MessageLookupByLibrary.simpleMessage(
+            "Nessun paese corrisponde alla tua ricerca"),
+        "offlineCatalogRegionRefreshTooltip":
+            MessageLookupByLibrary.simpleMessage(
+                "Aggiorna l\'elenco dei paesi"),
+        "offlineCatalogRegionSearchHint":
+            MessageLookupByLibrary.simpleMessage("Cerca paesi"),
+        "offlineCatalogRegionTitle":
+            MessageLookupByLibrary.simpleMessage("Scegli i paesi"),
+        "offlineCatalogResume":
+            MessageLookupByLibrary.simpleMessage("Riprendi"),
+        "offlineCatalogStartAction":
+            MessageLookupByLibrary.simpleMessage("Inizia"),
+        "offlineCatalogTileBuilding":
+            MessageLookupByLibrary.simpleMessage("Creazione…"),
+        "offlineCatalogTileBuildingPercent": m26,
+        "offlineCatalogTileLastRefreshed": m28,
+        "offlineCatalogTileNotBuilt": MessageLookupByLibrary.simpleMessage(
+            "Non creato — tocca per configurare"),
+        "offlineCatalogTilePaused": MessageLookupByLibrary.simpleMessage(
+            "Download in pausa — tocca per riprendere"),
+        "offlineCatalogTileReady": m27,
+        "offlineCatalogTileRefreshing":
+            MessageLookupByLibrary.simpleMessage("Aggiornamento…"),
+        "offlineCatalogTimeDaysAgo": m31,
+        "offlineCatalogTimeHoursAgo": m32,
+        "offlineCatalogTimeJustNow": MessageLookupByLibrary.simpleMessage("ora"),
+        "offlineCatalogTimeMonthsAgo": m29,
+        "offlineCatalogTimeWeeksAgo": m30,
+        "offlineCatalogTitle":
+            MessageLookupByLibrary.simpleMessage("Catalogo alimentare offline"),
+        "offlineCatalogWelcomeBody1": MessageLookupByLibrary.simpleMessage(
+            "Possiamo scaricare una copia del database Open Food Facts in modo che la ricerca e la lettura dei codici a barre funzionino senza connessione a internet."),
+        "offlineCatalogWelcomeBody2": MessageLookupByLibrary.simpleMessage(
+            "Sceglierai i paesi nella prossima pagina; conserviamo solo le colonne effettivamente usate dall\'app (nessuna immagine sul dispositivo, nessun metadato inutile) per mantenere il download il più piccolo possibile."),
+        "offlineCatalogWelcomeBulletHumanFood":
+            MessageLookupByLibrary.simpleMessage(
+                "Il catalogo include solo alimenti per esseri umani — cibo per animali, cosmetici e altri articoli non alimentari vengono filtrati per te."),
+        "offlineCatalogWelcomeBulletScreen":
+            MessageLookupByLibrary.simpleMessage(
+                "Per favore tieni questa schermata aperta mentre il catalogo viene creato. Se l\'app resta troppo a lungo in background, il download verrà messo in pausa e potrai riprenderlo più tardi."),
+        "offlineCatalogWelcomeBulletWifi":
+            MessageLookupByLibrary.simpleMessage(
+                "Consigliamo vivamente una connessione Wi-Fi: il download può raggiungere centinaia di megabyte a seconda di quanti paesi scegli."),
+        "offlineCatalogWelcomeTitle": MessageLookupByLibrary.simpleMessage(
+            "Crea un catalogo alimentare offline"),
       };
 }

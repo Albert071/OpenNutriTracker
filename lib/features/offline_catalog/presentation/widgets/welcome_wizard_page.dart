@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:opennutritracker/generated/l10n.dart';
 
 /// First page of the offline-catalog wizard. Plain explanation of
 /// what the user is about to opt into, with the honest upfront notes
@@ -9,53 +10,28 @@ class WelcomeWizardPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final s = S.of(context);
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 24),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // l10n: offlineCatalogWelcomeTitle
           Text(
-            'Build an offline food catalog',
+            s.offlineCatalogWelcomeTitle,
             style: theme.textTheme.headlineMedium,
           ),
           const SizedBox(height: 16),
-          // l10n: offlineCatalogWelcomeBody1
-          Text(
-            'We can download a copy of the Open Food Facts database '
-            'so search and barcode lookups work without an internet '
-            'connection.',
-            style: theme.textTheme.bodyLarge,
-          ),
+          Text(s.offlineCatalogWelcomeBody1, style: theme.textTheme.bodyLarge),
           const SizedBox(height: 16),
-          // l10n: offlineCatalogWelcomeBody2
-          Text(
-            'You choose the countries on the next page; we keep just '
-            'the columns the app actually uses (no images on disk, no '
-            'unused metadata) so the download stays as small as we '
-            'can make it.',
-            style: theme.textTheme.bodyLarge,
-          ),
+          Text(s.offlineCatalogWelcomeBody2, style: theme.textTheme.bodyLarge),
           const SizedBox(height: 24),
+          _Bullet(text: s.offlineCatalogWelcomeBulletWifi, icon: Icons.wifi),
           _Bullet(
-            // l10n: offlineCatalogWelcomeBulletWifi
-            text: 'We strongly recommend a Wi-Fi connection — the '
-                'download can be hundreds of megabytes depending on '
-                'how many countries you pick.',
-            icon: Icons.wifi,
-          ),
-          _Bullet(
-            // l10n: offlineCatalogWelcomeBulletScreen
-            text: 'Please keep this screen open while the catalog '
-                'builds. If the app is backgrounded for too long, the '
-                'download will pause and you can resume it later.',
+            text: s.offlineCatalogWelcomeBulletScreen,
             icon: Icons.smartphone,
           ),
           _Bullet(
-            // l10n: offlineCatalogWelcomeBulletHumanFood
-            text: 'The catalog covers human food only — pet food, '
-                'cosmetics, and other non-food entries are filtered '
-                'out for you.',
+            text: s.offlineCatalogWelcomeBulletHumanFood,
             icon: Icons.restaurant,
           ),
         ],
@@ -80,9 +56,7 @@ class _Bullet extends StatelessWidget {
         children: [
           Icon(icon, size: 20, color: theme.colorScheme.primary),
           const SizedBox(width: 12),
-          Expanded(
-            child: Text(text, style: theme.textTheme.bodyMedium),
-          ),
+          Expanded(child: Text(text, style: theme.textTheme.bodyMedium)),
         ],
       ),
     );

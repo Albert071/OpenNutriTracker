@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:opennutritracker/generated/l10n.dart';
 
 /// Three-control quality filter page. All defaults are the
 /// recommended setting so a user who taps Next without thinking still
@@ -31,12 +32,19 @@ class _QualityWizardPageState extends State<QualityWizardPage> {
   late bool _requireMinPopularity;
   late Duration? _maxAge;
 
-  static const _ageOptions = <_AgeOption>[
-    _AgeOption(label: '3 years', duration: Duration(days: 365 * 3)),
-    _AgeOption(label: '5 years', duration: Duration(days: 365 * 5)),
-    _AgeOption(label: '10 years', duration: Duration(days: 365 * 10)),
-    _AgeOption(label: 'Any', duration: null),
+  static const _ageDurations = <Duration?>[
+    Duration(days: 365 * 3),
+    Duration(days: 365 * 5),
+    Duration(days: 365 * 10),
+    null,
   ];
+
+  List<String> _ageLabels(S s) => [
+        s.offlineCatalogQualityRecency3Years,
+        s.offlineCatalogQualityRecency5Years,
+        s.offlineCatalogQualityRecency10Years,
+        s.offlineCatalogQualityRecencyAny,
+      ];
 
   @override
   void initState() {
@@ -57,31 +65,19 @@ class _QualityWizardPageState extends State<QualityWizardPage> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final s = S.of(context);
+    final ageLabels = _ageLabels(s);
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 24),
       child: ListView(
         children: [
-          // l10n: offlineCatalogQualityTitle
-          Text(
-            'Quality filters',
-            style: theme.textTheme.headlineMedium,
-          ),
+          Text(s.offlineCatalogQualityTitle, style: theme.textTheme.headlineMedium),
           const SizedBox(height: 8),
-          // l10n: offlineCatalogQualityBody
-          Text(
-            'These defaults give you a smaller, more useful catalog. '
-            'Turn them off only if you know you want the long tail of '
-            'partial entries.',
-            style: theme.textTheme.bodyMedium,
-          ),
+          Text(s.offlineCatalogQualityBody, style: theme.textTheme.bodyMedium),
           const SizedBox(height: 24),
           _buildToggle(
-            // l10n: offlineCatalogQualityNutritionLabel
-            label: 'Only entries with full nutrition data',
-            // l10n: offlineCatalogQualityNutritionBody
-            body: 'Drops products that have no calorie or macro '
-                'information yet — useful in search results, where '
-                'these would otherwise show up as blank cards.',
+            label: s.offlineCatalogQualityNutritionLabel,
+            body: s.offlineCatalogQualityNutritionBody,
             value: _requireNutritionGrade,
             onChanged: (v) {
               setState(() => _requireNutritionGrade = v);
@@ -90,13 +86,8 @@ class _QualityWizardPageState extends State<QualityWizardPage> {
           ),
           const SizedBox(height: 16),
           _buildToggle(
-            // l10n: offlineCatalogQualityPopularityLabel
-            label: 'Only well-scanned products',
-            // l10n: offlineCatalogQualityPopularityBody
-            body: 'Skips products only scanned once. The long tail of '
-                'one-off submissions is unlikely to be what you are '
-                'looking at in the supermarket, and dropping it cuts '
-                'the catalog size by a third.',
+            label: s.offlineCatalogQualityPopularityLabel,
+            body: s.offlineCatalogQualityPopularityBody,
             value: _requireMinPopularity,
             onChanged: (v) {
               setState(() => _requireMinPopularity = v);
@@ -104,28 +95,21 @@ class _QualityWizardPageState extends State<QualityWizardPage> {
             },
           ),
           const SizedBox(height: 24),
-          // l10n: offlineCatalogQualityRecencyLabel
-          Text(
-            'Updated within',
-            style: theme.textTheme.titleMedium,
-          ),
+          Text(s.offlineCatalogQualityRecencyLabel,
+              style: theme.textTheme.titleMedium),
           const SizedBox(height: 4),
-          // l10n: offlineCatalogQualityRecencyBody
-          Text(
-            'Older entries can drift — packaging changes, recipes get '
-            'reformulated. Pick a window that feels right.',
-            style: theme.textTheme.bodySmall,
-          ),
+          Text(s.offlineCatalogQualityRecencyBody,
+              style: theme.textTheme.bodySmall),
           const SizedBox(height: 12),
           Wrap(
             spacing: 8,
             children: [
-              for (final option in _ageOptions)
+              for (var i = 0; i < _ageDurations.length; i++)
                 ChoiceChip(
-                  label: Text(option.label),
-                  selected: _maxAge == option.duration,
+                  label: Text(ageLabels[i]),
+                  selected: _maxAge == _ageDurations[i],
                   onSelected: (_) {
-                    setState(() => _maxAge = option.duration);
+                    setState(() => _maxAge = _ageDurations[i]);
                     _emit();
                   },
                 ),
@@ -166,9 +150,3 @@ class _QualityWizardPageState extends State<QualityWizardPage> {
   }
 }
 
-class _AgeOption {
-  final String label;
-  final Duration? duration;
-
-  const _AgeOption({required this.label, required this.duration});
-}

@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:opennutritracker/features/offline_catalog/domain/entity/catalog_stats_entity.dart';
 import 'package:opennutritracker/features/offline_catalog/domain/entity/download_progress.dart';
 import 'package:opennutritracker/features/offline_catalog/presentation/bloc/offline_catalog_bloc.dart';
+import 'package:opennutritracker/generated/l10n.dart';
 
 /// Combined download + done page. While the bloc is in
 /// [OfflineCatalogPhase.building] we show progress, pause, and cancel.
@@ -53,22 +54,15 @@ class _BuildingView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final s = S.of(context);
     final p = progress;
     return ListView(
       children: [
-        // l10n: offlineCatalogDownloadingTitle
-        Text(
-          'Downloading your catalog',
-          style: theme.textTheme.headlineMedium,
-        ),
+        Text(s.offlineCatalogDownloadingTitle,
+            style: theme.textTheme.headlineMedium),
         const SizedBox(height: 8),
-        // l10n: offlineCatalogDownloadingBody
-        Text(
-          'You can leave this screen open and the download will keep '
-          'going. We will save what we have downloaded so far if you '
-          'pause or cancel.',
-          style: theme.textTheme.bodyMedium,
-        ),
+        Text(s.offlineCatalogDownloadingBody,
+            style: theme.textTheme.bodyMedium),
         const SizedBox(height: 24),
         if (p != null) _buildProgressBlock(context, p) else _buildSpinner(),
         const SizedBox(height: 32),
@@ -82,14 +76,12 @@ class _BuildingView extends StatelessWidget {
                     .add(const PauseCatalogBuildEvent());
               },
               icon: const Icon(Icons.pause),
-              // l10n: offlineCatalogPause
-              label: const Text('Pause'),
+              label: Text(s.offlineCatalogPause),
             ),
             OutlinedButton.icon(
               onPressed: () => _confirmCancel(context),
               icon: const Icon(Icons.cancel_outlined),
-              // l10n: offlineCatalogCancel
-              label: const Text('Cancel'),
+              label: Text(s.offlineCatalogCancel),
             ),
           ],
         ),
@@ -103,31 +95,30 @@ class _BuildingView extends StatelessWidget {
 
   Widget _buildProgressBlock(BuildContext context, DownloadProgress p) {
     final theme = Theme.of(context);
+    final s = S.of(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        LinearProgressIndicator(
-          value: p.fraction,
-          minHeight: 8,
-        ),
+        LinearProgressIndicator(value: p.fraction, minHeight: 8),
         const SizedBox(height: 16),
-        // l10n: offlineCatalogDownloadingProgress (formatter)
         Text(
-          'Downloaded ${_n(p.rowsDownloaded)} of ${_n(p.totalRows)} '
-          'products',
+          s.offlineCatalogDownloadingProgress(
+            _n(p.rowsDownloaded),
+            _n(p.totalRows),
+          ),
           style: theme.textTheme.titleMedium,
         ),
         const SizedBox(height: 4),
-        // l10n: offlineCatalogDownloadingPage
         Text(
-          'Page ${p.currentPage} of ${p.totalPages}',
+          s.offlineCatalogDownloadingPage(p.currentPage, p.totalPages),
           style: theme.textTheme.bodySmall,
         ),
         if (p.estimatedRemaining != null) ...[
           const SizedBox(height: 4),
-          // l10n: offlineCatalogDownloadingEta
           Text(
-            'About ${_formatDuration(p.estimatedRemaining!)} left',
+            s.offlineCatalogDownloadingEta(
+              _formatDuration(p.estimatedRemaining!),
+            ),
             style: theme.textTheme.bodySmall,
           ),
         ],
@@ -136,22 +127,16 @@ class _BuildingView extends StatelessWidget {
   }
 
   void _confirmCancel(BuildContext context) {
+    final s = S.of(context);
     showDialog<void>(
       context: context,
       builder: (dialogContext) => AlertDialog(
-        // l10n: offlineCatalogCancelConfirmTitle
-        title: const Text('Cancel and discard?'),
-        content: const Text(
-          // l10n: offlineCatalogCancelConfirmBody
-          'This will throw away the products you have already '
-          'downloaded. If you would like to come back to it later, '
-          'use Pause instead.',
-        ),
+        title: Text(s.offlineCatalogCancelConfirmTitle),
+        content: Text(s.offlineCatalogCancelConfirmBody),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(dialogContext).pop(),
-            // l10n: offlineCatalogCancelConfirmKeep
-            child: const Text('Keep downloading'),
+            child: Text(s.offlineCatalogCancelConfirmKeep),
           ),
           TextButton(
             onPressed: () {
@@ -160,8 +145,7 @@ class _BuildingView extends StatelessWidget {
                   .add(const CancelCatalogBuildEvent());
               Navigator.of(dialogContext).pop();
             },
-            // l10n: offlineCatalogCancelConfirmDiscard
-            child: const Text('Discard'),
+            child: Text(s.offlineCatalogDiscard),
           ),
         ],
       ),
@@ -196,28 +180,21 @@ class _PausedView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final s = S.of(context);
     return ListView(
       children: [
-        // l10n: offlineCatalogPausedTitle
-        Text(
-          'Download paused',
-          style: theme.textTheme.headlineMedium,
-        ),
+        Text(s.offlineCatalogPausedTitle, style: theme.textTheme.headlineMedium),
         const SizedBox(height: 8),
-        // l10n: offlineCatalogPausedBody
-        Text(
-          'We saved your progress. Pick up where you left off whenever '
-          'you have a Wi-Fi connection.',
-          style: theme.textTheme.bodyMedium,
-        ),
+        Text(s.offlineCatalogPausedBody, style: theme.textTheme.bodyMedium),
         const SizedBox(height: 24),
         if (progress != null) ...[
           LinearProgressIndicator(value: progress!.fraction, minHeight: 8),
           const SizedBox(height: 12),
           Text(
-            // l10n: offlineCatalogPausedProgress
-            '${_n(progress!.rowsDownloaded)} of '
-            '${_n(progress!.totalRows)} products downloaded',
+            s.offlineCatalogPausedProgress(
+              _n(progress!.rowsDownloaded),
+              _n(progress!.totalRows),
+            ),
             style: theme.textTheme.bodyMedium,
           ),
           const SizedBox(height: 24),
@@ -232,8 +209,7 @@ class _PausedView extends StatelessWidget {
                     .add(const ResumeCatalogBuildEvent());
               },
               icon: const Icon(Icons.play_arrow),
-              // l10n: offlineCatalogResume
-              label: const Text('Resume'),
+              label: Text(s.offlineCatalogResume),
             ),
             OutlinedButton.icon(
               onPressed: () {
@@ -242,8 +218,7 @@ class _PausedView extends StatelessWidget {
                     .add(const CancelCatalogBuildEvent());
               },
               icon: const Icon(Icons.delete_outline),
-              // l10n: offlineCatalogDiscard
-              label: const Text('Discard'),
+              label: Text(s.offlineCatalogDiscard),
             ),
           ],
         ),
@@ -266,6 +241,7 @@ class _DoneView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final s = S.of(context);
     return Padding(
       padding: const EdgeInsets.all(24),
       child: Column(
@@ -277,26 +253,20 @@ class _DoneView extends StatelessWidget {
             color: theme.colorScheme.primary,
           ),
           const SizedBox(height: 16),
-          // l10n: offlineCatalogDoneTitle
-          Text(
-            'Catalog ready',
-            style: theme.textTheme.headlineMedium,
-          ),
+          Text(s.offlineCatalogDoneTitle, style: theme.textTheme.headlineMedium),
           const SizedBox(height: 12),
           if (stats != null)
             Text(
-              // l10n: offlineCatalogDoneSummary
-              '${_n(stats!.productCount)} products available offline. '
-              '${_formatBytes(stats!.sizeBytes)} on disk.',
+              s.offlineCatalogDoneSummary(
+                _n(stats!.productCount),
+                _formatBytes(stats!.sizeBytes),
+              ),
               textAlign: TextAlign.center,
               style: theme.textTheme.bodyLarge,
             ),
           const SizedBox(height: 8),
-          // l10n: offlineCatalogDoneBody
           Text(
-            'Searches and barcode scans will now work offline. We '
-            'will still check the live database for products that are '
-            'not in your catalog yet.',
+            s.offlineCatalogDoneBody,
             textAlign: TextAlign.center,
             style: theme.textTheme.bodyMedium,
           ),
@@ -304,8 +274,7 @@ class _DoneView extends StatelessWidget {
           ElevatedButton.icon(
             onPressed: onDone,
             icon: const Icon(Icons.check),
-            // l10n: offlineCatalogDoneAction
-            label: const Text('Done'),
+            label: Text(s.offlineCatalogDoneAction),
           ),
         ],
       ),
@@ -338,6 +307,7 @@ class _ErrorView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final s = S.of(context);
     return Padding(
       padding: const EdgeInsets.all(24),
       child: Column(
@@ -346,19 +316,13 @@ class _ErrorView extends StatelessWidget {
           Icon(Icons.error_outline,
               size: 64, color: theme.colorScheme.error),
           const SizedBox(height: 16),
-          // l10n: offlineCatalogErrorTitle
-          Text(
-            'Something went wrong',
-            style: theme.textTheme.headlineMedium,
-          ),
+          Text(s.offlineCatalogErrorTitle,
+              style: theme.textTheme.headlineMedium),
           const SizedBox(height: 12),
-          // l10n: offlineCatalogErrorBody
           Text(
             recoverable
-                ? 'We saved everything we downloaded so far. Try '
-                    'again from the Resume button when you have a '
-                    'better connection.'
-                : 'We could not finish this download.',
+                ? s.offlineCatalogErrorBodyRecoverable
+                : s.offlineCatalogErrorBodyFatal,
             textAlign: TextAlign.center,
             style: theme.textTheme.bodyMedium,
           ),
@@ -379,8 +343,7 @@ class _ErrorView extends StatelessWidget {
                     .add(const ResumeCatalogBuildEvent());
               },
               icon: const Icon(Icons.refresh),
-              // l10n: offlineCatalogRetry
-              label: const Text('Try again'),
+              label: Text(s.offlineCatalogErrorRetry),
             ),
         ],
       ),

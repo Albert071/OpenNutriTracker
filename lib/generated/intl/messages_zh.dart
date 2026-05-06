@@ -58,6 +58,36 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m18(count) => "删除 ${count} 个食谱？";
 
+  static String m19(count) => "${count} 个产品";
+
+  static String m20(phrase) =>
+      "你的过滤器涵盖超过一百万个产品。这需要很多带宽和时间。要继续，请在下方框中输入“${phrase}” — 我们希望你主动选择，而不是误触通过。";
+
+  static String m21(rows, total) => "已下载 ${rows} / ${total} 个产品";
+
+  static String m22(current, total) => "第 ${current} 页 / 共 ${total} 页";
+
+  static String m23(time) => "约剩 ${time}";
+
+  static String m24(rows, total) => "已下载 ${rows} / ${total} 个产品";
+
+  static String m25(count, size) =>
+      "${count} 个产品可离线使用。占用 ${size}。";
+
+  static String m26(percent) => "正在创建（${percent}%）";
+
+  static String m27(count, size) => "${count} 个产品，${size}";
+
+  static String m28(when) => " · 上次刷新于 ${when}";
+
+  static String m29(n) => "${n} 个月前";
+
+  static String m30(n) => "${n} 周前";
+
+  static String m31(n) => "${n} 天前";
+
+  static String m32(n) => "${n} 小时前";
+
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "activityExample":
@@ -789,5 +819,155 @@ class MessageLookup extends MessageLookupByLibrary {
         "weightLabel": MessageLookupByLibrary.simpleMessage("体重"),
         "yearsLabel": m3,
         "zincLabel": MessageLookupByLibrary.simpleMessage("锌"),
+        "offlineCatalogActionDelete":
+            MessageLookupByLibrary.simpleMessage("删除"),
+        "offlineCatalogActionRefresh":
+            MessageLookupByLibrary.simpleMessage("刷新"),
+        "offlineCatalogCancel": MessageLookupByLibrary.simpleMessage("取消"),
+        "offlineCatalogCancelConfirmBody": MessageLookupByLibrary.simpleMessage(
+            "这会丢弃你已经下载的产品。如果你想稍后回来继续，请改用「暂停」。"),
+        "offlineCatalogCancelConfirmKeep":
+            MessageLookupByLibrary.simpleMessage("继续下载"),
+        "offlineCatalogCancelConfirmTitle":
+            MessageLookupByLibrary.simpleMessage("取消并丢弃？"),
+        "offlineCatalogDeleteConfirmBody": MessageLookupByLibrary.simpleMessage(
+            "这会从你的设备上删除已下载的产品。你可以随时在此页面重新创建目录。"),
+        "offlineCatalogDeleteConfirmTitle":
+            MessageLookupByLibrary.simpleMessage("删除离线目录？"),
+        "offlineCatalogDiscard": MessageLookupByLibrary.simpleMessage("丢弃"),
+        "offlineCatalogDoneAction":
+            MessageLookupByLibrary.simpleMessage("完成"),
+        "offlineCatalogDoneBody": MessageLookupByLibrary.simpleMessage(
+            "搜索和条形码扫描现在可离线使用。对于尚未在你目录中的产品，我们仍会查询在线数据库。"),
+        "offlineCatalogDoneSummary": m25,
+        "offlineCatalogDoneTitle":
+            MessageLookupByLibrary.simpleMessage("目录就绪"),
+        "offlineCatalogDownloadAction":
+            MessageLookupByLibrary.simpleMessage("下载"),
+        "offlineCatalogDownloadingBody": MessageLookupByLibrary.simpleMessage(
+            "你可以保持本页面打开，下载会继续进行。如果你暂停或取消，已下载的内容会保留。"),
+        "offlineCatalogDownloadingEta": m23,
+        "offlineCatalogDownloadingPage": m22,
+        "offlineCatalogDownloadingProgress": m21,
+        "offlineCatalogDownloadingTitle":
+            MessageLookupByLibrary.simpleMessage("正在下载你的目录"),
+        "offlineCatalogErrorBodyFatal":
+            MessageLookupByLibrary.simpleMessage("无法完成此次下载。"),
+        "offlineCatalogErrorBodyRecoverable":
+            MessageLookupByLibrary.simpleMessage(
+                "我们已保存到目前为止下载的所有内容。等你网络更好时，再用「继续」按钮重试。"),
+        "offlineCatalogErrorRetry":
+            MessageLookupByLibrary.simpleMessage("重试"),
+        "offlineCatalogErrorTitle":
+            MessageLookupByLibrary.simpleMessage("出了点问题"),
+        "offlineCatalogEstimateBody":
+            MessageLookupByLibrary.simpleMessage("这是我们将为你下载的内容。"),
+        "offlineCatalogEstimateError": MessageLookupByLibrary.simpleMessage(
+            "无法连接到 Open Food Facts 获取估算。请检查你的网络连接并重试。"),
+        "offlineCatalogEstimateHardCapBody": m20,
+        "offlineCatalogEstimateHardCapPhrase":
+            MessageLookupByLibrary.simpleMessage("我了解"),
+        "offlineCatalogEstimateHardCapTitle":
+            MessageLookupByLibrary.simpleMessage("这是一次非常大的下载"),
+        "offlineCatalogEstimateRequestsLabel":
+            MessageLookupByLibrary.simpleMessage("网络请求"),
+        "offlineCatalogEstimateRowsLabel":
+            MessageLookupByLibrary.simpleMessage("产品数"),
+        "offlineCatalogEstimateSizeLabel":
+            MessageLookupByLibrary.simpleMessage("预估大小"),
+        "offlineCatalogEstimateTimeLabel":
+            MessageLookupByLibrary.simpleMessage("预估时间"),
+        "offlineCatalogEstimateTitle":
+            MessageLookupByLibrary.simpleMessage("准备下载"),
+        "offlineCatalogEstimateWifiHint": MessageLookupByLibrary.simpleMessage(
+            "如果可以，请连接 Wi-Fi。否则下载将计入你的移动数据流量。"),
+        "offlineCatalogNextAction":
+            MessageLookupByLibrary.simpleMessage("下一步"),
+        "offlineCatalogPause": MessageLookupByLibrary.simpleMessage("暂停"),
+        "offlineCatalogPausedBody": MessageLookupByLibrary.simpleMessage(
+            "我们已保存你的进度。等你有 Wi-Fi 时再从中断处继续。"),
+        "offlineCatalogPausedProgress": m24,
+        "offlineCatalogPausedTitle":
+            MessageLookupByLibrary.simpleMessage("下载已暂停"),
+        "offlineCatalogProductCount": m19,
+        "offlineCatalogQualityBody": MessageLookupByLibrary.simpleMessage(
+            "这些默认设置会得到更小、更实用的目录。只有当你确实想包含不完整的条目时才关闭它们。"),
+        "offlineCatalogQualityNutritionBody":
+            MessageLookupByLibrary.simpleMessage(
+                "排除没有热量或宏量营养信息的产品 — 在搜索结果中很有用，否则它们会显示为空白卡片。"),
+        "offlineCatalogQualityNutritionLabel":
+            MessageLookupByLibrary.simpleMessage("仅包含完整营养数据的条目"),
+        "offlineCatalogQualityPopularityBody":
+            MessageLookupByLibrary.simpleMessage(
+                "跳过只被扫描过一次的产品。一次性提交的长尾内容很少是你在超市看到的东西，删除它能将目录大小减小约三分之一。"),
+        "offlineCatalogQualityPopularityLabel":
+            MessageLookupByLibrary.simpleMessage("仅常被扫描的产品"),
+        "offlineCatalogQualityRecency10Years":
+            MessageLookupByLibrary.simpleMessage("10 年"),
+        "offlineCatalogQualityRecency3Years":
+            MessageLookupByLibrary.simpleMessage("3 年"),
+        "offlineCatalogQualityRecency5Years":
+            MessageLookupByLibrary.simpleMessage("5 年"),
+        "offlineCatalogQualityRecencyAny":
+            MessageLookupByLibrary.simpleMessage("任意"),
+        "offlineCatalogQualityRecencyBody":
+            MessageLookupByLibrary.simpleMessage(
+                "较旧的条目可能会过时 — 包装会变，配方会重新调整。选择一个适合你的时间范围。"),
+        "offlineCatalogQualityRecencyLabel":
+            MessageLookupByLibrary.simpleMessage("在以下时间内更新过"),
+        "offlineCatalogQualityTitle":
+            MessageLookupByLibrary.simpleMessage("质量过滤"),
+        "offlineCatalogRegionBody": MessageLookupByLibrary.simpleMessage(
+            "只会下载带有所选国家／地区标签的产品。计数来自 Open Food Facts，会随时间变化。"),
+        "offlineCatalogRegionEmpty":
+            MessageLookupByLibrary.simpleMessage("没有可显示的国家／地区"),
+        "offlineCatalogRegionFallbackNotice":
+            MessageLookupByLibrary.simpleMessage(
+                "由于无法访问 Open Food Facts，正在显示一份简短的备用列表。请连接到网络后刷新以加载完整的国家／地区列表。"),
+        "offlineCatalogRegionNoMatches":
+            MessageLookupByLibrary.simpleMessage("没有匹配你搜索的国家／地区"),
+        "offlineCatalogRegionRefreshTooltip":
+            MessageLookupByLibrary.simpleMessage("刷新国家／地区列表"),
+        "offlineCatalogRegionSearchHint":
+            MessageLookupByLibrary.simpleMessage("搜索国家／地区"),
+        "offlineCatalogRegionTitle":
+            MessageLookupByLibrary.simpleMessage("选择国家／地区"),
+        "offlineCatalogResume": MessageLookupByLibrary.simpleMessage("继续"),
+        "offlineCatalogStartAction":
+            MessageLookupByLibrary.simpleMessage("开始"),
+        "offlineCatalogTileBuilding":
+            MessageLookupByLibrary.simpleMessage("正在创建…"),
+        "offlineCatalogTileBuildingPercent": m26,
+        "offlineCatalogTileLastRefreshed": m28,
+        "offlineCatalogTileNotBuilt":
+            MessageLookupByLibrary.simpleMessage("未创建 — 点击设置"),
+        "offlineCatalogTilePaused":
+            MessageLookupByLibrary.simpleMessage("下载已暂停 — 点击以继续"),
+        "offlineCatalogTileReady": m27,
+        "offlineCatalogTileRefreshing":
+            MessageLookupByLibrary.simpleMessage("正在刷新…"),
+        "offlineCatalogTimeDaysAgo": m31,
+        "offlineCatalogTimeHoursAgo": m32,
+        "offlineCatalogTimeJustNow":
+            MessageLookupByLibrary.simpleMessage("刚刚"),
+        "offlineCatalogTimeMonthsAgo": m29,
+        "offlineCatalogTimeWeeksAgo": m30,
+        "offlineCatalogTitle":
+            MessageLookupByLibrary.simpleMessage("离线食品目录"),
+        "offlineCatalogWelcomeBody1": MessageLookupByLibrary.simpleMessage(
+            "我们可以下载 Open Food Facts 数据库的副本，让搜索和条形码查找在没有互联网连接时也能使用。"),
+        "offlineCatalogWelcomeBody2": MessageLookupByLibrary.simpleMessage(
+            "你将在下一页选择国家／地区；为了让下载尽可能小，我们只保留应用实际使用的字段（不在设备上存图片，也不存任何用不到的元数据）。"),
+        "offlineCatalogWelcomeBulletHumanFood":
+            MessageLookupByLibrary.simpleMessage(
+                "目录只包含人类食品 — 宠物食品、化妆品和其他非食品条目会被自动过滤。"),
+        "offlineCatalogWelcomeBulletScreen":
+            MessageLookupByLibrary.simpleMessage(
+                "目录建立期间请保持本页面打开。如果应用长时间在后台，下载会暂停，之后你可以恢复。"),
+        "offlineCatalogWelcomeBulletWifi":
+            MessageLookupByLibrary.simpleMessage(
+                "强烈建议使用 Wi-Fi — 根据所选国家／地区数量，下载量可能达到几百 MB。"),
+        "offlineCatalogWelcomeTitle":
+            MessageLookupByLibrary.simpleMessage("建立离线食品目录"),
       };
 }

@@ -61,6 +61,36 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m18(count) => "Smazat ${count} recept(ů)?";
 
+  static String m19(count) => "${count} produktů";
+
+  static String m20(phrase) =>
+      "Tvé filtry pokrývají přes milion produktů. To je hodně dat a hodně času. Pro pokračování napiš „${phrase}\" do pole níže — chceme, abys to zvolil aktivně, ne omylem.";
+
+  static String m21(rows, total) => "Staženo ${rows} z ${total} produktů";
+
+  static String m22(current, total) => "Stránka ${current} z ${total}";
+
+  static String m23(time) => "Zbývá asi ${time}";
+
+  static String m24(rows, total) => "Staženo ${rows} z ${total} produktů";
+
+  static String m25(count, size) =>
+      "${count} produktů dostupných offline. ${size} na zařízení.";
+
+  static String m26(percent) => "Vytváří se (${percent}%)";
+
+  static String m27(count, size) => "${count} produktů, ${size}";
+
+  static String m28(when) => " · naposledy obnoveno ${when}";
+
+  static String m29(n) => "před ${n} měs.";
+
+  static String m30(n) => "před ${n} týd.";
+
+  static String m31(n) => "před ${n} dny";
+
+  static String m32(n) => "před ${n} hod.";
+
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "activityExample": MessageLookupByLibrary.simpleMessage(
@@ -918,5 +948,161 @@ class MessageLookup extends MessageLookupByLibrary {
         "weightLabel": MessageLookupByLibrary.simpleMessage("Hmotnost"),
         "yearsLabel": m3,
         "zincLabel": MessageLookupByLibrary.simpleMessage("zinek"),
+        "offlineCatalogActionDelete":
+            MessageLookupByLibrary.simpleMessage("Smazat"),
+        "offlineCatalogActionRefresh":
+            MessageLookupByLibrary.simpleMessage("Obnovit"),
+        "offlineCatalogCancel": MessageLookupByLibrary.simpleMessage("Zrušit"),
+        "offlineCatalogCancelConfirmBody": MessageLookupByLibrary.simpleMessage(
+            "Tím přijdeš o produkty, které byly už staženy. Pokud se k tomu chceš vrátit později, použij místo toho Pozastavit."),
+        "offlineCatalogCancelConfirmKeep":
+            MessageLookupByLibrary.simpleMessage("Pokračovat ve stahování"),
+        "offlineCatalogCancelConfirmTitle":
+            MessageLookupByLibrary.simpleMessage("Zrušit a zahodit?"),
+        "offlineCatalogDeleteConfirmBody": MessageLookupByLibrary.simpleMessage(
+            "Tím se z tvého zařízení odstraní stažené produkty. Katalog můžeš znovu vytvořit kdykoliv z této obrazovky."),
+        "offlineCatalogDeleteConfirmTitle":
+            MessageLookupByLibrary.simpleMessage("Smazat offline katalog?"),
+        "offlineCatalogDiscard":
+            MessageLookupByLibrary.simpleMessage("Zahodit"),
+        "offlineCatalogDoneAction":
+            MessageLookupByLibrary.simpleMessage("Hotovo"),
+        "offlineCatalogDoneBody": MessageLookupByLibrary.simpleMessage(
+            "Vyhledávání a skenování kódů teď fungují offline. Pro produkty, které ještě nejsou v tvém katalogu, budeme stále kontrolovat živou databázi."),
+        "offlineCatalogDoneSummary": m25,
+        "offlineCatalogDoneTitle":
+            MessageLookupByLibrary.simpleMessage("Katalog připraven"),
+        "offlineCatalogDownloadAction":
+            MessageLookupByLibrary.simpleMessage("Stáhnout"),
+        "offlineCatalogDownloadingBody": MessageLookupByLibrary.simpleMessage(
+            "Můžeš nechat tuto obrazovku otevřenou a stahování bude pokračovat. Pokud pozastavíš nebo zrušíš, uložíme to, co bylo dosud staženo."),
+        "offlineCatalogDownloadingEta": m23,
+        "offlineCatalogDownloadingPage": m22,
+        "offlineCatalogDownloadingProgress": m21,
+        "offlineCatalogDownloadingTitle":
+            MessageLookupByLibrary.simpleMessage("Stahujeme tvůj katalog"),
+        "offlineCatalogErrorBodyFatal": MessageLookupByLibrary.simpleMessage(
+            "Toto stahování se nepodařilo dokončit."),
+        "offlineCatalogErrorBodyRecoverable":
+            MessageLookupByLibrary.simpleMessage(
+                "Vše dosud stažené jsme uložili. Až budeš mít lepší připojení, zkus to znovu tlačítkem Obnovit."),
+        "offlineCatalogErrorRetry":
+            MessageLookupByLibrary.simpleMessage("Zkusit znovu"),
+        "offlineCatalogErrorTitle":
+            MessageLookupByLibrary.simpleMessage("Něco se pokazilo"),
+        "offlineCatalogEstimateBody": MessageLookupByLibrary.simpleMessage(
+            "Toto pro tebe stáhneme."),
+        "offlineCatalogEstimateError": MessageLookupByLibrary.simpleMessage(
+            "Nepodařilo se kontaktovat Open Food Facts pro odhad. Zkontroluj připojení k internetu a zkus to znovu."),
+        "offlineCatalogEstimateHardCapBody": m20,
+        "offlineCatalogEstimateHardCapPhrase":
+            MessageLookupByLibrary.simpleMessage("Rozumím"),
+        "offlineCatalogEstimateHardCapTitle":
+            MessageLookupByLibrary.simpleMessage(
+                "Toto je velmi velké stahování"),
+        "offlineCatalogEstimateRequestsLabel":
+            MessageLookupByLibrary.simpleMessage("Síťové požadavky"),
+        "offlineCatalogEstimateRowsLabel":
+            MessageLookupByLibrary.simpleMessage("Produkty"),
+        "offlineCatalogEstimateSizeLabel":
+            MessageLookupByLibrary.simpleMessage("Odhadovaná velikost"),
+        "offlineCatalogEstimateTimeLabel":
+            MessageLookupByLibrary.simpleMessage("Odhadovaný čas"),
+        "offlineCatalogEstimateTitle":
+            MessageLookupByLibrary.simpleMessage("Připraveno ke stažení"),
+        "offlineCatalogEstimateWifiHint": MessageLookupByLibrary.simpleMessage(
+            "Pokud můžeš, připoj se k Wi-Fi. Jinak se stažení započítá do tvých mobilních dat."),
+        "offlineCatalogNextAction":
+            MessageLookupByLibrary.simpleMessage("Dále"),
+        "offlineCatalogPause":
+            MessageLookupByLibrary.simpleMessage("Pozastavit"),
+        "offlineCatalogPausedBody": MessageLookupByLibrary.simpleMessage(
+            "Tvůj postup jsme uložili. Pokračuj kdykoliv, až budeš mít připojení Wi-Fi."),
+        "offlineCatalogPausedProgress": m24,
+        "offlineCatalogPausedTitle":
+            MessageLookupByLibrary.simpleMessage("Stahování pozastaveno"),
+        "offlineCatalogProductCount": m19,
+        "offlineCatalogQualityBody": MessageLookupByLibrary.simpleMessage(
+            "Tato výchozí nastavení dají menší a užitečnější katalog. Vypni je jen pokud opravdu chceš i neúplné záznamy."),
+        "offlineCatalogQualityNutritionBody":
+            MessageLookupByLibrary.simpleMessage(
+                "Vynechá produkty bez údajů o kaloriích či makroživinách — užitečné ve výsledcích hledání, kde by jinak vypadaly jako prázdné karty."),
+        "offlineCatalogQualityNutritionLabel":
+            MessageLookupByLibrary.simpleMessage(
+                "Pouze záznamy s úplnými výživovými údaji"),
+        "offlineCatalogQualityPopularityBody":
+            MessageLookupByLibrary.simpleMessage(
+                "Přeskočí produkty naskenované jen jednou. Dlouhý ocas jednorázových příspěvků zřídka odpovídá tomu, co máš v supermarketu, a jeho vynechání zmenší katalog asi o třetinu."),
+        "offlineCatalogQualityPopularityLabel":
+            MessageLookupByLibrary.simpleMessage(
+                "Pouze často skenované produkty"),
+        "offlineCatalogQualityRecency10Years":
+            MessageLookupByLibrary.simpleMessage("10 let"),
+        "offlineCatalogQualityRecency3Years":
+            MessageLookupByLibrary.simpleMessage("3 roky"),
+        "offlineCatalogQualityRecency5Years":
+            MessageLookupByLibrary.simpleMessage("5 let"),
+        "offlineCatalogQualityRecencyAny":
+            MessageLookupByLibrary.simpleMessage("Libovolné"),
+        "offlineCatalogQualityRecencyBody":
+            MessageLookupByLibrary.simpleMessage(
+                "Starší záznamy mohou zastarat — obaly se mění, receptury se přepracovávají. Vyber období, které ti vyhovuje."),
+        "offlineCatalogQualityRecencyLabel":
+            MessageLookupByLibrary.simpleMessage("Aktualizováno za posledních"),
+        "offlineCatalogQualityTitle":
+            MessageLookupByLibrary.simpleMessage("Filtry kvality"),
+        "offlineCatalogRegionBody": MessageLookupByLibrary.simpleMessage(
+            "Stáhnou se jen produkty označené vybranými zeměmi. Počty pocházejí z Open Food Facts a v čase se mění."),
+        "offlineCatalogRegionEmpty":
+            MessageLookupByLibrary.simpleMessage("Žádné země k zobrazení"),
+        "offlineCatalogRegionFallbackNotice":
+            MessageLookupByLibrary.simpleMessage(
+                "Zobrazujeme krátký záložní seznam, protože jsme nemohli kontaktovat Open Food Facts. Připoj se k internetu a obnov, abys načetl plný seznam zemí."),
+        "offlineCatalogRegionNoMatches": MessageLookupByLibrary.simpleMessage(
+            "Žádné země neodpovídají hledání"),
+        "offlineCatalogRegionRefreshTooltip":
+            MessageLookupByLibrary.simpleMessage("Obnovit seznam zemí"),
+        "offlineCatalogRegionSearchHint":
+            MessageLookupByLibrary.simpleMessage("Hledat země"),
+        "offlineCatalogRegionTitle":
+            MessageLookupByLibrary.simpleMessage("Vyber země"),
+        "offlineCatalogResume":
+            MessageLookupByLibrary.simpleMessage("Obnovit"),
+        "offlineCatalogStartAction":
+            MessageLookupByLibrary.simpleMessage("Začít"),
+        "offlineCatalogTileBuilding":
+            MessageLookupByLibrary.simpleMessage("Vytváří se…"),
+        "offlineCatalogTileBuildingPercent": m26,
+        "offlineCatalogTileLastRefreshed": m28,
+        "offlineCatalogTileNotBuilt": MessageLookupByLibrary.simpleMessage(
+            "Nevytvořeno — klepni pro nastavení"),
+        "offlineCatalogTilePaused": MessageLookupByLibrary.simpleMessage(
+            "Stahování pozastaveno — klepni pro obnovení"),
+        "offlineCatalogTileReady": m27,
+        "offlineCatalogTileRefreshing":
+            MessageLookupByLibrary.simpleMessage("Aktualizuje se…"),
+        "offlineCatalogTimeDaysAgo": m31,
+        "offlineCatalogTimeHoursAgo": m32,
+        "offlineCatalogTimeJustNow":
+            MessageLookupByLibrary.simpleMessage("právě teď"),
+        "offlineCatalogTimeMonthsAgo": m29,
+        "offlineCatalogTimeWeeksAgo": m30,
+        "offlineCatalogTitle":
+            MessageLookupByLibrary.simpleMessage("Offline katalog potravin"),
+        "offlineCatalogWelcomeBody1": MessageLookupByLibrary.simpleMessage(
+            "Můžeme stáhnout kopii databáze Open Food Facts, aby vyhledávání a čtení čárových kódů fungovaly i bez připojení k internetu."),
+        "offlineCatalogWelcomeBody2": MessageLookupByLibrary.simpleMessage(
+            "Země vybereš na další stránce; uchováváme jen sloupce, které aplikace skutečně používá (žádné obrázky v zařízení, žádná nepoužívaná metadata), aby stažení bylo co nejmenší."),
+        "offlineCatalogWelcomeBulletHumanFood":
+            MessageLookupByLibrary.simpleMessage(
+                "Katalog obsahuje pouze potraviny pro lidi — krmivo pro zvířata, kosmetiku a další nepotravinářské položky filtrujeme za tebe."),
+        "offlineCatalogWelcomeBulletScreen":
+            MessageLookupByLibrary.simpleMessage(
+                "Nech prosím tuto obrazovku otevřenou, dokud se katalog tvoří. Pokud aplikace zůstane příliš dlouho na pozadí, stahování se pozastaví a budeš ho moci později obnovit."),
+        "offlineCatalogWelcomeBulletWifi":
+            MessageLookupByLibrary.simpleMessage(
+                "Důrazně doporučujeme připojení Wi-Fi — stažení může mít stovky megabajtů podle počtu vybraných zemí."),
+        "offlineCatalogWelcomeTitle": MessageLookupByLibrary.simpleMessage(
+            "Vytvořit offline katalog potravin"),
       };
 }

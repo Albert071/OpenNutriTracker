@@ -5592,6 +5592,808 @@ class S {
       args: [],
     );
   }
+
+  // ===== Offline OFF catalog (#offline-off-catalog) =====
+
+  /// `Offline food catalog`
+  String get offlineCatalogTitle {
+    return Intl.message(
+      'Offline food catalog',
+      name: 'offlineCatalogTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Build an offline food catalog`
+  String get offlineCatalogWelcomeTitle {
+    return Intl.message(
+      'Build an offline food catalog',
+      name: 'offlineCatalogWelcomeTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `We can download a copy of the Open Food Facts database so search and barcode lookups work without an internet connection.`
+  String get offlineCatalogWelcomeBody1 {
+    return Intl.message(
+      'We can download a copy of the Open Food Facts database so search and barcode lookups work without an internet connection.',
+      name: 'offlineCatalogWelcomeBody1',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `You choose the countries on the next page; we keep just the columns the app actually uses (no images on disk, no unused metadata) so the download stays as small as we can make it.`
+  String get offlineCatalogWelcomeBody2 {
+    return Intl.message(
+      'You choose the countries on the next page; we keep just the columns the app actually uses (no images on disk, no unused metadata) so the download stays as small as we can make it.',
+      name: 'offlineCatalogWelcomeBody2',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `We strongly recommend a Wi-Fi connection — the download can be hundreds of megabytes depending on how many countries you pick.`
+  String get offlineCatalogWelcomeBulletWifi {
+    return Intl.message(
+      'We strongly recommend a Wi-Fi connection — the download can be hundreds of megabytes depending on how many countries you pick.',
+      name: 'offlineCatalogWelcomeBulletWifi',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please keep this screen open while the catalog builds. If the app is backgrounded for too long, the download will pause and you can resume it later.`
+  String get offlineCatalogWelcomeBulletScreen {
+    return Intl.message(
+      'Please keep this screen open while the catalog builds. If the app is backgrounded for too long, the download will pause and you can resume it later.',
+      name: 'offlineCatalogWelcomeBulletScreen',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `The catalog covers human food only — pet food, cosmetics, and other non-food entries are filtered out for you.`
+  String get offlineCatalogWelcomeBulletHumanFood {
+    return Intl.message(
+      'The catalog covers human food only — pet food, cosmetics, and other non-food entries are filtered out for you.',
+      name: 'offlineCatalogWelcomeBulletHumanFood',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Get started`
+  String get offlineCatalogStartAction {
+    return Intl.message(
+      'Get started',
+      name: 'offlineCatalogStartAction',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Next`
+  String get offlineCatalogNextAction {
+    return Intl.message(
+      'Next',
+      name: 'offlineCatalogNextAction',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Download`
+  String get offlineCatalogDownloadAction {
+    return Intl.message(
+      'Download',
+      name: 'offlineCatalogDownloadAction',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Done`
+  String get offlineCatalogDoneAction {
+    return Intl.message(
+      'Done',
+      name: 'offlineCatalogDoneAction',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Pick your countries`
+  String get offlineCatalogRegionTitle {
+    return Intl.message(
+      'Pick your countries',
+      name: 'offlineCatalogRegionTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Only products tagged with the countries you choose will be downloaded. Counts come from Open Food Facts and update over time.`
+  String get offlineCatalogRegionBody {
+    return Intl.message(
+      'Only products tagged with the countries you choose will be downloaded. Counts come from Open Food Facts and update over time.',
+      name: 'offlineCatalogRegionBody',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Showing a short fallback list because we could not reach Open Food Facts. Connect to the internet and refresh to load the full country list.`
+  String get offlineCatalogRegionFallbackNotice {
+    return Intl.message(
+      'Showing a short fallback list because we could not reach Open Food Facts. Connect to the internet and refresh to load the full country list.',
+      name: 'offlineCatalogRegionFallbackNotice',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Search countries`
+  String get offlineCatalogRegionSearchHint {
+    return Intl.message(
+      'Search countries',
+      name: 'offlineCatalogRegionSearchHint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Refresh country list`
+  String get offlineCatalogRegionRefreshTooltip {
+    return Intl.message(
+      'Refresh country list',
+      name: 'offlineCatalogRegionRefreshTooltip',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No countries to show`
+  String get offlineCatalogRegionEmpty {
+    return Intl.message(
+      'No countries to show',
+      name: 'offlineCatalogRegionEmpty',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No countries match your search`
+  String get offlineCatalogRegionNoMatches {
+    return Intl.message(
+      'No countries match your search',
+      name: 'offlineCatalogRegionNoMatches',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `{count} products`
+  String offlineCatalogProductCount(Object count) {
+    return Intl.message(
+      '$count products',
+      name: 'offlineCatalogProductCount',
+      desc: '',
+      args: [count],
+    );
+  }
+
+  /// `Quality filters`
+  String get offlineCatalogQualityTitle {
+    return Intl.message(
+      'Quality filters',
+      name: 'offlineCatalogQualityTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `These defaults give you a smaller, more useful catalog. Turn them off only if you know you want the long tail of partial entries.`
+  String get offlineCatalogQualityBody {
+    return Intl.message(
+      'These defaults give you a smaller, more useful catalog. Turn them off only if you know you want the long tail of partial entries.',
+      name: 'offlineCatalogQualityBody',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Only entries with full nutrition data`
+  String get offlineCatalogQualityNutritionLabel {
+    return Intl.message(
+      'Only entries with full nutrition data',
+      name: 'offlineCatalogQualityNutritionLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Drops products that have no calorie or macro information yet — useful in search results, where these would otherwise show up as blank cards.`
+  String get offlineCatalogQualityNutritionBody {
+    return Intl.message(
+      'Drops products that have no calorie or macro information yet — useful in search results, where these would otherwise show up as blank cards.',
+      name: 'offlineCatalogQualityNutritionBody',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Only well-scanned products`
+  String get offlineCatalogQualityPopularityLabel {
+    return Intl.message(
+      'Only well-scanned products',
+      name: 'offlineCatalogQualityPopularityLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Skips products only scanned once. The long tail of one-off submissions is unlikely to be what you are looking at in the supermarket, and dropping it cuts the catalog size by a third.`
+  String get offlineCatalogQualityPopularityBody {
+    return Intl.message(
+      'Skips products only scanned once. The long tail of one-off submissions is unlikely to be what you are looking at in the supermarket, and dropping it cuts the catalog size by a third.',
+      name: 'offlineCatalogQualityPopularityBody',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Updated within`
+  String get offlineCatalogQualityRecencyLabel {
+    return Intl.message(
+      'Updated within',
+      name: 'offlineCatalogQualityRecencyLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Older entries can drift — packaging changes, recipes get reformulated. Pick a window that feels right.`
+  String get offlineCatalogQualityRecencyBody {
+    return Intl.message(
+      'Older entries can drift — packaging changes, recipes get reformulated. Pick a window that feels right.',
+      name: 'offlineCatalogQualityRecencyBody',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `3 years`
+  String get offlineCatalogQualityRecency3Years {
+    return Intl.message(
+      '3 years',
+      name: 'offlineCatalogQualityRecency3Years',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `5 years`
+  String get offlineCatalogQualityRecency5Years {
+    return Intl.message(
+      '5 years',
+      name: 'offlineCatalogQualityRecency5Years',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `10 years`
+  String get offlineCatalogQualityRecency10Years {
+    return Intl.message(
+      '10 years',
+      name: 'offlineCatalogQualityRecency10Years',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Any`
+  String get offlineCatalogQualityRecencyAny {
+    return Intl.message(
+      'Any',
+      name: 'offlineCatalogQualityRecencyAny',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Ready to download`
+  String get offlineCatalogEstimateTitle {
+    return Intl.message(
+      'Ready to download',
+      name: 'offlineCatalogEstimateTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Here is what we will download for you.`
+  String get offlineCatalogEstimateBody {
+    return Intl.message(
+      'Here is what we will download for you.',
+      name: 'offlineCatalogEstimateBody',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Products`
+  String get offlineCatalogEstimateRowsLabel {
+    return Intl.message(
+      'Products',
+      name: 'offlineCatalogEstimateRowsLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Estimated size`
+  String get offlineCatalogEstimateSizeLabel {
+    return Intl.message(
+      'Estimated size',
+      name: 'offlineCatalogEstimateSizeLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Network requests`
+  String get offlineCatalogEstimateRequestsLabel {
+    return Intl.message(
+      'Network requests',
+      name: 'offlineCatalogEstimateRequestsLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Estimated time`
+  String get offlineCatalogEstimateTimeLabel {
+    return Intl.message(
+      'Estimated time',
+      name: 'offlineCatalogEstimateTimeLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Connect to Wi-Fi if you can. The download is paid for in cellular data otherwise.`
+  String get offlineCatalogEstimateWifiHint {
+    return Intl.message(
+      'Connect to Wi-Fi if you can. The download is paid for in cellular data otherwise.',
+      name: 'offlineCatalogEstimateWifiHint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `This is a very large download`
+  String get offlineCatalogEstimateHardCapTitle {
+    return Intl.message(
+      'This is a very large download',
+      name: 'offlineCatalogEstimateHardCapTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Your filter set covers more than a million products. That is a lot of bandwidth and a lot of time. To continue, type "{phrase}" in the box below — we want you to actively choose this rather than tap through it by accident.`
+  String offlineCatalogEstimateHardCapBody(Object phrase) {
+    return Intl.message(
+      'Your filter set covers more than a million products. That is a lot of bandwidth and a lot of time. To continue, type "$phrase" in the box below — we want you to actively choose this rather than tap through it by accident.',
+      name: 'offlineCatalogEstimateHardCapBody',
+      desc: '',
+      args: [phrase],
+    );
+  }
+
+  /// `I understand`
+  String get offlineCatalogEstimateHardCapPhrase {
+    return Intl.message(
+      'I understand',
+      name: 'offlineCatalogEstimateHardCapPhrase',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `We could not reach Open Food Facts to get an estimate. Check your internet connection and try again.`
+  String get offlineCatalogEstimateError {
+    return Intl.message(
+      'We could not reach Open Food Facts to get an estimate. Check your internet connection and try again.',
+      name: 'offlineCatalogEstimateError',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Downloading your catalog`
+  String get offlineCatalogDownloadingTitle {
+    return Intl.message(
+      'Downloading your catalog',
+      name: 'offlineCatalogDownloadingTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `You can leave this screen open and the download will keep going. We will save what we have downloaded so far if you pause or cancel.`
+  String get offlineCatalogDownloadingBody {
+    return Intl.message(
+      'You can leave this screen open and the download will keep going. We will save what we have downloaded so far if you pause or cancel.',
+      name: 'offlineCatalogDownloadingBody',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Downloaded {rows} of {total} products`
+  String offlineCatalogDownloadingProgress(Object rows, Object total) {
+    return Intl.message(
+      'Downloaded $rows of $total products',
+      name: 'offlineCatalogDownloadingProgress',
+      desc: '',
+      args: [rows, total],
+    );
+  }
+
+  /// `Page {current} of {total}`
+  String offlineCatalogDownloadingPage(Object current, Object total) {
+    return Intl.message(
+      'Page $current of $total',
+      name: 'offlineCatalogDownloadingPage',
+      desc: '',
+      args: [current, total],
+    );
+  }
+
+  /// `About {time} left`
+  String offlineCatalogDownloadingEta(Object time) {
+    return Intl.message(
+      'About $time left',
+      name: 'offlineCatalogDownloadingEta',
+      desc: '',
+      args: [time],
+    );
+  }
+
+  /// `Pause`
+  String get offlineCatalogPause {
+    return Intl.message(
+      'Pause',
+      name: 'offlineCatalogPause',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Cancel`
+  String get offlineCatalogCancel {
+    return Intl.message(
+      'Cancel',
+      name: 'offlineCatalogCancel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Resume`
+  String get offlineCatalogResume {
+    return Intl.message(
+      'Resume',
+      name: 'offlineCatalogResume',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Discard`
+  String get offlineCatalogDiscard {
+    return Intl.message(
+      'Discard',
+      name: 'offlineCatalogDiscard',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Cancel and discard?`
+  String get offlineCatalogCancelConfirmTitle {
+    return Intl.message(
+      'Cancel and discard?',
+      name: 'offlineCatalogCancelConfirmTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `This will throw away the products you have already downloaded. If you would like to come back to it later, use Pause instead.`
+  String get offlineCatalogCancelConfirmBody {
+    return Intl.message(
+      'This will throw away the products you have already downloaded. If you would like to come back to it later, use Pause instead.',
+      name: 'offlineCatalogCancelConfirmBody',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Keep downloading`
+  String get offlineCatalogCancelConfirmKeep {
+    return Intl.message(
+      'Keep downloading',
+      name: 'offlineCatalogCancelConfirmKeep',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Download paused`
+  String get offlineCatalogPausedTitle {
+    return Intl.message(
+      'Download paused',
+      name: 'offlineCatalogPausedTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `We saved your progress. Pick up where you left off whenever you have a Wi-Fi connection.`
+  String get offlineCatalogPausedBody {
+    return Intl.message(
+      'We saved your progress. Pick up where you left off whenever you have a Wi-Fi connection.',
+      name: 'offlineCatalogPausedBody',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `{rows} of {total} products downloaded`
+  String offlineCatalogPausedProgress(Object rows, Object total) {
+    return Intl.message(
+      '$rows of $total products downloaded',
+      name: 'offlineCatalogPausedProgress',
+      desc: '',
+      args: [rows, total],
+    );
+  }
+
+  /// `Catalog ready`
+  String get offlineCatalogDoneTitle {
+    return Intl.message(
+      'Catalog ready',
+      name: 'offlineCatalogDoneTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `{count} products available offline. {size} on disk.`
+  String offlineCatalogDoneSummary(Object count, Object size) {
+    return Intl.message(
+      '$count products available offline. $size on disk.',
+      name: 'offlineCatalogDoneSummary',
+      desc: '',
+      args: [count, size],
+    );
+  }
+
+  /// `Searches and barcode scans will now work offline. We will still check the live database for products that are not in your catalog yet.`
+  String get offlineCatalogDoneBody {
+    return Intl.message(
+      'Searches and barcode scans will now work offline. We will still check the live database for products that are not in your catalog yet.',
+      name: 'offlineCatalogDoneBody',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Something went wrong`
+  String get offlineCatalogErrorTitle {
+    return Intl.message(
+      'Something went wrong',
+      name: 'offlineCatalogErrorTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `We saved everything we downloaded so far. Try again from the Resume button when you have a better connection.`
+  String get offlineCatalogErrorBodyRecoverable {
+    return Intl.message(
+      'We saved everything we downloaded so far. Try again from the Resume button when you have a better connection.',
+      name: 'offlineCatalogErrorBodyRecoverable',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `We could not finish this download.`
+  String get offlineCatalogErrorBodyFatal {
+    return Intl.message(
+      'We could not finish this download.',
+      name: 'offlineCatalogErrorBodyFatal',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Try again`
+  String get offlineCatalogErrorRetry {
+    return Intl.message(
+      'Try again',
+      name: 'offlineCatalogErrorRetry',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Not built — tap to set up`
+  String get offlineCatalogTileNotBuilt {
+    return Intl.message(
+      'Not built — tap to set up',
+      name: 'offlineCatalogTileNotBuilt',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Building ({percent}%)`
+  String offlineCatalogTileBuildingPercent(Object percent) {
+    return Intl.message(
+      'Building ($percent%)',
+      name: 'offlineCatalogTileBuildingPercent',
+      desc: '',
+      args: [percent],
+    );
+  }
+
+  /// `Building…`
+  String get offlineCatalogTileBuilding {
+    return Intl.message(
+      'Building…',
+      name: 'offlineCatalogTileBuilding',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Refreshing…`
+  String get offlineCatalogTileRefreshing {
+    return Intl.message(
+      'Refreshing…',
+      name: 'offlineCatalogTileRefreshing',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Download paused — tap to resume`
+  String get offlineCatalogTilePaused {
+    return Intl.message(
+      'Download paused — tap to resume',
+      name: 'offlineCatalogTilePaused',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `{count} products, {size}`
+  String offlineCatalogTileReady(Object count, Object size) {
+    return Intl.message(
+      '$count products, $size',
+      name: 'offlineCatalogTileReady',
+      desc: '',
+      args: [count, size],
+    );
+  }
+
+  /// ` · last refreshed {when}`
+  String offlineCatalogTileLastRefreshed(Object when) {
+    return Intl.message(
+      ' · last refreshed $when',
+      name: 'offlineCatalogTileLastRefreshed',
+      desc: '',
+      args: [when],
+    );
+  }
+
+  /// `Refresh`
+  String get offlineCatalogActionRefresh {
+    return Intl.message(
+      'Refresh',
+      name: 'offlineCatalogActionRefresh',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Delete`
+  String get offlineCatalogActionDelete {
+    return Intl.message(
+      'Delete',
+      name: 'offlineCatalogActionDelete',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Delete offline catalog?`
+  String get offlineCatalogDeleteConfirmTitle {
+    return Intl.message(
+      'Delete offline catalog?',
+      name: 'offlineCatalogDeleteConfirmTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `This removes the downloaded products from your device. You can rebuild it any time from this screen.`
+  String get offlineCatalogDeleteConfirmBody {
+    return Intl.message(
+      'This removes the downloaded products from your device. You can rebuild it any time from this screen.',
+      name: 'offlineCatalogDeleteConfirmBody',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `{n}mo ago`
+  String offlineCatalogTimeMonthsAgo(Object n) {
+    return Intl.message(
+      '${n}mo ago',
+      name: 'offlineCatalogTimeMonthsAgo',
+      desc: '',
+      args: [n],
+    );
+  }
+
+  /// `{n}w ago`
+  String offlineCatalogTimeWeeksAgo(Object n) {
+    return Intl.message(
+      '${n}w ago',
+      name: 'offlineCatalogTimeWeeksAgo',
+      desc: '',
+      args: [n],
+    );
+  }
+
+  /// `{n}d ago`
+  String offlineCatalogTimeDaysAgo(Object n) {
+    return Intl.message(
+      '${n}d ago',
+      name: 'offlineCatalogTimeDaysAgo',
+      desc: '',
+      args: [n],
+    );
+  }
+
+  /// `{n}h ago`
+  String offlineCatalogTimeHoursAgo(Object n) {
+    return Intl.message(
+      '${n}h ago',
+      name: 'offlineCatalogTimeHoursAgo',
+      desc: '',
+      args: [n],
+    );
+  }
+
+  /// `just now`
+  String get offlineCatalogTimeJustNow {
+    return Intl.message(
+      'just now',
+      name: 'offlineCatalogTimeJustNow',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

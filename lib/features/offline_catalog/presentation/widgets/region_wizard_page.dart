@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:opennutritracker/features/offline_catalog/domain/entity/country_taxonomy_entry.dart';
 import 'package:opennutritracker/features/offline_catalog/presentation/bloc/offline_catalog_bloc.dart';
+import 'package:opennutritracker/generated/l10n.dart';
 
 /// Country selection page. Shows the OFF taxonomy as a scrollable list
 /// of FilterChips, sorted by product count descending, with a search
@@ -49,31 +50,26 @@ class _RegionWizardPageState extends State<RegionWizardPage> {
   Widget build(BuildContext context) {
     return BlocBuilder<OfflineCatalogBloc, OfflineCatalogState>(
       builder: (context, state) {
+        final s = S.of(context);
         return Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // l10n: offlineCatalogRegionTitle
               Text(
-                'Pick your countries',
+                s.offlineCatalogRegionTitle,
                 style: Theme.of(context).textTheme.headlineMedium,
               ),
               const SizedBox(height: 8),
-              // l10n: offlineCatalogRegionBody
               Text(
-                'Only products tagged with the countries you choose '
-                'will be downloaded. Counts come from Open Food Facts '
-                'and update over time.',
+                s.offlineCatalogRegionBody,
                 style: Theme.of(context).textTheme.bodyMedium,
               ),
               const SizedBox(height: 16),
               if (state.countriesFromFallback) _buildFallbackBanner(context),
-              _buildSearchField(),
+              _buildSearchField(context),
               const SizedBox(height: 12),
-              Expanded(
-                child: _buildBody(context, state),
-              ),
+              Expanded(child: _buildBody(context, state)),
             ],
           ),
         );
@@ -94,55 +90,47 @@ class _RegionWizardPageState extends State<RegionWizardPage> {
         children: [
           Icon(Icons.cloud_off, size: 20, color: theme.colorScheme.primary),
           const SizedBox(width: 12),
-          // l10n: offlineCatalogRegionFallbackNotice
-          const Expanded(
-            child: Text(
-              'Showing a short fallback list because we could not '
-              'reach Open Food Facts. Connect to the internet and '
-              'refresh to load the full country list.',
-            ),
+          Expanded(
+            child: Text(S.of(context).offlineCatalogRegionFallbackNotice),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildSearchField() {
+  Widget _buildSearchField(BuildContext context) {
+    final s = S.of(context);
     return TextField(
       onChanged: (value) => setState(() => _searchQuery = value.trim()),
       decoration: InputDecoration(
-        // l10n: offlineCatalogRegionSearchHint
-        hintText: 'Search countries',
+        hintText: s.offlineCatalogRegionSearchHint,
         prefixIcon: const Icon(Icons.search),
         suffixIcon: IconButton(
           icon: const Icon(Icons.refresh),
-          tooltip: 'Refresh country list',
+          tooltip: s.offlineCatalogRegionRefreshTooltip,
           onPressed: () {
             context
                 .read<OfflineCatalogBloc>()
                 .add(const LoadCountriesEvent(forceRefresh: true));
           },
         ),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
       ),
     );
   }
 
   Widget _buildBody(BuildContext context, OfflineCatalogState state) {
+    final s = S.of(context);
     if (state.phase == OfflineCatalogPhase.loadingCountries) {
       return const Center(child: CircularProgressIndicator());
     }
     final all = state.countries;
     if (all == null || all.isEmpty) {
-      // l10n: offlineCatalogRegionEmpty
-      return const Center(child: Text('No countries to show'));
+      return Center(child: Text(s.offlineCatalogRegionEmpty));
     }
     final visible = _filter(all, _searchQuery);
     if (visible.isEmpty) {
-      // l10n: offlineCatalogRegionNoMatches
-      return const Center(child: Text('No countries match your search'));
+      return Center(child: Text(s.offlineCatalogRegionNoMatches));
     }
     return ListView.builder(
       itemCount: visible.length,
@@ -152,7 +140,7 @@ class _RegionWizardPageState extends State<RegionWizardPage> {
         return ListTile(
           dense: true,
           title: Text(entry.name),
-          subtitle: Text(_formatCount(entry.productCount)),
+          subtitle: Text(_formatCount(context, entry.productCount)),
           trailing: Checkbox(
             value: selected,
             onChanged: (_) => _toggle(entry.code),
@@ -172,14 +160,12 @@ class _RegionWizardPageState extends State<RegionWizardPage> {
     return all.where((e) => e.name.toLowerCase().contains(q)).toList();
   }
 
-  String _formatCount(int count) {
-    // l10n: offlineCatalogRegionCount (formatter)
-    if (count >= 1000000) {
-      return '${(count / 1000000).toStringAsFixed(1)}M products';
-    }
-    if (count >= 1000) {
-      return '${(count / 1000).round()}k products';
-    }
-    return '$count products';
+  String _formatCount(BuildContext context, int count) {
+    final compact = count >= 1000000
+        ? '${(count / 1000000).toStringAsFixed(1)}M'
+        : count >= 1000
+            ? '${(count / 1000).round()}k'
+            : count.toString();
+    return S.of(context).offlineCatalogProductCount(compact);
   }
 }

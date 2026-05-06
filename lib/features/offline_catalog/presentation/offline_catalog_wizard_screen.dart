@@ -10,6 +10,7 @@ import 'package:opennutritracker/features/offline_catalog/presentation/widgets/q
 import 'package:opennutritracker/features/offline_catalog/presentation/widgets/region_wizard_page.dart';
 import 'package:opennutritracker/features/offline_catalog/presentation/widgets/welcome_wizard_page.dart';
 import 'package:opennutritracker/features/onboarding/presentation/widgets/highlight_button.dart';
+import 'package:opennutritracker/generated/l10n.dart';
 
 /// Five-page wizard that walks the user through building the offline
 /// catalog. Mirrors the visual shape of [OnboardingScreen] so the
@@ -122,8 +123,7 @@ class _OfflineCatalogWizardScreenState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // l10n: offlineCatalogWizardAppBarTitle
-      appBar: AppBar(title: const Text('Offline food catalog')),
+      appBar: AppBar(title: Text(S.of(context).offlineCatalogTitle)),
       body: BlocListener<OfflineCatalogBloc, OfflineCatalogState>(
         bloc: _bloc,
         listenWhen: (previous, current) =>
@@ -174,14 +174,14 @@ class _OfflineCatalogWizardScreenState
       bodyAlignment: Alignment.topCenter,
       bodyFlex: 6,
     );
+    final s = S.of(context);
     return [
       PageViewModel(
         title: '',
         decoration: decoration,
         bodyWidget: const WelcomeWizardPage(),
         footer: HighlightButton(
-          // l10n: offlineCatalogStartLabel
-          buttonLabel: 'Get started',
+          buttonLabel: s.offlineCatalogStartAction,
           onButtonPressed: () => _scrollTo(_pageRegion),
           buttonActive: true,
         ),
@@ -196,8 +196,7 @@ class _OfflineCatalogWizardScreenState
           },
         ),
         footer: HighlightButton(
-          // l10n: offlineCatalogNextLabel
-          buttonLabel: 'Next',
+          buttonLabel: s.offlineCatalogNextAction,
           onButtonPressed: () => _scrollTo(_pageQuality),
           buttonActive: _selectedCountries.isNotEmpty,
         ),
@@ -218,7 +217,7 @@ class _OfflineCatalogWizardScreenState
           },
         ),
         footer: HighlightButton(
-          buttonLabel: 'Next',
+          buttonLabel: s.offlineCatalogNextAction,
           onButtonPressed: () => _scrollTo(_pageEstimate),
           buttonActive: true,
         ),
@@ -239,8 +238,7 @@ class _OfflineCatalogWizardScreenState
                 estimate.rows > 0 &&
                 (!estimate.isAboveHardCap || _hardCapConfirmed);
             return HighlightButton(
-              // l10n: offlineCatalogDownloadLabel
-              buttonLabel: 'Download',
+              buttonLabel: s.offlineCatalogDownloadAction,
               onButtonPressed: () => _scrollTo(_pageDownload),
               buttonActive: canStart,
             );
