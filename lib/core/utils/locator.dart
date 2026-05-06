@@ -53,6 +53,7 @@ import 'package:opennutritracker/features/add_meal/data/repository/products_repo
 import 'package:opennutritracker/features/add_meal/domain/usecase/search_products_usecase.dart';
 import 'package:opennutritracker/features/add_meal/presentation/bloc/add_meal_bloc.dart';
 import 'package:opennutritracker/features/offline_catalog/data/data_sources/off_bulk_api_data_source.dart';
+import 'package:opennutritracker/features/offline_catalog/data/data_sources/off_csv_dump_data_source.dart';
 import 'package:opennutritracker/features/offline_catalog/data/data_sources/off_taxonomy_data_source.dart';
 import 'package:opennutritracker/features/offline_catalog/data/data_sources/offline_catalog_data_source.dart';
 import 'package:opennutritracker/features/offline_catalog/data/repository/offline_catalog_repository.dart';
@@ -371,8 +372,11 @@ Future<void> initLocator() async {
   locator.registerLazySingleton<OffBulkApiDataSource>(
     () => OffBulkApiDataSource(),
   );
+  locator.registerLazySingleton<OffCsvDumpDataSource>(
+    () => OffCsvDumpDataSource(),
+  );
   locator.registerLazySingleton<OfflineCatalogRepository>(
-    () => OfflineCatalogRepository(locator(), locator()),
+    () => OfflineCatalogRepository(locator(), locator(), locator()),
   );
   locator.registerLazySingleton<GetCountriesTaxonomyUseCase>(
     () => GetCountriesTaxonomyUseCase(locator()),

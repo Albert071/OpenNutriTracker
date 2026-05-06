@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:opennutritracker/features/offline_catalog/domain/entity/catalog_filter_entity.dart';
 import 'package:opennutritracker/features/offline_catalog/presentation/bloc/offline_catalog_bloc.dart';
 import 'package:opennutritracker/generated/l10n.dart';
 
@@ -42,37 +43,54 @@ class _EstimateConfirmWizardPageState extends State<EstimateConfirmWizardPage> {
   }
 
   Widget _buildBody(BuildContext context, OfflineCatalogState state) {
+    // Error first — when the estimate call fails, [state.estimate]
+    // stays null but the phase moves to error. If we let the
+    // null-estimate branch run before checking the phase the user
+    // sees an indefinite spinner instead of the recovery message.
+    if (state.phase == OfflineCatalogPhase.error) {
+      return _ErrorView(
+        message: state.errorMessage,
+        activeFilters: state.activeFilters,
+      );
+    }
     if (state.phase == OfflineCatalogPhase.estimating ||
         state.estimate == null) {
-      return const Center(child: CircularProgressIndicator());
-    }
-    if (state.phase == OfflineCatalogPhase.error) {
-      return _ErrorView(message: state.errorMessage);
+      return const Padding(
+        padding: EdgeInsets.symmetric(vertical: 48),
+        child: Center(child: CircularProgressIndicator()),
+      );
     }
     final estimate = state.estimate!;
     final theme = Theme.of(context);
     final s = S.of(context);
-    return ListView(
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(s.offlineCatalogEstimateTitle,
             style: theme.textTheme.headlineMedium),
         const SizedBox(height: 8),
         Text(s.offlineCatalogEstimateBody, style: theme.textTheme.bodyMedium),
         const SizedBox(height: 24),
+        // Roughly how many products we expect to keep on disk after
+        // the wizard's filter set runs over the CSV stream.
         _SummaryRow(
           icon: Icons.storage,
           label: s.offlineCatalogEstimateRowsLabel,
-          value: _formatRows(estimate.rows),
+          value: '~${_formatRows(estimate.rows)}',
         ),
+        // On-disk size of the resulting sqlite catalog.
         _SummaryRow(
           icon: Icons.sd_storage,
           label: s.offlineCatalogEstimateSizeLabel,
           value: _formatBytes(estimate.estimatedBytes),
         ),
+        // [requests] now carries the total *download* bytes (the
+        // CSV gzip from OFF). The legacy "network requests" label
+        // is recycled as a "download" line; the icon hints at it.
         _SummaryRow(
           icon: Icons.cloud_download,
           label: s.offlineCatalogEstimateRequestsLabel,
-          value: '${estimate.requests}',
+          value: _formatBytes(estimate.requests),
         ),
         _SummaryRow(
           icon: Icons.timer_outlined,
@@ -211,12 +229,14 @@ class _SummaryRow extends StatelessWidget {
 
 class _ErrorView extends StatelessWidget {
   final String? message;
+  final CatalogFilterEntity? activeFilters;
 
-  const _ErrorView({required this.message});
+  const _ErrorView({required this.message, required this.activeFilters});
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final s = S.of(context);
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(24),
@@ -227,7 +247,7 @@ class _ErrorView extends StatelessWidget {
                 size: 48, color: theme.colorScheme.error),
             const SizedBox(height: 16),
             Text(
-              S.of(context).offlineCatalogEstimateError,
+              s.offlineCatalogEstimateError,
               textAlign: TextAlign.center,
             ),
             if (message != null) ...[
@@ -238,6 +258,17 @@ class _ErrorView extends StatelessWidget {
                 textAlign: TextAlign.center,
               ),
             ],
+            const SizedBox(height: 24),
+            if (activeFilters != null)
+              ElevatedButton.icon(
+                onPressed: () {
+                  context
+                      .read<OfflineCatalogBloc>()
+                      .add(EstimateCatalogEvent(activeFilters!));
+                },
+                icon: const Icon(Icons.refresh),
+                label: Text(s.offlineCatalogErrorRetry),
+              ),
           ],
         ),
       ),

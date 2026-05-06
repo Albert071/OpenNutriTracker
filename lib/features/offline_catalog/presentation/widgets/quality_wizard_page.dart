@@ -69,7 +69,8 @@ class _QualityWizardPageState extends State<QualityWizardPage> {
     final ageLabels = _ageLabels(s);
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 24),
-      child: ListView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(s.offlineCatalogQualityTitle, style: theme.textTheme.headlineMedium),
           const SizedBox(height: 8),

@@ -48,6 +48,12 @@ class _RegionWizardPageState extends State<RegionWizardPage> {
 
   @override
   Widget build(BuildContext context) {
+    // The IntroductionScreen wraps each page body in a
+    // SingleChildScrollView, so we lay the page content out as a
+    // single Column with intrinsic height — no Expanded, and the
+    // inner country list is rendered with shrinkWrap so its rows
+    // become inline children of the outer scroll view rather than
+    // requesting their own scrollable region.
     return BlocBuilder<OfflineCatalogBloc, OfflineCatalogState>(
       builder: (context, state) {
         final s = S.of(context);
@@ -69,7 +75,7 @@ class _RegionWizardPageState extends State<RegionWizardPage> {
               if (state.countriesFromFallback) _buildFallbackBanner(context),
               _buildSearchField(context),
               const SizedBox(height: 12),
-              Expanded(child: _buildBody(context, state)),
+              _buildBody(context, state),
             ],
           ),
         );
@@ -122,17 +128,28 @@ class _RegionWizardPageState extends State<RegionWizardPage> {
   Widget _buildBody(BuildContext context, OfflineCatalogState state) {
     final s = S.of(context);
     if (state.phase == OfflineCatalogPhase.loadingCountries) {
-      return const Center(child: CircularProgressIndicator());
+      return const Padding(
+        padding: EdgeInsets.symmetric(vertical: 48),
+        child: Center(child: CircularProgressIndicator()),
+      );
     }
     final all = state.countries;
     if (all == null || all.isEmpty) {
-      return Center(child: Text(s.offlineCatalogRegionEmpty));
+      return Padding(
+        padding: const EdgeInsets.symmetric(vertical: 48),
+        child: Center(child: Text(s.offlineCatalogRegionEmpty)),
+      );
     }
     final visible = _filter(all, _searchQuery);
     if (visible.isEmpty) {
-      return Center(child: Text(s.offlineCatalogRegionNoMatches));
+      return Padding(
+        padding: const EdgeInsets.symmetric(vertical: 48),
+        child: Center(child: Text(s.offlineCatalogRegionNoMatches)),
+      );
     }
     return ListView.builder(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
       itemCount: visible.length,
       itemBuilder: (context, index) {
         final entry = visible[index];

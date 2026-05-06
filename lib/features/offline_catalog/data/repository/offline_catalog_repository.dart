@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:logging/logging.dart';
 import 'package:opennutritracker/features/add_meal/data/dto/off/off_product_dto.dart';
 import 'package:opennutritracker/features/offline_catalog/data/data_sources/off_bulk_api_data_source.dart';
+import 'package:opennutritracker/features/offline_catalog/data/data_sources/off_csv_dump_data_source.dart';
 import 'package:opennutritracker/features/offline_catalog/data/data_sources/offline_catalog_data_source.dart';
 import 'package:opennutritracker/features/offline_catalog/domain/entity/cancellation_token.dart';
 import 'package:opennutritracker/features/offline_catalog/domain/entity/catalog_estimate_entity.dart';
@@ -11,162 +12,149 @@ import 'package:opennutritracker/features/offline_catalog/domain/entity/catalog_
 import 'package:opennutritracker/features/offline_catalog/domain/entity/catalog_stats_entity.dart';
 import 'package:opennutritracker/features/offline_catalog/domain/entity/download_progress.dart';
 
-/// Persisted resume state. Lives under
-/// [OfflineCatalogDataSource.metaKeyBuildCursor] so a paused build can
-/// be picked up after the app is killed or backgrounded for too long.
-class _BuildCursor {
-  final int nextPage;
-  final int totalRows;
-  final String filtersHash;
+/// Conservative typical-row count we expect to keep on disk for a
+/// single-country build with default filters. Used to build the
+/// wizard's "approximately X products" line on the estimate page.
+/// Real builds vary widely; this is a friendly order-of-magnitude.
+const int _kRoughKeptRowsForSingleCountry = 18000;
 
-  const _BuildCursor({
-    required this.nextPage,
-    required this.totalRows,
-    required this.filtersHash,
-  });
-
-  Map<String, dynamic> toJson() => {
-        'nextPage': nextPage,
-        'totalRows': totalRows,
-        'filtersHash': filtersHash,
-      };
-
-  static _BuildCursor? tryParse(String? raw) {
-    if (raw == null) return null;
-    try {
-      final map = jsonDecode(raw);
-      if (map is! Map<String, dynamic>) return null;
-      return _BuildCursor(
-        nextPage: map['nextPage'] as int,
-        totalRows: map['totalRows'] as int,
-        filtersHash: map['filtersHash'] as String,
-      );
-    } catch (_) {
-      return null;
-    }
-  }
-}
-
-/// Per-row average size estimate used by the wizard's confirmation
-/// page. The number is conservative; real on-disk size after FTS index
-/// overhead is typically within ±30% of this.
+/// Average bytes-per-row in the on-disk sqlite catalogue (JSON blob
+/// + denormalised name/brand cells + FTS index overhead).
 const int _kBytesPerRow = 1024;
 
-/// Orchestrates the catalog lifecycle: estimate, build, refresh,
-/// stats, delete. Lives between the bloc and the two data sources;
-/// holds the [BulkSearchPage] → sqlite write loop.
+/// Orchestrates the catalog lifecycle.
+///
+/// **Build path** (the heavy one): downloads the OFF CSV dump from
+/// `static.openfoodfacts.org` to a local cache, then stream-decodes
+/// + filters + writes survivors to sqlite. The CDN endpoint is
+/// reliable (unlike the legacy `cgi/search.pl` which 503s under bulk
+/// traffic), so a build either runs to completion or stops cleanly
+/// at a known byte offset for resume.
+///
+/// **Refresh path** (the lightweight one): keeps the existing API
+/// paginator in place. A few hundred modified-since-last-sync rows
+/// are well within the legacy CGI's healthy band.
+///
+/// **Pause / cancel semantics**:
+/// * Pause during download → partial gzip stays on disk, resume
+///   sends `Range: bytes=<offset>-` and continues from there.
+/// * Pause during parse → gzip stays, resume re-streams from the
+///   start; sqlite upserts are idempotent so no data is lost, just
+///   parse time is.
+/// * Cancel any phase → cached gzip is deleted, sqlite is wiped.
 class OfflineCatalogRepository {
   final _log = Logger('OfflineCatalogRepository');
   final OfflineCatalogDataSource _local;
   final OffBulkApiDataSource _remote;
+  final OffCsvDumpDataSource _csvDump;
 
-  OfflineCatalogRepository(this._local, this._remote);
+  OfflineCatalogRepository(this._local, this._remote, this._csvDump);
 
-  /// One-shot probe of the OFF search envelope. Returns the count and
-  /// derived size/time estimates the wizard surfaces on page 4.
+  /// One-shot HEAD probe of the CSV dump. Returns size + a rough
+  /// kept-rows projection for the wizard's confirmation page.
+  ///
+  /// We can't know the exact row count up-front (we'd have to stream
+  /// the file to count), so the wizard surfaces both the precise
+  /// download-size figure and an honest "approximately X products"
+  /// for the post-filter result.
   Future<CatalogEstimateEntity> estimate(CatalogFilterEntity filters) async {
-    final rows = await _remote.estimateCount(filters);
-    final pageSize = OffBulkApiDataSource.defaultPageSize;
-    final requests = (rows / pageSize).ceil();
-    final etaSeconds = requests * OffBulkApiDataSource.defaultThrottle.inSeconds;
+    final dumpBytes = await _csvDump.headTotalBytes();
+    if (dumpBytes == null) {
+      throw const FormatException(
+        'Open Food Facts did not advertise a download size for the CSV.',
+      );
+    }
+    // Rough on-disk catalogue size. Linear with how many countries
+    // the user picked. Anything below 1 we still surface as "1
+    // country worth" so the number doesn't read as zero.
+    final countryFactor = filters.countries.isEmpty
+        ? 1.0
+        : filters.countries.length.toDouble();
+    final keptRows = (_kRoughKeptRowsForSingleCountry * countryFactor).round();
     return CatalogEstimateEntity(
-      rows: rows,
-      estimatedBytes: rows * _kBytesPerRow,
-      requests: requests,
-      etaSeconds: etaSeconds,
+      rows: keptRows,
+      // Storage estimate uses the post-filter row count.
+      estimatedBytes: keptRows * _kBytesPerRow,
+      // "Requests" is repurposed as "download bytes" for the CSV
+      // path; the wizard's UI label can call it that. (We could add
+      // a separate field on the entity, but reusing avoids a
+      // disruptive refactor for one number.)
+      requests: dumpBytes,
+      // Wall-clock seconds — depends on user's bandwidth, very
+      // rough. Assume 10 MB/s effective; that's a fast Wi-Fi link.
+      // Real-world will skew higher.
+      etaSeconds: (dumpBytes / (10 * 1024 * 1024)).round(),
     );
   }
 
-  /// Run the full build (or resume an interrupted one) for [filters].
-  /// Emits one [DownloadProgress] per page. Cooperative cancellation
-  /// is checked between pages — the loop never abandons a page
-  /// mid-flight, so a cancel never leaves the catalog in an
-  /// inconsistent state.
+  /// Run a fresh build (or resume an interrupted one) for [filters].
   ///
-  /// On success, clears the build cursor and updates
-  /// [OfflineCatalogDataSource.metaKeyLastFullSync] +
-  /// [OfflineCatalogDataSource.metaKeyTotalCount]. On cancel, the
-  /// cursor is preserved so a resume picks up where we left off.
+  /// Phase 1 — download. Yields [DownloadProgress] with
+  /// `phase = downloading` and bytes counters. Cancellation between
+  /// chunks. Resume picks up at the on-disk file's existing length.
+  ///
+  /// Phase 2 — parse + filter. Yields [DownloadProgress] with
+  /// `phase = parsing` and rows-kept counter. Cancellation checked
+  /// every ~200 rows.
   Stream<DownloadProgress> build({
     required CatalogFilterEntity filters,
     required CancellationToken cancellation,
   }) async* {
     final filtersJson = _serialiseFilters(filters);
     final filtersHash = _hashFilters(filtersJson);
-
-    // Resume state: only honour an existing cursor when the filter
-    // hash matches. A different filter set means the user changed
-    // their mind and we should start fresh.
-    final existing =
-        _BuildCursor.tryParse(await _local.getMeta(OfflineCatalogDataSource.metaKeyBuildCursor));
-    var startPage = 1;
-    var totalRows = 0;
-    if (existing != null && existing.filtersHash == filtersHash) {
-      startPage = existing.nextPage;
-      totalRows = existing.totalRows;
-      _log.info(
-        'Resuming catalog build at page $startPage of '
-        '${(totalRows / OffBulkApiDataSource.defaultPageSize).ceil()}',
-      );
-    } else {
-      // Fresh build. Hit the estimate endpoint to anchor totalRows
-      // (so progress reporting has a denominator from page 1).
-      totalRows = await _remote.estimateCount(filters);
-      await _local.setMeta(
-        OfflineCatalogDataSource.metaKeyFiltersJson,
-        filtersJson,
-      );
-      _log.info('Starting fresh catalog build of $totalRows rows');
-    }
-
-    final pageSize = OffBulkApiDataSource.defaultPageSize;
-    final totalPages = (totalRows / pageSize).ceil();
     final stopwatch = Stopwatch()..start();
-    var rowsDownloaded = (startPage - 1) * pageSize;
-    if (rowsDownloaded > totalRows) rowsDownloaded = totalRows;
 
-    for (var page = startPage; page <= totalPages; page++) {
-      cancellation.throwIfCancelled();
+    // Persist the filter set so the resume / refresh paths can find
+    // what the catalog was built for.
+    await _local.setMeta(
+      OfflineCatalogDataSource.metaKeyFiltersJson,
+      filtersJson,
+    );
+    await _local.setMeta(
+      OfflineCatalogDataSource.metaKeyBuildCursor,
+      jsonEncode({'phase': 'downloading', 'filtersHash': filtersHash}),
+    );
 
-      final fetched = await _remote.fetchPage(
-        filters: filters,
-        pageNumber: page,
-        pageSize: pageSize,
-      );
-
-      // Atomic: write rows AND advance the cursor in one transaction.
-      // A crash mid-write leaves the catalog consistent at "we did
-      // pages 1..page-1, resume at page" rather than "we wrote rows
-      // but lost the cursor".
-      final cursor = _BuildCursor(
-        nextPage: page + 1,
-        totalRows: totalRows,
-        filtersHash: filtersHash,
-      );
-      await _local.upsertBatch(
-        fetched.products,
-        metaUpdates: {
-          OfflineCatalogDataSource.metaKeyBuildCursor:
-              jsonEncode(cursor.toJson()),
-        },
-      );
-      rowsDownloaded += fetched.products.length;
-      if (rowsDownloaded > totalRows) rowsDownloaded = totalRows;
-
+    _log.info('Catalog build phase 1: download');
+    await for (final p in _csvDump.downloadResumable(
+      cancellation: cancellation,
+    )) {
       yield DownloadProgress(
-        rowsDownloaded: rowsDownloaded,
-        totalRows: totalRows,
-        currentPage: page,
-        totalPages: totalPages,
+        phase: DownloadPhase.downloading,
+        bytesDone: p.bytesDone,
+        bytesTotal: p.bytesTotal,
+        rowsKept: 0,
+        rowsScanned: 0,
         elapsed: stopwatch.elapsed,
       );
-
-      if (fetched.isLast) break;
     }
+    cancellation.throwIfCancelled();
 
-    // Clean up the cursor and stamp completion metadata. The catalog
-    // is now ready for the search/scanner integration to start hitting
-    // it; the bloc flips OfflineCatalogReady afterwards.
+    await _local.setMeta(
+      OfflineCatalogDataSource.metaKeyBuildCursor,
+      jsonEncode({'phase': 'parsing', 'filtersHash': filtersHash}),
+    );
+
+    _log.info('Catalog build phase 2: parse + filter');
+    await for (final p in _csvDump.parseAndFilter(
+      filter: filters,
+      cancellation: cancellation,
+      onBatch: (batch) async => _local.upsertBatch(batch),
+    )) {
+      yield DownloadProgress(
+        phase: DownloadPhase.parsing,
+        bytesDone: p.bytesDone,
+        bytesTotal: p.bytesTotal,
+        rowsKept: p.rowsKept,
+        rowsScanned: p.rowsScanned,
+        elapsed: stopwatch.elapsed,
+      );
+    }
+    cancellation.throwIfCancelled();
+
+    // Phase 3 — cleanup. Drop the cached gzip; the catalog is sealed.
+    await _csvDump.deleteCachedFile();
+    final stored = await _local.count();
     await _local.setMeta(OfflineCatalogDataSource.metaKeyBuildCursor, null);
     await _local.setMeta(
       OfflineCatalogDataSource.metaKeyLastFullSync,
@@ -174,16 +162,16 @@ class OfflineCatalogRepository {
     );
     await _local.setMeta(
       OfflineCatalogDataSource.metaKeyTotalCount,
-      rowsDownloaded.toString(),
+      stored.toString(),
     );
+    _log.info('Catalog build complete: $stored rows on disk');
   }
 
-  /// Incremental refresh against the same filter set last used. Pulls
-  /// only rows where `last_modified_t` is newer than the previous
-  /// full-sync timestamp; upserts them. Does not currently delete rows
-  /// OFF has marked obsolete — that would require a second pass over
-  /// the obsolete-only filter, which we'll add when there's evidence
-  /// the catalog drifts noticeably without it.
+  /// Incremental refresh against the same filter set last used.
+  /// Uses the API paginator (small queries are still healthy on the
+  /// legacy CGI). Does not currently delete rows OFF has marked
+  /// obsolete — that would require a second pass we'll add when
+  /// there's evidence the catalogue drifts.
   Stream<DownloadProgress> refresh({
     required CancellationToken cancellation,
   }) async* {
@@ -198,10 +186,6 @@ class OfflineCatalogRepository {
     final originalFilters = _deserialiseFilters(filtersJson);
     final lastSyncSeconds = lastSyncMillis ~/ 1000;
     final refreshFilters = originalFilters.copyWith(
-      // Override the user's recency window with "since last sync" —
-      // the user's preference still drives the catalog's overall
-      // shape, but the refresh is always anchored to what they
-      // already have on disk.
       maxAge: Duration(
         seconds: DateTime.now().millisecondsSinceEpoch ~/ 1000 - lastSyncSeconds,
       ),
@@ -220,7 +204,8 @@ class OfflineCatalogRepository {
 
     final totalPages = (totalRows / pageSize).ceil();
     final stopwatch = Stopwatch()..start();
-    var rowsDownloaded = 0;
+    var rowsScanned = 0;
+    var rowsKept = 0;
 
     for (var page = 1; page <= totalPages; page++) {
       cancellation.throwIfCancelled();
@@ -230,12 +215,17 @@ class OfflineCatalogRepository {
         pageSize: pageSize,
       );
       await _local.upsertBatch(fetched.products);
-      rowsDownloaded += fetched.products.length;
+      rowsScanned += pageSize;
+      rowsKept += fetched.products.length;
       yield DownloadProgress(
-        rowsDownloaded: rowsDownloaded,
-        totalRows: totalRows,
-        currentPage: page,
-        totalPages: totalPages,
+        // Refresh is fast and small — we report it as a "parsing"
+        // phase so the UI uses the rows-progress view rather than
+        // the bytes-progress view.
+        phase: DownloadPhase.parsing,
+        bytesDone: rowsScanned,
+        bytesTotal: totalRows,
+        rowsKept: rowsKept,
+        rowsScanned: rowsScanned,
         elapsed: stopwatch.elapsed,
       );
       if (fetched.isLast) break;
@@ -272,8 +262,6 @@ class OfflineCatalogRepository {
     );
   }
 
-  /// Read the persisted filter set, if any. Returns null when the
-  /// catalog has never been built.
   Future<CatalogFilterEntity?> getPersistedFilters() async {
     final filtersJson =
         await _local.getMeta(OfflineCatalogDataSource.metaKeyFiltersJson);
@@ -281,23 +269,23 @@ class OfflineCatalogRepository {
     return _deserialiseFilters(filtersJson);
   }
 
-  /// Read-through to the local data source. Consumers are
-  /// `SearchOfflineCatalogUseCase` and friends.
   Future<OFFProductDTO?> getByCode(String code) => _local.getByCode(code);
 
   Future<List<OFFProductDTO>> searchByText(String query, {int limit = 50}) =>
       _local.searchByText(query, limit: limit);
 
+  /// Drop the catalog AND any cached CSV download.
   Future<void> delete() async {
     await _local.clear();
+    await _csvDump.deleteCachedFile();
   }
 
-  /// True when an in-flight build cursor is sitting on disk (the user
-  /// paused, or the app crashed mid-build, etc).
+  /// True when there's a paused build to resume — either a partial
+  /// CSV download on disk, or a build_cursor recording phase=parsing.
   Future<bool> hasResumeableBuild() async {
-    final raw =
+    final cursor =
         await _local.getMeta(OfflineCatalogDataSource.metaKeyBuildCursor);
-    return _BuildCursor.tryParse(raw) != null;
+    return cursor != null;
   }
 
   String _serialiseFilters(CatalogFilterEntity filters) {
@@ -324,8 +312,5 @@ class OfflineCatalogRepository {
     );
   }
 
-  /// Stable hash so we can detect filter changes between resume
-  /// attempts. Hash content is the serialised filter JSON, which
-  /// already canonicalises (sorted countries, fixed key order).
   String _hashFilters(String json) => json.hashCode.toRadixString(16);
 }

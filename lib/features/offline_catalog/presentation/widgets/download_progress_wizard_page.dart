@@ -56,7 +56,8 @@ class _BuildingView extends StatelessWidget {
     final theme = Theme.of(context);
     final s = S.of(context);
     final p = progress;
-    return ListView(
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(s.offlineCatalogDownloadingTitle,
             style: theme.textTheme.headlineMedium),
@@ -96,24 +97,30 @@ class _BuildingView extends StatelessWidget {
   Widget _buildProgressBlock(BuildContext context, DownloadProgress p) {
     final theme = Theme.of(context);
     final s = S.of(context);
+    final isDownloading = p.phase == DownloadPhase.downloading;
+    final headline = isDownloading
+        // "Downloaded X MB of Y MB"
+        ? s.offlineCatalogDownloadingProgress(
+            _formatBytes(p.bytesDone),
+            _formatBytes(p.bytesTotal),
+          )
+        // "X products kept (Y rows scanned)"
+        : s.offlineCatalogDownloadingProgress(
+            _n(p.rowsKept),
+            _n(p.rowsScanned),
+          );
+    final phaseLabel = isDownloading
+        ? s.offlineCatalogTileBuilding
+        : s.offlineCatalogTileRefreshing;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         LinearProgressIndicator(value: p.fraction, minHeight: 8),
         const SizedBox(height: 16),
-        Text(
-          s.offlineCatalogDownloadingProgress(
-            _n(p.rowsDownloaded),
-            _n(p.totalRows),
-          ),
-          style: theme.textTheme.titleMedium,
-        ),
+        Text(headline, style: theme.textTheme.titleMedium),
         const SizedBox(height: 4),
-        Text(
-          s.offlineCatalogDownloadingPage(p.currentPage, p.totalPages),
-          style: theme.textTheme.bodySmall,
-        ),
-        if (p.estimatedRemaining != null) ...[
+        Text(phaseLabel, style: theme.textTheme.bodySmall),
+        if (p.estimatedRemaining != null && p.bytesTotal > 0) ...[
           const SizedBox(height: 4),
           Text(
             s.offlineCatalogDownloadingEta(
@@ -162,6 +169,17 @@ class _BuildingView extends StatelessWidget {
     return v.toString();
   }
 
+  String _formatBytes(int bytes) {
+    if (bytes >= 1024 * 1024 * 1024) {
+      return '${(bytes / (1024 * 1024 * 1024)).toStringAsFixed(2)} GB';
+    }
+    if (bytes >= 1024 * 1024) {
+      return '${(bytes / (1024 * 1024)).round()} MB';
+    }
+    if (bytes >= 1024) return '${(bytes / 1024).round()} KB';
+    return '$bytes B';
+  }
+
   String _formatDuration(Duration d) {
     if (d.inHours >= 1) {
       final mins = d.inMinutes - d.inHours * 60;
@@ -181,7 +199,8 @@ class _PausedView extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final s = S.of(context);
-    return ListView(
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(s.offlineCatalogPausedTitle, style: theme.textTheme.headlineMedium),
         const SizedBox(height: 8),
@@ -191,10 +210,15 @@ class _PausedView extends StatelessWidget {
           LinearProgressIndicator(value: progress!.fraction, minHeight: 8),
           const SizedBox(height: 12),
           Text(
-            s.offlineCatalogPausedProgress(
-              _n(progress!.rowsDownloaded),
-              _n(progress!.totalRows),
-            ),
+            progress!.phase == DownloadPhase.downloading
+                ? s.offlineCatalogPausedProgress(
+                    _formatBytes(progress!.bytesDone),
+                    _formatBytes(progress!.bytesTotal),
+                  )
+                : s.offlineCatalogPausedProgress(
+                    _n(progress!.rowsKept),
+                    _n(progress!.rowsScanned),
+                  ),
             style: theme.textTheme.bodyMedium,
           ),
           const SizedBox(height: 24),
@@ -230,6 +254,17 @@ class _PausedView extends StatelessWidget {
         RegExp(r'(\d)(?=(\d{3})+(?!\d))'),
         (m) => '${m[1]},',
       );
+
+  String _formatBytes(int bytes) {
+    if (bytes >= 1024 * 1024 * 1024) {
+      return '${(bytes / (1024 * 1024 * 1024)).toStringAsFixed(2)} GB';
+    }
+    if (bytes >= 1024 * 1024) {
+      return '${(bytes / (1024 * 1024)).round()} MB';
+    }
+    if (bytes >= 1024) return '${(bytes / 1024).round()} KB';
+    return '$bytes B';
+  }
 }
 
 class _DoneView extends StatelessWidget {
