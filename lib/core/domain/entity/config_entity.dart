@@ -19,6 +19,7 @@ class ConfigEntity extends Equatable {
   final int notificationMinute;
   final String? selectedLocale;
   final bool showMicronutrients; // #237
+  final bool offlineCatalogEnabled;
 
   const ConfigEntity(
     this.hasAcceptedDisclaimer,
@@ -37,6 +38,7 @@ class ConfigEntity extends Equatable {
     this.notificationMinute = 0,
     this.selectedLocale,
     this.showMicronutrients = false,
+    this.offlineCatalogEnabled = false,
   });
 
   factory ConfigEntity.fromConfigDBO(ConfigDBO dbo) => ConfigEntity(
@@ -56,6 +58,7 @@ class ConfigEntity extends Equatable {
         notificationMinute: dbo.notificationMinute ?? 0,
         selectedLocale: dbo.selectedLocale,
         showMicronutrients: dbo.showMicronutrients ?? false,
+        offlineCatalogEnabled: dbo.offlineCatalogEnabled ?? false,
       );
 
   @override
@@ -75,5 +78,6 @@ class ConfigEntity extends Equatable {
         notificationMinute,
         selectedLocale,
         showMicronutrients,
+        offlineCatalogEnabled,
       ];
 }

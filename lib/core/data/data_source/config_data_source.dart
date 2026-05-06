@@ -147,6 +147,17 @@ class ConfigDataSource {
     await config?.save();
   }
 
+  Future<void> setOfflineCatalogEnabled(bool enabled) async {
+    _log.fine('Updating config offlineCatalogEnabled to $enabled');
+    final config = _configBox.get(_configKey);
+    config?.offlineCatalogEnabled = enabled;
+    await config?.save();
+  }
+
+  Future<bool> getOfflineCatalogEnabled() async {
+    final config = _configBox.get(_configKey);
+    return config?.offlineCatalogEnabled ?? false;
+  }
 
   Future<ConfigDBO> getConfig() async {
     return _configBox.get(_configKey) ?? ConfigDBO.empty();

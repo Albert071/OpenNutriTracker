@@ -96,4 +96,12 @@ class ConfigRepository {
   Future<void> setConfigShowMicronutrients(bool show) async {
     await _configDataSource.setConfigShowMicronutrients(show);
   }
+
+  Future<void> setOfflineCatalogEnabled(bool enabled) async {
+    await _configDataSource.setOfflineCatalogEnabled(enabled);
+  }
+
+  Future<bool> getOfflineCatalogEnabled() async {
+    return await _configDataSource.getOfflineCatalogEnabled();
+  }
 }
