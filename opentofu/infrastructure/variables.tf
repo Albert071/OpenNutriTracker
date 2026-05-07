@@ -27,9 +27,9 @@ variable "edge_cache_seconds" {
 }
 
 variable "browser_cache_seconds" {
-  description = "Cache-Control max-age sent to HTTP clients. Kept short (1 day) so users see fresh content within ~24h of the Saturday rebuild even if their HTTP client cached aggressively, without forcing a daily round-trip to origin (the edge handles that, see edge_cache_seconds)."
+  description = "Cache-Control max-age sent to HTTP clients. Deliberately short (2 minutes) so HTTP clients converge on freshly-purged catalog content within minutes of each rebuild's apply rather than serving up to a day of stale bytes from their own cache. Revalidations land on Cloudflare's edge — which holds chunks for `edge_cache_seconds` — and either return 304 (unchanged content) or the fresh body, so this short value does not increase R2 origin reads. The two-minute floor exists mostly to support the future in-app cache-refresh notification feature that will poll the manifest periodically."
   type        = number
-  default     = 86400 # 1 day
+  default     = 120 # 2 minutes
 }
 
 variable "catalog_build_output_dir" {
