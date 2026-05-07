@@ -50,6 +50,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
     _diaryBloc = locator<DiaryBloc>();
     _calendarDayBloc = locator<CalendarDayBloc>();
     super.initState();
+    // SettingsBloc is registered as a singleton so the previous
+    // SettingsLoadedState survives across screen visits. The cache
+    // count and on-disk size in particular are written in the
+    // background by search and barcode-scan flows, so reading them
+    // once at the bloc's first transition out of SettingsInitial
+    // leaves stale values on the screen for the rest of the session.
+    // Refresh on every entry instead.
+    _settingsBloc.add(LoadSettingsEvent());
   }
 
   @override

@@ -144,6 +144,53 @@ void main() {
       expect(tsBox.get('B'), isNotNull);
     });
 
+    test(
+        'cacheFromSearch dedups within a single batch (later duplicate '
+        'overwrites earlier rather than producing two rows)', () async {
+      await ds.cacheFromSearch([
+        _meal(code: 'A', name: 'Apple v1'),
+        _meal(code: 'B', name: 'Banana'),
+        _meal(code: 'A', name: 'Apple v2'), // duplicate within the same batch
+      ]);
+
+      expect(ds.count, equals(2),
+          reason: 'duplicate code within a batch must not double-add');
+      final apples =
+          ds.getAll().where((m) => m.code == 'A').toList();
+      expect(apples, hasLength(1));
+      expect(apples.first.name, equals('Apple v2'));
+    });
+
+    test(
+        'cacheFromSearch behaves identically against a large pre-populated box '
+        '(regression: O(N²) linear scan replaced with map dedup)', () async {
+      // Pre-populate with 200 entries to make a regression to the
+      // linear-scan path obvious in a CI run; the assertion is on
+      // correctness, not on timing.
+      final preExisting = List.generate(
+        200,
+        (i) => _meal(code: 'pre$i', name: 'Pre $i'),
+      );
+      await ds.cacheFromSearch(preExisting);
+      expect(ds.count, equals(200));
+
+      // Now cache a batch where some items overlap and some are new.
+      final batch = [
+        _meal(code: 'pre50', name: 'Pre 50 refreshed'),
+        _meal(code: 'pre150', name: 'Pre 150 refreshed'),
+        _meal(code: 'fresh1', name: 'Fresh 1'),
+        _meal(code: 'fresh2', name: 'Fresh 2'),
+      ];
+      await ds.cacheFromSearch(batch);
+
+      expect(ds.count, equals(202),
+          reason: '200 pre-existing + 2 fresh, no duplicates');
+      expect(ds.getByBarcode('pre50')?.name, equals('Pre 50 refreshed'));
+      expect(ds.getByBarcode('pre150')?.name, equals('Pre 150 refreshed'));
+      expect(ds.getByBarcode('fresh1'), isNotNull);
+      expect(ds.getByBarcode('fresh2'), isNotNull);
+    });
+
     test('getByBarcode returns the matching cached entry or null', () async {
       await ds.cache(_meal(code: 'X', name: 'Item X'));
       await ds.cache(_meal(code: 'Y', name: 'Item Y'));

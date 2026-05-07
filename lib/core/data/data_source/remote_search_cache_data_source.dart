@@ -35,14 +35,10 @@ class RemoteSearchCacheDataSource {
   /// code is null, the same name) already exists, it is overwritten so
   /// the freshest remote result wins.
   Future<void> cache(MealDBO meal) async {
-    final existing = _cacheBox.values.cast<MealDBO?>().firstWhere(
-      (m) =>
-          (meal.code != null && m?.code == meal.code) ||
-          (meal.code == null && m?.name == meal.name),
-      orElse: () => null,
-    );
-    if (existing != null) {
-      await _cacheBox.put(existing.key, meal);
+    final index = _buildDedupIndex();
+    final existingKey = _lookupExistingKey(meal, index);
+    if (existingKey != null) {
+      await _cacheBox.put(existingKey, meal);
     } else {
       await _cacheBox.add(meal);
     }
@@ -58,8 +54,22 @@ class RemoteSearchCacheDataSource {
   /// the wrong choice for bulk caching a search result page; use
   /// [cacheFromSearch] for that.
   Future<void> cacheAll(Iterable<MealDBO> meals) async {
+    final index = _buildDedupIndex();
+    final now = DateTime.now().millisecondsSinceEpoch;
     for (final meal in meals) {
-      await cache(meal);
+      final existingKey = _lookupExistingKey(meal, index);
+      if (existingKey != null) {
+        await _cacheBox.put(existingKey, meal);
+      } else {
+        final newKey = await _cacheBox.add(meal);
+        // Keep the index live so a duplicate later in the same batch
+        // overwrites this entry rather than producing a second copy.
+        _registerInIndex(meal, newKey, index);
+      }
+      final tsKey = _timestampKey(meal);
+      if (tsKey != null) {
+        await _timestampsBox.put(tsKey, now);
+      }
     }
   }
 
@@ -69,24 +79,67 @@ class RemoteSearchCacheDataSource {
   /// "user-selected this recently" signal isn't wiped out by an
   /// unrelated re-search of the same query.
   Future<void> cacheFromSearch(Iterable<MealDBO> meals) async {
+    final index = _buildDedupIndex();
+    final now = DateTime.now().millisecondsSinceEpoch;
     for (final meal in meals) {
-      final existing = _cacheBox.values.cast<MealDBO?>().firstWhere(
-        (m) =>
-            (meal.code != null && m?.code == meal.code) ||
-            (meal.code == null && m?.name == meal.name),
-        orElse: () => null,
-      );
-      if (existing != null) {
+      final existingKey = _lookupExistingKey(meal, index);
+      if (existingKey != null) {
         // Refresh data, leave timestamp alone.
-        await _cacheBox.put(existing.key, meal);
+        await _cacheBox.put(existingKey, meal);
       } else {
-        await _cacheBox.add(meal);
+        final newKey = await _cacheBox.add(meal);
+        _registerInIndex(meal, newKey, index);
         final tsKey = _timestampKey(meal);
         if (tsKey != null) {
-          await _timestampsBox.put(
-              tsKey, DateTime.now().millisecondsSinceEpoch);
+          await _timestampsBox.put(tsKey, now);
         }
       }
+    }
+  }
+
+  /// Snapshot the cache box into a per-call dedup index. Two maps so
+  /// barcode-keyed entries and name-keyed entries don't collide on a
+  /// shared key namespace.
+  ///
+  /// The index lives only for the duration of a single cache(All|FromSearch)
+  /// call — bookkeeping a long-lived index inside the data source would
+  /// be more invasive than the speedup justifies, and Hive's `.values`
+  /// already iterates over an in-memory map so the snapshot is cheap.
+  _DedupIndex _buildDedupIndex() {
+    final byCode = <String, dynamic>{};
+    final byName = <String, dynamic>{};
+    for (final entry in _cacheBox.toMap().entries) {
+      final meal = entry.value;
+      final code = meal.code;
+      if (code != null && code.isNotEmpty) {
+        byCode[code] = entry.key;
+      } else {
+        final name = meal.name;
+        if (name != null && name.isNotEmpty) {
+          byName[name] = entry.key;
+        }
+      }
+    }
+    return _DedupIndex(byCode: byCode, byName: byName);
+  }
+
+  dynamic _lookupExistingKey(MealDBO meal, _DedupIndex index) {
+    final code = meal.code;
+    if (code != null && code.isNotEmpty) return index.byCode[code];
+    final name = meal.name;
+    if (name != null && name.isNotEmpty) return index.byName[name];
+    return null;
+  }
+
+  void _registerInIndex(MealDBO meal, dynamic boxKey, _DedupIndex index) {
+    final code = meal.code;
+    if (code != null && code.isNotEmpty) {
+      index.byCode[code] = boxKey;
+      return;
+    }
+    final name = meal.name;
+    if (name != null && name.isNotEmpty) {
+      index.byName[name] = boxKey;
     }
   }
 
@@ -192,4 +245,11 @@ class RemoteSearchCacheDataSource {
     if (meal.name != null && meal.name!.isNotEmpty) return meal.name;
     return null;
   }
+}
+
+class _DedupIndex {
+  final Map<String, dynamic> byCode;
+  final Map<String, dynamic> byName;
+
+  _DedupIndex({required this.byCode, required this.byName});
 }

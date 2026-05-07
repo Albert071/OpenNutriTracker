@@ -21,69 +21,41 @@ class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'uk';
 
   static String m0(versionNumber) => "Версія ${versionNumber}";
-
   static String m1(pctCarbs, pctFats, pctProteins) =>
       "${pctCarbs}% вуглеводи, ${pctFats}% жири, ${pctProteins}% білки";
-
   static String m2(riskValue) => "Ризик супутніх захворювань: ${riskValue}";
-
   static String m3(age) => "${age} років";
-
   static String m4(mealType) =>
       "These items will be added to your ${mealType}.";
-
   static String m5(count) => "Import ${count} items?";
-
   static String m6(count) =>
       "${count} елемент(ів) не вдалося отримати з OpenFoodFacts.";
-
+  static String m7(count) => "Імпортувати ${count} активностей?";
   static String m8(rate) => "${rate} кг/тиждень";
-
   static String m9(rate) => "${rate} фунт/тиждень";
-
   static String m10(qty, unit) => "На ${qty} ${unit}";
-
   static String m11(time) => "Час нагадування: ${time}";
-
   static String m12(count) => "З CSV файлу імпортовано ${count} страв.";
-
   static String m13(imported, skipped) =>
       "Імпортовано ${imported} страв; ${skipped} рядків пропущено через неправильні дані.";
-
   static String m14(count, size) => "${count} елементів · ${size}";
-
   static String m15(count) => "${count} інгредієнт(ів)";
-
   static String m16(count) =>
       "Імпортувати цей рецепт з ${count} інгредієнт(ами)?";
-
   static String m17(count) => "Вибрано: ${count}";
-
   static String m18(count) => "Видалити ${count} рецепт(ів)?";
-
   static String m19(count) => "${count} продуктів";
-
   static String m21(done, total) => "Завантажено ${done} з ${total}";
-
   static String m23(time) => "Залишилося приблизно ${time}";
-
   static String m24(done, total) => "Завантажено ${done} з ${total}";
-
   static String m25(count, size) =>
       "${count} продуктів доступні офлайн. ${size} на пристрої.";
-
   static String m26(percent) => "Створюється (${percent}%)";
-
   static String m27(count, size) => "${count} продуктів, ${size}";
-
   static String m28(when) => " · востаннє оновлено ${when}";
-
   static String m29(n) => "${n} міс. тому";
-
   static String m30(n) => "${n} тижн. тому";
-
   static String m31(n) => "${n} дн. тому";
-
   static String m32(n) => "${n} год. тому";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
@@ -91,32 +63,26 @@ class MessageLookup extends MessageLookupByLibrary {
         "activityExample": MessageLookupByLibrary.simpleMessage(
             "наприклад, біг, їзда на велосипеді, йога ..."),
         "activityLabel": MessageLookupByLibrary.simpleMessage("Активність"),
-        "addItemLabel":
-            MessageLookupByLibrary.simpleMessage("Додати новий елемент:"),
+        "addItemLabel": MessageLookupByLibrary.simpleMessage("Додати новий елемент:"),
         "addLabel": MessageLookupByLibrary.simpleMessage("Додати"),
         "additionalInfoLabelCompendium2011": MessageLookupByLibrary.simpleMessage(
             "Інформація надана\n \"2024 Compendium\n of Physical Activities\""),
-        "additionalInfoLabelCustom":
-            MessageLookupByLibrary.simpleMessage("Власний елемент їжі"),
-        "additionalInfoLabelRecipe":
-            MessageLookupByLibrary.simpleMessage("Власний рецепт"),
+        "additionalInfoLabelCustom": MessageLookupByLibrary.simpleMessage("Власний елемент їжі"),
         "additionalInfoLabelFDC": MessageLookupByLibrary.simpleMessage(
             "Більше інформації на\nFoodData Central"),
         "additionalInfoLabelOFF": MessageLookupByLibrary.simpleMessage(
             "Більше інформації на\nOpenFoodFacts"),
-        "additionalInfoLabelUnknown":
-            MessageLookupByLibrary.simpleMessage("Невідомий елемент їжі"),
+        "additionalInfoLabelRecipe": MessageLookupByLibrary.simpleMessage("Власний рецепт"),
+        "additionalInfoLabelUnknown": MessageLookupByLibrary.simpleMessage("Невідомий елемент їжі"),
         "ageLabel": MessageLookupByLibrary.simpleMessage("Вік"),
         "allItemsLabel": MessageLookupByLibrary.simpleMessage("Всі"),
         "alphaVersionName": MessageLookupByLibrary.simpleMessage("[Альфа]"),
         "appDescription": MessageLookupByLibrary.simpleMessage(
             "OpenNutriTracker — це безкоштовний трекер калорій та поживних речовин з відкритим кодом, який поважає вашу конфіденційність і не містить реклами"),
-        "appLicenseLabel":
-            MessageLookupByLibrary.simpleMessage("Ліцензія GPL-3.0"),
+        "appLicenseLabel": MessageLookupByLibrary.simpleMessage("Ліцензія GPL-3.0"),
         "appTitle": MessageLookupByLibrary.simpleMessage("OpenNutriTracker"),
         "appVersionName": m0,
-        "baseQuantityLabel":
-            MessageLookupByLibrary.simpleMessage("Базова кількість (г/мл)"),
+        "baseQuantityLabel": MessageLookupByLibrary.simpleMessage("Базова кількість (г/мл)"),
         "betaVersionName": MessageLookupByLibrary.simpleMessage("[Бета]"),
         "bmiInfo": MessageLookupByLibrary.simpleMessage(
             "Індекс маси тіла (ІМТ) — це індекс для класифікації надмірної ваги та ожиріння у дорослих. Визначається як вага в кілограмах, поділена на квадрат зросту в метрах (кг/м²). ІМТ не розрізняє жирову і м\'язову масу і може бути неточним для деяких людей."),
@@ -131,78 +97,90 @@ class MessageLookup extends MessageLookupByLibrary {
         "buttonStartLabel": MessageLookupByLibrary.simpleMessage("Почати"),
         "buttonYesLabel": MessageLookupByLibrary.simpleMessage("Так"),
         "calciumLabel": MessageLookupByLibrary.simpleMessage("кальцій"),
-        "calculationsMacronutrientsDistributionLabel":
-            MessageLookupByLibrary.simpleMessage("Розподіл макроелементів"),
+        "calculationsMacronutrientsDistributionLabel": MessageLookupByLibrary.simpleMessage("Розподіл макроелементів"),
         "calculationsMacrosDistribution": m1,
-        "calculationsRecommendedLabel":
-            MessageLookupByLibrary.simpleMessage("(рекомендовано)"),
+        "calculationsRecommendedLabel": MessageLookupByLibrary.simpleMessage("(рекомендовано)"),
         "calculationsTDEEIOM2006Label": MessageLookupByLibrary.simpleMessage(
             "Розрахунок Інституту Медицини"),
-        "calculationsTDEELabel":
-            MessageLookupByLibrary.simpleMessage("Розрахунок TDEE"),
+        "calculationsTDEELabel": MessageLookupByLibrary.simpleMessage("Розрахунок TDEE"),
         "caloriesProfileAveragedLabel": MessageLookupByLibrary.simpleMessage(
             "Усереднена референція (за замовчуванням)"),
-        "caloriesProfileEstrogenTypicalLabel":
-            MessageLookupByLibrary.simpleMessage("Естрогенова референція"),
+        "caloriesProfileEstrogenTypicalLabel": MessageLookupByLibrary.simpleMessage("Естрогенова референція"),
         "caloriesProfileInfoBody": MessageLookupByLibrary.simpleMessage(
             "Для небінарних користувачів ми за замовчуванням використовуємо усереднену калорійну референцію. Якщо ви проходите ГЗТ або хочете точнішу початкову точку, тут можна обрати свій гормональний профіль. Цей вибір впливає лише на розрахунок калорій — він ніде не передається й не показується в інших частинах застосунку."),
-        "caloriesProfileInfoTitle":
-            MessageLookupByLibrary.simpleMessage("Калорійна референція"),
-        "caloriesProfileTestosteroneTypicalLabel":
-            MessageLookupByLibrary.simpleMessage("Тестостеронова референція"),
+        "caloriesProfileInfoTitle": MessageLookupByLibrary.simpleMessage("Калорійна референція"),
+        "caloriesProfileTestosteroneTypicalLabel": MessageLookupByLibrary.simpleMessage("Тестостеронова референція"),
         "carbohydrateLabel": MessageLookupByLibrary.simpleMessage("вуглеводи"),
         "carbsLabel": MessageLookupByLibrary.simpleMessage("вуглеводи"),
         "carbsLabelShort": MessageLookupByLibrary.simpleMessage("в"),
         "cholesterolLabel": MessageLookupByLibrary.simpleMessage("холестерин"),
-        "chooseWeeklyWeightGoalLabel":
-            MessageLookupByLibrary.simpleMessage("Тижневий темп ваги"),
-        "chooseWeightGoalLabel":
-            MessageLookupByLibrary.simpleMessage("Виберіть ціль ваги"),
+        "chooseWeeklyWeightGoalLabel": MessageLookupByLibrary.simpleMessage("Тижневий темп ваги"),
+        "chooseWeightGoalLabel": MessageLookupByLibrary.simpleMessage("Виберіть ціль ваги"),
+        "clearOffCacheConfirmContent": MessageLookupByLibrary.simpleMessage(
+            "Видаляє локально збережені результати пошуку та сканування з Open Food Facts та FDC. Кеш автоматично відновлюється під час пошуку та сканування. Ваші власні страви не зачіпаються."),
+        "clearOffCacheConfirmTitle": MessageLookupByLibrary.simpleMessage("Очистити кеш?"),
+        "clearOffCacheLabel": MessageLookupByLibrary.simpleMessage("Очистити кеш"),
+        "clearOffCacheSubtitle": m14,
         "cmLabel": MessageLookupByLibrary.simpleMessage("см"),
-        "codeCopiedLabel":
-            MessageLookupByLibrary.simpleMessage("Код скопійовано"),
-        "copyCodeLabel":
-            MessageLookupByLibrary.simpleMessage("Копіювати код"),
+        "codeCopiedLabel": MessageLookupByLibrary.simpleMessage("Код скопійовано"),
+        "copyCodeLabel": MessageLookupByLibrary.simpleMessage("Копіювати код"),
         "copyDialogTitle": MessageLookupByLibrary.simpleMessage(
             "До якого типу страви скопіювати?"),
         "copyOrDeleteTimeDialogContent": MessageLookupByLibrary.simpleMessage(
             "За допомогою \"Скопіювати на сьогодні\" ви можете скопіювати страву на сьогодні. За допомогою \"Видалити\" ви можете видалити страву."),
-        "copyOrDeleteTimeDialogTitle":
-            MessageLookupByLibrary.simpleMessage("Що ви хочете зробити?"),
+        "copyOrDeleteTimeDialogTitle": MessageLookupByLibrary.simpleMessage("Що ви хочете зробити?"),
         "createCustomDialogContent": MessageLookupByLibrary.simpleMessage(
             "Бажаєте створити власну їжу?"),
-        "createCustomDialogTitle":
-            MessageLookupByLibrary.simpleMessage("Створити власну їжу?"),
-        "dailyKcalAdjustmentLabel":
-            MessageLookupByLibrary.simpleMessage("Щоденна корекція калорій:"),
+        "createCustomDialogTitle": MessageLookupByLibrary.simpleMessage("Створити власну їжу?"),
+        "createRecipeTitle": MessageLookupByLibrary.simpleMessage("Створити рецепт"),
+        "csvImportContributeOffAndroidLink": MessageLookupByLibrary.simpleMessage("Android"),
+        "csvImportContributeOffIosLink": MessageLookupByLibrary.simpleMessage("iOS"),
+        "csvImportContributeOffPrefix": MessageLookupByLibrary.simpleMessage(
+            "Маєте штрих-код? Додайте продукт до Open Food Facts:"),
+        "csvImportErrorLabel": MessageLookupByLibrary.simpleMessage(
+            "Не вдалося прочитати CSV файл. Перевірте формат і спробуйте знову."),
+        "csvImportPartialLabel": m13,
+        "csvImportSuccessLabel": m12,
+        "customMealsDeleteConfirmContent": MessageLookupByLibrary.simpleMessage(
+            "Усі записи в щоденнику, що використовують цю страву, також буде видалено."),
+        "customMealsDeleteConfirmTitle": MessageLookupByLibrary.simpleMessage("Видалити власну страву?"),
+        "customMealsEmptyLabel": MessageLookupByLibrary.simpleMessage(
+            "Ще немає збережених власних страв."),
+        "dailyKcalAdjustmentLabel": MessageLookupByLibrary.simpleMessage("Щоденна корекція калорій:"),
         "dataCollectionLabel": MessageLookupByLibrary.simpleMessage(
             "Підтримайте розробку, надаючи анонімні дані про використання"),
         "deleteAllLabel": MessageLookupByLibrary.simpleMessage("Видалити все"),
+        "deleteSelectedRecipesConfirmTitle": m18,
         "deleteTimeDialogContent": MessageLookupByLibrary.simpleMessage(
             "Ви хочете видалити вибраний елемент?"),
         "deleteTimeDialogPluralContent": MessageLookupByLibrary.simpleMessage(
             "Ви хочете видалити всі елементи цієї страви?"),
-        "deleteTimeDialogPluralTitle":
-            MessageLookupByLibrary.simpleMessage("Видалити елементи?"),
-        "deleteTimeDialogTitle":
-            MessageLookupByLibrary.simpleMessage("Видалити елемент?"),
+        "deleteTimeDialogPluralTitle": MessageLookupByLibrary.simpleMessage("Видалити елементи?"),
+        "deleteTimeDialogTitle": MessageLookupByLibrary.simpleMessage("Видалити елемент?"),
         "dialogCancelLabel": MessageLookupByLibrary.simpleMessage("Скасувати"),
-        "dialogCopyLabel":
-            MessageLookupByLibrary.simpleMessage("Скопіювати на сьогодні"),
+        "dialogCopyLabel": MessageLookupByLibrary.simpleMessage("Скопіювати на сьогодні"),
         "dialogDeleteLabel": MessageLookupByLibrary.simpleMessage("ВИДАЛИТИ"),
         "dialogOKLabel": MessageLookupByLibrary.simpleMessage("ОК"),
-        "diaryLabel": MessageLookupByLibrary.simpleMessage("Щоденник"),
         "diaryFutureDateWarning": MessageLookupByLibrary.simpleMessage(
             "Ви редагуєте майбутню дату"),
+        "diaryLabel": MessageLookupByLibrary.simpleMessage("Щоденник"),
         "dinnerExample": MessageLookupByLibrary.simpleMessage(
             "наприклад, суп, курка, вино ..."),
         "dinnerLabel": MessageLookupByLibrary.simpleMessage("Вечеря"),
+        "discardChangesConfirmLabel": MessageLookupByLibrary.simpleMessage("Скасувати"),
+        "discardChangesContent": MessageLookupByLibrary.simpleMessage(
+            "Ваші незбережені зміни будуть втрачені."),
+        "discardChangesTitle": MessageLookupByLibrary.simpleMessage("Скасувати зміни?"),
         "disclaimerText": MessageLookupByLibrary.simpleMessage(
             "OpenNutriTracker не є медичним додатком. Всі надані дані не перевіряються і повинні використовуватися з обережністю. Будь ласка, ведіть здоровий спосіб життя і консультуйтеся з фахівцем, якщо у вас виникли проблеми. Використання під час хвороби, вагітності або лактації не рекомендується."),
-        "editItemDialogTitle":
-            MessageLookupByLibrary.simpleMessage("Редагувати елемент"),
-        "editMealLabel":
-            MessageLookupByLibrary.simpleMessage("Редагувати страву"),
+        "downloadSampleCsvAction": MessageLookupByLibrary.simpleMessage("Зразкові страви (csv)"),
+        "downloadSampleRecipesCsvAction": MessageLookupByLibrary.simpleMessage("Зразкові рецепти (csv)"),
+        "duplicateMealDialogContent": MessageLookupByLibrary.simpleMessage("Цю їжу вже додано до цього прийому їжі сьогодні. Додати ще раз?"),
+        "duplicateRecipeLabel": MessageLookupByLibrary.simpleMessage("Дублювати"),
+        "duplicateRecipeNameSuffix": MessageLookupByLibrary.simpleMessage("(копія)"),
+        "editItemDialogTitle": MessageLookupByLibrary.simpleMessage("Редагувати елемент"),
+        "editMealLabel": MessageLookupByLibrary.simpleMessage("Редагувати страву"),
+        "editRecipeTitle": MessageLookupByLibrary.simpleMessage("Редагувати рецепт"),
         "energyLabel": MessageLookupByLibrary.simpleMessage("енергія"),
         "errorFetchingProductData": MessageLookupByLibrary.simpleMessage(
             "Помилка при отриманні даних про продукт"),
@@ -214,60 +192,14 @@ class MessageLookup extends MessageLookupByLibrary {
             "Помилка при відкритті браузера"),
         "errorOpeningEmail": MessageLookupByLibrary.simpleMessage(
             "Помилка при відкритті поштової програми"),
-        "errorProductNotFound":
-            MessageLookupByLibrary.simpleMessage("Продукт не знайдено"),
-        "customMealsDeleteConfirmContent": MessageLookupByLibrary.simpleMessage(
-            "Усі записи в щоденнику, що використовують цю страву, також буде видалено."),
-        "customMealsDeleteConfirmTitle":
-            MessageLookupByLibrary.simpleMessage("Видалити власну страву?"),
-        "customMealsEmptyLabel": MessageLookupByLibrary.simpleMessage(
-            "Ще немає збережених власних страв."),
-        "ironLabel": MessageLookupByLibrary.simpleMessage("залізо"),
-        "magnesiumLabel": MessageLookupByLibrary.simpleMessage("магній"),
-        "micronutrientsLabel": MessageLookupByLibrary.simpleMessage("Мікроелементи"),
-        "monounsaturatedFatLabel": MessageLookupByLibrary.simpleMessage("мононенасичені жири"),
-        "niacinLabel": MessageLookupByLibrary.simpleMessage("ніацин (B3)"),
-        "phosphorusLabel": MessageLookupByLibrary.simpleMessage("фосфор"),
-        "polyunsaturatedFatLabel": MessageLookupByLibrary.simpleMessage("поліненасичені жири"),
-        "potassiumLabel": MessageLookupByLibrary.simpleMessage("калій"),
-        "settingsCustomMealsLabel":
-            MessageLookupByLibrary.simpleMessage("Власні страви"),
-        "clearOffCacheConfirmContent": MessageLookupByLibrary.simpleMessage(
-            "Видаляє локально збережені результати пошуку та сканування з Open Food Facts та FDC. Кеш автоматично відновлюється під час пошуку та сканування. Ваші власні страви не зачіпаються."),
-        "clearOffCacheConfirmTitle":
-            MessageLookupByLibrary.simpleMessage("Очистити кеш?"),
-        "clearOffCacheLabel":
-            MessageLookupByLibrary.simpleMessage("Очистити кеш"),
-        "clearOffCacheSubtitle": m14,
-        "csvImportContributeOffAndroidLink":
-            MessageLookupByLibrary.simpleMessage("Android"),
-        "csvImportContributeOffIosLink":
-            MessageLookupByLibrary.simpleMessage("iOS"),
-        "csvImportContributeOffPrefix": MessageLookupByLibrary.simpleMessage(
-            "Маєте штрих-код? Додайте продукт до Open Food Facts:"),
-        "csvImportErrorLabel": MessageLookupByLibrary.simpleMessage(
-            "Не вдалося прочитати CSV файл. Перевірте формат і спробуйте знову."),
-        "csvImportPartialLabel": m13,
-        "csvImportSuccessLabel": m12,
-        "downloadSampleCsvAction":
-            MessageLookupByLibrary.simpleMessage("Зразкові страви (csv)"),
-        "downloadSampleRecipesCsvAction":
-            MessageLookupByLibrary.simpleMessage("Зразкові рецепти (csv)"),
-        "importMealsCsvAction":
-            MessageLookupByLibrary.simpleMessage("Імпортувати страви (csv)"),
+        "errorProductNotFound": MessageLookupByLibrary.simpleMessage("Продукт не знайдено"),
         "exportAction": MessageLookupByLibrary.simpleMessage("Експортувати"),
-        "exportImportDescription": MessageLookupByLibrary.simpleMessage(
-            "Ви можете експортувати дані додатка у zip-файл і імпортувати їх пізніше. Це корисно, якщо ви хочете зробити резервну копію або перенести дані на інший пристрій. Додаток не використовує жодних хмарних сервісів для зберігання ваших даних."),
-        "exportImportErrorLabel":
-            MessageLookupByLibrary.simpleMessage("Помилка експорту / імпорту"),
         "exportImportAppDataLabel": MessageLookupByLibrary.simpleMessage(
             "Експортувати / Імпортувати дані застосунку"),
-        "importCustomFoodDataLabel": MessageLookupByLibrary.simpleMessage(
-            "Імпортувати власні дані про їжу"),
-        "importCustomFoodDataDescription": MessageLookupByLibrary.simpleMessage(
-            "Імпортуйте власні страви з CSV файлу. Завантажте зразок, щоб побачити очікуваний формат стовпців та обов'язкові поля."),
-        "exportImportSuccessLabel":
-            MessageLookupByLibrary.simpleMessage("Експорт / Імпорт успішний"),
+        "exportImportDescription": MessageLookupByLibrary.simpleMessage(
+            "Ви можете експортувати дані додатка у zip-файл і імпортувати їх пізніше. Це корисно, якщо ви хочете зробити резервну копію або перенести дані на інший пристрій. Додаток не використовує жодних хмарних сервісів для зберігання ваших даних."),
+        "exportImportErrorLabel": MessageLookupByLibrary.simpleMessage("Помилка експорту / імпорту"),
+        "exportImportSuccessLabel": MessageLookupByLibrary.simpleMessage("Експорт / Імпорт успішний"),
         "fatLabel": MessageLookupByLibrary.simpleMessage("жири"),
         "fatLabelShort": MessageLookupByLibrary.simpleMessage("ж"),
         "fiberLabel": MessageLookupByLibrary.simpleMessage("клітковина"),
@@ -276,45 +208,53 @@ class MessageLookup extends MessageLookupByLibrary {
         "genderFemaleLabel": MessageLookupByLibrary.simpleMessage("жінка"),
         "genderLabel": MessageLookupByLibrary.simpleMessage("Стать"),
         "genderMaleLabel": MessageLookupByLibrary.simpleMessage("чоловік"),
-        "genderNonBinaryLabel":
-            MessageLookupByLibrary.simpleMessage("небінарний"),
+        "genderNonBinaryLabel": MessageLookupByLibrary.simpleMessage("небінарний"),
         "goalGainWeight": MessageLookupByLibrary.simpleMessage("Набрати вагу"),
         "goalLabel": MessageLookupByLibrary.simpleMessage("Ціль"),
         "goalLoseWeight": MessageLookupByLibrary.simpleMessage("Схуднути"),
-        "goalMaintainWeight":
-            MessageLookupByLibrary.simpleMessage("Підтримувати вагу"),
+        "goalMaintainWeight": MessageLookupByLibrary.simpleMessage("Підтримувати вагу"),
         "gramMilliliterUnit": MessageLookupByLibrary.simpleMessage("г/мл"),
         "gramUnit": MessageLookupByLibrary.simpleMessage("г"),
         "heightLabel": MessageLookupByLibrary.simpleMessage("Зріст"),
         "homeLabel": MessageLookupByLibrary.simpleMessage("Головна"),
         "importAction": MessageLookupByLibrary.simpleMessage("Імпортувати"),
+        "importActivityConfirmContent": MessageLookupByLibrary.simpleMessage("Ці активності буде додано на сьогодні."),
+        "importActivityConfirmTitle": m7,
+        "importActivityLabel": MessageLookupByLibrary.simpleMessage("Імпортувати спільне тренування"),
+        "importActivitySuccessLabel": MessageLookupByLibrary.simpleMessage("Тренування імпортовано"),
+        "importCustomFoodDataDescription": MessageLookupByLibrary.simpleMessage(
+            "Імпортуйте власні страви з CSV файлу. Завантажте зразок, щоб побачити очікуваний формат стовпців та обов'язкові поля."),
+        "importCustomFoodDataLabel": MessageLookupByLibrary.simpleMessage(
+            "Імпортувати власні дані про їжу"),
         "importMealConfirmContent": m4,
         "importMealConfirmTitle": m5,
-        "importMealErrorLabel":
-            MessageLookupByLibrary.simpleMessage("Invalid QR code"),
-        "importMealLabel":
-            MessageLookupByLibrary.simpleMessage("Import shared meal"),
-        "importMealSuccessLabel":
-            MessageLookupByLibrary.simpleMessage("Meal imported"),
+        "importMealErrorLabel": MessageLookupByLibrary.simpleMessage("Invalid QR code"),
+        "importMealLabel": MessageLookupByLibrary.simpleMessage("Import shared meal"),
+        "importMealSuccessLabel": MessageLookupByLibrary.simpleMessage("Meal imported"),
+        "importMealsCsvAction": MessageLookupByLibrary.simpleMessage("Імпортувати страви (csv)"),
         "importOffFetchFailedLabel": m6,
-        "infoAddedActivityLabel":
-            MessageLookupByLibrary.simpleMessage("Додано нову активність"),
-        "infoAddedIntakeLabel":
-            MessageLookupByLibrary.simpleMessage("Додано новий прийом їжі"),
-        "itemDeletedSnackbar":
-            MessageLookupByLibrary.simpleMessage("Елемент видалено"),
-        "itemUpdatedSnackbar":
-            MessageLookupByLibrary.simpleMessage("Елемент оновлено"),
+        "importRecipeConfirmContent": m16,
+        "importRecipeErrorLabel": MessageLookupByLibrary.simpleMessage(
+            "Не вдалося розпізнати код рецепта"),
+        "importRecipeLabel": MessageLookupByLibrary.simpleMessage("Імпортувати рецепт"),
+        "importRecipeSuccessLabel": MessageLookupByLibrary.simpleMessage("Рецепт імпортовано"),
+        "importRecipesCsvAction": MessageLookupByLibrary.simpleMessage(
+            "Імпортувати рецепти (csv)"),
+        "infoAddedActivityLabel": MessageLookupByLibrary.simpleMessage("Додано нову активність"),
+        "infoAddedIntakeLabel": MessageLookupByLibrary.simpleMessage("Додано новий прийом їжі"),
+        "ironLabel": MessageLookupByLibrary.simpleMessage("залізо"),
+        "itemDeletedSnackbar": MessageLookupByLibrary.simpleMessage("Елемент видалено"),
+        "itemUpdatedSnackbar": MessageLookupByLibrary.simpleMessage("Елемент оновлено"),
         "kcalLabel": MessageLookupByLibrary.simpleMessage("ккал"),
-        "kcalLeftLabel":
-            MessageLookupByLibrary.simpleMessage("залишилось ккал"),
+        "kcalLeftLabel": MessageLookupByLibrary.simpleMessage("залишилось ккал"),
+        "kcalTooMuchLabel": MessageLookupByLibrary.simpleMessage("ккал понад норму"),
         "kgLabel": MessageLookupByLibrary.simpleMessage("кг"),
         "lbsLabel": MessageLookupByLibrary.simpleMessage("фунт"),
         "lunchExample": MessageLookupByLibrary.simpleMessage(
             "наприклад, піца, салат, рис ..."),
         "lunchLabel": MessageLookupByLibrary.simpleMessage("Обід"),
-        "macroDistributionLabel":
-            MessageLookupByLibrary.simpleMessage("Розподіл макроелементів:"),
+        "macroDistributionLabel": MessageLookupByLibrary.simpleMessage("Розподіл макроелементів:"),
+        "magnesiumLabel": MessageLookupByLibrary.simpleMessage("магній"),
         "mealBrandsLabel": MessageLookupByLibrary.simpleMessage("Бренди"),
         "mealCarbsLabel": MessageLookupByLibrary.simpleMessage("вуглеводи на"),
         "mealFatLabel": MessageLookupByLibrary.simpleMessage("жири на"),
@@ -323,156 +263,202 @@ class MessageLookup extends MessageLookupByLibrary {
         "mealNameValidationError": MessageLookupByLibrary.simpleMessage(
             "Назва страви повинна містити принаймні одну літеру"),
         "mealNutrientsPerQtyLabel": m10,
-        "mealNutrientsTotalLabel":
-            MessageLookupByLibrary.simpleMessage("Загальна кількість"),
-        "mealProteinLabel":
-            MessageLookupByLibrary.simpleMessage("білки на 100 г/мл"),
-        "mealSizeLabel":
-            MessageLookupByLibrary.simpleMessage("Розмір страви (г/мл)"),
+        "mealNutrientsTotalLabel": MessageLookupByLibrary.simpleMessage("Загальна кількість"),
+        "mealProteinLabel": MessageLookupByLibrary.simpleMessage("білки на 100 г/мл"),
+        "mealSizeLabel": MessageLookupByLibrary.simpleMessage("Розмір страви (г/мл)"),
         "mealSizeLabelImperial": MessageLookupByLibrary.simpleMessage(
             "Розмір страви (унція/рідка унція)"),
         "mealUnitLabel": MessageLookupByLibrary.simpleMessage("Одиниця страви"),
+        "micronutrientsLabel": MessageLookupByLibrary.simpleMessage("Мікроелементи"),
         "milliliterUnit": MessageLookupByLibrary.simpleMessage("мл"),
         "missingProductInfo": MessageLookupByLibrary.simpleMessage(
             "У продукту відсутня необхідна інформація про ккал або макроелементи"),
+        "monounsaturatedFatLabel": MessageLookupByLibrary.simpleMessage("мононенасичені жири"),
+        "newCustomMealLabel": MessageLookupByLibrary.simpleMessage("Новий власний продукт"),
+        "niacinLabel": MessageLookupByLibrary.simpleMessage("ніацин (B3)"),
         "noActivityRecentlyAddedLabel": MessageLookupByLibrary.simpleMessage(
             "Нещодавно не додано активності"),
-        "noMealsRecentlyAddedLabel":
-            MessageLookupByLibrary.simpleMessage("Нещодавно не додано страв"),
-        "noResultsFound":
-            MessageLookupByLibrary.simpleMessage("Нічого не знайдено"),
+        "noMealsRecentlyAddedLabel": MessageLookupByLibrary.simpleMessage("Нещодавно не додано страв"),
+        "noResultsFound": MessageLookupByLibrary.simpleMessage("Нічого не знайдено"),
         "notAvailableLabel": MessageLookupByLibrary.simpleMessage("Н/Д"),
-        "nothingAddedLabel":
-            MessageLookupByLibrary.simpleMessage("Нічого не додано"),
-        "nutritionInfoLabel":
-            MessageLookupByLibrary.simpleMessage("Інформація про харчування"),
-        "nutritionalStatusNormalWeight":
-            MessageLookupByLibrary.simpleMessage("Нормальна вага"),
-        "nutritionalStatusObeseClassI":
-            MessageLookupByLibrary.simpleMessage("Ожиріння I класу"),
-        "nutritionalStatusObeseClassII":
-            MessageLookupByLibrary.simpleMessage("Ожиріння II класу"),
-        "nutritionalStatusObeseClassIII":
-            MessageLookupByLibrary.simpleMessage("Ожиріння III класу"),
-        "nutritionalStatusPreObesity":
-            MessageLookupByLibrary.simpleMessage("Передожиріння"),
-        "nutritionalStatusRiskAverage":
-            MessageLookupByLibrary.simpleMessage("Середній"),
-        "nutritionalStatusRiskIncreased":
-            MessageLookupByLibrary.simpleMessage("Підвищений"),
+        "nothingAddedLabel": MessageLookupByLibrary.simpleMessage("Нічого не додано"),
+        "nutritionInfoLabel": MessageLookupByLibrary.simpleMessage("Інформація про харчування"),
+        "nutritionalStatusNormalWeight": MessageLookupByLibrary.simpleMessage("Нормальна вага"),
+        "nutritionalStatusObeseClassI": MessageLookupByLibrary.simpleMessage("Ожиріння I класу"),
+        "nutritionalStatusObeseClassII": MessageLookupByLibrary.simpleMessage("Ожиріння II класу"),
+        "nutritionalStatusObeseClassIII": MessageLookupByLibrary.simpleMessage("Ожиріння III класу"),
+        "nutritionalStatusPreObesity": MessageLookupByLibrary.simpleMessage("Передожиріння"),
+        "nutritionalStatusRiskAverage": MessageLookupByLibrary.simpleMessage("Середній"),
+        "nutritionalStatusRiskIncreased": MessageLookupByLibrary.simpleMessage("Підвищений"),
         "nutritionalStatusRiskLabel": m2,
         "nutritionalStatusRiskLow": MessageLookupByLibrary.simpleMessage(
             "Низький (але ризик інших клінічних проблем підвищений)"),
-        "nutritionalStatusRiskModerate":
-            MessageLookupByLibrary.simpleMessage("Помірний"),
-        "nutritionalStatusRiskSevere":
-            MessageLookupByLibrary.simpleMessage("Серйозний"),
-        "nutritionalStatusRiskVerySevere":
-            MessageLookupByLibrary.simpleMessage("Дуже серйозний"),
-        "nutritionalStatusUnderweight":
-            MessageLookupByLibrary.simpleMessage("Недостатня вага"),
+        "nutritionalStatusRiskModerate": MessageLookupByLibrary.simpleMessage("Помірний"),
+        "nutritionalStatusRiskSevere": MessageLookupByLibrary.simpleMessage("Серйозний"),
+        "nutritionalStatusRiskVerySevere": MessageLookupByLibrary.simpleMessage("Дуже серйозний"),
+        "nutritionalStatusUnderweight": MessageLookupByLibrary.simpleMessage("Недостатня вага"),
         "offDisclaimer": MessageLookupByLibrary.simpleMessage(
             "Дані, які надає цей додаток, отримані з бази даних Open Food Facts. Не гарантується точність, повнота або надійність наданої інформації. Дані надаються “як є”, і джерело даних (Open Food Facts) не несе відповідальності за будь-які збитки, що виникають внаслідок використання даних."),
-        "onboardingActivityQuestionSubtitle":
-            MessageLookupByLibrary.simpleMessage(
+        "offlineCatalogActionDelete": MessageLookupByLibrary.simpleMessage("Видалити"),
+        "offlineCatalogActionRefresh": MessageLookupByLibrary.simpleMessage("Оновити"),
+        "offlineCatalogCancel": MessageLookupByLibrary.simpleMessage("Скасувати"),
+        "offlineCatalogCancelConfirmBody": MessageLookupByLibrary.simpleMessage(
+            "Це втратить вже завантажені продукти. Якщо хочеш повернутися до цього пізніше, скористайся «Призупинити»."),
+        "offlineCatalogCancelConfirmKeep": MessageLookupByLibrary.simpleMessage("Продовжити завантаження"),
+        "offlineCatalogCancelConfirmTitle": MessageLookupByLibrary.simpleMessage("Скасувати та відхилити?"),
+        "offlineCatalogDeleteConfirmBody": MessageLookupByLibrary.simpleMessage(
+            "Це видалить завантажені продукти з твого пристрою. Ти можеш створити каталог заново будь-коли з цього екрана."),
+        "offlineCatalogDeleteConfirmTitle": MessageLookupByLibrary.simpleMessage("Видалити офлайн-каталог?"),
+        "offlineCatalogDiscard": MessageLookupByLibrary.simpleMessage("Відхилити"),
+        "offlineCatalogDoneAction": MessageLookupByLibrary.simpleMessage("Готово"),
+        "offlineCatalogDoneBody": MessageLookupByLibrary.simpleMessage(
+            "Пошук і сканування штрих-кодів тепер працюють офлайн. Для продуктів, яких ще немає у твоєму каталозі, ми все одно перевіримо живу базу."),
+        "offlineCatalogDoneSummary": m25,
+        "offlineCatalogDoneTitle": MessageLookupByLibrary.simpleMessage("Каталог готовий"),
+        "offlineCatalogDownloadAction": MessageLookupByLibrary.simpleMessage("Завантажити"),
+        "offlineCatalogDownloadingBody": MessageLookupByLibrary.simpleMessage(
+            "Можеш залишити цей екран відкритим — завантаження триватиме. Призупини, якщо потрібно відійти — твій прогрес збережемо."),
+        "offlineCatalogDownloadingEta": m23,
+        "offlineCatalogDownloadingProgress": m21,
+        "offlineCatalogDownloadingTitle": MessageLookupByLibrary.simpleMessage("Завантажуємо твій каталог"),
+        "offlineCatalogErrorBodyFatal": MessageLookupByLibrary.simpleMessage(
+            "Не вдалося завершити це завантаження."),
+        "offlineCatalogErrorBodyRecoverable": MessageLookupByLibrary.simpleMessage(
+                "Все, що було завантажено досі, ми зберегли. Спробуй ще раз кнопкою «Продовжити», коли матимеш краще з\'єднання."),
+        "offlineCatalogErrorRetry": MessageLookupByLibrary.simpleMessage("Спробувати знову"),
+        "offlineCatalogErrorTitle": MessageLookupByLibrary.simpleMessage("Щось пішло не так"),
+        "offlineCatalogEstimateBody": MessageLookupByLibrary.simpleMessage(
+            "Ось що ми для тебе завантажимо."),
+        "offlineCatalogEstimateError": MessageLookupByLibrary.simpleMessage(
+            "Не вдалося визначити розмір завантаження. Спробуй ще раз за хвилину."),
+        "offlineCatalogEstimateRequestsLabel": MessageLookupByLibrary.simpleMessage("Розмір завантаження"),
+        "offlineCatalogEstimateRowsLabel": MessageLookupByLibrary.simpleMessage("Продукти"),
+        "offlineCatalogEstimateSizeLabel": MessageLookupByLibrary.simpleMessage("Орієнтовний розмір"),
+        "offlineCatalogEstimateTimeLabel": MessageLookupByLibrary.simpleMessage("Орієнтовний час"),
+        "offlineCatalogEstimateTitle": MessageLookupByLibrary.simpleMessage("Готово до завантаження"),
+        "offlineCatalogEstimateWifiHint": MessageLookupByLibrary.simpleMessage(
+            "Якщо можеш, підключися до Wi-Fi. Інакше завантаження зарахується до твоїх мобільних даних."),
+        "offlineCatalogInstallingBody": MessageLookupByLibrary.simpleMessage(
+            "Розпаковуємо щойно завантажене та записуємо на твій пристрій. Зазвичай це триває лише кілька секунд."),
+        "offlineCatalogInstallingTitle": MessageLookupByLibrary.simpleMessage("Розпаковуємо твій каталог"),
+        "offlineCatalogNextAction": MessageLookupByLibrary.simpleMessage("Далі"),
+        "offlineCatalogPause": MessageLookupByLibrary.simpleMessage("Призупинити"),
+        "offlineCatalogPausedBody": MessageLookupByLibrary.simpleMessage(
+            "Твій прогрес збережено. Продовжуй з того місця, де зупинився, коли матимеш Wi-Fi."),
+        "offlineCatalogPausedProgress": m24,
+        "offlineCatalogPausedTitle": MessageLookupByLibrary.simpleMessage("Завантаження призупинено"),
+        "offlineCatalogProductCount": m19,
+        "offlineCatalogQualityBody": MessageLookupByLibrary.simpleMessage(
+            "Ці типові налаштування дають менший і кориснішіший каталог. Вимикай їх лише якщо свідомо хочеш бачити неповні записи."),
+        "offlineCatalogQualityNutritionBody": MessageLookupByLibrary.simpleMessage(
+                "Пропускає продукти без даних про калорії або макронутрієнти — корисно в результатах пошуку, де інакше вони з\'являлися б як порожні картки."),
+        "offlineCatalogQualityNutritionLabel": MessageLookupByLibrary.simpleMessage(
+                "Лише записи з повними поживними даними"),
+        "offlineCatalogQualityPopularityBody": MessageLookupByLibrary.simpleMessage(
+                "Пропускає продукти, скановані лише раз. Довгий хвіст одноразових записів рідко відповідає тому, що ти бачиш у супермаркеті, і його видалення зменшує каталог приблизно на третину."),
+        "offlineCatalogQualityPopularityLabel": MessageLookupByLibrary.simpleMessage(
+                "Лише часто скановані продукти"),
+        "offlineCatalogQualityRecency10Years": MessageLookupByLibrary.simpleMessage("10 років"),
+        "offlineCatalogQualityRecency3Years": MessageLookupByLibrary.simpleMessage("3 роки"),
+        "offlineCatalogQualityRecency5Years": MessageLookupByLibrary.simpleMessage("5 років"),
+        "offlineCatalogQualityRecencyAny": MessageLookupByLibrary.simpleMessage("Будь-який"),
+        "offlineCatalogQualityRecencyBody": MessageLookupByLibrary.simpleMessage(
+                "Старіші записи можуть застаріти — упаковки змінюються, рецептури переробляються. Обери проміжок, який тобі підходить."),
+        "offlineCatalogQualityRecencyLabel": MessageLookupByLibrary.simpleMessage("Оновлено за останні"),
+        "offlineCatalogQualityTitle": MessageLookupByLibrary.simpleMessage("Фільтри якості"),
+        "offlineCatalogResume": MessageLookupByLibrary.simpleMessage("Продовжити"),
+        "offlineCatalogStartAction": MessageLookupByLibrary.simpleMessage("Почати"),
+        "offlineCatalogTileBuilding": MessageLookupByLibrary.simpleMessage("Працюємо над цим…"),
+        "offlineCatalogTileBuildingPercent": m26,
+        "offlineCatalogTileCheckingAvailability": MessageLookupByLibrary.simpleMessage("Перевіряю доступність…"),
+        "offlineCatalogTileLastRefreshed": m28,
+        "offlineCatalogTileNotBuilt": MessageLookupByLibrary.simpleMessage(
+            "Не створено — торкнися, щоб налаштувати"),
+        "offlineCatalogTilePaused": MessageLookupByLibrary.simpleMessage(
+            "Завантаження призупинено — торкнися, щоб продовжити"),
+        "offlineCatalogTileReady": m27,
+        "offlineCatalogTileUnavailable": MessageLookupByLibrary.simpleMessage(
+            "Офлайн-каталог зараз недоступний, спробуй пізніше"),
+        "offlineCatalogTimeDaysAgo": m31,
+        "offlineCatalogTimeHoursAgo": m32,
+        "offlineCatalogTimeJustNow": MessageLookupByLibrary.simpleMessage("щойно"),
+        "offlineCatalogTimeMonthsAgo": m29,
+        "offlineCatalogTimeWeeksAgo": m30,
+        "offlineCatalogTitle": MessageLookupByLibrary.simpleMessage(
+            "Офлайн-каталог продуктів"),
+        "offlineCatalogWelcomeBody1": MessageLookupByLibrary.simpleMessage(
+            "Ми можемо завантажити копію бази Open Food Facts, щоб пошук і сканування штрих-кодів працювали без підключення до інтернету."),
+        "offlineCatalogWelcomeBody2": MessageLookupByLibrary.simpleMessage(
+            "Країни ти обереш на наступній сторінці; ми зберігаємо лише стовпці, які реально використовує застосунок (без зображень на пристрої, без зайвих метаданих), щоб завантаження було якнайменшим."),
+        "offlineCatalogWelcomeBulletHumanFood": MessageLookupByLibrary.simpleMessage(
+                "Каталог містить тільки їжу для людей — корм для тварин, косметику та інші непродовольчі товари ми відфільтровуємо за тебе."),
+        "offlineCatalogWelcomeBulletScreen": MessageLookupByLibrary.simpleMessage(
+                "Будь ласка, не закривай цей екран, поки створюється каталог. Якщо застосунок надовго піде у фон, завантаження призупиниться, і ти зможеш продовжити пізніше."),
+        "offlineCatalogWelcomeBulletWifi": MessageLookupByLibrary.simpleMessage(
+                "Наполегливо радимо з\'єднання Wi-Fi — завантаження може займати сотні мегабайтів залежно від кількості обраних країн."),
+        "onboardingActivityQuestionSubtitle": MessageLookupByLibrary.simpleMessage(
                 "Наскільки ви активні? (без тренувань)"),
-        "onboardingBirthdayHint":
-            MessageLookupByLibrary.simpleMessage("Введіть дату"),
-        "onboardingBirthdayQuestionSubtitle":
-            MessageLookupByLibrary.simpleMessage("Коли у вас день народження?"),
-        "onboardingEnterBirthdayLabel":
-            MessageLookupByLibrary.simpleMessage("День народження"),
-        "onboardingGenderQuestionSubtitle":
-            MessageLookupByLibrary.simpleMessage("Ваша стать?"),
-        "onboardingGoalQuestionSubtitle":
-            MessageLookupByLibrary.simpleMessage("Яка ваша поточна ціль ваги?"),
-        "onboardingHeightExampleHintCm":
-            MessageLookupByLibrary.simpleMessage("наприклад, 170"),
-        "onboardingHeightExampleHintFt":
-            MessageLookupByLibrary.simpleMessage("наприклад, 5.8"),
-        "onboardingHeightQuestionSubtitle":
-            MessageLookupByLibrary.simpleMessage("Який ваш поточний зріст?"),
+        "onboardingBirthdayHint": MessageLookupByLibrary.simpleMessage("Введіть дату"),
+        "onboardingBirthdayQuestionSubtitle": MessageLookupByLibrary.simpleMessage("Коли у вас день народження?"),
+        "onboardingEnterBirthdayLabel": MessageLookupByLibrary.simpleMessage("День народження"),
+        "onboardingGenderQuestionSubtitle": MessageLookupByLibrary.simpleMessage("Ваша стать?"),
+        "onboardingGoalQuestionSubtitle": MessageLookupByLibrary.simpleMessage("Яка ваша поточна ціль ваги?"),
+        "onboardingHeightExampleHintCm": MessageLookupByLibrary.simpleMessage("наприклад, 170"),
+        "onboardingHeightExampleHintFt": MessageLookupByLibrary.simpleMessage("наприклад, 5.8"),
+        "onboardingHeightQuestionSubtitle": MessageLookupByLibrary.simpleMessage("Який ваш поточний зріст?"),
         "onboardingIntroDescription": MessageLookupByLibrary.simpleMessage(
             "Для початку додаток потребує деяку інформацію про вас, щоб розрахувати вашу щоденну ціль калорій.\nВся інформація про вас зберігається безпечно на вашому пристрої."),
-        "onboardingKcalPerDayLabel":
-            MessageLookupByLibrary.simpleMessage("ккал на день"),
+        "onboardingKcalPerDayLabel": MessageLookupByLibrary.simpleMessage("ккал на день"),
         "onboardingNonBinaryDisclaimer": MessageLookupByLibrary.simpleMessage(
             "Ми оцінюємо твоє денне споживання калорій як середнє значення між чоловічою та жіночою референтними формулами. Ти можеш скоригувати це у Налаштування → Розрахунки."),
-        "onboardingOverviewLabel":
-            MessageLookupByLibrary.simpleMessage("Огляд"),
+        "onboardingOverviewLabel": MessageLookupByLibrary.simpleMessage("Огляд"),
         "onboardingSaveUserError": MessageLookupByLibrary.simpleMessage(
             "Неправильне введення, спробуйте ще раз"),
-        "onboardingWeightExampleHintKg":
-            MessageLookupByLibrary.simpleMessage("наприклад, 60"),
-        "onboardingWeightExampleHintLbs":
-            MessageLookupByLibrary.simpleMessage("наприклад, 132"),
-        "onboardingWeightQuestionSubtitle":
-            MessageLookupByLibrary.simpleMessage("Яка ваша поточна вага?"),
-        "onboardingWelcomeLabel":
-            MessageLookupByLibrary.simpleMessage("Ласкаво просимо до"),
-        "onboardingWrongHeightLabel":
-            MessageLookupByLibrary.simpleMessage("Введіть коректний зріст"),
-        "onboardingWrongWeightLabel":
-            MessageLookupByLibrary.simpleMessage("Введіть коректну вагу"),
-        "onboardingYourGoalLabel":
-            MessageLookupByLibrary.simpleMessage("Ваша ціль калорій:"),
-        "onboardingYourMacrosGoalLabel":
-            MessageLookupByLibrary.simpleMessage("Ваші цілі макроелементів:"),
+        "onboardingWeightExampleHintKg": MessageLookupByLibrary.simpleMessage("наприклад, 60"),
+        "onboardingWeightExampleHintLbs": MessageLookupByLibrary.simpleMessage("наприклад, 132"),
+        "onboardingWeightQuestionSubtitle": MessageLookupByLibrary.simpleMessage("Яка ваша поточна вага?"),
+        "onboardingWelcomeLabel": MessageLookupByLibrary.simpleMessage("Ласкаво просимо до"),
+        "onboardingWrongHeightLabel": MessageLookupByLibrary.simpleMessage("Введіть коректний зріст"),
+        "onboardingWrongWeightLabel": MessageLookupByLibrary.simpleMessage("Введіть коректну вагу"),
+        "onboardingYourGoalLabel": MessageLookupByLibrary.simpleMessage("Ваша ціль калорій:"),
+        "onboardingYourMacrosGoalLabel": MessageLookupByLibrary.simpleMessage("Ваші цілі макроелементів:"),
         "ozUnit": MessageLookupByLibrary.simpleMessage("унція"),
-        "paAmericanFootballGeneral":
-            MessageLookupByLibrary.simpleMessage("американський футбол"),
+        "paActiveVideoGames": MessageLookupByLibrary.simpleMessage("активні відеоігри"),
+        "paActiveVideoGamesDesc": MessageLookupByLibrary.simpleMessage("Wii Sports, Dance Dance Revolution, загалом"),
+        "paAmericanFootballGeneral": MessageLookupByLibrary.simpleMessage("американський футбол"),
         "paAmericanFootballGeneralDesc": MessageLookupByLibrary.simpleMessage(
             "безконтактний, з прапорцями, загальний"),
-        "paArcheryGeneral":
-            MessageLookupByLibrary.simpleMessage("стрільба з лука"),
-        "paArcheryGeneralDesc":
-            MessageLookupByLibrary.simpleMessage("не на полюванні"),
+        "paArcheryGeneral": MessageLookupByLibrary.simpleMessage("стрільба з лука"),
+        "paArcheryGeneralDesc": MessageLookupByLibrary.simpleMessage("не на полюванні"),
         "paAutoRacing": MessageLookupByLibrary.simpleMessage("автогонки"),
-        "paAutoRacingDesc":
-            MessageLookupByLibrary.simpleMessage("з відкритими колесами"),
-        "paBackpackingGeneral":
-            MessageLookupByLibrary.simpleMessage("піший туризм з рюкзаком"),
-        "paBackpackingGeneralDesc":
-            MessageLookupByLibrary.simpleMessage("загальне"),
+        "paAutoRacingDesc": MessageLookupByLibrary.simpleMessage("з відкритими колесами"),
+        "paBackpackingGeneral": MessageLookupByLibrary.simpleMessage("піший туризм з рюкзаком"),
+        "paBackpackingGeneralDesc": MessageLookupByLibrary.simpleMessage("загальне"),
         "paBadmintonGeneral": MessageLookupByLibrary.simpleMessage("бадмінтон"),
         "paBadmintonGeneralDesc": MessageLookupByLibrary.simpleMessage(
             "соціальний одиночний та парний розряд, загальний"),
-        "paBasketballGeneral":
-            MessageLookupByLibrary.simpleMessage("баскетбол"),
-        "paBasketballGeneralDesc":
-            MessageLookupByLibrary.simpleMessage("загальне"),
-        "paBicyclingGeneral":
-            MessageLookupByLibrary.simpleMessage("їзда на велосипеді"),
-        "paBicyclingGeneralDesc":
-            MessageLookupByLibrary.simpleMessage("загальне"),
-        "paBicyclingMountainGeneral":
-            MessageLookupByLibrary.simpleMessage("гірський велосипед"),
-        "paBicyclingMountainGeneralDesc":
-            MessageLookupByLibrary.simpleMessage("загальне"),
-        "paBicyclingStationaryGeneral":
-            MessageLookupByLibrary.simpleMessage("стаціонарний велосипед"),
-        "paBicyclingStationaryGeneralDesc":
-            MessageLookupByLibrary.simpleMessage("загальне"),
+        "paBasketballGeneral": MessageLookupByLibrary.simpleMessage("баскетбол"),
+        "paBasketballGeneralDesc": MessageLookupByLibrary.simpleMessage("загальне"),
+        "paBicyclingGeneral": MessageLookupByLibrary.simpleMessage("їзда на велосипеді"),
+        "paBicyclingGeneralDesc": MessageLookupByLibrary.simpleMessage("загальне"),
+        "paBicyclingMountainGeneral": MessageLookupByLibrary.simpleMessage("гірський велосипед"),
+        "paBicyclingMountainGeneralDesc": MessageLookupByLibrary.simpleMessage("загальне"),
+        "paBicyclingStationaryGeneral": MessageLookupByLibrary.simpleMessage("стаціонарний велосипед"),
+        "paBicyclingStationaryGeneralDesc": MessageLookupByLibrary.simpleMessage("загальне"),
         "paBilliardsGeneral": MessageLookupByLibrary.simpleMessage("більярд"),
-        "paBilliardsGeneralDesc":
-            MessageLookupByLibrary.simpleMessage("загальне"),
+        "paBilliardsGeneralDesc": MessageLookupByLibrary.simpleMessage("загальне"),
         "paBowlingGeneral": MessageLookupByLibrary.simpleMessage("боулінг"),
-        "paBowlingGeneralDesc":
-            MessageLookupByLibrary.simpleMessage("загальне"),
+        "paBowlingGeneralDesc": MessageLookupByLibrary.simpleMessage("загальне"),
         "paBoxingBag": MessageLookupByLibrary.simpleMessage("бокс"),
-        "paBoxingBagDesc":
-            MessageLookupByLibrary.simpleMessage("на боксерській груші"),
+        "paBoxingBagDesc": MessageLookupByLibrary.simpleMessage("на боксерській груші"),
         "paBoxingGeneral": MessageLookupByLibrary.simpleMessage("бокс"),
-        "paBoxingGeneralDesc":
-            MessageLookupByLibrary.simpleMessage("на ринзі, загальне"),
+        "paBoxingGeneralDesc": MessageLookupByLibrary.simpleMessage("на ринзі, загальне"),
         "paBroomball": MessageLookupByLibrary.simpleMessage("брумбол"),
         "paBroomballDesc": MessageLookupByLibrary.simpleMessage("загальне"),
-        "paCalisthenicsGeneral":
-            MessageLookupByLibrary.simpleMessage("калістеніка"),
+        "paCalisthenicsGeneral": MessageLookupByLibrary.simpleMessage("калістеніка"),
         "paCalisthenicsGeneralDesc": MessageLookupByLibrary.simpleMessage(
             "легкі або помірні зусилля, загальне (наприклад, вправи для спини)"),
-        "paCanoeingGeneral":
-            MessageLookupByLibrary.simpleMessage("веслування на каное"),
+        "paCanoeingGeneral": MessageLookupByLibrary.simpleMessage("веслування на каное"),
         "paCanoeingGeneralDesc": MessageLookupByLibrary.simpleMessage(
             "веслування, для задоволення, загальне"),
         "paCatch": MessageLookupByLibrary.simpleMessage("футбол або бейсбол"),
@@ -485,33 +471,28 @@ class MessageLookup extends MessageLookupByLibrary {
             "(наприклад, класики, 4-квадрат, вишибали, ігровий майданчик, т-бол, tetherball, марбли, аркадні ігри), помірні зусилля"),
         "paClimbingHillsNoLoadGeneral": MessageLookupByLibrary.simpleMessage(
             "підйом на пагорби, без навантаження"),
-        "paClimbingHillsNoLoadGeneralDesc":
-            MessageLookupByLibrary.simpleMessage("без навантаження"),
+        "paClimbingHillsNoLoadGeneralDesc": MessageLookupByLibrary.simpleMessage("без навантаження"),
         "paCricket": MessageLookupByLibrary.simpleMessage("крикет"),
         "paCricketDesc": MessageLookupByLibrary.simpleMessage(
             "відбивання, подача, гра в полі"),
         "paCroquet": MessageLookupByLibrary.simpleMessage("крокет"),
         "paCroquetDesc": MessageLookupByLibrary.simpleMessage("загальне"),
+        "paCrossCountrySkiing": MessageLookupByLibrary.simpleMessage("біг на лижах"),
+        "paCrossCountrySkiingDesc": MessageLookupByLibrary.simpleMessage("біг на лижах, загалом"),
         "paCurling": MessageLookupByLibrary.simpleMessage("керлінг"),
         "paCurlingDesc": MessageLookupByLibrary.simpleMessage("загальне"),
-        "paDancingAerobicGeneral":
-            MessageLookupByLibrary.simpleMessage("аеробні"),
-        "paDancingAerobicGeneralDesc":
-            MessageLookupByLibrary.simpleMessage("загальне"),
-        "paDancingGeneral":
-            MessageLookupByLibrary.simpleMessage("загальні танці"),
+        "paDancingAerobicGeneral": MessageLookupByLibrary.simpleMessage("аеробні"),
+        "paDancingAerobicGeneralDesc": MessageLookupByLibrary.simpleMessage("загальне"),
+        "paDancingGeneral": MessageLookupByLibrary.simpleMessage("загальні танці"),
         "paDancingGeneralDesc": MessageLookupByLibrary.simpleMessage(
             "наприклад, диско, народні, ірландські, лінійні, полька, контра, кантрі"),
         "paDartsWall": MessageLookupByLibrary.simpleMessage("дартс"),
-        "paDartsWallDesc":
-            MessageLookupByLibrary.simpleMessage("настінний або газонний"),
+        "paDartsWallDesc": MessageLookupByLibrary.simpleMessage("настінний або газонний"),
         "paDivingGeneral": MessageLookupByLibrary.simpleMessage("дайвінг"),
         "paDivingGeneralDesc": MessageLookupByLibrary.simpleMessage(
             "підводне плавання, дайвінг з аквалангом, загальне"),
-        "paDivingSpringboardPlatform":
-            MessageLookupByLibrary.simpleMessage("стрибки у воду"),
-        "paDivingSpringboardPlatformDesc":
-            MessageLookupByLibrary.simpleMessage("з трампліна або платформи"),
+        "paDivingSpringboardPlatform": MessageLookupByLibrary.simpleMessage("стрибки у воду"),
+        "paDivingSpringboardPlatformDesc": MessageLookupByLibrary.simpleMessage("з трампліна або платформи"),
         "paFencing": MessageLookupByLibrary.simpleMessage("фехтування"),
         "paFencingDesc": MessageLookupByLibrary.simpleMessage("загальне"),
         "paFrisbee": MessageLookupByLibrary.simpleMessage("гра у фрісбі"),
@@ -519,190 +500,141 @@ class MessageLookup extends MessageLookupByLibrary {
         "paGeneralDesc": MessageLookupByLibrary.simpleMessage("загальне"),
         "paGolfGeneral": MessageLookupByLibrary.simpleMessage("гольф"),
         "paGolfGeneralDesc": MessageLookupByLibrary.simpleMessage("загальне"),
-        "paGymnasticsGeneral":
-            MessageLookupByLibrary.simpleMessage("гімнастика"),
-        "paGymnasticsGeneralDesc":
-            MessageLookupByLibrary.simpleMessage("загальне"),
+        "paGymnasticsGeneral": MessageLookupByLibrary.simpleMessage("гімнастика"),
+        "paGymnasticsGeneralDesc": MessageLookupByLibrary.simpleMessage("загальне"),
         "paHackySack": MessageLookupByLibrary.simpleMessage("гакі-сак"),
         "paHackySackDesc": MessageLookupByLibrary.simpleMessage("загальне"),
         "paHandballGeneral": MessageLookupByLibrary.simpleMessage("гандбол"),
-        "paHandballGeneralDesc":
-            MessageLookupByLibrary.simpleMessage("загальне"),
-        "paHangGliding":
-            MessageLookupByLibrary.simpleMessage("дельтапланеризм"),
+        "paHandballGeneralDesc": MessageLookupByLibrary.simpleMessage("загальне"),
+        "paHangGliding": MessageLookupByLibrary.simpleMessage("дельтапланеризм"),
         "paHangGlidingDesc": MessageLookupByLibrary.simpleMessage("загальне"),
-        "paHeadingBicycling":
-            MessageLookupByLibrary.simpleMessage("їзда на велосипеді"),
-        "paHeadingConditionalExercise":
-            MessageLookupByLibrary.simpleMessage("аеробне тренування"),
+        "paHeadingBicycling": MessageLookupByLibrary.simpleMessage("їзда на велосипеді"),
+        "paHeadingConditionalExercise": MessageLookupByLibrary.simpleMessage("аеробне тренування"),
         "paHeadingDancing": MessageLookupByLibrary.simpleMessage("танці"),
         "paHeadingRunning": MessageLookupByLibrary.simpleMessage("біг"),
         "paHeadingSports": MessageLookupByLibrary.simpleMessage("спорт"),
-        "pasteCodeHint": MessageLookupByLibrary.simpleMessage(
-            "Вставте сюди код спільного прийому їжі"),
-        "pasteCodeLabel":
-            MessageLookupByLibrary.simpleMessage("Вставити код"),
         "paHeadingWalking": MessageLookupByLibrary.simpleMessage("ходьба"),
-        "paHeadingWaterActivities":
-            MessageLookupByLibrary.simpleMessage("водні види спорту"),
-        "paHeadingWinterActivities":
-            MessageLookupByLibrary.simpleMessage("зимові види спорту"),
+        "paHeadingWaterActivities": MessageLookupByLibrary.simpleMessage("водні види спорту"),
+        "paHeadingWinterActivities": MessageLookupByLibrary.simpleMessage("зимові види спорту"),
         "paHighIntensityIntervalExercise": MessageLookupByLibrary.simpleMessage(
             "високоінтенсивне інтервальне тренування"),
-        "paHighIntensityIntervalExerciseDesc":
-            MessageLookupByLibrary.simpleMessage("помірне зусилля"),
-        "paHighIntensityIntervalExerciseVigorous":
-            MessageLookupByLibrary.simpleMessage(
+        "paHighIntensityIntervalExerciseDesc": MessageLookupByLibrary.simpleMessage("помірне зусилля"),
+        "paHighIntensityIntervalExerciseVigorous": MessageLookupByLibrary.simpleMessage(
                 "високоінтенсивне інтервальне тренування"),
-        "paHighIntensityIntervalExerciseVigorousDesc":
-            MessageLookupByLibrary.simpleMessage(
+        "paHighIntensityIntervalExerciseVigorousDesc": MessageLookupByLibrary.simpleMessage(
                 "берпі, скелелаз, вистрибування з присіду, Табата, інтенсивне зусилля"),
         "paHikingCrossCountry": MessageLookupByLibrary.simpleMessage("похід"),
-        "paHikingCrossCountryDesc":
-            MessageLookupByLibrary.simpleMessage("пересіченою місцевістю"),
+        "paHikingCrossCountryDesc": MessageLookupByLibrary.simpleMessage("пересіченою місцевістю"),
         "paHockeyField": MessageLookupByLibrary.simpleMessage("хокей на траві"),
         "paHockeyFieldDesc": MessageLookupByLibrary.simpleMessage("загальне"),
-        "paHorseRidingGeneral":
-            MessageLookupByLibrary.simpleMessage("верхова їзда"),
-        "paHorseRidingGeneralDesc":
-            MessageLookupByLibrary.simpleMessage("загальне"),
-        "paIceHockeyGeneral":
-            MessageLookupByLibrary.simpleMessage("хокей на льоду"),
-        "paIceHockeyGeneralDesc":
-            MessageLookupByLibrary.simpleMessage("загальне"),
-        "paIceSkatingGeneral":
-            MessageLookupByLibrary.simpleMessage("катання на ковзанах"),
-        "paIceSkatingGeneralDesc":
-            MessageLookupByLibrary.simpleMessage("загальне"),
+        "paHorseRidingGeneral": MessageLookupByLibrary.simpleMessage("верхова їзда"),
+        "paHorseRidingGeneralDesc": MessageLookupByLibrary.simpleMessage("загальне"),
+        "paIceHockeyGeneral": MessageLookupByLibrary.simpleMessage("хокей на льоду"),
+        "paIceHockeyGeneralDesc": MessageLookupByLibrary.simpleMessage("загальне"),
+        "paIceSkatingGeneral": MessageLookupByLibrary.simpleMessage("катання на ковзанах"),
+        "paIceSkatingGeneralDesc": MessageLookupByLibrary.simpleMessage("загальне"),
         "paJaiAlai": MessageLookupByLibrary.simpleMessage("хай-алай"),
         "paJaiAlaiDesc": MessageLookupByLibrary.simpleMessage("загальне"),
         "paJoggingGeneral": MessageLookupByLibrary.simpleMessage("пробіжка"),
-        "paJoggingGeneralDesc":
-            MessageLookupByLibrary.simpleMessage("загальне"),
+        "paJoggingGeneralDesc": MessageLookupByLibrary.simpleMessage("загальне"),
         "paJuggling": MessageLookupByLibrary.simpleMessage("жонглювання"),
         "paJugglingDesc": MessageLookupByLibrary.simpleMessage("загальне"),
-        "paKayakingModerate":
-            MessageLookupByLibrary.simpleMessage("веслування на байдарці"),
-        "paKayakingModerateDesc":
-            MessageLookupByLibrary.simpleMessage("помірні зусилля"),
+        "paKayakingModerate": MessageLookupByLibrary.simpleMessage("веслування на байдарці"),
+        "paKayakingModerateDesc": MessageLookupByLibrary.simpleMessage("помірні зусилля"),
         "paKickball": MessageLookupByLibrary.simpleMessage("кікбол"),
         "paKickballDesc": MessageLookupByLibrary.simpleMessage("загальне"),
         "paLacrosse": MessageLookupByLibrary.simpleMessage("лакрос"),
         "paLacrosseDesc": MessageLookupByLibrary.simpleMessage("загальне"),
-        "paLawnBowling":
-            MessageLookupByLibrary.simpleMessage("гра в боулінг на газоні"),
+        "paLawnBowling": MessageLookupByLibrary.simpleMessage("гра в боулінг на газоні"),
         "paLawnBowlingDesc": MessageLookupByLibrary.simpleMessage(
             "бочче, на відкритому повітрі"),
-        "paMartialArtsModerate":
-            MessageLookupByLibrary.simpleMessage("бойові мистецтва"),
+        "paMartialArtsModerate": MessageLookupByLibrary.simpleMessage("бойові мистецтва"),
         "paMartialArtsModerateDesc": MessageLookupByLibrary.simpleMessage(
             "різні види, помірний темп (наприклад, дзюдо, джиу-джитсу, карате, кікбоксинг, тхеквондо, тай-бо, муай-тай)"),
-        "paMartialArtsSlower":
-            MessageLookupByLibrary.simpleMessage("бойові мистецтва"),
+        "paMartialArtsSlower": MessageLookupByLibrary.simpleMessage("бойові мистецтва"),
         "paMartialArtsSlowerDesc": MessageLookupByLibrary.simpleMessage(
             "різні види, повільний темп, для початківців, тренування"),
         "paMotoCross": MessageLookupByLibrary.simpleMessage("мотокрос"),
         "paMotoCrossDesc": MessageLookupByLibrary.simpleMessage(
             "позашляхові мотоспорт, всюдихід, загальне"),
-        "paMountainClimbing":
-            MessageLookupByLibrary.simpleMessage("скелелазіння"),
-        "paMountainClimbingDesc":
-            MessageLookupByLibrary.simpleMessage("скелелазіння або альпінізм"),
+        "paMountainClimbing": MessageLookupByLibrary.simpleMessage("скелелазіння"),
+        "paMountainClimbingDesc": MessageLookupByLibrary.simpleMessage("скелелазіння або альпінізм"),
+        "paNordicWalking": MessageLookupByLibrary.simpleMessage("скандинавська ходьба"),
         "paOrienteering": MessageLookupByLibrary.simpleMessage("орієнтування"),
         "paOrienteeringDesc": MessageLookupByLibrary.simpleMessage("загальне"),
-        "paPaddleBoarding":
-            MessageLookupByLibrary.simpleMessage("паддлбординг"),
-        "paPaddleBoardingDesc":
-            MessageLookupByLibrary.simpleMessage("паддлбординг стоячи"),
+        "paPaddleBoarding": MessageLookupByLibrary.simpleMessage("паддлбординг"),
+        "paPaddleBoardingDesc": MessageLookupByLibrary.simpleMessage("паддлбординг стоячи"),
         "paPaddleBoat": MessageLookupByLibrary.simpleMessage("катамаран"),
         "paPaddleBoatDesc": MessageLookupByLibrary.simpleMessage("загальне"),
         "paPaddleball": MessageLookupByLibrary.simpleMessage("падлбол"),
-        "paPaddleballDesc":
-            MessageLookupByLibrary.simpleMessage("невимушено, загальне"),
+        "paPaddleballDesc": MessageLookupByLibrary.simpleMessage("невимушено, загальне"),
+        "paPickleball": MessageLookupByLibrary.simpleMessage("пікльбол"),
+        "paPilates": MessageLookupByLibrary.simpleMessage("пілатес"),
         "paPoloHorse": MessageLookupByLibrary.simpleMessage("поло"),
         "paPoloHorseDesc": MessageLookupByLibrary.simpleMessage("на коні"),
         "paRacquetball": MessageLookupByLibrary.simpleMessage("ракетбол"),
         "paRacquetballDesc": MessageLookupByLibrary.simpleMessage("загальне"),
-        "paResistanceTraining":
-            MessageLookupByLibrary.simpleMessage("силові тренування"),
+        "paResistanceTraining": MessageLookupByLibrary.simpleMessage("силові тренування"),
         "paResistanceTrainingDesc": MessageLookupByLibrary.simpleMessage(
             "підняття ваги, вільна вага, Nautilus або Universal"),
-        "paRodeoSportGeneralModerate":
-            MessageLookupByLibrary.simpleMessage("спорт родео"),
-        "paRodeoSportGeneralModerateDesc":
-            MessageLookupByLibrary.simpleMessage("загальний, помірні зусилля"),
-        "paRollerbladingLight":
-            MessageLookupByLibrary.simpleMessage("катання на роликах"),
-        "paRollerbladingLightDesc":
-            MessageLookupByLibrary.simpleMessage("катання на роликах"),
-        "paRopeJumpingGeneral":
-            MessageLookupByLibrary.simpleMessage("стрибки зі скакалкою"),
+        "paResistanceTrainingVigorous": MessageLookupByLibrary.simpleMessage("силове тренування (інтенсивне)"),
+        "paResistanceTrainingVigorousDesc": MessageLookupByLibrary.simpleMessage("інтенсивне зусилля, пауерліфтинг або бодибілдинг"),
+        "paRodeoSportGeneralModerate": MessageLookupByLibrary.simpleMessage("спорт родео"),
+        "paRodeoSportGeneralModerateDesc": MessageLookupByLibrary.simpleMessage("загальний, помірні зусилля"),
+        "paRollerbladingLight": MessageLookupByLibrary.simpleMessage("катання на роликах"),
+        "paRollerbladingLightDesc": MessageLookupByLibrary.simpleMessage("катання на роликах"),
+        "paRopeJumpingGeneral": MessageLookupByLibrary.simpleMessage("стрибки зі скакалкою"),
         "paRopeJumpingGeneralDesc": MessageLookupByLibrary.simpleMessage(
             "помірний темп, 100-120 стрибків/хв, загальне, стрибки на двох ногах, звичайний відскок"),
-        "paRopeSkippingGeneral":
-            MessageLookupByLibrary.simpleMessage("стрибки зі скакалкою"),
-        "paRopeSkippingGeneralDesc":
-            MessageLookupByLibrary.simpleMessage("загальне"),
+        "paRopeSkippingGeneral": MessageLookupByLibrary.simpleMessage("стрибки зі скакалкою"),
+        "paRopeSkippingGeneralDesc": MessageLookupByLibrary.simpleMessage("загальне"),
         "paRugbyCompetitive": MessageLookupByLibrary.simpleMessage("регбі"),
-        "paRugbyCompetitiveDesc":
-            MessageLookupByLibrary.simpleMessage("союз, команда, змагальний"),
+        "paRugbyCompetitiveDesc": MessageLookupByLibrary.simpleMessage("союз, команда, змагальний"),
         "paRugbyNonCompetitive": MessageLookupByLibrary.simpleMessage("регбі"),
-        "paRugbyNonCompetitiveDesc":
-            MessageLookupByLibrary.simpleMessage("безконтактний, незмагальний"),
+        "paRugbyNonCompetitiveDesc": MessageLookupByLibrary.simpleMessage("безконтактний, незмагальний"),
         "paRunningGeneral": MessageLookupByLibrary.simpleMessage("біг"),
-        "paRunningGeneralDesc":
-            MessageLookupByLibrary.simpleMessage("загальне"),
-        "paSailingGeneral":
-            MessageLookupByLibrary.simpleMessage("вітрильний спорт"),
+        "paRunningGeneralDesc": MessageLookupByLibrary.simpleMessage("загальне"),
+        "paSailingGeneral": MessageLookupByLibrary.simpleMessage("вітрильний спорт"),
         "paSailingGeneralDesc": MessageLookupByLibrary.simpleMessage(
             "вітрильний спорт на човні та дошці, віндсерфінг, вітрильний спорт на льоду, загальне"),
         "paShuffleboard": MessageLookupByLibrary.simpleMessage("шаффлборд"),
         "paShuffleboardDesc": MessageLookupByLibrary.simpleMessage("загальне"),
-        "paSkateboardingGeneral":
-            MessageLookupByLibrary.simpleMessage("скейтбординг"),
-        "paSkateboardingGeneralDesc":
-            MessageLookupByLibrary.simpleMessage("загальний, помірні зусилля"),
-        "paSkatingRoller":
-            MessageLookupByLibrary.simpleMessage("катання на роликах"),
+        "paSkateboardingGeneral": MessageLookupByLibrary.simpleMessage("скейтбординг"),
+        "paSkateboardingGeneralDesc": MessageLookupByLibrary.simpleMessage("загальний, помірні зусилля"),
+        "paSkatingRoller": MessageLookupByLibrary.simpleMessage("катання на роликах"),
         "paSkatingRollerDesc": MessageLookupByLibrary.simpleMessage("загальне"),
         "paSkiingGeneral": MessageLookupByLibrary.simpleMessage("лижний спорт"),
         "paSkiingGeneralDesc": MessageLookupByLibrary.simpleMessage("загальне"),
-        "paSkiingWaterWakeboarding":
-            MessageLookupByLibrary.simpleMessage("водні лижі"),
-        "paSkiingWaterWakeboardingDesc":
-            MessageLookupByLibrary.simpleMessage("водні лижі або вейкбординг"),
+        "paSkiingWaterWakeboarding": MessageLookupByLibrary.simpleMessage("водні лижі"),
+        "paSkiingWaterWakeboardingDesc": MessageLookupByLibrary.simpleMessage("водні лижі або вейкбординг"),
         "paSkydiving": MessageLookupByLibrary.simpleMessage("скайдайвінг"),
         "paSkydivingDesc": MessageLookupByLibrary.simpleMessage(
             "скайдайвінг, бейс-джампінг, банджі-джампінг"),
         "paSnorkeling": MessageLookupByLibrary.simpleMessage("сноркелінг"),
         "paSnorkelingDesc": MessageLookupByLibrary.simpleMessage("загальне"),
-        "paSnowShovingModerate":
-            MessageLookupByLibrary.simpleMessage("розчищення снігу"),
+        "paSnowShovingModerate": MessageLookupByLibrary.simpleMessage("розчищення снігу"),
         "paSnowShovingModerateDesc": MessageLookupByLibrary.simpleMessage(
             "Розчишення снігу, помірні зусилля"),
+        "paSnowshoeing": MessageLookupByLibrary.simpleMessage("ходьба на снігоступах"),
         "paSoccerGeneral": MessageLookupByLibrary.simpleMessage("футбол"),
-        "paSoccerGeneralDesc":
-            MessageLookupByLibrary.simpleMessage("невимушено, загальне"),
-        "paSoftballBaseballGeneral":
-            MessageLookupByLibrary.simpleMessage("софтбол / бейсбол"),
+        "paSoccerGeneralDesc": MessageLookupByLibrary.simpleMessage("невимушено, загальне"),
+        "paSoftballBaseballGeneral": MessageLookupByLibrary.simpleMessage("софтбол / бейсбол"),
         "paSoftballBaseballGeneralDesc": MessageLookupByLibrary.simpleMessage(
             "швидка або повільна подача, загальне"),
         "paSquashGeneral": MessageLookupByLibrary.simpleMessage("сквош"),
         "paSquashGeneralDesc": MessageLookupByLibrary.simpleMessage("загальне"),
+        "paStretching": MessageLookupByLibrary.simpleMessage("розтяжка"),
+        "paStretchingDesc": MessageLookupByLibrary.simpleMessage("помірне, загалом"),
         "paSurfing": MessageLookupByLibrary.simpleMessage("серфінг"),
         "paSurfingDesc": MessageLookupByLibrary.simpleMessage(
             "бодісерфінг або серфінг на дошці, загальне"),
         "paSwimmingGeneral": MessageLookupByLibrary.simpleMessage("плавання"),
         "paSwimmingGeneralDesc": MessageLookupByLibrary.simpleMessage(
             "плавання, помірні зусилля, загальне"),
-        "paTableTennisGeneral":
-            MessageLookupByLibrary.simpleMessage("настільний теніс"),
-        "paTableTennisGeneralDesc":
-            MessageLookupByLibrary.simpleMessage("настільний теніс, пінг-понг"),
-        "paTaiChiQiGongGeneral":
-            MessageLookupByLibrary.simpleMessage("тай-чі, цигун"),
-        "paTaiChiQiGongGeneralDesc":
-            MessageLookupByLibrary.simpleMessage("загальне"),
+        "paTableTennisGeneral": MessageLookupByLibrary.simpleMessage("настільний теніс"),
+        "paTableTennisGeneralDesc": MessageLookupByLibrary.simpleMessage("настільний теніс, пінг-понг"),
+        "paTaiChiQiGongGeneral": MessageLookupByLibrary.simpleMessage("тай-чі, цигун"),
+        "paTaiChiQiGongGeneralDesc": MessageLookupByLibrary.simpleMessage("загальне"),
         "paTennisGeneral": MessageLookupByLibrary.simpleMessage("теніс"),
         "paTennisGeneralDesc": MessageLookupByLibrary.simpleMessage("загальне"),
         "paTrackField": MessageLookupByLibrary.simpleMessage("легка атлетика"),
@@ -713,21 +645,18 @@ class MessageLookup extends MessageLookupByLibrary {
         "paTrackField3Desc": MessageLookupByLibrary.simpleMessage(
             "(наприклад, стипль-чез, біг з бар\'єрами)"),
         "paTrampolineLight": MessageLookupByLibrary.simpleMessage("батут"),
-        "paTrampolineLightDesc":
-            MessageLookupByLibrary.simpleMessage("розважальний"),
+        "paTrampolineLightDesc": MessageLookupByLibrary.simpleMessage("розважальний"),
+        "paTreadmillRunning": MessageLookupByLibrary.simpleMessage("біг на біговій доріжці"),
+        "paTreadmillRunningDesc": MessageLookupByLibrary.simpleMessage("на біговій доріжці, загалом"),
         "paUnicyclingGeneral": MessageLookupByLibrary.simpleMessage("уніцикл"),
-        "paUnicyclingGeneralDesc":
-            MessageLookupByLibrary.simpleMessage("загальне"),
+        "paUnicyclingGeneralDesc": MessageLookupByLibrary.simpleMessage("загальне"),
         "paVolleyballGeneral": MessageLookupByLibrary.simpleMessage("волейбол"),
         "paVolleyballGeneralDesc": MessageLookupByLibrary.simpleMessage(
             "незмагальний, команда з 6 - 9 гравців, загальне"),
-        "paWalkingForPleasure":
-            MessageLookupByLibrary.simpleMessage("прогулянка"),
-        "paWalkingForPleasureDesc":
-            MessageLookupByLibrary.simpleMessage("прогулянка для задоволення"),
+        "paWalkingForPleasure": MessageLookupByLibrary.simpleMessage("прогулянка"),
+        "paWalkingForPleasureDesc": MessageLookupByLibrary.simpleMessage("прогулянка для задоволення"),
         "paWalkingTheDog": MessageLookupByLibrary.simpleMessage("вигул собаки"),
-        "paWalkingTheDogDesc":
-            MessageLookupByLibrary.simpleMessage("вигул собак"),
+        "paWalkingTheDogDesc": MessageLookupByLibrary.simpleMessage("вигул собак"),
         "paWallyball": MessageLookupByLibrary.simpleMessage("воллібол"),
         "paWallyballDesc": MessageLookupByLibrary.simpleMessage("загальне"),
         "paWaterAerobics": MessageLookupByLibrary.simpleMessage("водні вправи"),
@@ -735,12 +664,9 @@ class MessageLookup extends MessageLookupByLibrary {
             "водна аеробіка, водна калістеніка"),
         "paWaterPolo": MessageLookupByLibrary.simpleMessage("водне поло"),
         "paWaterPoloDesc": MessageLookupByLibrary.simpleMessage("загальне"),
-        "paWaterVolleyball":
-            MessageLookupByLibrary.simpleMessage("водний волейбол"),
-        "paWaterVolleyballDesc":
-            MessageLookupByLibrary.simpleMessage("загальне"),
-        "paWateraerobicsCalisthenics":
-            MessageLookupByLibrary.simpleMessage("водна аеробіка"),
+        "paWaterVolleyball": MessageLookupByLibrary.simpleMessage("водний волейбол"),
+        "paWaterVolleyballDesc": MessageLookupByLibrary.simpleMessage("загальне"),
+        "paWateraerobicsCalisthenics": MessageLookupByLibrary.simpleMessage("водна аеробіка"),
         "paWateraerobicsCalisthenicsDesc": MessageLookupByLibrary.simpleMessage(
             "водна аеробіка, водна калістеніка"),
         "paWrestling": MessageLookupByLibrary.simpleMessage("боротьба"),
@@ -750,20 +676,22 @@ class MessageLookup extends MessageLookupByLibrary {
         "palActiveLabel": MessageLookupByLibrary.simpleMessage("Активний"),
         "palLowActiveDescriptionLabel": MessageLookupByLibrary.simpleMessage(
             "наприклад, сидяча або стояча робота і легкі активності у вільний час"),
-        "palLowLActiveLabel":
-            MessageLookupByLibrary.simpleMessage("Малоактивний"),
+        "palLowLActiveLabel": MessageLookupByLibrary.simpleMessage("Малоактивний"),
         "palSedentaryDescriptionLabel": MessageLookupByLibrary.simpleMessage(
             "наприклад, офісна робота і переважно сидячий відпочинок"),
-        "palSedentaryLabel":
-            MessageLookupByLibrary.simpleMessage("Сидячий спосіб життя"),
+        "palSedentaryLabel": MessageLookupByLibrary.simpleMessage("Сидячий спосіб життя"),
         "palVeryActiveDescriptionLabel": MessageLookupByLibrary.simpleMessage(
             "Переважно ходьба, біг або носіння ваги на роботі і активний відпочинок"),
-        "palVeryActiveLabel":
-            MessageLookupByLibrary.simpleMessage("Дуже активний"),
+        "palVeryActiveLabel": MessageLookupByLibrary.simpleMessage("Дуже активний"),
+        "pasteCodeHint": MessageLookupByLibrary.simpleMessage(
+            "Вставте сюди код спільного прийому їжі"),
+        "pasteCodeLabel": MessageLookupByLibrary.simpleMessage("Вставити код"),
         "per100gmlLabel": MessageLookupByLibrary.simpleMessage("На 100 г/мл"),
         "perServingLabel": MessageLookupByLibrary.simpleMessage("На порцію"),
-        "privacyPolicyLabel":
-            MessageLookupByLibrary.simpleMessage("Політика конфіденційності"),
+        "phosphorusLabel": MessageLookupByLibrary.simpleMessage("фосфор"),
+        "polyunsaturatedFatLabel": MessageLookupByLibrary.simpleMessage("поліненасичені жири"),
+        "potassiumLabel": MessageLookupByLibrary.simpleMessage("калій"),
+        "privacyPolicyLabel": MessageLookupByLibrary.simpleMessage("Політика конфіденційності"),
         "profileLabel": MessageLookupByLibrary.simpleMessage("Профіль"),
         "proteinLabel": MessageLookupByLibrary.simpleMessage("білки"),
         "proteinLabelShort": MessageLookupByLibrary.simpleMessage("б"),
@@ -771,165 +699,98 @@ class MessageLookup extends MessageLookupByLibrary {
         "readLabel": MessageLookupByLibrary.simpleMessage(
             "Я прочитав і приймаю політику конфіденційності."),
         "recentlyAddedLabel": MessageLookupByLibrary.simpleMessage("Нещодавно"),
-        "recipesLabel": MessageLookupByLibrary.simpleMessage("Рецепти"),
-        "recipesEmptyLabel":
-            MessageLookupByLibrary.simpleMessage("Поки немає рецептів"),
-        "recipesEmptyHint": MessageLookupByLibrary.simpleMessage(
-            "Створіть страву з кількох інгредієнтів і використовуйте її як будь-який інший продукт."),
-        "createRecipeTitle":
-            MessageLookupByLibrary.simpleMessage("Створити рецепт"),
-        "newCustomMealLabel":
-            MessageLookupByLibrary.simpleMessage("Новий власний продукт"),
-        "discardChangesTitle":
-            MessageLookupByLibrary.simpleMessage("Скасувати зміни?"),
-        "discardChangesContent": MessageLookupByLibrary.simpleMessage(
-            "Ваші незбережені зміни будуть втрачені."),
-        "discardChangesConfirmLabel":
-            MessageLookupByLibrary.simpleMessage("Скасувати"),
-        "editRecipeTitle":
-            MessageLookupByLibrary.simpleMessage("Редагувати рецепт"),
-        "recipeNameLabel":
-            MessageLookupByLibrary.simpleMessage("Назва рецепта"),
-        "recipeDescriptionLabel":
-            MessageLookupByLibrary.simpleMessage("Опис (необов'язково)"),
-        "recipeServingsCountLabel":
-            MessageLookupByLibrary.simpleMessage("Порції (необов'язково)"),
-        "recipeServingsCountHelper": MessageLookupByLibrary.simpleMessage(
-            "Дозволяє реєструвати цей рецепт у порціях замість грамів."),
-        "recipeIngredientsLabel":
-            MessageLookupByLibrary.simpleMessage("Інгредієнти"),
-        "recipeAddIngredientLabel":
-            MessageLookupByLibrary.simpleMessage("Додати інгредієнт"),
-        "recipeNoIngredientsLabel":
-            MessageLookupByLibrary.simpleMessage("Поки немає інгредієнтів"),
-        "recipeTotalWeightLabel":
-            MessageLookupByLibrary.simpleMessage("Загальна вага (г)"),
-        "recipeTotalWeightHelper": MessageLookupByLibrary.simpleMessage(
-            "За замовчуванням сума інгредієнтів. Рідини приблизно як 1 мл ≈ 1 г."),
-        "recipeNutritionPreviewLabel":
-            MessageLookupByLibrary.simpleMessage("Поживність (загалом)"),
-        "recipeNutritionPer100Label":
-            MessageLookupByLibrary.simpleMessage("На 100 г"),
-        "recipeIngredientAmountLabel":
-            MessageLookupByLibrary.simpleMessage("Кількість"),
-        "recipeIngredientUnitLabel":
-            MessageLookupByLibrary.simpleMessage("Одиниця"),
-        "recipeSaveLabel":
-            MessageLookupByLibrary.simpleMessage("Зберегти рецепт"),
-        "recipeSaveErrorLabel":
-            MessageLookupByLibrary.simpleMessage("Не вдалося зберегти рецепт."),
-        "recipeNameRequiredLabel":
-            MessageLookupByLibrary.simpleMessage("Рецепт потребує назви"),
-        "recipeNeedsIngredientsLabel": MessageLookupByLibrary.simpleMessage(
-            "Додайте хоча б один інгредієнт"),
-        "recipeInvalidTotalWeightLabel": MessageLookupByLibrary.simpleMessage(
-            "Загальна вага має бути більшою за нуль"),
-        "shareRecipeLabel":
-            MessageLookupByLibrary.simpleMessage("Поділитися рецептом"),
-        "duplicateRecipeLabel":
-            MessageLookupByLibrary.simpleMessage("Дублювати"),
-        "duplicateRecipeNameSuffix":
-            MessageLookupByLibrary.simpleMessage("(копія)"),
-        "recipeTagsLabel": MessageLookupByLibrary.simpleMessage("Теги"),
-        "recipeTagsHelper": MessageLookupByLibrary.simpleMessage(
-            "Через кому, напр. \"сніданок, веганське\""),
-        "recipesFilterAllLabel":
-            MessageLookupByLibrary.simpleMessage("Усі"),
-        "importRecipesCsvAction": MessageLookupByLibrary.simpleMessage(
-            "Імпортувати рецепти (csv)"),
-        "selectionCountLabel": m17,
-        "deleteSelectedRecipesConfirmTitle": m18,
-        "importRecipeLabel":
-            MessageLookupByLibrary.simpleMessage("Імпортувати рецепт"),
-        "importRecipeSuccessLabel":
-            MessageLookupByLibrary.simpleMessage("Рецепт імпортовано"),
-        "importRecipeErrorLabel": MessageLookupByLibrary.simpleMessage(
-            "Не вдалося розпізнати код рецепта"),
-        "recipesLoadErrorLabel": MessageLookupByLibrary.simpleMessage(
-            "Не вдалося завантажити рецепти. Спробуйте пізніше."),
-        "importRecipeConfirmContent": m16,
-        "recipeDeleteConfirmTitle":
-            MessageLookupByLibrary.simpleMessage("Видалити рецепт?"),
+        "recipeAddIngredientLabel": MessageLookupByLibrary.simpleMessage("Додати інгредієнт"),
         "recipeDeleteConfirmContent": MessageLookupByLibrary.simpleMessage(
             "Попередні записи щоденника з цього рецепта залишаться."),
-        "recipeLogCtaLabel":
-            MessageLookupByLibrary.simpleMessage("Записати цей рецепт"),
+        "recipeDeleteConfirmTitle": MessageLookupByLibrary.simpleMessage("Видалити рецепт?"),
+        "recipeDescriptionLabel": MessageLookupByLibrary.simpleMessage("Опис (необов'язково)"),
+        "recipeIngredientAmountLabel": MessageLookupByLibrary.simpleMessage("Кількість"),
         "recipeIngredientCountLabel": m15,
+        "recipeIngredientUnitLabel": MessageLookupByLibrary.simpleMessage("Одиниця"),
+        "recipeIngredientsLabel": MessageLookupByLibrary.simpleMessage("Інгредієнти"),
+        "recipeInvalidTotalWeightLabel": MessageLookupByLibrary.simpleMessage(
+            "Загальна вага має бути більшою за нуль"),
+        "recipeLogCtaLabel": MessageLookupByLibrary.simpleMessage("Записати цей рецепт"),
+        "recipeNameLabel": MessageLookupByLibrary.simpleMessage("Назва рецепта"),
+        "recipeNameRequiredLabel": MessageLookupByLibrary.simpleMessage("Рецепт потребує назви"),
+        "recipeNeedsIngredientsLabel": MessageLookupByLibrary.simpleMessage(
+            "Додайте хоча б один інгредієнт"),
+        "recipeNoIngredientsLabel": MessageLookupByLibrary.simpleMessage("Поки немає інгредієнтів"),
+        "recipeNutritionPer100Label": MessageLookupByLibrary.simpleMessage("На 100 г"),
+        "recipeNutritionPreviewLabel": MessageLookupByLibrary.simpleMessage("Поживність (загалом)"),
+        "recipeSaveErrorLabel": MessageLookupByLibrary.simpleMessage("Не вдалося зберегти рецепт."),
+        "recipeSaveLabel": MessageLookupByLibrary.simpleMessage("Зберегти рецепт"),
+        "recipeServingsCountHelper": MessageLookupByLibrary.simpleMessage(
+            "Дозволяє реєструвати цей рецепт у порціях замість грамів."),
+        "recipeServingsCountLabel": MessageLookupByLibrary.simpleMessage("Порції (необов'язково)"),
+        "recipeTagsHelper": MessageLookupByLibrary.simpleMessage(
+            "Через кому, напр. \"сніданок, веганське\""),
+        "recipeTagsLabel": MessageLookupByLibrary.simpleMessage("Теги"),
+        "recipeTotalWeightHelper": MessageLookupByLibrary.simpleMessage(
+            "За замовчуванням сума інгредієнтів. Рідини приблизно як 1 мл ≈ 1 г."),
+        "recipeTotalWeightLabel": MessageLookupByLibrary.simpleMessage("Загальна вага (г)"),
+        "recipesEmptyHint": MessageLookupByLibrary.simpleMessage(
+            "Створіть страву з кількох інгредієнтів і використовуйте її як будь-який інший продукт."),
+        "recipesEmptyLabel": MessageLookupByLibrary.simpleMessage("Поки немає рецептів"),
+        "recipesFilterAllLabel": MessageLookupByLibrary.simpleMessage("Усі"),
+        "recipesLabel": MessageLookupByLibrary.simpleMessage("Рецепти"),
+        "recipesLoadErrorLabel": MessageLookupByLibrary.simpleMessage(
+            "Не вдалося завантажити рецепти. Спробуйте пізніше."),
         "reportErrorDialogText": MessageLookupByLibrary.simpleMessage(
             "Бажаєте повідомити про помилку розробнику?"),
         "retryLabel": MessageLookupByLibrary.simpleMessage("Повторити"),
-        "saturatedFatLabel":
-            MessageLookupByLibrary.simpleMessage("насичені жири"),
-        "scanProductLabel":
-            MessageLookupByLibrary.simpleMessage("Сканувати продукт"),
-        "searchDefaultLabel":
-            MessageLookupByLibrary.simpleMessage("Введіть слово для пошуку"),
+        "saturatedFatLabel": MessageLookupByLibrary.simpleMessage("насичені жири"),
+        "scanProductLabel": MessageLookupByLibrary.simpleMessage("Сканувати продукт"),
+        "searchDefaultLabel": MessageLookupByLibrary.simpleMessage("Введіть слово для пошуку"),
         "searchFoodPage": MessageLookupByLibrary.simpleMessage("Їжа"),
         "searchLabel": MessageLookupByLibrary.simpleMessage("Пошук"),
         "searchProductsPage": MessageLookupByLibrary.simpleMessage("Продукти"),
-        "searchResultsLabel":
-            MessageLookupByLibrary.simpleMessage("Результати пошуку"),
-        "selectGenderDialogLabel":
-            MessageLookupByLibrary.simpleMessage("Виберіть стать"),
-        "selectHeightDialogLabel":
-            MessageLookupByLibrary.simpleMessage("Виберіть зріст"),
-        "selectPalCategoryLabel":
-            MessageLookupByLibrary.simpleMessage("Виберіть рівень активності"),
-        "selectWeightDialogLabel":
-            MessageLookupByLibrary.simpleMessage("Виберіть вагу"),
+        "searchResultsLabel": MessageLookupByLibrary.simpleMessage("Результати пошуку"),
+        "selectGenderDialogLabel": MessageLookupByLibrary.simpleMessage("Виберіть стать"),
+        "selectHeightDialogLabel": MessageLookupByLibrary.simpleMessage("Виберіть зріст"),
+        "selectPalCategoryLabel": MessageLookupByLibrary.simpleMessage("Виберіть рівень активності"),
+        "selectWeightDialogLabel": MessageLookupByLibrary.simpleMessage("Виберіть вагу"),
+        "selectionCountLabel": m17,
         "sendAnonymousUserData": MessageLookupByLibrary.simpleMessage(
             "Надсилати анонімні дані про використання"),
         "servingLabel": MessageLookupByLibrary.simpleMessage("Порція"),
         "servingSizeLabelImperial": MessageLookupByLibrary.simpleMessage(
             "Розмір порції (унція/рідка унція)"),
-        "servingSizeLabelMetric":
-            MessageLookupByLibrary.simpleMessage("Розмір порції (г/мл)"),
-        "settingAboutLabel":
-            MessageLookupByLibrary.simpleMessage("Про додаток"),
+        "servingSizeLabelMetric": MessageLookupByLibrary.simpleMessage("Розмір порції (г/мл)"),
+        "settingAboutLabel": MessageLookupByLibrary.simpleMessage("Про додаток"),
         "settingFeedbackLabel": MessageLookupByLibrary.simpleMessage("Відгук"),
-        "settingsCalculationsLabel":
-            MessageLookupByLibrary.simpleMessage("Розрахунки"),
+        "settingsCalculationsLabel": MessageLookupByLibrary.simpleMessage("Розрахунки"),
+        "settingsCustomMealsLabel": MessageLookupByLibrary.simpleMessage("Власні страви"),
         "settingsDisclaimerLabel": MessageLookupByLibrary.simpleMessage(
             "Відмова від відповідальності"),
-        "settingsDistanceLabel":
-            MessageLookupByLibrary.simpleMessage("Відстань"),
+        "settingsDistanceLabel": MessageLookupByLibrary.simpleMessage("Відстань"),
         "settingsImperialLabel": MessageLookupByLibrary.simpleMessage(
             "Імперська (фунти, фут, унції)"),
         "settingsLabel": MessageLookupByLibrary.simpleMessage("Налаштування"),
-        "settingsLanguageLabel":
-            MessageLookupByLibrary.simpleMessage("Мова"),
-        "settingsLicensesLabel":
-            MessageLookupByLibrary.simpleMessage("Ліцензії"),
+        "settingsLanguageLabel": MessageLookupByLibrary.simpleMessage("Мова"),
+        "settingsLicensesLabel": MessageLookupByLibrary.simpleMessage("Ліцензії"),
         "settingsMassLabel": MessageLookupByLibrary.simpleMessage("Маса"),
-        "settingsMetricLabel":
-            MessageLookupByLibrary.simpleMessage("Метрична (кг, см, мл)"),
-        "settingsNotificationsLabel":
-            MessageLookupByLibrary.simpleMessage("Щоденне нагадування"),
+        "settingsMetricLabel": MessageLookupByLibrary.simpleMessage("Метрична (кг, см, мл)"),
+        "settingsNotificationsLabel": MessageLookupByLibrary.simpleMessage("Щоденне нагадування"),
         "settingsNotificationsTimeLabel": m11,
         "settingsPrivacySettings": MessageLookupByLibrary.simpleMessage(
             "Налаштування конфіденційності"),
-        "settingsReportErrorLabel":
-            MessageLookupByLibrary.simpleMessage("Повідомити про помилку"),
-        "settingsShowActivityTracking":
-            MessageLookupByLibrary.simpleMessage("Показати відстеження активності"),
-        "settingsShowMealMacros":
-            MessageLookupByLibrary.simpleMessage("Показати макроси страви"),
+        "settingsReportErrorLabel": MessageLookupByLibrary.simpleMessage("Повідомити про помилку"),
+        "settingsShowActivityTracking": MessageLookupByLibrary.simpleMessage("Показати відстеження активності"),
+        "settingsShowMealMacros": MessageLookupByLibrary.simpleMessage("Показати макроси страви"),
         "settingsShowMicronutrientsLabel": MessageLookupByLibrary.simpleMessage("Показувати мікроелементи"),
-        "settingsSourceCodeLabel":
-            MessageLookupByLibrary.simpleMessage("Вихідний код"),
+        "settingsSourceCodeLabel": MessageLookupByLibrary.simpleMessage("Вихідний код"),
         "settingsSystemLabel": MessageLookupByLibrary.simpleMessage("Система"),
         "settingsThemeDarkLabel": MessageLookupByLibrary.simpleMessage("Темна"),
         "settingsThemeLabel": MessageLookupByLibrary.simpleMessage("Тема"),
-        "settingsThemeLightLabel":
-            MessageLookupByLibrary.simpleMessage("Світла"),
-        "settingsThemeSystemDefaultLabel":
-            MessageLookupByLibrary.simpleMessage("Системна за замовчуванням"),
-        "settingsUnitsLabel":
-            MessageLookupByLibrary.simpleMessage("Одиниці вимірювання"),
+        "settingsThemeLightLabel": MessageLookupByLibrary.simpleMessage("Світла"),
+        "settingsThemeSystemDefaultLabel": MessageLookupByLibrary.simpleMessage("Системна за замовчуванням"),
+        "settingsUnitsLabel": MessageLookupByLibrary.simpleMessage("Одиниці вимірювання"),
         "settingsVolumeLabel": MessageLookupByLibrary.simpleMessage("Об\'єм"),
-        "shareCodeLabel":
-            MessageLookupByLibrary.simpleMessage("Поділитися кодом"),
+        "shareActivityLabel": MessageLookupByLibrary.simpleMessage("Поділитися тренуванням"),
+        "shareCodeLabel": MessageLookupByLibrary.simpleMessage("Поділитися кодом"),
         "shareMealLabel": MessageLookupByLibrary.simpleMessage("Share meal"),
+        "shareRecipeLabel": MessageLookupByLibrary.simpleMessage("Поділитися рецептом"),
         "snackExample": MessageLookupByLibrary.simpleMessage(
             "наприклад, яблуко, морозиво, шоколад ..."),
         "snackLabel": MessageLookupByLibrary.simpleMessage("Перекус"),
@@ -943,155 +804,13 @@ class MessageLookup extends MessageLookupByLibrary {
         "vitaminB6Label": MessageLookupByLibrary.simpleMessage("вітамін B6"),
         "vitaminCLabel": MessageLookupByLibrary.simpleMessage("вітамін C"),
         "vitaminDLabel": MessageLookupByLibrary.simpleMessage("вітамін D"),
+        "warningLabel": MessageLookupByLibrary.simpleMessage("Попередження"),
         "weeklyWeightGoalKgPerWeek": m8,
-        "weeklyWeightGoalLabel":
-            MessageLookupByLibrary.simpleMessage("Тижневий темп"),
+        "weeklyWeightGoalLabel": MessageLookupByLibrary.simpleMessage("Тижневий темп"),
         "weeklyWeightGoalLbsPerWeek": m9,
-        "weeklyWeightGoalNoneLabel":
-            MessageLookupByLibrary.simpleMessage("Не встановлено"),
+        "weeklyWeightGoalNoneLabel": MessageLookupByLibrary.simpleMessage("Не встановлено"),
         "weightLabel": MessageLookupByLibrary.simpleMessage("Вага"),
         "yearsLabel": m3,
         "zincLabel": MessageLookupByLibrary.simpleMessage("цинк"),
-        "offlineCatalogActionDelete":
-            MessageLookupByLibrary.simpleMessage("Видалити"),
-        "offlineCatalogActionRefresh":
-            MessageLookupByLibrary.simpleMessage("Оновити"),
-        "offlineCatalogCancel":
-            MessageLookupByLibrary.simpleMessage("Скасувати"),
-        "offlineCatalogCancelConfirmBody": MessageLookupByLibrary.simpleMessage(
-            "Це втратить вже завантажені продукти. Якщо хочеш повернутися до цього пізніше, скористайся «Призупинити»."),
-        "offlineCatalogCancelConfirmKeep":
-            MessageLookupByLibrary.simpleMessage("Продовжити завантаження"),
-        "offlineCatalogCancelConfirmTitle":
-            MessageLookupByLibrary.simpleMessage("Скасувати та відхилити?"),
-        "offlineCatalogDeleteConfirmBody": MessageLookupByLibrary.simpleMessage(
-            "Це видалить завантажені продукти з твого пристрою. Ти можеш створити каталог заново будь-коли з цього екрана."),
-        "offlineCatalogDeleteConfirmTitle":
-            MessageLookupByLibrary.simpleMessage("Видалити офлайн-каталог?"),
-        "offlineCatalogDiscard":
-            MessageLookupByLibrary.simpleMessage("Відхилити"),
-        "offlineCatalogDoneAction":
-            MessageLookupByLibrary.simpleMessage("Готово"),
-        "offlineCatalogDoneBody": MessageLookupByLibrary.simpleMessage(
-            "Пошук і сканування штрих-кодів тепер працюють офлайн. Для продуктів, яких ще немає у твоєму каталозі, ми все одно перевіримо живу базу."),
-        "offlineCatalogDoneSummary": m25,
-        "offlineCatalogDoneTitle":
-            MessageLookupByLibrary.simpleMessage("Каталог готовий"),
-        "offlineCatalogDownloadAction":
-            MessageLookupByLibrary.simpleMessage("Завантажити"),
-        "offlineCatalogDownloadingBody": MessageLookupByLibrary.simpleMessage(
-            "Можеш залишити цей екран відкритим — завантаження триватиме. Призупини, якщо потрібно відійти — твій прогрес збережемо."),
-        "offlineCatalogDownloadingEta": m23,
-        "offlineCatalogDownloadingProgress": m21,
-        "offlineCatalogDownloadingTitle":
-            MessageLookupByLibrary.simpleMessage("Завантажуємо твій каталог"),
-        "offlineCatalogInstallingTitle":
-            MessageLookupByLibrary.simpleMessage("Розпаковуємо твій каталог"),
-        "offlineCatalogInstallingBody": MessageLookupByLibrary.simpleMessage(
-            "Розпаковуємо щойно завантажене та записуємо на твій пристрій. Зазвичай це триває лише кілька секунд."),
-        "offlineCatalogErrorBodyFatal": MessageLookupByLibrary.simpleMessage(
-            "Не вдалося завершити це завантаження."),
-        "offlineCatalogErrorBodyRecoverable":
-            MessageLookupByLibrary.simpleMessage(
-                "Все, що було завантажено досі, ми зберегли. Спробуй ще раз кнопкою «Продовжити», коли матимеш краще з\'єднання."),
-        "offlineCatalogErrorRetry":
-            MessageLookupByLibrary.simpleMessage("Спробувати знову"),
-        "offlineCatalogErrorTitle":
-            MessageLookupByLibrary.simpleMessage("Щось пішло не так"),
-        "offlineCatalogEstimateBody": MessageLookupByLibrary.simpleMessage(
-            "Ось що ми для тебе завантажимо."),
-        "offlineCatalogEstimateError": MessageLookupByLibrary.simpleMessage(
-            "Не вдалося визначити розмір завантаження. Спробуй ще раз за хвилину."),
-        "offlineCatalogEstimateRequestsLabel":
-            MessageLookupByLibrary.simpleMessage("Розмір завантаження"),
-        "offlineCatalogEstimateRowsLabel":
-            MessageLookupByLibrary.simpleMessage("Продукти"),
-        "offlineCatalogEstimateSizeLabel":
-            MessageLookupByLibrary.simpleMessage("Орієнтовний розмір"),
-        "offlineCatalogEstimateTimeLabel":
-            MessageLookupByLibrary.simpleMessage("Орієнтовний час"),
-        "offlineCatalogEstimateTitle":
-            MessageLookupByLibrary.simpleMessage("Готово до завантаження"),
-        "offlineCatalogEstimateWifiHint": MessageLookupByLibrary.simpleMessage(
-            "Якщо можеш, підключися до Wi-Fi. Інакше завантаження зарахується до твоїх мобільних даних."),
-        "offlineCatalogNextAction":
-            MessageLookupByLibrary.simpleMessage("Далі"),
-        "offlineCatalogPause":
-            MessageLookupByLibrary.simpleMessage("Призупинити"),
-        "offlineCatalogPausedBody": MessageLookupByLibrary.simpleMessage(
-            "Твій прогрес збережено. Продовжуй з того місця, де зупинився, коли матимеш Wi-Fi."),
-        "offlineCatalogPausedProgress": m24,
-        "offlineCatalogPausedTitle":
-            MessageLookupByLibrary.simpleMessage("Завантаження призупинено"),
-        "offlineCatalogProductCount": m19,
-        "offlineCatalogQualityBody": MessageLookupByLibrary.simpleMessage(
-            "Ці типові налаштування дають менший і кориснішіший каталог. Вимикай їх лише якщо свідомо хочеш бачити неповні записи."),
-        "offlineCatalogQualityNutritionBody":
-            MessageLookupByLibrary.simpleMessage(
-                "Пропускає продукти без даних про калорії або макронутрієнти — корисно в результатах пошуку, де інакше вони з\'являлися б як порожні картки."),
-        "offlineCatalogQualityNutritionLabel":
-            MessageLookupByLibrary.simpleMessage(
-                "Лише записи з повними поживними даними"),
-        "offlineCatalogQualityPopularityBody":
-            MessageLookupByLibrary.simpleMessage(
-                "Пропускає продукти, скановані лише раз. Довгий хвіст одноразових записів рідко відповідає тому, що ти бачиш у супермаркеті, і його видалення зменшує каталог приблизно на третину."),
-        "offlineCatalogQualityPopularityLabel":
-            MessageLookupByLibrary.simpleMessage(
-                "Лише часто скановані продукти"),
-        "offlineCatalogQualityRecency10Years":
-            MessageLookupByLibrary.simpleMessage("10 років"),
-        "offlineCatalogQualityRecency3Years":
-            MessageLookupByLibrary.simpleMessage("3 роки"),
-        "offlineCatalogQualityRecency5Years":
-            MessageLookupByLibrary.simpleMessage("5 років"),
-        "offlineCatalogQualityRecencyAny":
-            MessageLookupByLibrary.simpleMessage("Будь-який"),
-        "offlineCatalogQualityRecencyBody":
-            MessageLookupByLibrary.simpleMessage(
-                "Старіші записи можуть застаріти — упаковки змінюються, рецептури переробляються. Обери проміжок, який тобі підходить."),
-        "offlineCatalogQualityRecencyLabel":
-            MessageLookupByLibrary.simpleMessage("Оновлено за останні"),
-        "offlineCatalogQualityTitle":
-            MessageLookupByLibrary.simpleMessage("Фільтри якості"),
-        "offlineCatalogResume":
-            MessageLookupByLibrary.simpleMessage("Продовжити"),
-        "offlineCatalogStartAction":
-            MessageLookupByLibrary.simpleMessage("Почати"),
-        "offlineCatalogTileBuilding":
-            MessageLookupByLibrary.simpleMessage("Працюємо над цим…"),
-        "offlineCatalogTileBuildingPercent": m26,
-        "offlineCatalogTileLastRefreshed": m28,
-        "offlineCatalogTileNotBuilt": MessageLookupByLibrary.simpleMessage(
-            "Не створено — торкнися, щоб налаштувати"),
-        "offlineCatalogTilePaused": MessageLookupByLibrary.simpleMessage(
-            "Завантаження призупинено — торкнися, щоб продовжити"),
-        "offlineCatalogTileCheckingAvailability":
-            MessageLookupByLibrary.simpleMessage("Перевіряю доступність…"),
-        "offlineCatalogTileUnavailable": MessageLookupByLibrary.simpleMessage(
-            "Офлайн-каталог зараз недоступний, спробуй пізніше"),
-        "offlineCatalogTileReady": m27,
-        "offlineCatalogTimeDaysAgo": m31,
-        "offlineCatalogTimeHoursAgo": m32,
-        "offlineCatalogTimeJustNow":
-            MessageLookupByLibrary.simpleMessage("щойно"),
-        "offlineCatalogTimeMonthsAgo": m29,
-        "offlineCatalogTimeWeeksAgo": m30,
-        "offlineCatalogTitle": MessageLookupByLibrary.simpleMessage(
-            "Офлайн-каталог продуктів"),
-        "offlineCatalogWelcomeBody1": MessageLookupByLibrary.simpleMessage(
-            "Ми можемо завантажити копію бази Open Food Facts, щоб пошук і сканування штрих-кодів працювали без підключення до інтернету."),
-        "offlineCatalogWelcomeBody2": MessageLookupByLibrary.simpleMessage(
-            "Країни ти обереш на наступній сторінці; ми зберігаємо лише стовпці, які реально використовує застосунок (без зображень на пристрої, без зайвих метаданих), щоб завантаження було якнайменшим."),
-        "offlineCatalogWelcomeBulletHumanFood":
-            MessageLookupByLibrary.simpleMessage(
-                "Каталог містить тільки їжу для людей — корм для тварин, косметику та інші непродовольчі товари ми відфільтровуємо за тебе."),
-        "offlineCatalogWelcomeBulletScreen":
-            MessageLookupByLibrary.simpleMessage(
-                "Будь ласка, не закривай цей екран, поки створюється каталог. Якщо застосунок надовго піде у фон, завантаження призупиниться, і ти зможеш продовжити пізніше."),
-        "offlineCatalogWelcomeBulletWifi":
-            MessageLookupByLibrary.simpleMessage(
-                "Наполегливо радимо з\'єднання Wi-Fi — завантаження може займати сотні мегабайтів залежно від кількості обраних країн."),
-        "offlineCatalogWelcomeTitle": MessageLookupByLibrary.simpleMessage(
-            "Створити офлайн-каталог продуктів"),
       };
 }

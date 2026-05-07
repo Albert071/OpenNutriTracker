@@ -146,6 +146,38 @@ void main() {
 
       expect(result, equals('Nom Français - testValue'));
     });
+
+    test('Case 9: Czech locale returns product_name_cs when present', () {
+      final product = _buildProduct(product_name_cs: 'Český název');
+      expect(product.getLocaleName(SupportedLanguage.cs),
+          equals('Český název'));
+    });
+
+    test('Case 10: Italian locale returns product_name_it when present', () {
+      final product = _buildProduct(product_name_it: 'Nome italiano');
+      expect(product.getLocaleName(SupportedLanguage.it),
+          equals('Nome italiano'));
+    });
+
+    test('Case 11: Turkish locale returns product_name_tr when present', () {
+      final product = _buildProduct(product_name_tr: 'Türkçe isim');
+      expect(product.getLocaleName(SupportedLanguage.tr),
+          equals('Türkçe isim'));
+    });
+
+    test('Case 12: Ukrainian locale returns product_name_uk when present', () {
+      final product = _buildProduct(product_name_uk: 'Українська назва');
+      expect(product.getLocaleName(SupportedLanguage.uk),
+          equals('Українська назва'));
+    });
+
+    test(
+        'Case 13: Czech locale falls back through product_name when '
+        'product_name_cs is null', () {
+      final product = _buildProduct(product_name: 'Default name');
+      expect(product.getLocaleName(SupportedLanguage.cs),
+          equals('Default name'));
+    });
   });
 }
 
@@ -154,6 +186,10 @@ OFFProductDTO _buildProduct({
   String? product_name_en,
   String? product_name_fr,
   String? product_name_de,
+  String? product_name_cs,
+  String? product_name_it,
+  String? product_name_tr,
+  String? product_name_uk,
 }) {
   return OFFProductDTO(
     code: '123',
@@ -161,6 +197,10 @@ OFFProductDTO _buildProduct({
     product_name_en: product_name_en,
     product_name_fr: product_name_fr,
     product_name_de: product_name_de,
+    product_name_cs: product_name_cs,
+    product_name_it: product_name_it,
+    product_name_tr: product_name_tr,
+    product_name_uk: product_name_uk,
     brands: null,
     image_front_thumb_url: null,
     image_front_url: null,

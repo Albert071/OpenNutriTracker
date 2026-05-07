@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:io' show gzip;
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:opennutritracker/core/domain/entity/recipe_entity.dart';
 import 'package:opennutritracker/core/domain/entity/recipe_ingredient_entity.dart';
@@ -147,6 +150,26 @@ void main() {
       expect(
         () => SharedRecipePayload.fromJsonString(fakeJson),
         throwsA(isA<SharedRecipeParseException>()),
+      );
+    });
+
+    test('oversized decompressed payload throws SharedRecipeParseException',
+        () {
+      // 1 MiB of repeated bytes compresses to ~1 KiB but expands well
+      // past the 64 KiB cap. A malicious QR could in principle ship
+      // something like this; the cap keeps the parse predictable.
+      final blob = List<int>.filled(1024 * 1024, 0x42);
+      final compressed = gzip.encode(blob);
+      final raw = base64Url.encode(compressed);
+      expect(
+        () => SharedRecipePayload.fromJsonString(raw),
+        throwsA(
+          isA<SharedRecipeParseException>().having(
+            (e) => e.message,
+            'message',
+            contains('too large'),
+          ),
+        ),
       );
     });
   });

@@ -201,6 +201,25 @@ void main() {
       );
     });
 
+    test('oversized decompressed payload throws SharedMealParseException', () {
+      // A highly compressible blob: 1 MiB of repeated bytes compresses
+      // to ~1 KiB but expands well past the 64 KiB cap on decode. A
+      // malicious QR could in principle ship something like this.
+      final blob = List<int>.filled(1024 * 1024, 0x41);
+      final compressed = gzip.encode(blob);
+      final raw = base64Url.encode(compressed);
+      expect(
+        () => SharedMealPayload.fromJsonString(raw),
+        throwsA(
+          isA<SharedMealParseException>().having(
+            (e) => e.message,
+            'message',
+            contains('too large'),
+          ),
+        ),
+      );
+    });
+
     test('totalCount sums OFF refs and custom items', () {
       final intakes = [
         makeIntake(createMeal(

@@ -61,6 +61,13 @@ class _ImportActivityScannerScreenState
     if (_isProcessing) return;
     final raw = capture.barcodes.firstOrNull?.rawValue;
     if (raw == null) return;
+    // Flip the flag synchronously, before any await, so a second
+    // onDetect call that mobile_scanner queues up while the camera
+    // still has the QR in frame can't pass the gate. The flag was
+    // previously only flipped inside _processCode, leaving a brief
+    // microtask window where two detections could both reach the
+    // dialog.
+    _isProcessing = true;
     await _processCode(raw);
   }
 
@@ -97,9 +104,12 @@ class _ImportActivityScannerScreenState
   }
 
   Future<void> _processCode(String raw) async {
-    if (_isProcessing) return;
+    // Idempotent set — _onDetect flips the flag synchronously before
+    // calling here, but the paste-code dialog path doesn't, so this
+    // still needs to set it.
     setState(() => _isProcessing = true);
 
+    var didPop = false;
     try {
       final payload = SharedActivityPayload.fromJsonString(raw);
       if (!mounted) return;
@@ -109,6 +119,7 @@ class _ImportActivityScannerScreenState
         _refreshPages();
         if (mounted) {
           Navigator.of(context).pop();
+          didPop = true;
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
                 content: Text(S.of(context).importActivitySuccessLabel)),
@@ -122,7 +133,17 @@ class _ImportActivityScannerScreenState
         );
       }
     } finally {
-      if (mounted) setState(() => _isProcessing = false);
+      // Don't reset the flag on the success-and-pop path. Navigator.pop
+      // schedules the pop for the next frame, so `mounted` stays true
+      // for the rest of this microtask. If we reset _isProcessing to
+      // false here, a buffered onDetect that mobile_scanner emits in
+      // the same microtask passes the gate and shows a second confirm
+      // dialog — except by then the scanner has popped, so
+      // showDialog walks up to the home navigator and the dialog
+      // appears on the home screen.
+      if (mounted && !didPop) {
+        setState(() => _isProcessing = false);
+      }
     }
   }
 

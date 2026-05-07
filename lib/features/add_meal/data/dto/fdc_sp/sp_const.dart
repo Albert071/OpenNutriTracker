@@ -26,9 +26,17 @@ class SPConst {
         return fdcFoodDescriptionEn;
       case SupportedLanguage.de:
         return fdcFoodDescriptionDe;
+      // The Supabase view only has English and German description
+      // columns today. cs / it / pl / tr / uk / zh fall through to
+      // the English column for now.
+      // TODO(@simonoppowa): add description_cs/_it/_pl/_tr/_uk/_zh
+      // to the Supabase fdc_food view, then split these cases out.
       case SupportedLanguage.pl:
-        return fdcFoodDescriptionEn;
       case SupportedLanguage.zh:
+      case SupportedLanguage.cs:
+      case SupportedLanguage.it:
+      case SupportedLanguage.tr:
+      case SupportedLanguage.uk:
         return fdcFoodDescriptionEn;
     }
   }

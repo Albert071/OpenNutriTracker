@@ -36,6 +36,13 @@ class SharedActivityItem {
 class SharedActivityPayload {
   static const int _currentVersion = 1;
 
+  // Cap the post-decompression payload size to make zip-bomb-style QR
+  // codes a clean parse failure rather than an OOM. 64 KiB is well
+  // beyond any plausible legitimate share (a hundred activities
+  // round-trip in ~2 KiB) and well below anything that could pressure
+  // memory on even an entry-level device.
+  static const int _kMaxDecompressedBytes = 64 * 1024;
+
   final int version;
   final List<SharedActivityItem> items;
 
@@ -57,8 +64,17 @@ class SharedActivityPayload {
     try {
       String jsonString;
       try {
-        jsonString = utf8
-            .decode(gzip.decode(base64Url.decode(base64Url.normalize(input))));
+        final decompressed =
+            gzip.decode(base64Url.decode(base64Url.normalize(input)));
+        if (decompressed.length > _kMaxDecompressedBytes) {
+          throw SharedActivityParseException(
+              'Payload too large to decode (>$_kMaxDecompressedBytes bytes)');
+        }
+        jsonString = utf8.decode(decompressed);
+      } on SharedActivityParseException {
+        // Size violations are real errors, not malformed input — don't
+        // fall back to treating the raw input as JSON.
+        rethrow;
       } catch (_) {
         jsonString = input;
       }

@@ -244,18 +244,23 @@ class _ProfilePageState extends State<ProfilePage> {
 
   Future<void> _showSetWeeklyWeightGoalDialog(BuildContext context,
       UserEntity userEntity, bool usesImperialUnits) async {
-    final result = await showDialog<double>(
+    final result = await showDialog<WeeklyWeightGoalResult>(
       context: context,
       builder: (context) => SetWeeklyWeightGoalDialog(
         currentGoalKg: userEntity.weeklyWeightGoalKg,
         usesImperialUnits: usesImperialUnits,
       ),
     );
-    if (result == null) return; // cancelled
-    if (isWeeklyGoalClear(result)) {
-      userEntity.weeklyWeightGoalKg = null;
-    } else {
-      userEntity.weeklyWeightGoalKg = result;
+    switch (result) {
+      // null when the framework returns from a back-button pop, treated
+      // as cancellation alongside the explicit Cancel case.
+      case null:
+      case WeeklyWeightGoalCancelled():
+        return;
+      case WeeklyWeightGoalCleared():
+        userEntity.weeklyWeightGoalKg = null;
+      case WeeklyWeightGoalSet(:final kgPerWeek):
+        userEntity.weeklyWeightGoalKg = kgPerWeek;
     }
     await _profileBloc.updateUser(userEntity);
   }

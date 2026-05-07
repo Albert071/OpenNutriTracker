@@ -224,6 +224,13 @@ class SharedMealPayload {
   static const int _currentVersion = 2;
   static const int _minSupportedVersion = 1;
 
+  // Cap the post-decompression payload size to make zip-bomb-style QR
+  // codes a clean parse failure rather than an OOM. 64 KiB comfortably
+  // covers the largest legitimate share (a meal-share with several
+  // embedded recipes) while staying well below memory pressure on any
+  // device the app targets.
+  static const int _kMaxDecompressedBytes = 64 * 1024;
+
   final int version;
   final List<SharedMealOffRef> offRefs;
   final List<SharedMealItem> items;
@@ -293,8 +300,17 @@ class SharedMealPayload {
     try {
       String jsonString;
       try {
-        jsonString = utf8
-            .decode(gzip.decode(base64Url.decode(base64Url.normalize(input))));
+        final decompressed =
+            gzip.decode(base64Url.decode(base64Url.normalize(input)));
+        if (decompressed.length > _kMaxDecompressedBytes) {
+          throw SharedMealParseException(
+              'Payload too large to decode (>$_kMaxDecompressedBytes bytes)');
+        }
+        jsonString = utf8.decode(decompressed);
+      } on SharedMealParseException {
+        // Size violations are real errors, not malformed input — don't
+        // fall back to treating the raw input as JSON.
+        rethrow;
       } catch (_) {
         jsonString = input;
       }

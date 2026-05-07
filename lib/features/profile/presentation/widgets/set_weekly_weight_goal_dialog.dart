@@ -1,8 +1,40 @@
 import 'package:flutter/material.dart';
 import 'package:opennutritracker/generated/l10n.dart';
 
-/// #284: Dialog for setting the weekly weight change rate.
-/// Returns a nullable double (kg/week): negative = lose, positive = gain, null = clear/not set.
+/// #284: Dialog for setting the weekly weight change rate. The dialog
+/// returns one of three [WeeklyWeightGoalResult] cases:
+///
+/// - [WeeklyWeightGoalCancelled] when the user dismisses or taps Cancel.
+///   (This is also what the framework returns from a back-button pop,
+///   so callers don't need to special-case `null`.)
+/// - [WeeklyWeightGoalCleared] when the user taps Reset, asking to
+///   fall back to the overall weight goal (lose / maintain / gain).
+/// - [WeeklyWeightGoalSet] with a kg/week value when the user taps OK
+///   on a slider position. Negative = lose, positive = gain, zero =
+///   maintain.
+///
+/// The previous shape of this API returned a `double?` and overloaded
+/// `double.nan` as a sentinel for "clear". The sealed type makes the
+/// intent obvious in the caller's switch and removes a footgun where
+/// any caller forgetting to check `isNaN` would silently set the user
+/// to a NaN goal.
+sealed class WeeklyWeightGoalResult {
+  const WeeklyWeightGoalResult();
+}
+
+class WeeklyWeightGoalCancelled extends WeeklyWeightGoalResult {
+  const WeeklyWeightGoalCancelled();
+}
+
+class WeeklyWeightGoalCleared extends WeeklyWeightGoalResult {
+  const WeeklyWeightGoalCleared();
+}
+
+class WeeklyWeightGoalSet extends WeeklyWeightGoalResult {
+  final double kgPerWeek;
+  const WeeklyWeightGoalSet(this.kgPerWeek);
+}
+
 class SetWeeklyWeightGoalDialog extends StatefulWidget {
   final double? currentGoalKg;
   final bool usesImperialUnits;
@@ -83,28 +115,24 @@ class _SetWeeklyWeightGoalDialogState
       ),
       actions: [
         TextButton(
-          onPressed: () => Navigator.of(context).pop(null),
+          onPressed: () => Navigator.of(context)
+              .pop<WeeklyWeightGoalResult>(const WeeklyWeightGoalCancelled()),
           child: Text(S.of(context).dialogCancelLabel),
         ),
         // Always offer Reset — users need a way to fall back to the
         // overall weight goal (lose / maintain / gain) even if they
         // opened the slider once and never set an explicit weekly rate.
         TextButton(
-          onPressed: () => Navigator.of(context).pop(_kClearSentinel),
+          onPressed: () => Navigator.of(context)
+              .pop<WeeklyWeightGoalResult>(const WeeklyWeightGoalCleared()),
           child: Text(S.of(context).buttonResetLabel),
         ),
         TextButton(
-          onPressed: () => Navigator.of(context).pop(_selectedKg),
+          onPressed: () => Navigator.of(context)
+              .pop<WeeklyWeightGoalResult>(WeeklyWeightGoalSet(_selectedKg)),
           child: Text(S.of(context).dialogOKLabel),
         ),
       ],
     );
   }
 }
-
-/// Sentinel value returned when the user chooses to clear the weekly goal.
-const double _kClearSentinel = double.nan;
-
-/// Returns true when the dialog result signals "clear the goal".
-bool isWeeklyGoalClear(double? result) =>
-    result != null && result.isNaN;

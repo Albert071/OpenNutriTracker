@@ -13,6 +13,14 @@ class OFFProductDTO {
   final String? product_name_en;
   final String? product_name_fr;
   final String? product_name_de;
+  // OFF carries product names in many languages — these four cover the
+  // remaining locales the ONT UI ships in (cs / it / tr / uk). When any
+  // are missing or blank for a particular product the lookup falls
+  // through to product_name / product_name_en / etc as before.
+  final String? product_name_cs;
+  final String? product_name_it;
+  final String? product_name_tr;
+  final String? product_name_uk;
 
   final String? brands;
 
@@ -49,10 +57,23 @@ class OFFProductDTO {
       case SupportedLanguage.de:
         localeName = product_name_de;
         break;
-      case SupportedLanguage.pl:
-        localeName = product_name;
+      case SupportedLanguage.cs:
+        localeName = product_name_cs;
         break;
+      case SupportedLanguage.it:
+        localeName = product_name_it;
+        break;
+      case SupportedLanguage.tr:
+        localeName = product_name_tr;
+        break;
+      case SupportedLanguage.uk:
+        localeName = product_name_uk;
+        break;
+      case SupportedLanguage.pl:
       case SupportedLanguage.zh:
+        // OFF doesn't surface separate `product_name_pl` / `_zh` fields
+        // for most products; the unsuffixed product_name covers them in
+        // practice.
         localeName = product_name;
         break;
     }
@@ -71,6 +92,10 @@ class OFFProductDTO {
     required this.product_name_en,
     required this.product_name_fr,
     required this.product_name_de,
+    this.product_name_cs,
+    this.product_name_it,
+    this.product_name_tr,
+    this.product_name_uk,
     required this.brands,
     required this.image_front_thumb_url,
     required this.image_front_url,

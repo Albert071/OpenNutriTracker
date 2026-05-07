@@ -125,6 +125,36 @@ void main() {
       expect(result.meals.single.nutriments.fat100, 0.3);
     });
 
+    test('quoted decimal-comma works (the documented happy path)', () {
+      // Decimal-comma values must be wrapped in quotes because the
+      // CSV format alone doesn't disambiguate `288,12,5` (288 + 12.5
+      // vs three integers vs 288.12 + 5). The error path below tells
+      // users so when they get it wrong.
+      const csv = 'name,kcal_per_100g,fat_per_100g,protein_per_100g\n'
+          'Butter,717,"82,5","0,9"\n';
+
+      final result = CsvMealImporter.parse(csv);
+
+      expect(result.errors, isEmpty);
+      expect(result.meals, hasLength(1));
+      expect(result.meals.single.nutriments.fat100, 82.5);
+      expect(result.meals.single.nutriments.proteins100, 0.9);
+    });
+
+    test('unquoted decimal-comma triggers a clear too-many-columns hint', () {
+      // 3 expected columns; the unquoted `12,5` over-splits to 4.
+      // Surface a hint about quoting so the user knows what to fix.
+      const csv = 'name,kcal_per_100g,fat_per_100g\n'
+          'Butter,717,82,5\n';
+
+      final result = CsvMealImporter.parse(csv);
+
+      expect(result.errors, hasLength(1));
+      expect(result.errors.first, contains('too many columns'));
+      expect(result.errors.first, contains('"1,5"'));
+      expect(result.meals, isEmpty);
+    });
+
     test('blank lines between rows are ignored', () {
       const csv = 'name,kcal_per_100g\n\nApple,52\n\n\nBanana,89\n';
 

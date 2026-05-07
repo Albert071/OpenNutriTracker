@@ -88,6 +88,11 @@ class _ImportMealScannerScreenState extends State<ImportMealScannerScreen> {
     if (_isProcessing) return;
     final raw = capture.barcodes.firstOrNull?.rawValue;
     if (raw == null) return;
+    // Flip the flag synchronously, before any await, so a second
+    // onDetect call queued by mobile_scanner while the QR is still
+    // in frame can't pass the gate. Without this, two detections
+    // fired in the same microtask window both reach the dialog.
+    _isProcessing = true;
     await _processCode(raw);
   }
 
@@ -124,9 +129,12 @@ class _ImportMealScannerScreenState extends State<ImportMealScannerScreen> {
   }
 
   Future<void> _processCode(String raw) async {
-    if (_isProcessing) return;
+    // Idempotent set — _onDetect flips the flag synchronously before
+    // calling here, but the paste-code dialog path doesn't, so this
+    // still needs to set it.
     setState(() => _isProcessing = true);
 
+    var didPop = false;
     try {
       final payload = SharedMealPayload.fromJsonString(raw);
       if (!mounted) return;
@@ -136,6 +144,7 @@ class _ImportMealScannerScreenState extends State<ImportMealScannerScreen> {
         _refreshPages();
         if (mounted) {
           Navigator.of(context).pop();
+          didPop = true;
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text(S.of(context).importMealSuccessLabel)),
           );
@@ -148,7 +157,15 @@ class _ImportMealScannerScreenState extends State<ImportMealScannerScreen> {
         );
       }
     } finally {
-      if (mounted) setState(() => _isProcessing = false);
+      // Don't reset the flag on the success-and-pop path. Navigator.pop
+      // schedules the pop for the next frame, so a buffered onDetect
+      // that mobile_scanner emits in the same microtask would otherwise
+      // pass the gate and show a second confirm dialog — except by
+      // then the scanner has popped, so the dialog appears on the
+      // home screen.
+      if (mounted && !didPop) {
+        setState(() => _isProcessing = false);
+      }
     }
   }
 

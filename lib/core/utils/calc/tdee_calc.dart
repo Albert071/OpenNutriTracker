@@ -32,25 +32,27 @@ class TDEECalc {
   /// estrogen-typical or testosterone-typical reference via the calorie-profile
   /// setting; either choice routes through the existing male/female formula.
   static double getTDEEKcalIOM2005(UserEntity userEntity) {
+    final palValue = PalCalc.getPALValueFromActivityCategory(userEntity);
     switch (userEntity.gender) {
       case UserGenderEntity.male:
-        return _iom2005MaleKcal(userEntity);
+        return _iom2005MaleKcal(userEntity, palValue);
       case UserGenderEntity.female:
-        return _iom2005FemaleKcal(userEntity);
+        return _iom2005FemaleKcal(userEntity, palValue);
       case UserGenderEntity.nonBinary:
         switch (userEntity.caloriesProfile ?? CaloriesProfileEntity.averaged) {
           case CaloriesProfileEntity.averaged:
-            return (_iom2005MaleKcal(userEntity) + _iom2005FemaleKcal(userEntity)) / 2;
+            return (_iom2005MaleKcal(userEntity, palValue) +
+                    _iom2005FemaleKcal(userEntity, palValue)) /
+                2;
           case CaloriesProfileEntity.estrogenTypical:
-            return _iom2005FemaleKcal(userEntity);
+            return _iom2005FemaleKcal(userEntity, palValue);
           case CaloriesProfileEntity.testosteroneTypical:
-            return _iom2005MaleKcal(userEntity);
+            return _iom2005MaleKcal(userEntity, palValue);
         }
     }
   }
 
-  static double _iom2005MaleKcal(UserEntity userEntity) {
-    final palValue = PalCalc.getPALValueFromActivityCategory(userEntity);
+  static double _iom2005MaleKcal(UserEntity userEntity, double palValue) {
     final paValue = PalCalc.getPAValueForFormula(
       palValue: palValue,
       isMaleFormula: true,
@@ -61,8 +63,7 @@ class TDEECalc {
         503 * (userEntity.heightCM / 100);
   }
 
-  static double _iom2005FemaleKcal(UserEntity userEntity) {
-    final palValue = PalCalc.getPALValueFromActivityCategory(userEntity);
+  static double _iom2005FemaleKcal(UserEntity userEntity, double palValue) {
     final paValue = PalCalc.getPAValueForFormula(
       palValue: palValue,
       isMaleFormula: false,

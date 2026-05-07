@@ -9,11 +9,18 @@ import UserNotifications
     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
   ) -> Bool {
     GeneratedPluginRegistrant.register(with: self)
-    // Required by flutter_local_notifications so foreground notifications are
-    // displayed instead of being silently dropped (#312).
-    UNUserNotificationCenter.current().delegate = self as? UNUserNotificationCenterDelegate
-        // Exclude the documents folder from iCloud backup.
-        try! setExcludeFromiCloudBackup(isExcluded: true)
+    // Required by flutter_local_notifications so foreground notifications
+    // are displayed instead of being silently dropped (#312).
+    // FlutterAppDelegate already conforms to UNUserNotificationCenterDelegate,
+    // so the direct assignment type-checks at compile time. The previous
+    // shape used `self as? UNUserNotificationCenterDelegate`, which would
+    // silently resolve to nil (and drop foreground notifications) if a
+    // future Flutter / plugin reorganisation ever lost the conformance.
+    // With the unconditional assignment, that scenario surfaces as a
+    // compile error instead.
+    UNUserNotificationCenter.current().delegate = self
+    // Exclude the documents folder from iCloud backup.
+    try! setExcludeFromiCloudBackup(isExcluded: true)
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
   }
 }
