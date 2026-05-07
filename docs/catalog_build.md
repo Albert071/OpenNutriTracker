@@ -45,12 +45,21 @@ Every Saturday evening (and on demand via `workflow_dispatch`) a chained workflo
                         variant.manifest.json
             │
             ▼
-  upload_to_r2.py    ──► R2 bucket (chunks + manifests)
-                       ──► sweep stale objects
-                       ──► purge edge cache for new URLs
+  upload as workflow artefact: catalog-chunks/
+            │
+            ▼
+  plan job (same workflow)
+    download artefact
+    tofu init + tofu plan, hash every file
+            │
+            ▼
+  apply job (same workflow, gated on main / unattended on feature)
+    download artefact + saved plan
+    tofu apply ──► PutObject only changed files
+                ──► R2 bucket (chunks + manifests)
 ```
 
-A successful tofu apply is the gate for this workflow: the catalog only gets rebuilt and uploaded into infrastructure that has just been reconciled with the OpenTofu config.
+Build, plan, and apply are jobs inside one workflow file (`build_catalog.yml`) chained by `needs:`. OpenTofu handles every upload as a state-tracked `aws_s3_object`, which gives delta-only uploads after the first apply and a real `tofu plan` preview of what is about to land.
 
 ## The variant matrix
 
@@ -116,13 +125,13 @@ Rows go into `products` first, in batches of 5000, then `INSERT INTO products_ft
 
 The original `.db.gz` is removed once the chunks are written; the directory at the end of this stage holds only manifests and chunk files. See [The chunked layout](#the-chunked-layout) for the manifest shape and the reasoning behind the 256 MiB cap.
 
-### 5. Upload, sweep, purge
+### 5. Hand the artefact to OpenTofu
 
-`upload_to_r2.py` is the last stage. It globs `*.manifest.json` and `*.db.gz.part-*` from the work directory, refuses the run if the total exceeds the 9.7 GiB ceiling (see [Disk and upload ceilings](#disk-and-upload-ceilings)), and uploads each file with the appropriate content type: `application/json` for manifests, `application/octet-stream` for chunks. boto3's adaptive retry mode and 64 MiB multipart threshold do the rest.
+The script's last act is to publish the work directory as a workflow artefact (`catalog-chunks`). Everything that used to be a separate "upload to R2 + sweep + purge" stage has moved into OpenTofu: the `catalog` module in `opentofu/infrastructure/modules/catalog/` walks the artefact at plan time, hashes every chunk and every manifest with `filesha256()`, and uploads only the files whose content has changed since the last apply. A chunk that has not moved produces no diff and no API call; a chunk whose bytes differ from state produces one PutObject. The "destroy stale objects" step the old python upload did manually is now drift detection — if a previous build's chunk is no longer referenced by the current artefact, OpenTofu sees it as a state-only resource and plans its destruction explicitly.
 
-After the upload finishes, two cleanup steps follow. The sweep step lists every object under the bucket prefix and deletes anything not in this upload set; that catches stale objects from a previous build whose variant set has changed (a renamed variant, a removed one, a chunk-size change that produced a different number of parts). The cache-purge step posts the just-uploaded URLs to Cloudflare's `/zones/{zone}/purge_cache` endpoint in batches of 30, so users see the new catalog immediately rather than waiting up to a week for the 7-day edge TTL to expire on the old one.
+This is the change that gives `tofu plan` a real preview of what is about to land. The plan output names every chunk that will move and shows its `~ source_hash` diff; a reviewer reads exactly which files are being uploaded before approving. The previous "run the python script and hope for the best" model gave no such visibility.
 
-Both cleanup steps require their own credentials. The sweep uses the same R2 token as the upload. The purge uses `CLOUDFLARE_PURGE_TOKEN`, a separate zone-scoped, purge-only token managed by OpenTofu (see `opentofu/cloudflare/tokens.tf`). If the purge env vars are not all set, the step is skipped silently with a log line, which is the right behaviour for local runs.
+Cache-purge after upload still happens, but the trigger is the apply rather than the script. See `opentofu/infrastructure/modules/cloudflare/` for where the purge token lives; the workflow that consumes it is being moved alongside this work.
 
 ## The chunked layout
 
@@ -158,37 +167,48 @@ The current values are `schema_version = 1` and `schema_version_minor = 0`. To b
 
 The pipeline is sized to fit inside a GitHub-hosted ubuntu-latest runner's roughly 14 GB of free disk. The peak holds the OFF CSV (1.2 GB), the trimmed CSVs (around 1.8 GB total), and one variant's uncompressed `.db` (up to 3.8 GB for `s0_n0_rany`) at once, with the build_catalog workflow stripping out the pre-installed Android SDK, .NET, Haskell, and CodeQL trees first to give itself headroom. Each `.db` is gzipped and its trimmed CSV deleted as soon as build_sqlite finishes, so the runner only ever holds one uncompressed sqlite file at peak.
 
-`upload_to_r2.py` carries a 9.7 GiB total-upload ceiling as a hard refusal: if the directory's total size exceeds it, the script logs a GitHub Actions error annotation and exits non-zero rather than committing the bandwidth. The current 16 variants come to about 3.51 GiB, so there is plenty of headroom, but the ceiling exists so a future schema mistake (an unintended column, a runaway variant matrix) cannot quietly multiply the CDN bill. Raising it should always be a deliberate code change rather than a rubber-stamp.
+The 9.7 GiB total-upload ceiling that lived in the old python upload script has gone with it. With OpenTofu managing the upload, the equivalent guard is a `validation` block on the `catalog` module's variables — left unimplemented today, on the basis that `tofu plan` is itself a manual gate that will surface a runaway directory size before any bytes leave the runner. If a plan ever shows a clearly unreasonable number of `~ source_hash` diffs, the apply doesn't have to be approved. Worth adding the size validation back as a belt-and-braces measure once we've lived with the new shape for a while.
 
 ## The CI workflow
 
-`.github/workflows/build_catalog.yml` is wired to start via `workflow_run` only after `Tofu apply` completes successfully on the same branch. There is no `push` or `cron` trigger directly on this workflow; the catalog build is always downstream of an apply, which means the build only happens against infrastructure that has just been reconciled with the OpenTofu config. The first guard on the job is `if: github.event.workflow_run.conclusion == 'success'`, so a failed apply does not propagate a half-broken upload.
+`.github/workflows/build_catalog.yml` is one workflow with four jobs chained by `needs:`. Triggers are restricted to push on `[main, feature/offline-off-catalog]`, the Saturday 19:00 UTC cron, and manual `workflow_dispatch`. There is deliberately no `pull_request` trigger — runs are scoped to the two named branches plus the cron and manual paths.
 
-The job runs on `ubuntu-latest` and walks through these steps:
+The `build` job runs on `ubuntu-latest` and walks through these steps:
 
-1. Check out the repo at the commit the upstream apply ran against.
+1. Check out the repo.
 2. Free disk space by removing `/usr/share/dotnet`, `/usr/local/lib/android`, `/opt/ghc`, and `/opt/hostedtoolcache/CodeQL`. Together those buy enough room for the peak-disk profile described above.
 3. Install `pigz`, which the orchestrator uses for both the OFF download decompression and the per-variant `.db` compression.
 4. Set up Python 3.12 with `pip` cache keyed off `tools/catalog_build/requirements.txt`.
-5. Install Python deps (just `boto3` at the moment).
-6. Run `bash tools/catalog_build/build_catalog.sh`, with the seven Tofu-managed secrets piped in as environment variables.
-7. Print final disk usage in `if: always()`, so failed runs still leave a usable diagnostic.
+5. Install Python deps. The dependency list is currently empty; the script runs entirely on the standard library now that the upload step has moved out.
+6. Run `bash tools/catalog_build/build_catalog.sh`. No credentials are needed — the script's only job is to leave a populated `$WORK/dbs/` directory behind.
+7. Enforce the 9.7 GiB upload ceiling with `du -sb`. A run whose chunked output exceeds the ceiling fails before any artefact is uploaded, so a runaway variant matrix or a schema mistake cannot quietly multiply the CDN bill.
+8. Upload `$WORK/dbs/` as the `catalog-chunks` workflow artefact for the downstream jobs to consume.
+9. Print final disk usage in `if: always()`, so failed runs still leave a usable diagnostic.
 
-There is no explicit job timeout. GitHub's per-job 6-hour ceiling is the right backstop for the data volume here; a real run takes around 10 to 20 minutes wallclock, dominated by the OFF download and the per-variant sqlite VACUUM steps.
+The `plan` job (`needs: build`) downloads the artefact, runs `tofu init` and `tofu plan -out=tfplan`, and uploads the `tfplan` artefact. The two apply jobs (`apply_gated` and `apply_unattended`, both `needs: plan` and mutually exclusive) download both artefacts and run `tofu apply tfplan`. The gated path uses the `tofu-apply` GitHub environment with a required reviewer; the unattended path runs without a gate for the cron-on-main and feature-branch cases. See [`docs/opentofu.md`](opentofu.md) for the full apply-side reference.
+
+There is no explicit job timeout. GitHub's per-job 6-hour ceiling is the right backstop for the data volume here; a real build run takes around 10 to 20 minutes wallclock, dominated by the OFF download and the per-variant sqlite VACUUM steps. The chained tofu apply adds another minute or two for the actual upload phase, dominated by network throughput on whichever chunks have changed.
 
 ## Running it locally
 
-The pipeline is just bash and Python, so it runs anywhere with `pigz` and Python 3.12 installed. The R2 upload step needs the same seven environment variables the workflow consumes; the simplest way to run a local build end-to-end is to source the gitignored `.env` from the cloudflare Tofu directory, since it carries the same values for the operator's own use:
+The build pipeline is just bash and Python on the standard library, so it runs anywhere with `pigz` and Python 3.12 installed. The script no longer needs any credentials, since the upload step has moved out:
 
 ```bash
 cd /tmp && mkdir -p catalog-build-work && export WORK=$PWD/catalog-build-work
-set -a && source ~/git/OpenNutriTracker/opentofu/cloudflare/.env && set +a
-# Pull the catalog upload creds out of the encrypted Tofu state
-# (see docs/opentofu.md for the helper script that does this).
 ~/git/OpenNutriTracker/tools/catalog_build/build_catalog.sh
 ```
 
-If you only want the build artefacts and not the upload, run the stages by hand and stop after `split_to_chunks.py`. The `$WORK/dbs` directory will hold the manifests and chunks ready to inspect, and skipping `upload_to_r2.py` skips the sweep and the cache purge along with it.
+After it finishes, `$WORK/dbs/` holds the manifests and chunks ready to inspect. To upload the result to R2 from a laptop, point the OpenTofu config at the directory and run an apply:
+
+```bash
+cd ~/git/OpenNutriTracker/opentofu/infrastructure
+set -a && source .env && set +a
+export TF_VAR_catalog_build_output_dir="/tmp/catalog-build-work/dbs"
+~/.tenv/OpenTofu/1.11.6/tofu plan
+~/.tenv/OpenTofu/1.11.6/tofu apply
+```
+
+The plan will show every chunk whose content has changed since the last apply (or every chunk, the first time around). If you only want to inspect the artefacts without uploading anything, simply skip the tofu step.
 
 ## Adding things
 
@@ -232,29 +252,20 @@ The per-variant disk and bandwidth costs add up multiplicatively. Doubling the a
 - **The OFF dump is republished daily, not weekly.** Re-running the workflow more than once a week is fine and gives users fresher data, but the cron only fires Saturday evening because the chained tofu apply on the same schedule rotates the catalog upload token at the same time, and rotating that token more often than weekly is more churn than the project needs.
 - **`build_sqlite.py` runs with `synchronous = OFF` and `journal_mode = MEMORY`.** A power loss on the runner during a build would corrupt the in-progress `.db`, but the pipeline is restartable from the orchestrator anyway, and durability mid-build buys nothing here.
 - **The trim step processes rows in a single pass.** Adding a new variant that is not strictly more or less restrictive than an existing one is fine, but it widens the per-row dispatch loop. The hot-path conditional inside `trim_variants.py` is worth reviewing if you ever add more than a couple of new axes.
-- **Cache-purge errors fail the workflow.** A failed purge leaves the new catalog uploaded but invisible to most users until the 7-day TTL expires. The script returns a non-zero exit code, which surfaces as a red workflow run on the repo so the issue gets noticed rather than waiting it out silently.
-- **The upload step's sweep is unforgiving.** Anything under the bucket prefix that is not in the upload set gets deleted, including any manual experiments you might have left there. If you ever want to keep a debug copy of an old catalog, put it under a different prefix.
-
-## Re-chunking what's already on R2
-
-`tools/catalog_build/rechunk_existing.sh` is a one-off helper that downloads the chunks currently in R2, reassembles them into monolithic `.db.gz` files, runs the chunker again, and re-uploads. The script exists to migrate the layout in place when the chunker's output shape changes (when `schemaVersionMajor` or `schemaVersionMinor` is added to the manifest, when the chunk size cap is adjusted, when a new manifest field is introduced) without paying the cost of a full rebuild from the OFF CSV.
-
-The script needs the same R2 credentials as the upload step. Once the next weekly rebuild has run with the new chunker, the rechunk script becomes dead code and is safe to delete; it is migration scaffolding, not a tool the project needs long-term.
+- **The first apply against an existing R2 bucket re-uploads every chunk.** OpenTofu has no record of the chunks the previous python uploads put there, so the very first `aws_s3_object` apply creates 160ish resources from scratch, every one a PutObject. R2's PutObject is upsert, so the existing chunks are overwritten in place rather than duplicated. From the second apply onwards only changed chunks move.
 
 ## Files
 
 ```text
 tools/catalog_build/
-  build_catalog.sh         ← orchestrator: download → trim → build → split → upload
+  build_catalog.sh         ← orchestrator: download → trim → build → split (no upload)
   trim_variants.py         ← single-pass OFF CSV → 16 trimmed CSVs
   build_sqlite.py          ← one trimmed CSV → one .db (products + FTS5)
   split_to_chunks.py       ← .db.gz → chunks + manifest, ≤256 MiB cap
-  upload_to_r2.py          ← upload + sweep + cache-purge, 9.7 GiB ceiling
-  rechunk_existing.sh      ← one-off in-place migration helper
-  requirements.txt         ← pinned Python deps (boto3)
+  requirements.txt         ← (empty — the build runs on the standard library)
 ```
 
 ```text
 .github/workflows/
-  build_catalog.yml        ← workflow_run-chained from tofu_apply.yml
+  build_catalog.yml        ← single-workflow pipeline: build → plan → apply
 ```

@@ -189,7 +189,7 @@ Settings screen exports to a `.zip` containing three JSON files (user activities
 
 ## Catalog infrastructure
 
-The offline catalog feature is backed by Cloudflare-side infrastructure managed in code at `opentofu/cloudflare/`. A weekly GitHub Actions workflow builds 16 prebuilt sqlite databases from the OpenFoodFacts CSV dump, splits each into ≤256 MiB chunks, and uploads them to a public-read R2 bucket served through `catalog.opennutritracker.org`. The Flutter client (`lib/features/offline_catalog/data/data_sources/catalog_download_data_source.dart`) downloads from that domain.
+The offline catalog feature is backed by Cloudflare-side infrastructure managed in code at `opentofu/infrastructure/`. A weekly GitHub Actions workflow builds 16 prebuilt sqlite databases from the OpenFoodFacts CSV dump, splits each into ≤256 MiB chunks, and uploads them to a public-read R2 bucket served through `catalog.opennutritracker.org`. The Flutter client (`lib/features/offline_catalog/data/data_sources/catalog_download_data_source.dart`) downloads from that domain.
 
 What OpenTofu manages:
 
@@ -198,16 +198,16 @@ What OpenTofu manages:
 - Two downstream Cloudflare API tokens (object-write on the bucket; cache-purge on the zone).
 - Seven GitHub Actions secrets sealed against the repo's libsodium public key, consumed by the catalog-build workflow.
 
-State lives in a separate private R2 bucket (`opennutritracker-tf-state`) and is encrypted at rest at the OpenTofu layer using PBKDF2 (SHA-512, 600k iterations) into AES-256-GCM. The passphrase comes from `TF_VAR_state_passphrase`, which is mirrored to the `TF_VAR_STATE_PASSPHRASE` GitHub Actions secret and to the gitignored `opentofu/cloudflare/.env`.
+State lives in a separate private R2 bucket (`opennutritracker-tf-state`) and is encrypted at rest at the OpenTofu layer using PBKDF2 (SHA-512, 600k iterations) into AES-256-GCM. The passphrase comes from `TF_VAR_state_passphrase`, which is mirrored to the `TF_VAR_STATE_PASSPHRASE` GitHub Actions secret and to the gitignored `opentofu/infrastructure/.env`.
 
-The CI workflow at `.github/workflows/tofu_apply.yml` is split into a plan job and two apply jobs. PRs touching `opentofu/cloudflare/**` run init and plan only. Pushes to `main` and manual `workflow_dispatch` runs run plan and then a gated apply that waits on the `tofu-apply` environment's required reviewer. The Saturday 19:00 UTC cron runs plan and apply unattended (no approval gate), guarded on `github.ref == 'refs/heads/main'`. A successful apply chains via `workflow_run` into `.github/workflows/build_catalog.yml`, which rebuilds and uploads the catalog.
+The CI pipeline lives in a single workflow at `.github/workflows/build_catalog.yml`. Jobs run as `build → plan → apply_gated | apply_unattended`, with artefact passing inside the run. `apply_gated` requires the `tofu-apply` environment's reviewer and only fires for push-to-main or main-branch `workflow_dispatch`; `apply_unattended` fires for the Saturday 19:00 UTC cron on main and for any push or dispatch on `feature/offline-off-catalog` while that branch is in active development. Triggers are restricted to the two named branches, the cron, and manual dispatch — no PR runs and no other-branch runs. OpenTofu manages the catalog chunks as `aws_s3_object` resources, so a chunk whose content has not changed produces no diff and no API call.
 
 For the full reference on the OpenTofu side (resource list, secrets matrix, bootstrap-from-scratch procedure, recovery story if the passphrase is lost, common gotchas), see [`docs/opentofu.md`](docs/opentofu.md). For the build pipeline that produces what gets uploaded into all this infrastructure (variant matrix, the chunked layout, schema versioning, the CI workflow that orchestrates it), see [`docs/catalog_build.md`](docs/catalog_build.md). For the client-side feature itself (the wizard, the bloc lifecycle, the search and scanner fallback chain, the auto-disable crash safety, forward compatibility from the client's perspective), see [`docs/offline_catalog.md`](docs/offline_catalog.md).
 
 Local OpenTofu apply, when needed:
 
 ```sh
-cd opentofu/cloudflare
+cd opentofu/infrastructure
 set -a && source .env && set +a
 ~/.tenv/OpenTofu/1.11.6/tofu init
 ~/.tenv/OpenTofu/1.11.6/tofu apply

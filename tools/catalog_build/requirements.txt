@@ -1,1 +1,6 @@
-boto3>=1.40,<2.0
+# Empty — the build pipeline runs entirely on the Python standard
+# library (csv, gzip, sqlite3, hashlib, pathlib, subprocess). Kept
+# as a placeholder so `pip install -r requirements.txt` is still
+# the canonical install step in the workflow even when the
+# dependency list is empty; if the build ever needs an external
+# package, this is where it goes.

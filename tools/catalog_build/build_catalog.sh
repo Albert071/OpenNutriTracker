@@ -4,7 +4,14 @@
 #   2. Trim it into 16 wizard-filter variants (one CSV per variant)
 #   3. For each variant, build the sqlite + FTS5 database, gzip it,
 #      then delete the .db so peak disk on a GitHub runner stays low
-#   4. Hand the final .db.gz directory to upload_to_r2.py
+#   4. Split each .db.gz into <=256 MiB chunks with a manifest
+#
+# The upload step used to live in this script as a `boto3` shellout
+# and has been deliberately removed: catalog uploads now flow
+# through OpenTofu's `aws_s3_object` resources, which hash each
+# chunk at plan time and re-upload only the ones whose content has
+# changed. This script's only job is to leave a populated
+# `$WORK/dbs/` directory behind for `tofu plan` to pick up.
 #
 # Designed to fit inside a GitHub-hosted ubuntu-latest runner's
 # ~14 GB free disk: peak usage is the OFF CSV (1.2 GB) + the trimmed
@@ -96,10 +103,6 @@ gh_group_end
 gh_group_start "splitting variants into chunks (<=256 MiB each)"
 python3 "$HERE/split_to_chunks.py" "$WORK/dbs/"
 ls -lh "$WORK/dbs/" | head -40
-gh_group_end
-
-gh_group_start "uploading to R2 (with 9.7 GiB pre-flight)"
-python3 "$HERE/upload_to_r2.py" "$WORK/dbs/"
 gh_group_end
 
 ELAPSED=$(( $(date +%s) - START_TS ))

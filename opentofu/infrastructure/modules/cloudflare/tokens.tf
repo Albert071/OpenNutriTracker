@@ -13,7 +13,7 @@ locals {
 
 # Catalog upload token — bucket-scoped, object read+write only.
 # Consumed by .github/workflows/build_catalog.yml via the R2_*
-# GitHub Actions secrets generated in github.tf.
+# GitHub Actions secrets generated at the root.
 resource "cloudflare_api_token" "catalog_upload" {
   name   = "github-actions-catalog-upload"
   status = "active"
