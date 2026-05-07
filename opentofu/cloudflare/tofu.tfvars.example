@@ -1,0 +1,8 @@
+# Local-development template. Copy to tofu.tfvars (gitignored, auto-
+# loaded by OpenTofu) and fill in real values, OR set them via
+# TF_VAR_* environment variables (preferred — that's what the GitHub
+# Actions workflow does, sourcing each value from a repository
+# secret).
+
+account_id                   = "REPLACE_ME"
+zone_id_opennutritracker_org = "REPLACE_ME"

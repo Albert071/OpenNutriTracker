@@ -1,0 +1,23 @@
+# Local state — never commit
+*.tfstate
+*.tfstate.*
+*.tfstate.backup
+
+# Working directory (downloaded provider plugins, etc.) — regenerated
+# by `tofu init`, never commit
+.terraform/
+.tofu/
+
+# Note: .terraform.lock.hcl IS committed. It pins provider versions
+# so every operator and CI run uses the same plugin builds.
+
+# Per-environment variable values — contain account/zone IDs which
+# aren't strictly secret but should be set per-operator
+terraform.tfvars
+tofu.tfvars
+*.auto.tfvars
+*.auto.tofuvars
+
+# Local credentials — written by hand or by automation, never committed
+.env
+.env.*

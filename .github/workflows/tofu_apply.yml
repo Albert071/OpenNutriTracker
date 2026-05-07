@@ -1,0 +1,92 @@
+name: Tofu apply
+
+# Applies the Cloudflare infrastructure managed in opentofu/cloudflare:
+# the catalog R2 bucket, its custom domain, the cache rule, the
+# downstream R2 API token, and the GitHub Actions secrets the
+# catalog upload consumes.
+#
+# Runs as the gating job for the catalog build — build_catalog.yml
+# is wired to start via workflow_run only after this workflow
+# completes successfully on the same branch.
+#
+# Triggers:
+#   - push to opentofu/** on the feature branch (short-term — long-
+#     term replace with `main`)
+#   - weekly Monday 04:30 UTC, so the chained catalog build picks up
+#     fresh OFF data even when nothing infra-side has changed
+#   - manual dispatch
+#
+# Bootstrap secrets (manually managed in repo settings):
+#   CLOUDFLARE_API_TOKEN     — opentofu-bootstrap CF token
+#   TF_GITHUB_TOKEN          — PAT with `repo` scope for github provider
+#   AWS_ACCESS_KEY_ID        — state bucket R2 access key
+#   AWS_SECRET_ACCESS_KEY    — state bucket R2 secret key
+#   TF_VAR_account_id, TF_VAR_zone_id_opennutritracker_org
+#   TF_VAR_STATE_PASSPHRASE  — passphrase used by the OpenTofu state-
+#                              file encryption layer (see encryption.tf).
+#                              Lose this and the state cannot be decrypted.
+
+on:
+  push:
+    branches:
+      - feature/offline-off-catalog
+    paths:
+      - 'opentofu/cloudflare/**'
+      - '.github/workflows/tofu_apply.yml'
+  schedule:
+    # 19:00 UTC every Saturday — ~7pm UK winter / ~8pm UK summer.
+    # The chained catalog build then runs through Saturday evening.
+    - cron: '0 19 * * 6'
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+concurrency:
+  group: tofu-apply
+  cancel-in-progress: false
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: opentofu/cloudflare
+    steps:
+      - name: Check out
+        uses: actions/checkout@v4
+
+      - name: Set up OpenTofu
+        uses: opentofu/setup-opentofu@v1
+        with:
+          tofu_version: 1.11.6
+          tofu_wrapper: false
+
+      - name: Set up Python (for the github-secret sealer)
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install pynacl (for scripts/seal.py)
+        run: pip install --user pynacl
+
+      - name: tofu init
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          # `tofu init` already needs the encryption passphrase
+          # because reading the existing state during init goes
+          # through the encryption layer.
+          TF_VAR_state_passphrase: ${{ secrets.TF_VAR_STATE_PASSPHRASE }}
+        run: tofu init
+
+      - name: tofu apply
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.TF_GITHUB_TOKEN }}
+          TF_VAR_account_id: ${{ secrets.TF_VAR_ACCOUNT_ID }}
+          TF_VAR_zone_id_opennutritracker_org: ${{ secrets.TF_VAR_ZONE_ID_OPENNUTRITRACKER_ORG }}
+          TF_VAR_state_passphrase: ${{ secrets.TF_VAR_STATE_PASSPHRASE }}
+        run: tofu apply -auto-approve

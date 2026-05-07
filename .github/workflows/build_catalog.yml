@@ -1,0 +1,88 @@
+name: Build offline catalog
+
+# Pulls the OFF CSV dump, trims it into 16 wizard-filter variants,
+# builds a sqlite + FTS5 database for each, and uploads the gzipped
+# .db files to R2 behind catalog.opennutritracker.org.
+#
+# Triggered exclusively as the downstream of tofu_apply.yml so we
+# always upload into infrastructure that has just been reconciled
+# with the OpenTofu config (bucket, R2 token, GitHub secrets, cache
+# rule). No timeout is set — GitHub's per-job 6-hour ceiling
+# applies and is the right backstop for the data volume here.
+#
+# Hard 9.7 GiB ceiling on total upload size lives in
+# tools/catalog_build/upload_to_r2.py; if exceeded the upload step
+# refuses and the run fails so we notice rather than silently
+# busting the CDN budget.
+#
+# R2 credentials live in the repository's Actions secrets, written
+# by OpenTofu (do not edit by hand):
+#   R2_ACCESS_KEY_ID, R2_SECRET_ACCESS_KEY, R2_ENDPOINT, R2_BUCKET
+
+on:
+  workflow_run:
+    workflows: ["Tofu apply"]
+    types: [completed]
+    branches:
+      - feature/offline-off-catalog
+
+permissions:
+  contents: read
+
+concurrency:
+  group: build-catalog
+  cancel-in-progress: false
+
+jobs:
+  build:
+    # Only run when the upstream tofu apply succeeded — a failed
+    # apply means the bucket / token / secrets aren't in a known
+    # state and we shouldn't push the catalog into them.
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out
+        uses: actions/checkout@v4
+
+      - name: Free disk space
+        # Strip the pre-installed Android SDK / .NET / Haskell toolchains
+        # so we have enough headroom for the OFF CSV + trimmed CSVs +
+        # the largest sqlite (~3.8 GB) at peak.
+        run: |
+          sudo rm -rf /usr/share/dotnet /usr/local/lib/android \
+                      /opt/ghc /opt/hostedtoolcache/CodeQL || true
+          sudo apt-get clean
+          df -h /
+
+      - name: Install pigz
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y pigz
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+          cache-dependency-path: tools/catalog_build/requirements.txt
+
+      - name: Install Python deps
+        run: pip install -r tools/catalog_build/requirements.txt
+
+      - name: Build and upload catalog
+        env:
+          R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+          R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+          R2_ENDPOINT: ${{ secrets.R2_ENDPOINT }}
+          R2_BUCKET: ${{ secrets.R2_BUCKET }}
+          R2_PREFIX: v1/
+          # Edge-cache purge after upload so users skip the 7-day TTL
+          CLOUDFLARE_PURGE_TOKEN: ${{ secrets.CLOUDFLARE_PURGE_TOKEN }}
+          CLOUDFLARE_ZONE_ID: ${{ secrets.CLOUDFLARE_ZONE_ID }}
+          CDN_HOST: ${{ secrets.CDN_HOST }}
+        run: bash tools/catalog_build/build_catalog.sh
+
+      - name: Disk after run
+        if: always()
+        run: df -h /
