@@ -202,7 +202,7 @@ State lives in a separate private R2 bucket (`opennutritracker-tf-state`) and is
 
 The CI workflow at `.github/workflows/tofu_apply.yml` runs `tofu init && tofu apply -auto-approve` on push to `opentofu/cloudflare/**` (currently filtered to the feature branch), on a weekly Saturday cron, or manually via `workflow_dispatch`. A successful apply chains via `workflow_run` into `.github/workflows/build_catalog.yml`, which rebuilds and uploads the catalog.
 
-For the full reference on the OpenTofu side (resource list, secrets matrix, bootstrap-from-scratch procedure, recovery story if the passphrase is lost, common gotchas), see [`docs/opentofu.md`](docs/opentofu.md). For the build pipeline that produces what gets uploaded into all this infrastructure (variant matrix, the chunked layout, schema versioning, the CI workflow that orchestrates it), see [`docs/catalog_build.md`](docs/catalog_build.md).
+For the full reference on the OpenTofu side (resource list, secrets matrix, bootstrap-from-scratch procedure, recovery story if the passphrase is lost, common gotchas), see [`docs/opentofu.md`](docs/opentofu.md). For the build pipeline that produces what gets uploaded into all this infrastructure (variant matrix, the chunked layout, schema versioning, the CI workflow that orchestrates it), see [`docs/catalog_build.md`](docs/catalog_build.md). For the client-side feature itself (the wizard, the bloc lifecycle, the search and scanner fallback chain, the auto-disable crash safety, forward compatibility from the client's perspective), see [`docs/offline_catalog.md`](docs/offline_catalog.md).
 
 Local OpenTofu apply, when needed:
 
