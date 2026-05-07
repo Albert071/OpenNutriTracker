@@ -91,5 +91,43 @@ void main() {
         closeTo(250, 0.001),
       );
     });
+
+    test('quoted decimal-comma in ingredient quantities is supported', () {
+      // The documented happy path: wrap decimal-comma values in
+      // double quotes so the splitter doesn't see the comma.
+      const csv = 'recipe_name,ingredient_name,ingredient_amount,'
+          'ingredient_unit,ingredient_kcal_100,ingredient_fat_100\n'
+          'Cookie,Vanilla,"1,5",g,288,"12,5"\n'
+          'Cookie,Flour,200,g,340,1\n';
+
+      final result = CsvRecipeImporter.parse(csv);
+
+      expect(result.errors, isEmpty);
+      expect(result.recipes, hasLength(1));
+      final ingredients = result.recipes.single.ingredients;
+      expect(ingredients, hasLength(2));
+      expect(ingredients[0].amount, 1.5);
+      expect(ingredients[0].unit, 'g');
+      expect(ingredients[0].snapshotMeal.nutriments.fat100, 12.5);
+      expect(ingredients[1].amount, 200);
+    });
+
+    test('unquoted decimal-comma surfaces a too-many-columns hint', () {
+      // 16 expected columns; the unquoted `1,5` in the ingredient_amount
+      // cell over-splits the row.
+      const csv = 'recipe_name,recipe_description,recipe_servings,'
+          'recipe_total_weight_g,recipe_tags,ingredient_name,'
+          'ingredient_brands,ingredient_amount,ingredient_unit,'
+          'ingredient_kcal_100,ingredient_carbs_100,ingredient_fat_100,'
+          'ingredient_protein_100,ingredient_sugars_100,'
+          'ingredient_sat_fat_100,ingredient_fiber_100\n'
+          'Cookie,,,,,Vanilla,,1,5,g,288,0,12,0,0,0,0\n';
+
+      final result = CsvRecipeImporter.parse(csv);
+
+      expect(result.errors, isNotEmpty);
+      expect(result.errors.first, contains('too many columns'));
+      expect(result.errors.first, contains('"1,5"'));
+    });
   });
 }

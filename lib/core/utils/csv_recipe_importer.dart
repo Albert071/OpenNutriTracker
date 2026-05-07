@@ -1,6 +1,7 @@
 import 'package:opennutritracker/core/domain/entity/recipe_entity.dart';
 import 'package:opennutritracker/core/domain/entity/recipe_ingredient_entity.dart';
 import 'package:opennutritracker/core/domain/usecase/compute_recipe_nutrition_usecase.dart';
+import 'package:opennutritracker/core/utils/csv_row_parser.dart';
 import 'package:opennutritracker/core/utils/id_generator.dart';
 import 'package:opennutritracker/features/add_meal/domain/entity/meal_entity.dart';
 import 'package:opennutritracker/features/add_meal/domain/entity/meal_nutriments_entity.dart';
@@ -84,7 +85,8 @@ class CsvRecipeImporter {
       );
     }
 
-    final headerCells = _splitRow(lines.first)
+    // Headers never carry decimal-comma payloads; parse strict.
+    final headerCells = CsvRowParser.splitRow(lines.first)
         .map((c) => c.trim().toLowerCase())
         .toList();
     final missingRequired = requiredColumns
@@ -106,9 +108,16 @@ class CsvRecipeImporter {
 
     for (var i = 1; i < lines.length; i++) {
       final rowNum = i + 1; // 1-based, including the header
-      final cells = _splitRow(lines[i]);
+      final cells = CsvRowParser.splitRow(lines[i]);
       if (cells.length < headerCells.length) {
         errors.add('Row $rowNum: too few columns');
+        continue;
+      }
+      if (cells.length > headerCells.length) {
+        errors.add(
+            'Row $rowNum: too many columns. If a value contains a comma '
+            '(for example a decimal like 1,5), wrap that cell in double '
+            'quotes: "1,5".');
         continue;
       }
       final row = <String, String>{};
@@ -126,7 +135,7 @@ class CsvRecipeImporter {
         errors.add('Row $rowNum: ingredient_name is empty');
         continue;
       }
-      final amount = _parseNumOrNull(row[_kIngredientAmount]);
+      final amount = CsvRowParser.parseDoubleOrNull(row[_kIngredientAmount]);
       if (amount == null || amount <= 0) {
         errors.add('Row $rowNum: ingredient_amount is missing or not positive');
         continue;
@@ -136,7 +145,7 @@ class CsvRecipeImporter {
         errors.add('Row $rowNum: ingredient_unit is empty');
         continue;
       }
-      final kcal = _parseNumOrNull(row[_kIngredientKcal]);
+      final kcal = CsvRowParser.parseDoubleOrNull(row[_kIngredientKcal]);
       if (kcal == null) {
         errors.add('Row $rowNum: ingredient_kcal_100 is not a number');
         continue;
@@ -154,7 +163,7 @@ class CsvRecipeImporter {
               : null;
       group.servingsCount ??= _parseIntOrNull(row[_kRecipeServings]);
       group.totalWeightOverride ??=
-          _parseNumOrNull(row[_kRecipeTotalWeightG]);
+          CsvRowParser.parseDoubleOrNull(row[_kRecipeTotalWeightG]);
       if (group.tags.isEmpty) {
         final tagsRaw = row[_kRecipeTags] ?? '';
         if (tagsRaw.isNotEmpty) {
@@ -179,12 +188,12 @@ class CsvRecipeImporter {
         servingSize: null,
         nutriments: MealNutrimentsEntity(
           energyKcal100: kcal,
-          carbohydrates100: _parseNumOrNull(row[_kIngredientCarbs]),
-          fat100: _parseNumOrNull(row[_kIngredientFat]),
-          proteins100: _parseNumOrNull(row[_kIngredientProtein]),
-          sugars100: _parseNumOrNull(row[_kIngredientSugars]),
-          saturatedFat100: _parseNumOrNull(row[_kIngredientSatFat]),
-          fiber100: _parseNumOrNull(row[_kIngredientFiber]),
+          carbohydrates100: CsvRowParser.parseDoubleOrNull(row[_kIngredientCarbs]),
+          fat100: CsvRowParser.parseDoubleOrNull(row[_kIngredientFat]),
+          proteins100: CsvRowParser.parseDoubleOrNull(row[_kIngredientProtein]),
+          sugars100: CsvRowParser.parseDoubleOrNull(row[_kIngredientSugars]),
+          saturatedFat100: CsvRowParser.parseDoubleOrNull(row[_kIngredientSatFat]),
+          fiber100: CsvRowParser.parseDoubleOrNull(row[_kIngredientFiber]),
         ),
         source: MealSourceEntity.custom,
       );
@@ -253,38 +262,9 @@ class CsvRecipeImporter {
         'Vanilla Cake,,,,,Eggs,,200,g,155,1.1,11,13,1.1,3.3,0\n';
   }
 
-  static List<String> _splitRow(String line) {
-    final cells = <String>[];
-    final buf = StringBuffer();
-    var inQuotes = false;
-
-    for (var i = 0; i < line.length; i++) {
-      final ch = line[i];
-      if (ch == '"') {
-        if (inQuotes && i + 1 < line.length && line[i + 1] == '"') {
-          buf.write('"');
-          i++;
-        } else {
-          inQuotes = !inQuotes;
-        }
-      } else if (ch == ',' && !inQuotes) {
-        cells.add(buf.toString());
-        buf.clear();
-      } else {
-        buf.write(ch);
-      }
-    }
-    cells.add(buf.toString());
-    return cells;
-  }
-
-  static double? _parseNumOrNull(String? raw) {
-    if (raw == null) return null;
-    final trimmed = raw.trim();
-    if (trimmed.isEmpty) return null;
-    return double.tryParse(trimmed.replaceAll(',', '.'));
-  }
-
+  // _parseIntOrNull stays local because the recipe importer needs an
+  // int (for servings count) and CsvRowParser only exposes the
+  // double-with-comma-fallback variant the importers share.
   static int? _parseIntOrNull(String? raw) {
     if (raw == null) return null;
     final trimmed = raw.trim();
