@@ -127,7 +127,7 @@ The script's last act is to leave the populated work directory on disk for the O
 
 This is the change that gives `tofu plan` a real preview of what is about to land. The plan output names every chunk that will move and shows its `~ source_hash` diff; a reviewer reads exactly which files are being uploaded before approving. The previous "run the python script and hope for the best" model gave no such visibility.
 
-Cache-purge after upload still happens, but the trigger is the apply rather than the script. See `opentofu/infrastructure/modules/cloudflare/` for where the purge token lives; the workflow that consumes it is being moved alongside this work.
+Cache-purge after upload happens as a separate step in the workflow, immediately after `tofu apply` succeeds: a `curl` POST to `https://api.cloudflare.com/client/v4/zones/{zone_id}/purge_cache` with `{"hosts": ["catalog.opennutritracker.org"]}`, authenticated with the Tofu-managed `CLOUDFLARE_PURGE_TOKEN` secret. This drops every cached response for the catalog host across Cloudflare's edge so users start fetching the freshly-uploaded chunks within seconds of the apply, rather than waiting up to `edge_cache_seconds` for the previous build's chunks to age out.
 
 ## The chunked layout
 

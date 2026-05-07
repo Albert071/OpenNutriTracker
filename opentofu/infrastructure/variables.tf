@@ -21,15 +21,15 @@ variable "github_repo" {
 }
 
 variable "edge_cache_seconds" {
-  description = "How long the catalog .db.gz files stay cached at the edge."
+  description = "How long Cloudflare's edge holds catalog responses before considering them stale and revalidating against origin. Kept long (1 week) because cold chunks should not get evicted just for being unrequested for a couple of days; the post-apply cache-purge step in build_catalog.yml handles freshness on rebuild instead of relying on TTL expiry."
   type        = number
   default     = 604800 # 7 days
 }
 
 variable "browser_cache_seconds" {
-  description = "How long client browsers can hold catalog .db.gz files."
+  description = "Cache-Control max-age sent to HTTP clients. Kept short (1 day) so users see fresh content within ~24h of the Saturday rebuild even if their HTTP client cached aggressively, without forcing a daily round-trip to origin (the edge handles that, see edge_cache_seconds)."
   type        = number
-  default     = 604800 # 7 days
+  default     = 86400 # 1 day
 }
 
 variable "catalog_build_output_dir" {
