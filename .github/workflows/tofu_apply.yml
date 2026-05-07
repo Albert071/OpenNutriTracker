@@ -1,20 +1,34 @@
 name: Tofu apply
 
-# Applies the Cloudflare infrastructure managed in opentofu/cloudflare:
-# the catalog R2 bucket, its custom domain, the cache rule, the
-# downstream R2 API token, and the GitHub Actions secrets the
-# catalog upload consumes.
+# Manages the Cloudflare infrastructure for the offline catalog.
 #
-# Runs as the gating job for the catalog build — build_catalog.yml
-# is wired to start via workflow_run only after this workflow
-# completes successfully on the same branch.
+# How the triggers map to behaviour:
 #
-# Triggers:
-#   - push to opentofu/** on the feature branch (short-term — long-
-#     term replace with `main`)
-#   - weekly Monday 04:30 UTC, so the chained catalog build picks up
-#     fresh OFF data even when nothing infra-side has changed
-#   - manual dispatch
+#   pull_request (paths touch opentofu/cloudflare/**)
+#     → init + plan only. The plan output sits in the run logs for
+#       reviewers to read alongside the PR. No state is written.
+#
+#   push to main (paths touch opentofu/cloudflare/**)
+#     → init + plan, then apply gated on manual approval.
+#       The apply job uses the `tofu-apply` environment, which is
+#       configured in repo settings to require a reviewer's approval
+#       before the apply runs. The plan artifact uploaded by the
+#       plan job is downloaded by the apply job, so we apply the
+#       *same* plan that was reviewed.
+#
+#   schedule (weekly cron)
+#     → init + plan + apply, with NO approval gate. The cron's
+#       purpose is to nudge the catalog rebuild even when the
+#       infrastructure has not changed; pausing every weekly run
+#       on a manual approval defeats the point. Guarded with a
+#       `github.ref == 'refs/heads/main'` check so a cron firing
+#       from a non-main default branch (during transition periods)
+#       does not silently apply a different branch's config.
+#
+#   workflow_dispatch
+#     → init + plan + apply, behind the same approval gate as the
+#       push trigger. Useful for re-running an apply after a
+#       manual fix.
 #
 # Bootstrap secrets (manually managed in repo settings):
 #   CLOUDFLARE_API_TOKEN     — opentofu-bootstrap CF token
@@ -25,11 +39,20 @@ name: Tofu apply
 #   TF_VAR_STATE_PASSPHRASE  — passphrase used by the OpenTofu state-
 #                              file encryption layer (see encryption.tf).
 #                              Lose this and the state cannot be decrypted.
+#
+# One-time environment setup (needs repo admin rights):
+#   Settings → Environments → New environment → "tofu-apply".
+#   Required reviewers: at least one. Without this, the gated apply
+#   job will run unattended, defeating the approval gate.
 
 on:
+  pull_request:
+    paths:
+      - 'opentofu/cloudflare/**'
+      - '.github/workflows/tofu_apply.yml'
   push:
     branches:
-      - feature/offline-off-catalog
+      - main
     paths:
       - 'opentofu/cloudflare/**'
       - '.github/workflows/tofu_apply.yml'
@@ -42,12 +65,9 @@ on:
 permissions:
   contents: read
 
-concurrency:
-  group: tofu-apply
-  cancel-in-progress: false
-
 jobs:
-  apply:
+  plan:
+    name: Plan
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -80,7 +100,7 @@ jobs:
           TF_VAR_state_passphrase: ${{ secrets.TF_VAR_STATE_PASSPHRASE }}
         run: tofu init
 
-      - name: tofu apply
+      - name: tofu plan
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -89,4 +109,134 @@ jobs:
           TF_VAR_account_id: ${{ secrets.TF_VAR_ACCOUNT_ID }}
           TF_VAR_zone_id_opennutritracker_org: ${{ secrets.TF_VAR_ZONE_ID_OPENNUTRITRACKER_ORG }}
           TF_VAR_state_passphrase: ${{ secrets.TF_VAR_STATE_PASSPHRASE }}
-        run: tofu apply -auto-approve
+        run: tofu plan -out=tfplan
+
+      - name: Upload plan artifact
+        # The PR-only plan does not need to ship its plan binary
+        # anywhere — the run log is the review surface. Apply jobs
+        # for push / schedule / dispatch consume the artifact so
+        # the apply runs against the exact plan the human approved.
+        if: github.event_name != 'pull_request'
+        uses: actions/upload-artifact@v4
+        with:
+          name: tfplan
+          path: opentofu/cloudflare/tfplan
+          retention-days: 1
+
+  apply:
+    name: Apply (gated)
+    needs: plan
+    # Push-to-main and manual-dispatch applies sit behind the
+    # `tofu-apply` environment's required reviewer. The cron path
+    # uses `apply_scheduled` below so it can run unattended.
+    if: |
+      (github.event_name == 'push' && github.ref == 'refs/heads/main')
+      || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    environment: tofu-apply
+    concurrency:
+      # Single global lock across both apply jobs so the cron and a
+      # human apply can never race for the state file. Plans run
+      # outside this group because they are read-only.
+      group: tofu-apply-state
+      cancel-in-progress: false
+    defaults:
+      run:
+        working-directory: opentofu/cloudflare
+    steps:
+      - name: Check out
+        uses: actions/checkout@v4
+
+      - name: Set up OpenTofu
+        uses: opentofu/setup-opentofu@v1
+        with:
+          tofu_version: 1.11.6
+          tofu_wrapper: false
+
+      - name: Set up Python (for the github-secret sealer)
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install pynacl (for scripts/seal.py)
+        run: pip install --user pynacl
+
+      - name: tofu init
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          TF_VAR_state_passphrase: ${{ secrets.TF_VAR_STATE_PASSPHRASE }}
+        run: tofu init
+
+      - name: Download plan artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: tfplan
+          path: opentofu/cloudflare
+
+      - name: tofu apply (saved plan)
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.TF_GITHUB_TOKEN }}
+          TF_VAR_account_id: ${{ secrets.TF_VAR_ACCOUNT_ID }}
+          TF_VAR_zone_id_opennutritracker_org: ${{ secrets.TF_VAR_ZONE_ID_OPENNUTRITRACKER_ORG }}
+          TF_VAR_state_passphrase: ${{ secrets.TF_VAR_STATE_PASSPHRASE }}
+        run: tofu apply tfplan
+
+  apply_scheduled:
+    name: Apply (weekly cron)
+    needs: plan
+    # The weekly cron applies unattended. We still gate on the plan
+    # job succeeding (so a config breakage on develop never gets
+    # silently rolled out), but no human is in the loop.
+    if: github.event_name == 'schedule' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    concurrency:
+      group: tofu-apply-state
+      cancel-in-progress: false
+    defaults:
+      run:
+        working-directory: opentofu/cloudflare
+    steps:
+      - name: Check out
+        uses: actions/checkout@v4
+
+      - name: Set up OpenTofu
+        uses: opentofu/setup-opentofu@v1
+        with:
+          tofu_version: 1.11.6
+          tofu_wrapper: false
+
+      - name: Set up Python (for the github-secret sealer)
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install pynacl (for scripts/seal.py)
+        run: pip install --user pynacl
+
+      - name: tofu init
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          TF_VAR_state_passphrase: ${{ secrets.TF_VAR_STATE_PASSPHRASE }}
+        run: tofu init
+
+      - name: Download plan artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: tfplan
+          path: opentofu/cloudflare
+
+      - name: tofu apply (saved plan, unattended)
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.TF_GITHUB_TOKEN }}
+          TF_VAR_account_id: ${{ secrets.TF_VAR_ACCOUNT_ID }}
+          TF_VAR_zone_id_opennutritracker_org: ${{ secrets.TF_VAR_ZONE_ID_OPENNUTRITRACKER_ORG }}
+          TF_VAR_state_passphrase: ${{ secrets.TF_VAR_STATE_PASSPHRASE }}
+        run: tofu apply tfplan

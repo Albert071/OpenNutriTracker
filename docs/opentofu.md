@@ -37,7 +37,7 @@ The offline catalog is built weekly by a GitHub Actions pipeline, sliced into 16
                     GitHub Actions
         ┌────────────────────────────────────┐
         │  tofu_apply.yml                    │
-        │    └── tofu init && tofu apply ────┼──► Cloudflare API
+        │    plan → (approval) → apply ──────┼──► Cloudflare API
         │                                    │      • mints downstream tokens
         │                                    │      • manages R2 bucket + domain
         │                                    │      • writes cache rule
@@ -196,15 +196,24 @@ set -a && source .env && set +a
 
 ### In CI
 
-`.github/workflows/tofu_apply.yml` runs on three triggers:
+`.github/workflows/tofu_apply.yml` is split into a plan job and two apply jobs, with the trigger deciding which apply path runs (if any). The plan binary is uploaded as an artifact and the apply jobs consume it, so the apply runs against the exact plan a human reviewed rather than re-planning under their feet.
 
-- Push to the feature branch when `opentofu/cloudflare/**` or the workflow file itself changes.
-- Saturday 19:00 UTC cron, so the chained catalog build picks up fresh OpenFoodFacts data even when nothing infra-side has changed.
-- Manual `workflow_dispatch`.
+Trigger to behaviour, end to end:
 
-The job runs `tofu init` then `tofu apply -auto-approve`. Both steps need `TF_VAR_state_passphrase` because reading the existing state during init goes through the encryption layer.
+- **Pull request** touching `opentofu/cloudflare/**` or the workflow file itself runs init and plan only. The plan output sits in the run logs alongside the PR for the reviewer to read. No state is written.
+- **Push to `main`** under the same paths runs init, plan, and then a gated apply. The apply job uses the `tofu-apply` GitHub environment, which is configured in repo settings to require a reviewer's approval before the apply step runs. The apply consumes the plan artifact uploaded by the plan job.
+- **Saturday 19:00 UTC cron** (when run from `main`) runs init, plan, and an unattended apply. The cron's job is to nudge the chained catalog rebuild even when the infrastructure is unchanged, so pausing every weekly run on a manual approval would defeat the point. The cron-triggered apply job is gated on `github.ref == 'refs/heads/main'` for safety so it does not silently apply a non-main branch's config during transitions.
+- **Manual `workflow_dispatch`** runs init, plan, and then the same approval-gated apply as the push trigger. Useful for re-running an apply after a manual fix.
 
-A successful apply gates `.github/workflows/build_catalog.yml`, which runs via `workflow_run` only after `Tofu apply` completes successfully.
+Both apply jobs share a single concurrency group (`tofu-apply-state`) so the cron and a human apply can never race for the state file. Plans run outside this group because they are read-only.
+
+Both apply paths need `TF_VAR_state_passphrase` from the `tofu init` step onwards, because reading the existing state during init goes through the encryption layer.
+
+A successful workflow run gates `.github/workflows/build_catalog.yml`, which fires via `workflow_run`. The chain only fires when the parent workflow completes from the default branch, so a PR's plan-only run does not trigger a catalog rebuild.
+
+#### One-time environment setup
+
+The gated apply needs a `tofu-apply` GitHub environment with at least one required reviewer, configured manually in repo settings (the GitHub API does not let collaborators create environments). Without a reviewer set, the gated apply job will run unattended, which defeats the approval gate. Path: Settings → Environments → New environment → "tofu-apply" → "Required reviewers" → add yourself.
 
 ## Adding things
 
@@ -212,7 +221,7 @@ A successful apply gates `.github/workflows/build_catalog.yml`, which runs via `
 
 1. Add the resource to whichever `.tf` file fits its shape, or create a new one if it deserves its own surface.
 2. If the resource produces a value that downstream workflows need (an API token, a bucket name, a zone id), add it to the `secrets` map in `github.tf` so it gets sealed and published as an Actions secret.
-3. Open a PR. Review the plan output yourself before merging, since `tofu apply -auto-approve` runs on push.
+3. Open a PR. The PR run lands a plan in the workflow logs for review. Once the PR merges to `main`, the workflow runs again, the apply job pauses on the `tofu-apply` environment for explicit approval, and the apply only runs after that approval lands.
 
 ### A new bootstrap secret
 
@@ -326,7 +335,7 @@ opentofu/cloudflare/
 
 ```text
 .github/workflows/
-  tofu_apply.yml     ← runs `tofu init && tofu apply -auto-approve`
+  tofu_apply.yml     ← plan → (gated) apply, with cron bypass
   build_catalog.yml  ← chained via workflow_run; rebuilds and uploads
                        the 16 catalog variants weekly
 ```
