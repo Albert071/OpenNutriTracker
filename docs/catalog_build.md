@@ -45,21 +45,17 @@ Every Saturday evening (and on demand via `workflow_dispatch`) a chained workflo
                         variant.manifest.json
             │
             ▼
-  upload as workflow artefact: catalog-chunks/
+  $WORK/dbs/  (built into the runner's local filesystem)
             │
             ▼
-  plan job (same workflow)
-    download artefact
-    tofu init + tofu plan, hash every file
+  tofu init + tofu plan, hash every file
             │
             ▼
-  apply job (same workflow, gated on main / unattended on feature)
-    download artefact + saved plan
-    tofu apply ──► PutObject only changed files
-                ──► R2 bucket (chunks + manifests)
+  tofu apply ──► PutObject only changed files
+              ──► R2 bucket (chunks + manifests)
 ```
 
-Build, plan, and apply are jobs inside one workflow file (`build_catalog.yml`) chained by `needs:`. OpenTofu handles every upload as a state-tracked `aws_s3_object`, which gives delta-only uploads after the first apply and a real `tofu plan` preview of what is about to land.
+Build, plan, and apply run as steps of a single `build_and_apply` job inside `build_catalog.yml`, on the same runner with a shared filesystem so there are no inter-job artefacts to pass around. OpenTofu handles every upload as a state-tracked `aws_s3_object`, which gives delta-only uploads after the first apply and a real `tofu plan` preview of what is about to land.
 
 ## The variant matrix
 
@@ -127,7 +123,7 @@ The original `.db.gz` is removed once the chunks are written; the directory at t
 
 ### 5. Hand the artefact to OpenTofu
 
-The script's last act is to publish the work directory as a workflow artefact (`catalog-chunks`). Everything that used to be a separate "upload to R2 + sweep + purge" stage has moved into OpenTofu: the `catalog` module in `opentofu/infrastructure/modules/catalog/` walks the artefact at plan time, hashes every chunk and every manifest with `filesha256()`, and uploads only the files whose content has changed since the last apply. A chunk that has not moved produces no diff and no API call; a chunk whose bytes differ from state produces one PutObject. The "destroy stale objects" step the old python upload did manually is now drift detection — if a previous build's chunk is no longer referenced by the current artefact, OpenTofu sees it as a state-only resource and plans its destruction explicitly.
+The script's last act is to leave the populated work directory on disk for the OpenTofu steps that follow it on the same runner. Everything that used to be a separate "upload to R2 + sweep + purge" stage has moved into OpenTofu: the `catalog` module in `opentofu/infrastructure/modules/catalog/` walks `$WORK/dbs/` at plan time, hashes every chunk and every manifest with `filesha256()`, and uploads only the files whose content has changed since the last apply. A chunk that has not moved produces no diff and no API call; a chunk whose bytes differ from state produces one PutObject. The "destroy stale objects" step the old python upload did manually is now drift detection — if a previous build's chunk is no longer referenced by the current build, OpenTofu sees it as a state-only resource and plans its destruction explicitly.
 
 This is the change that gives `tofu plan` a real preview of what is about to land. The plan output names every chunk that will move and shows its `~ source_hash` diff; a reviewer reads exactly which files are being uploaded before approving. The previous "run the python script and hope for the best" model gave no such visibility.
 
@@ -171,9 +167,9 @@ The 9.7 GiB total-upload ceiling that lived in the old python upload script has 
 
 ## The CI workflow
 
-`.github/workflows/build_catalog.yml` is one workflow with four jobs chained by `needs:`. Triggers are restricted to push on `[main, feature/offline-off-catalog]`, the Saturday 19:00 UTC cron, and manual `workflow_dispatch`. There is deliberately no `pull_request` trigger — runs are scoped to the two named branches plus the cron and manual paths.
+`.github/workflows/build_catalog.yml` is one workflow with one main job (`build_and_apply`) plus a small trailing `unlock_on_failure` cleanup job that only fires when the main job didn't complete cleanly. Triggers are push on `[main, feature/offline-off-catalog]`, `pull_request` filtered to catalog-relevant paths, the Saturday 19:00 UTC cron, and manual `workflow_dispatch`. PR runs stop at plan; the merge button is the approval gate. See [`docs/opentofu.md`](opentofu.md) for the full apply-side reference, including the trigger-to-apply matrix and the state-locking story.
 
-The `build` job runs on `ubuntu-latest` and walks through these steps:
+The `build_and_apply` job runs on `ubuntu-latest` and walks through these steps in order, all on the same runner with a shared filesystem:
 
 1. Check out the repo.
 2. Free disk space by removing `/usr/share/dotnet`, `/usr/local/lib/android`, `/opt/ghc`, and `/opt/hostedtoolcache/CodeQL`. Together those buy enough room for the peak-disk profile described above.
@@ -181,11 +177,12 @@ The `build` job runs on `ubuntu-latest` and walks through these steps:
 4. Set up Python 3.12 with `pip` cache keyed off `tools/catalog_build/requirements.txt`.
 5. Install Python deps. The dependency list is currently empty; the script runs entirely on the standard library now that the upload step has moved out.
 6. Run `bash tools/catalog_build/build_catalog.sh`. No credentials are needed — the script's only job is to leave a populated `$WORK/dbs/` directory behind.
-7. Enforce the 9.7 GiB upload ceiling with `du -sb`. A run whose chunked output exceeds the ceiling fails before any artefact is uploaded, so a runaway variant matrix or a schema mistake cannot quietly multiply the CDN bill.
-8. Upload `$WORK/dbs/` as the `catalog-chunks` workflow artefact for the downstream jobs to consume.
-9. Print final disk usage in `if: always()`, so failed runs still leave a usable diagnostic.
+7. Enforce the 9.7 GiB upload ceiling with `du -sb`. A run whose chunked output exceeds the ceiling fails before tofu sees it, so a runaway variant matrix or a schema mistake cannot quietly multiply the CDN bill.
+8. Set up OpenTofu and `pynacl` (the latter for the github-secret sealer that the infra side uses). Skipped on fork PRs since secrets aren't available.
+9. `tofu init` (acquires the R2 lockfile via `use_lockfile = true`) → `Record tofu start time` (the boundary the cleanup job uses) → `tofu plan -out=tfplan` → `tofu apply tfplan`. The catalog module hashes `$WORK/dbs/` at plan time and uploads only the files whose content has changed.
+10. Print final disk usage in `if: always()`, so failed runs still leave a usable diagnostic.
 
-The `plan` job (`needs: build`) downloads the artefact, runs `tofu init` and `tofu plan -out=tfplan`, and uploads the `tfplan` artefact. The two apply jobs (`apply_gated` and `apply_unattended`, both `needs: plan` and mutually exclusive) download both artefacts and run `tofu apply tfplan`. The gated path uses the `tofu-apply` GitHub environment with a required reviewer; the unattended path runs without a gate for the cron-on-main and feature-branch cases. See [`docs/opentofu.md`](opentofu.md) for the full apply-side reference.
+The apply step itself is gated on the trigger: it runs on push, on `schedule` (the weekly content refresh), and on `workflow_dispatch` against `main`. PRs and `workflow_dispatch` against the feature branch stop at plan.
 
 There is no explicit job timeout. GitHub's per-job 6-hour ceiling is the right backstop for the data volume here; a real build run takes around 10 to 20 minutes wallclock, dominated by the OFF download and the per-variant sqlite VACUUM steps. The chained tofu apply adds another minute or two for the actual upload phase, dominated by network throughput on whichever chunks have changed.
 

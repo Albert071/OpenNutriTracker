@@ -34,36 +34,33 @@ Long-form reference for the Cloudflare-side infrastructure that backs the offlin
 The offline catalog is built weekly by a GitHub Actions pipeline, sliced into 16 filter variants, chunked under a 256 MiB cap, and uploaded to a public Cloudflare R2 bucket. The Flutter client downloads it from a custom domain on that bucket. OpenTofu owns the Cloudflare side of that pipeline.
 
 ```text
-                    GitHub Actions
-        ┌──────────────────────────────────────────┐
-        │  build_catalog.yml  (one workflow file)  │
-        │                                          │
-        │  build:                                  │
-        │    download OFF → trim → build sqlite    │
-        │     → split into chunks                  │
-        │    └─ artefact: catalog-chunks/          │
-        │                                          │
-        │  plan: (needs build)                     │
-        │    download artefact                     │
-        │    tofu plan, hash every file            │
-        │    └─ artefact: tfplan                   │
-        │                                          │
-        │  apply_gated | apply_unattended:         │
-        │    (needs plan; mutually exclusive)      │
-        │    download artefacts                    │
-        │    tofu apply tfplan ─────────────┬──────┼─► Cloudflare API
-        │      • PUTs only changed chunks   │      │     • mints downstream tokens
-        │      • reconciles infra alongside │      │     • manages bucket, cache rule
-        │                                   │      │
-        │                                   └──────┼─► R2 bucket
-        │                                          │     ▼
-        │                                          │     catalog.opennutritracker.org
-        └──────────────────────────────────────────┘            ▲
-                                                                │
-                                                      Flutter client downloads here
+                  GitHub Actions
+        ┌────────────────────────────────────────────┐
+        │  build_catalog.yml                         │
+        │                                            │
+        │  build_and_apply:  (single job)            │
+        │    download OFF → trim → build sqlite      │
+        │      → split into chunks                   │
+        │    enforce 9.7 GiB upload ceiling          │
+        │    tofu init  (acquires R2 lockfile)       │
+        │    tofu plan -out=tfplan                   │
+        │    tofu apply tfplan ─────────────┬────────┼─► Cloudflare API
+        │      • PUTs only changed chunks   │        │     • mints downstream tokens
+        │      • reconciles infra alongside │        │     • manages bucket, cache rule
+        │                                   │        │
+        │                                   └────────┼─► R2 bucket
+        │                                            │     ▼
+        │  unlock_on_failure:  (only on failure)     │     catalog.opennutritracker.org
+        │    delete the lockfile if it belongs       │            ▲
+        │    to this run (timestamp guard)           │            │
+        └────────────────────────────────────────────┘  Flutter client downloads here
 ```
 
-The pipeline lives in one workflow file with `needs:`-chained jobs rather than two workflows wired via `workflow_run`. The latter would resolve the downstream workflow file from the *default* branch, which means a feature-branch push would silently never trigger the apply side; collapsing both halves into a single file sidesteps that entirely. OpenTofu manages every chunk as an `aws_s3_object` resource keyed off `filesha256()`, so a chunk whose content has not changed since the last apply produces no diff and no API call. Infra-side resources (bucket, custom domain, cache rule, tokens, GitHub secrets and variables) reconcile in the same plan, so any infra change rides along on the next build run.
+The pipeline lives in one workflow with one main job. Build, plan, and apply all run on the same runner with a shared filesystem, so there are no inter-job artefacts to upload and download — the chunks the build produces are read directly by the apply step that follows it. This was originally three jobs chained by `needs:` with a `tfplan` artefact in the middle, and before that two workflows wired via `workflow_run`; both earlier shapes have been collapsed because the simpler one-job version lets us reason about the whole pipeline as a single linear sequence.
+
+OpenTofu manages every chunk as an `aws_s3_object` resource keyed off `filesha256()`, so a chunk whose content has not changed since the last apply produces no diff and no API call. Infra-side resources (bucket, custom domain, cache rule, tokens, GitHub secrets and variables) reconcile in the same plan, so any infra change rides along on the next build run.
+
+State locking is handled at the OpenTofu layer via `use_lockfile = true` in the S3 backend (see [State](#state) below). The matching `unlock_on_failure` job runs only when the main job fails or is cancelled and a tofu state-touching step has actually started; it deletes the lockfile object directly via the S3 API, but only when the lockfile's `Created` timestamp is after this run's first tofu step started — earlier lockfiles belong to another process (most plausibly a developer's laptop apply that started before our run did) and must not be touched.
 
 ## What OpenTofu manages
 
@@ -100,6 +97,12 @@ These four secrets, plus `TF_VAR_account_id` and `TF_VAR_zone_id_opennutritracke
 ### Backend
 
 State lives at `s3://opennutritracker-tf-state/cloudflare/terraform.tfstate` in Cloudflare R2, accessed via the S3-compatible API. Auth comes from `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` env vars: in CI from GitHub Actions secrets, locally from `opentofu/infrastructure/.env` (gitignored). The bucket is private and has no custom domain attached.
+
+### Locking
+
+The S3 backend has `use_lockfile = true` set in `tofu.tf`. OpenTofu 1.10+ writes a small companion object at `<state-key>.tflock` using a conditional `If-None-Match: *` PUT, then deletes it on release; if the conditional PUT fails because the lockfile already exists, the apply refuses to start with a clear "state is locked" message rather than racing the existing holder. R2 has supported the required conditional-write semantics since October 2024, so no DynamoDB stand-in is needed. Two layers of exclusion sit on top of each other: the GitHub Actions concurrency group catches concurrent CI runs cheaply, and the lockfile catches everything else (laptop applies, cron-vs-dispatch races, anything outside Actions).
+
+If a process dies mid-apply (laptop crash, runner pre-emption, `kill -9`) the lockfile stays behind and the next apply refuses to start. The CI side has an `unlock_on_failure` job that handles that case automatically: it fires only when the main job fails or is cancelled and a tofu state-touching step has actually started, then deletes the lockfile object directly via the S3 API — but only when the lockfile's `Created` timestamp is after the run's first tofu step started. Earlier lockfiles belong to another process (most plausibly a developer's laptop apply that started before our run did) and must not be touched. For a stale lockfile from a laptop-side crash, the manual recovery is `tofu force-unlock <id>` once you're confident no other apply is in flight.
 
 ### Encryption
 
@@ -215,24 +218,34 @@ set -a && source .env && set +a
 
 ### In CI
 
-OpenTofu runs as part of the catalog pipeline at `.github/workflows/build_catalog.yml`. The workflow is one file with four jobs chained by `needs:`:
+OpenTofu runs as part of the catalog pipeline at `.github/workflows/build_catalog.yml`. The workflow has one main job (`build_and_apply`) that does everything in sequence on a single runner, plus a small trailing `unlock_on_failure` cleanup job that runs only when the main job didn't complete cleanly.
 
-- **`build`** pulls the OFF dump, builds the 16 sqlite variants, splits each into ≤256 MiB chunks with manifests, and uploads the result as the `catalog-chunks` workflow artefact.
-- **`plan`** downloads that artefact, hands the path to OpenTofu via `TF_VAR_catalog_build_output_dir`, and runs `tofu init` + `tofu plan -out=tfplan`. The plan binary is uploaded as the `tfplan` artefact.
-- **`apply_gated`** runs only on push-to-main or main-branch `workflow_dispatch`. It uses the `tofu-apply` GitHub environment, which is configured in repo settings to require a reviewer's approval before the apply step runs. It downloads `catalog-chunks` and `tfplan` and runs `tofu apply tfplan` — so what lands is exactly the plan a human reviewed.
-- **`apply_unattended`** runs without a gate, in two cases: the Saturday 19:00 UTC cron when triggered from `main`, and any push or dispatch from `feature/offline-off-catalog` while that branch is in active development. It downloads the same artefacts and applies the same way.
+`build_and_apply` walks the catalog through these phases on a shared filesystem:
 
-The two apply jobs are mutually exclusive — exactly one fires per run, decided by `if:` guards on `github.event_name` and `github.ref`. Both share the `tofu-apply-state` concurrency group so the cron and a human apply can never race for the state file. The plan job runs outside that group because it is read-only.
+1. Download OFF, trim into 16 variants, build per-variant sqlite + FTS5 files, split into chunks under the 256 MiB cap, write per-variant manifests.
+2. Enforce the 9.7 GiB upload ceiling against `$WORK/dbs` before any further work.
+3. `tofu init` (which acquires the R2 lockfile via `use_lockfile = true`).
+4. `tofu plan -out=tfplan`. The catalog module's `for_each` is `fileset(var.build_output_dir, ...)`, so the chunks the build step just produced are hashed in place and folded into the plan.
+5. `tofu apply tfplan` — but only if the run's trigger is one of the apply paths described below.
 
-Triggers are restricted to push on `[main, feature/offline-off-catalog]`, the weekly cron, and manual `workflow_dispatch`. There is no `pull_request` trigger and no other-branch trigger — runs from anywhere else are not configured to fire.
+The trigger map and the apply gate together decide what each run does:
 
-Both apply paths need `TF_VAR_state_passphrase` from the `tofu init` step onwards, because reading the existing state during init goes through the encryption layer. They also need `TF_VAR_catalog_build_output_dir` pointing at the downloaded artefact, since the catalog module's `for_each` is `fileset(var.build_output_dir, ...)`.
+| Event                                                   | Build + plan | Apply |
+| ------------------------------------------------------- | :----------: | :---: |
+| `push` to `main`                                        | yes          | yes   |
+| `push` to `feature/offline-off-catalog`                 | yes          | yes   |
+| `schedule` (Saturday 19:00 UTC, main only)              | yes          | yes   |
+| `workflow_dispatch` on `main`                           | yes          | yes   |
+| `workflow_dispatch` on `feature/offline-off-catalog`    | yes          | no    |
+| `pull_request` (catalog / opentofu / workflow paths)    | yes          | no    |
 
-When this lands on main, the `feature/offline-off-catalog` reference comes out of the push branches list and the `apply_unattended` `if:` guard, so post-merge main-side activity is fully gated again.
+The PR path is the everyday review surface: the plan that runs on a PR is the reviewer's preview of what would happen on merge, and the merge button is the approval gate. The Saturday cron is the weekly content refresh — OFF publishes a new dump, the build pulls it down, and apply uploads only the chunks whose content has actually changed (each chunk is an `aws_s3_object`, so unchanged content produces no diff and no API call). Fork PRs skip the OpenTofu steps entirely, because `secrets.*` is not exposed to fork runs; the catalog build itself still validates schema, CSV, and build-script changes for contributors.
 
-#### One-time environment setup
+A workflow-level `concurrency: catalog-pipeline` group with `cancel-in-progress: false` serialises everything that runs inside Actions, so the cron and a manual dispatch can never race. PRs use a per-PR concurrency group with cancellation enabled, so a fix-up push cancels the in-flight plan for the previous SHA. The `unlock_on_failure` job joins the same `catalog-pipeline` group so it can't race a fresh push that started while this run was dying.
 
-The gated apply needs a `tofu-apply` GitHub environment with at least one required reviewer, configured manually in repo settings (the GitHub API does not let collaborators create environments). Without a reviewer set, the gated apply job will run unattended, which defeats the approval gate. Path: Settings → Environments → New environment → "tofu-apply" → "Required reviewers" → add yourself.
+`tofu init`, `plan`, and `apply` all need `TF_VAR_state_passphrase` (because state encryption runs through `init`'s state-read path) and `TF_VAR_catalog_build_output_dir` (because the catalog module's `for_each` reads from there).
+
+When this lands on `main`, the `feature/offline-off-catalog` entry comes out of the `push` branches list, so the only path that can apply from a non-`main` ref is gone. Workflow_dispatch on `main` remains the manual escape hatch; the cron and post-merge pushes cover the everyday refresh path.
 
 ## Adding things
 
@@ -240,7 +253,7 @@ The gated apply needs a `tofu-apply` GitHub environment with at least one requir
 
 1. Add the resource to whichever `.tf` file fits its shape, or create a new one if it deserves its own surface.
 2. If the resource produces a value that downstream workflows need (an API token, a bucket name, a zone id), expose it as an output on the `cloudflare` module and add it to the `secrets` map in `locals.tf` so it gets sealed and published as an Actions secret.
-3. Open a PR. The PR run lands a plan in the workflow logs for review. Once the PR merges to `main`, the workflow runs again, the apply job pauses on the `tofu-apply` environment for explicit approval, and the apply only runs after that approval lands.
+3. Open a PR. The PR run lands a plan in the workflow logs for review — that plan is the document you and the reviewer read. Once the PR merges to `main`, the post-merge run executes the same plan as an apply, with no separate approval click required: the merge itself is the approval gate.
 
 ### A new bootstrap secret
 
