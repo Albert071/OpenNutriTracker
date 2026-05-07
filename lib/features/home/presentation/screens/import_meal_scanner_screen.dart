@@ -129,7 +129,12 @@ class _ImportMealScannerScreenState extends State<ImportMealScannerScreen> {
   }
 
   Future<void> _processCode(String raw) async {
-    if (_isProcessing) return;
+    // Idempotent set — _onDetect flips the flag synchronously
+    // before calling here, but the paste-code dialog path doesn't,
+    // so this still needs to set it. The previous early-return
+    // guard would short-circuit the camera path now that _onDetect
+    // sets the flag, leaving the finally block unreached and the
+    // flag stuck at true.
     setState(() => _isProcessing = true);
 
     try {
