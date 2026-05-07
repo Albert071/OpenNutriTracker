@@ -8,10 +8,13 @@ name: Catalog build and apply
 #
 # Trigger map:
 #
-#   push to main / feature/offline-off-catalog → build + plan + apply
+#   push to main / feature/offline-off-catalog        → build + plan + apply
+#   workflow_dispatch on main                          → build + plan + apply
+#   workflow_dispatch on feature/offline-off-catalog   → build + plan
 #   pull_request (catalog / opentofu / workflow paths) → build + plan
-#   schedule (Saturday 19:00 UTC, main only)        → build + plan + apply
-#   workflow_dispatch                               → build + plan + apply
+#   schedule (Saturday 19:00 UTC, main only)           → build + plan
+#                                                        (drift detection,
+#                                                         no apply)
 #
 # A pull request runs everything except the final apply step,
 # which means a reviewer can read the plan output in CI before
@@ -40,9 +43,16 @@ name: Catalog build and apply
 #
 # When this lands on main: remove `feature/offline-off-catalog`
 # from the push-branches list so main-side activity is the only
-# thing that auto-applies. The pull_request path filter is
-# already narrow enough that contributor PRs touching unrelated
-# code (Flutter, docs, etc.) won't pay the catalog-build tax.
+# thing that auto-applies. The push and pull_request triggers
+# both carry a `paths:` filter, so a change that only touches
+# Flutter / docs / fastlane code won't fire this workflow at
+# all — and the matching `paths-ignore:` filter on
+# default_workflow.yml means the reverse is also true: a
+# catalog-only change won't pay for a full Flutter analyze and
+# iOS/Android build. The Saturday cron and `workflow_dispatch`
+# both fire unconditionally, since neither carries a path
+# filter (cron triggers can't, and a manual dispatch is always
+# deliberate).
 #
 # Bootstrap secrets (manually managed in repo settings):
 #   CLOUDFLARE_API_TOKEN     — opentofu-bootstrap CF token
@@ -61,6 +71,10 @@ on:
     branches:
       - main
       - feature/offline-off-catalog
+    paths:
+      - tools/catalog_build/**
+      - opentofu/**
+      - .github/workflows/build_catalog.yml
   pull_request:
     paths:
       - tools/catalog_build/**
@@ -212,10 +226,24 @@ jobs:
         run: tofu plan -out=tfplan
 
       - name: tofu apply
-        # The merge button is the approval gate, so PR runs stop
-        # at plan. Pushes to main and the active feature branch,
-        # the Saturday cron, and manual dispatch all apply.
-        if: github.event_name != 'pull_request'
+        # Apply runs on:
+        #   - push to main (post-merge of a reviewed PR)
+        #   - push to feature/offline-off-catalog (active dev)
+        #   - manual workflow_dispatch on main only
+        #
+        # Apply does NOT run on:
+        #   - any pull_request (the merge is the approval gate)
+        #   - the Saturday cron (drift-detection plan only —
+        #     cron applies are the kind of unattended mutation
+        #     that should never be the surprise change in
+        #     Cloudflare state)
+        #   - workflow_dispatch on the feature branch (the
+        #     branch is mid-development; if you want to apply
+        #     from it, use a push instead so the change is at
+        #     least visible in git history)
+        if: |
+          github.event_name == 'push'
+          || (github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main')
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}

@@ -11,10 +11,25 @@ on:
   push:
     branches:
       - main
+    paths-ignore:
+      # The catalog build and the Cloudflare-side IaC have their
+      # own pipeline (`build_catalog.yml`); changes that only
+      # touch those areas don't need the Flutter analyze + tests
+      # + iOS/Android build runs. A commit that touches both
+      # app code and one of these directories still triggers
+      # this workflow, because `paths-ignore` only skips when
+      # *every* file in the push falls inside the ignore list.
+      - tools/catalog_build/**
+      - opentofu/**
+      - .github/workflows/build_catalog.yml
   pull_request:
     branches:
       - main
       - develop
+    paths-ignore:
+      - tools/catalog_build/**
+      - opentofu/**
+      - .github/workflows/build_catalog.yml
   workflow_dispatch:
 
 jobs:
