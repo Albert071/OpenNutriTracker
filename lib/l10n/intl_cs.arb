@@ -633,6 +633,8 @@
   "offlineCatalogTileBuildingPercent": "Vytváří se ({percent}%)",
   "offlineCatalogTileBuilding": "Pracujeme na tom…",
   "offlineCatalogTilePaused": "Stahování pozastaveno — klepni pro obnovení",
+  "offlineCatalogTileCheckingAvailability": "Kontroluji dostupnost…",
+  "offlineCatalogTileUnavailable": "Offline katalog je momentálně nedostupný, zkus to později",
   "offlineCatalogTileReady": "{count} produktů, {size}",
   "offlineCatalogTileLastRefreshed": " · naposledy obnoveno {when}",
   "offlineCatalogActionRefresh": "Obnovit",

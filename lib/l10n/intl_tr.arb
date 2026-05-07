@@ -665,6 +665,8 @@
   "offlineCatalogTileBuildingPercent": "Oluşturuluyor (%{percent})",
   "offlineCatalogTileBuilding": "Üzerinde çalışılıyor…",
   "offlineCatalogTilePaused": "İndirme duraklatıldı — devam etmek için dokun",
+  "offlineCatalogTileCheckingAvailability": "Kullanılabilirlik kontrol ediliyor…",
+  "offlineCatalogTileUnavailable": "Çevrimdışı katalog şu anda kullanılamıyor, lütfen daha sonra tekrar dene",
   "offlineCatalogTileReady": "{count} ürün, {size}",
   "offlineCatalogTileLastRefreshed": " · son yenileme {when}",
   "offlineCatalogActionRefresh": "Yenile",

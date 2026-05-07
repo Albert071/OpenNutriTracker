@@ -634,6 +634,8 @@
   "offlineCatalogTileBuildingPercent": "正在创建（{percent}%）",
   "offlineCatalogTileBuilding": "正在处理…",
   "offlineCatalogTilePaused": "下载已暂停 — 点击以继续",
+  "offlineCatalogTileCheckingAvailability": "正在检查可用性…",
+  "offlineCatalogTileUnavailable": "离线目录暂时不可用，请稍后再试",
   "offlineCatalogTileReady": "{count} 个产品，{size}",
   "offlineCatalogTileLastRefreshed": " · 上次刷新于 {when}",
   "offlineCatalogActionRefresh": "刷新",

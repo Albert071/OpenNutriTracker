@@ -633,6 +633,8 @@
   "offlineCatalogTileBuildingPercent": "Створюється ({percent}%)",
   "offlineCatalogTileBuilding": "Працюємо над цим…",
   "offlineCatalogTilePaused": "Завантаження призупинено — торкнися, щоб продовжити",
+  "offlineCatalogTileCheckingAvailability": "Перевіряю доступність…",
+  "offlineCatalogTileUnavailable": "Офлайн-каталог зараз недоступний, спробуй пізніше",
   "offlineCatalogTileReady": "{count} продуктів, {size}",
   "offlineCatalogTileLastRefreshed": " · востаннє оновлено {when}",
   "offlineCatalogActionRefresh": "Оновити",

@@ -633,6 +633,8 @@
   "offlineCatalogTileBuildingPercent": "Creazione ({percent}%)",
   "offlineCatalogTileBuilding": "Ci stiamo lavorando…",
   "offlineCatalogTilePaused": "Download in pausa — tocca per riprendere",
+  "offlineCatalogTileCheckingAvailability": "Verifica disponibilità in corso…",
+  "offlineCatalogTileUnavailable": "Catalogo offline non disponibile al momento, riprova più tardi",
   "offlineCatalogTileReady": "{count} prodotti, {size}",
   "offlineCatalogTileLastRefreshed": " · ultimo aggiornamento {when}",
   "offlineCatalogActionRefresh": "Aggiorna",

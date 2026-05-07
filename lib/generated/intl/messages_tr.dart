@@ -1044,6 +1044,11 @@ class MessageLookup extends MessageLookupByLibrary {
             "Oluşturulmadı — kurmak için dokun"),
         "offlineCatalogTilePaused": MessageLookupByLibrary.simpleMessage(
             "İndirme duraklatıldı — devam etmek için dokun"),
+        "offlineCatalogTileCheckingAvailability":
+            MessageLookupByLibrary.simpleMessage(
+                "Kullanılabilirlik kontrol ediliyor…"),
+        "offlineCatalogTileUnavailable": MessageLookupByLibrary.simpleMessage(
+            "Çevrimdışı katalog şu anda kullanılamıyor, lütfen daha sonra tekrar dene"),
         "offlineCatalogTileReady": m27,
         "offlineCatalogTimeDaysAgo": m31,
         "offlineCatalogTimeHoursAgo": m32,

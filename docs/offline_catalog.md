@@ -12,6 +12,7 @@ Long-form reference for how the offline catalog feature lives inside the Flutter
   - [Estimate](#estimate)
   - [Download](#download)
 - [Bloc lifecycle](#bloc-lifecycle)
+- [The availability gate](#the-availability-gate)
 - [The download path](#the-download-path)
 - [Using the catalog at runtime](#using-the-catalog-at-runtime)
   - [Barcode scans](#barcode-scans)
@@ -90,7 +91,9 @@ The page also holds a `wakelock_plus` lock for the duration of the active phase.
 `OfflineCatalogBloc` runs through a short list of phases that the wizard pages and the settings tile both key off:
 
 - **`initial`** — no state has been loaded yet. The bloc emits this exactly once, before the first `LoadCatalogStatusEvent`.
-- **`idle`** — no catalog on disk, no partial download. Fresh state.
+- **`checking`** — a `LoadCatalogStatusEvent` has resolved that no catalog is on disk and no partial download exists, and the bloc is now HEADing the CDN to confirm the bucket is reachable. The settings tile renders a "checking availability" subtitle and disables the tap during this brief window so a user does not walk into a wizard mid-probe.
+- **`unavailable`** — the probe failed (network unreachable, DNS error, 5xx, anything that is not a 2xx within five seconds). The settings tile shows a "try again later" message; the wizard refuses to open. Tapping the tile re-fires `LoadCatalogStatusEvent` so the user has a manual retry path without leaving the screen.
+- **`idle`** — no catalog on disk, no partial download, and the CDN probe came back healthy. The wizard is unlocked and the user can start a download.
 - **`estimating` → `estimated`** — the user has landed on the estimate page and the bloc is computing the static estimate (or has just computed it). These transition fast; they exist mostly so the UI can render a spinner while the work happens.
 - **`downloading`** — chunks are flowing from the CDN onto disk. Progress is throttled to roughly one emission per second.
 - **`installing`** — chunks have all landed and are being concatenated, gunzipped, schema-checked, and atomic-renamed into place. Same progress shape, different label, no Pause button (the install phase is short and pause-mid-gunzip would not give the user a meaningful resume point).
@@ -100,7 +103,19 @@ The page also holds a `wakelock_plus` lock for the duration of the active phase.
 
 Pause and cancel both flip the `CancellationToken` the bloc holds for the in-flight build. The download stream completes naturally on the next chunk-loop iteration; the file system state is left in place for pause and wiped for cancel.
 
-A subtle property of the bloc that's worth knowing about: the auxiliary handlers (`_onEstimate`, `_onLoadStatus`) check whether a lifecycle phase is already in flight before they overwrite state. Without that guard, a wizard re-entry that fires both `LoadCatalogStatusEvent` and `EstimateCatalogEvent` could clobber a paused-download state with a transient `estimating` phase, which would leave the download page showing a spinner instead of the resume CTA. The bloc test pins this contract down so the regression cannot return.
+A subtle property of the bloc that's worth knowing about: the auxiliary handlers (`_onEstimate`, `_onLoadStatus`) check whether a lifecycle phase is already in flight before they overwrite state. Without that guard, a wizard re-entry that fires both `LoadCatalogStatusEvent` and `EstimateCatalogEvent` could clobber a paused-download state with a transient `estimating` phase, which would leave the download page showing a spinner instead of the resume CTA. The bloc test pins this contract down so the regression cannot return. Both `checking` and `unavailable` are part of the lifecycle-protected set for the same reason: a stray estimate event must not flip the tile back to `estimated` while we are still confirming the CDN is reachable.
+
+## The availability gate
+
+Before the wizard opens for a brand-new install, the bloc runs a tight reachability probe against the CDN so a user with no connection (or an outage on our side) sees a clear message on the settings tile rather than walking into a wizard that will fail at its first network hop. The flow is short and deliberate.
+
+When `LoadCatalogStatusEvent` fires and resolves that there is no catalog on disk and no partial download to resume, the bloc emits `checking` and calls `CheckCatalogAvailabilityUseCase`. That use case delegates to `CatalogDownloadDataSource.probeAvailability`, which issues a HEAD against the recommended default variant's manifest URL with a five-second timeout and folds every failure mode (timeout, DNS error, TLS error, non-2xx response) into a simple `false`. The recommended default variant `s1_n1_r5` is always present when the catalog pipeline is healthy, so reaching it successfully proves the whole chain (DNS, edge, R2, cache rule) is working end to end.
+
+If the probe returns `true`, the bloc emits `idle` and the wizard is unlocked the way it always was. If the probe returns `false`, the bloc emits `unavailable` and the settings tile shows the "try again later" message in the user's locale. Tapping the tile in this state does not open the wizard; instead it re-fires `LoadCatalogStatusEvent`, which re-runs the probe so the user has a manual retry path without leaving the screen. A snackbar acknowledges the retry so the user knows the tap did something.
+
+The probe is deliberately not run when a catalog is already on disk or a paused download exists. A user with installed data can search it happily without ever talking to the CDN; gating the tile on availability in that case would block them from a feature they have already paid for. Refresh, which does need the CDN, surfaces a normal error if the bucket is down, and the user can wait and try again.
+
+There is also a defence-in-depth pop in the wizard itself. If an availability transition somehow happens while the wizard is open (a user who entered before the first probe completed, a probe that flipped during a long-running session), the wizard's `BlocListener` shows a snackbar and pops back to settings rather than letting the user continue into a flow that is going to fail. The settings tile is the primary gate; the wizard pop is the safety net.
 
 ## The download path
 
@@ -198,6 +213,7 @@ lib/features/offline_catalog/
       download_progress.dart              ← phase + bytesDone / bytesTotal / elapsed
     usecase/
       build_catalog_usecase.dart
+      check_catalog_availability_usecase.dart  ← CDN probe behind the wizard gate
       delete_catalog_usecase.dart
       estimate_catalog_usecase.dart
       get_catalog_stats_usecase.dart

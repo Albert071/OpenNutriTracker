@@ -5,6 +5,15 @@ part of 'offline_catalog_bloc.dart';
 /// moment. The wizard pages key off this enum to decide what to show.
 enum OfflineCatalogPhase {
   initial,
+  /// Briefly entered while the bloc HEADs the catalog CDN to confirm
+  /// it is reachable. The settings tile renders a "checking…" subtitle
+  /// in this phase and disables the tap so the user does not walk
+  /// into a wizard mid-probe.
+  checking,
+  /// CDN reachability probe failed. The settings tile shows a "try
+  /// again later" message and the wizard refuses to open. Re-firing
+  /// `LoadCatalogStatusEvent` re-runs the probe.
+  unavailable,
   idle,
   estimating,
   estimated,

@@ -6,6 +6,7 @@ import 'package:opennutritracker/features/offline_catalog/domain/entity/catalog_
 import 'package:opennutritracker/features/offline_catalog/domain/entity/catalog_stats_entity.dart';
 import 'package:opennutritracker/features/offline_catalog/domain/entity/download_progress.dart';
 import 'package:opennutritracker/features/offline_catalog/domain/usecase/build_catalog_usecase.dart';
+import 'package:opennutritracker/features/offline_catalog/domain/usecase/check_catalog_availability_usecase.dart';
 import 'package:opennutritracker/features/offline_catalog/domain/usecase/delete_catalog_usecase.dart';
 import 'package:opennutritracker/features/offline_catalog/domain/usecase/estimate_catalog_usecase.dart';
 import 'package:opennutritracker/features/offline_catalog/domain/usecase/get_catalog_stats_usecase.dart';
@@ -31,16 +32,19 @@ void main() {
     late OfflineCatalogBloc bloc;
     late _StubGetStatsUseCase getStats;
     late _StubBuildUseCase buildUseCase;
+    late _StubCheckAvailabilityUseCase checkAvailability;
 
     setUp(() {
       getStats = _StubGetStatsUseCase();
       buildUseCase = _StubBuildUseCase();
+      checkAvailability = _StubCheckAvailabilityUseCase();
       bloc = OfflineCatalogBloc(
         getStats,
         _StubEstimateUseCase(),
         buildUseCase,
         _StubRefreshUseCase(),
         _StubDeleteUseCase(),
+        checkAvailability,
         _StubConfigRepository(),
       );
     });
@@ -99,6 +103,45 @@ void main() {
           reason: 'Idle is NOT a lifecycle phase — estimate may '
               'transition through its normal phases here');
       expect(bloc.state.estimate, isNotNull);
+    });
+
+    test(
+        'LoadCatalogStatusEvent against an empty disk transitions '
+        'through checking and lands on unavailable when the CDN '
+        'probe fails', () async {
+      getStats.next = CatalogStatsEntity.empty;
+      buildUseCase.hasResume = false;
+      checkAvailability.available = false;
+
+      bloc.add(const LoadCatalogStatusEvent());
+      await Future<void>.delayed(const Duration(milliseconds: 50));
+
+      expect(
+        bloc.state.phase,
+        OfflineCatalogPhase.unavailable,
+        reason:
+            'Probe returned false → tile must show "try again later"',
+      );
+    });
+
+    test(
+        'EstimateCatalogEvent does not overwrite an unavailable '
+        'lifecycle phase', () async {
+      getStats.next = CatalogStatsEntity.empty;
+      buildUseCase.hasResume = false;
+      checkAvailability.available = false;
+
+      bloc.add(const LoadCatalogStatusEvent());
+      bloc.add(const EstimateCatalogEvent(CatalogFilterEntity()));
+      await Future<void>.delayed(const Duration(milliseconds: 50));
+
+      expect(
+        bloc.state.phase,
+        OfflineCatalogPhase.unavailable,
+        reason:
+            'A stray estimate event must not flip the tile back to '
+            'estimated while the CDN is still down',
+      );
     });
 
     test(
@@ -230,6 +273,16 @@ class _StubRefreshUseCase implements RefreshCatalogUseCase {
 class _StubDeleteUseCase implements DeleteCatalogUseCase {
   @override
   Future<void> call() async {}
+}
+
+class _StubCheckAvailabilityUseCase implements CheckCatalogAvailabilityUseCase {
+  /// The default of `true` lets tests that don't care about the
+  /// availability probe land on `idle` exactly the way they did
+  /// before the probe was wired in.
+  bool available = true;
+
+  @override
+  Future<bool> call() async => available;
 }
 
 class _StubConfigRepository implements ConfigRepository {

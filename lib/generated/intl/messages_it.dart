@@ -1064,6 +1064,11 @@ class MessageLookup extends MessageLookupByLibrary {
             "Non creato — tocca per configurare"),
         "offlineCatalogTilePaused": MessageLookupByLibrary.simpleMessage(
             "Download in pausa — tocca per riprendere"),
+        "offlineCatalogTileCheckingAvailability":
+            MessageLookupByLibrary.simpleMessage(
+                "Verifica disponibilità in corso…"),
+        "offlineCatalogTileUnavailable": MessageLookupByLibrary.simpleMessage(
+            "Catalogo offline non disponibile al momento, riprova più tardi"),
         "offlineCatalogTileReady": m27,
         "offlineCatalogTimeDaysAgo": m31,
         "offlineCatalogTimeHoursAgo": m32,

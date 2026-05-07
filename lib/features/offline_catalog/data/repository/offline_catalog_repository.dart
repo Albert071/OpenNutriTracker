@@ -279,6 +279,14 @@ class OfflineCatalogRepository {
     await _download.cleanupPartials();
   }
 
+  /// Quick reachability probe for the catalog CDN. Delegates to the
+  /// download data source — the bucket health is purely a network
+  /// concern, so the repository is just a pass-through. Used by the
+  /// bloc to decide whether to surface a "try again later" state on
+  /// the settings tile rather than letting the user walk into a
+  /// download that will fail at the manifest fetch.
+  Future<bool> probeAvailability() => _download.probeAvailability();
+
   /// True when there's a partial download on disk to resume. The
   /// presence of a `.tmp.gz` plus its sidecar is the signal — when
   /// either is missing, there is no meaningful resume.

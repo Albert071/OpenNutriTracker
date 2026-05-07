@@ -921,6 +921,10 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("未创建 — 点击设置"),
         "offlineCatalogTilePaused":
             MessageLookupByLibrary.simpleMessage("下载已暂停 — 点击以继续"),
+        "offlineCatalogTileCheckingAvailability":
+            MessageLookupByLibrary.simpleMessage("正在检查可用性…"),
+        "offlineCatalogTileUnavailable":
+            MessageLookupByLibrary.simpleMessage("离线目录暂时不可用，请稍后再试"),
         "offlineCatalogTileReady": m27,
         "offlineCatalogTimeDaysAgo": m31,
         "offlineCatalogTimeHoursAgo": m32,

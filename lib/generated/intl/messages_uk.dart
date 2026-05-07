@@ -1065,6 +1065,10 @@ class MessageLookup extends MessageLookupByLibrary {
             "Не створено — торкнися, щоб налаштувати"),
         "offlineCatalogTilePaused": MessageLookupByLibrary.simpleMessage(
             "Завантаження призупинено — торкнися, щоб продовжити"),
+        "offlineCatalogTileCheckingAvailability":
+            MessageLookupByLibrary.simpleMessage("Перевіряю доступність…"),
+        "offlineCatalogTileUnavailable": MessageLookupByLibrary.simpleMessage(
+            "Офлайн-каталог зараз недоступний, спробуй пізніше"),
         "offlineCatalogTileReady": m27,
         "offlineCatalogTimeDaysAgo": m31,
         "offlineCatalogTimeHoursAgo": m32,

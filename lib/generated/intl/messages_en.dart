@@ -1081,6 +1081,10 @@ class MessageLookup extends MessageLookupByLibrary {
             "Not built — tap to set up"),
         "offlineCatalogTilePaused": MessageLookupByLibrary.simpleMessage(
             "Download paused — tap to resume"),
+        "offlineCatalogTileCheckingAvailability":
+            MessageLookupByLibrary.simpleMessage("Checking availability…"),
+        "offlineCatalogTileUnavailable": MessageLookupByLibrary.simpleMessage(
+            "Caching currently unavailable, try again later"),
         "offlineCatalogTileReady": m27,
         "offlineCatalogTimeDaysAgo": m31,
         "offlineCatalogTimeHoursAgo": m32,

@@ -123,6 +123,25 @@ class _OfflineCatalogWizardScreenState
         listenWhen: (previous, current) =>
             previous.phase != current.phase,
         listener: (context, state) {
+          // Defence in depth: if the availability probe transitions
+          // us into unavailable while the wizard is open, pop back to
+          // settings and surface a snackbar. The settings tile already
+          // gates entry on this phase, so reaching this branch is
+          // unusual (e.g. a user who opened the wizard before the
+          // first probe completed, or a probe that flipped during a
+          // long-running session), but bailing here keeps the user
+          // out of a flow that is going to fail at the manifest fetch.
+          if (state.phase == OfflineCatalogPhase.unavailable) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(
+                  S.of(context).offlineCatalogTileUnavailable,
+                ),
+              ),
+            );
+            Navigator.of(context).pop();
+            return;
+          }
           // Auto-jump to the download page when the wizard opens onto
           // a paused or ready build. The jump is deferred to after
           // the next frame because IntroductionScreen's PageController

@@ -634,6 +634,8 @@
   "offlineCatalogTileBuildingPercent": "Tworzenie ({percent}%)",
   "offlineCatalogTileBuilding": "Pracujemy nad tym…",
   "offlineCatalogTilePaused": "Pobieranie wstrzymane — dotknij, aby wznowić",
+  "offlineCatalogTileCheckingAvailability": "Sprawdzanie dostępności…",
+  "offlineCatalogTileUnavailable": "Katalog offline jest obecnie niedostępny, spróbuj ponownie później",
   "offlineCatalogTileReady": "{count} produktów, {size}",
   "offlineCatalogTileLastRefreshed": " · ostatnio odświeżono {when}",
   "offlineCatalogActionRefresh": "Odśwież",

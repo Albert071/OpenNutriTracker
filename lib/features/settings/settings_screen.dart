@@ -749,6 +749,32 @@ class _OfflineCatalogTileState extends State<_OfflineCatalogTile> {
     );
   }
 
+  /// Tap handler that takes the bloc's current phase into account.
+  ///
+  /// When the CDN reachability probe has marked the catalog as
+  /// unavailable, we deliberately don't open the wizard — instead we
+  /// re-run the probe so the user has a manual retry path without
+  /// having to leave settings and come back. While the probe is in
+  /// flight (the brief `checking` window) the tap is a no-op so we
+  /// don't queue duplicate probes. Any other phase falls through to
+  /// the normal wizard route.
+  void _handleTileTap(OfflineCatalogState state) {
+    switch (state.phase) {
+      case OfflineCatalogPhase.checking:
+        return;
+      case OfflineCatalogPhase.unavailable:
+        _bloc.add(const LoadCatalogStatusEvent());
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(S.of(context).offlineCatalogTileCheckingAvailability),
+          ),
+        );
+        return;
+      default:
+        _openWizard();
+    }
+  }
+
   Future<void> _confirmDelete(BuildContext context) async {
     final s = S.of(context);
     final confirmed = await showDialog<bool>(
@@ -787,7 +813,8 @@ class _OfflineCatalogTileState extends State<_OfflineCatalogTile> {
               title: Text(S.of(context).offlineCatalogTitle),
               subtitle: Text(_subtitleFor(context, state)),
               trailing: _trailingFor(context, state),
-              onTap: _openWizard,
+              onTap: () => _handleTileTap(state),
+              enabled: state.phase != OfflineCatalogPhase.checking,
             ),
           ],
         );
@@ -863,6 +890,10 @@ class _OfflineCatalogTileState extends State<_OfflineCatalogTile> {
       return 'Paused after repeated crashes — tap to set up again';
     }
     switch (state.phase) {
+      case OfflineCatalogPhase.checking:
+        return s.offlineCatalogTileCheckingAvailability;
+      case OfflineCatalogPhase.unavailable:
+        return s.offlineCatalogTileUnavailable;
       case OfflineCatalogPhase.downloading:
       case OfflineCatalogPhase.installing:
         final p = state.progress;

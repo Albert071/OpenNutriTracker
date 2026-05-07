@@ -224,6 +224,37 @@ class CatalogDownloadDataSource {
   /// manifest already include the variant prefix.
   Uri partUrlFor(String partName) => Uri.parse('$_baseUrl/$partName');
 
+  /// Quick "is the catalog CDN reachable?" probe. Issues a HEAD
+  /// against the recommended default variant's manifest with a tight
+  /// timeout, and folds every failure mode (timeout, DNS error, TLS
+  /// error, non-2xx response) into a simple `false`. Used by the
+  /// settings tile and the wizard to decide whether to even let the
+  /// user start a download — if the bucket is down we surface a
+  /// "try again later" message instead of marching into a flow that
+  /// is going to fail at the manifest fetch anyway.
+  ///
+  /// The recommended default variant `s1_n1_r5` is always present
+  /// when the catalog pipeline is healthy, so reaching it
+  /// successfully proves the whole chain (DNS, edge, R2, cache
+  /// rule) is working end to end.
+  Future<bool> probeAvailability({
+    Duration timeout = const Duration(seconds: 5),
+  }) async {
+    final userAgent = await _userAgentResolver();
+    final client = ONTHttpClient(userAgent, _httpClientFactory());
+    try {
+      final response = await client
+          .head(manifestUrlFor('s1_n1_r5'))
+          .timeout(timeout);
+      return response.statusCode >= 200 && response.statusCode < 300;
+    } catch (e) {
+      _log.fine('Catalog availability probe failed: $e');
+      return false;
+    } finally {
+      client.close();
+    }
+  }
+
   /// HEAD probe of [variantId]'s manifest URL. Returns the manifest's
   /// `Content-Length` in bytes — useful as a cheap connectivity
   /// check before committing to the full download.

@@ -6185,6 +6185,26 @@ class S {
     );
   }
 
+  /// `Checking availability…`
+  String get offlineCatalogTileCheckingAvailability {
+    return Intl.message(
+      'Checking availability…',
+      name: 'offlineCatalogTileCheckingAvailability',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Caching currently unavailable, try again later`
+  String get offlineCatalogTileUnavailable {
+    return Intl.message(
+      'Caching currently unavailable, try again later',
+      name: 'offlineCatalogTileUnavailable',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `{count} products, {size}`
   String offlineCatalogTileReady(Object count, Object size) {
     return Intl.message(

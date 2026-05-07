@@ -56,6 +56,7 @@ import 'package:opennutritracker/features/offline_catalog/data/data_sources/cata
 import 'package:opennutritracker/features/offline_catalog/data/data_sources/offline_catalog_data_source.dart';
 import 'package:opennutritracker/features/offline_catalog/data/repository/offline_catalog_repository.dart';
 import 'package:opennutritracker/features/offline_catalog/domain/usecase/build_catalog_usecase.dart';
+import 'package:opennutritracker/features/offline_catalog/domain/usecase/check_catalog_availability_usecase.dart';
 import 'package:opennutritracker/features/offline_catalog/domain/usecase/delete_catalog_usecase.dart';
 import 'package:opennutritracker/features/offline_catalog/domain/usecase/estimate_catalog_usecase.dart';
 import 'package:opennutritracker/features/offline_catalog/domain/usecase/get_catalog_stats_usecase.dart';
@@ -384,6 +385,9 @@ Future<void> initLocator() async {
   locator.registerLazySingleton<DeleteCatalogUseCase>(
     () => DeleteCatalogUseCase(locator(), locator()),
   );
+  locator.registerLazySingleton<CheckCatalogAvailabilityUseCase>(
+    () => CheckCatalogAvailabilityUseCase(locator()),
+  );
   locator.registerLazySingleton<SearchOfflineCatalogUseCase>(
     () => SearchOfflineCatalogUseCase(locator()),
   );
@@ -391,6 +395,7 @@ Future<void> initLocator() async {
   // download survives the user navigating away and back.
   locator.registerLazySingleton<OfflineCatalogBloc>(
     () => OfflineCatalogBloc(
+      locator(),
       locator(),
       locator(),
       locator(),

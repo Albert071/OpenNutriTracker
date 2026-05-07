@@ -11,6 +11,7 @@ import 'package:opennutritracker/features/offline_catalog/domain/entity/catalog_
 import 'package:opennutritracker/features/offline_catalog/domain/entity/catalog_stats_entity.dart';
 import 'package:opennutritracker/features/offline_catalog/domain/entity/download_progress.dart';
 import 'package:opennutritracker/features/offline_catalog/domain/usecase/build_catalog_usecase.dart';
+import 'package:opennutritracker/features/offline_catalog/domain/usecase/check_catalog_availability_usecase.dart';
 import 'package:opennutritracker/features/offline_catalog/domain/usecase/delete_catalog_usecase.dart';
 import 'package:opennutritracker/features/offline_catalog/domain/usecase/estimate_catalog_usecase.dart';
 import 'package:opennutritracker/features/offline_catalog/domain/usecase/get_catalog_stats_usecase.dart';
@@ -41,6 +42,7 @@ class OfflineCatalogBloc extends Bloc<OfflineCatalogEvent, OfflineCatalogState> 
   final BuildCatalogUseCase _build;
   final RefreshCatalogUseCase _refresh;
   final DeleteCatalogUseCase _delete;
+  final CheckCatalogAvailabilityUseCase _checkAvailability;
   final ConfigRepository _configRepository;
 
   CancellationToken? _activeToken;
@@ -51,6 +53,7 @@ class OfflineCatalogBloc extends Bloc<OfflineCatalogEvent, OfflineCatalogState> 
     this._build,
     this._refresh,
     this._delete,
+    this._checkAvailability,
     this._configRepository,
   ) : super(OfflineCatalogState.initial) {
     on<LoadCatalogStatusEvent>(_onLoadStatus);
@@ -82,12 +85,33 @@ class OfflineCatalogBloc extends Bloc<OfflineCatalogEvent, OfflineCatalogState> 
       ));
       return;
     }
+    if (stats.isPopulated) {
+      // A catalog is already on disk and the user can search it
+      // happily without ever talking to the CDN. Don't gate the tile
+      // on availability; the network is only needed for refresh, and
+      // a refresh that hits a down CDN surfaces a normal error.
+      emit(state.copyWith(
+        phase: OfflineCatalogPhase.ready,
+        stats: stats,
+        clearError: true,
+      ));
+      return;
+    }
+    // No catalog yet. Probe the CDN before unlocking the wizard so a
+    // user with no connection (or an outage on our side) sees a
+    // clear message on the settings tile rather than walking into a
+    // download that is going to fail at the manifest fetch.
     emit(state.copyWith(
-      phase: stats.isPopulated
-          ? OfflineCatalogPhase.ready
-          : OfflineCatalogPhase.idle,
+      phase: OfflineCatalogPhase.checking,
       stats: stats,
       clearError: true,
+    ));
+    final available = await _checkAvailability();
+    emit(state.copyWith(
+      phase: available
+          ? OfflineCatalogPhase.idle
+          : OfflineCatalogPhase.unavailable,
+      stats: stats,
     ));
   }
 
@@ -106,7 +130,13 @@ class OfflineCatalogBloc extends Bloc<OfflineCatalogEvent, OfflineCatalogState> 
         phase == OfflineCatalogPhase.installing ||
         phase == OfflineCatalogPhase.paused ||
         phase == OfflineCatalogPhase.ready ||
-        phase == OfflineCatalogPhase.error;
+        phase == OfflineCatalogPhase.error ||
+        // While the availability probe is in flight, don't let an
+        // estimate or build event sneak in and overwrite the
+        // checking/unavailable state. The user is supposed to see
+        // those phases on the tile until the probe resolves.
+        phase == OfflineCatalogPhase.checking ||
+        phase == OfflineCatalogPhase.unavailable;
   }
 
   Future<void> _onEstimate(

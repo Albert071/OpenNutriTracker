@@ -1055,6 +1055,10 @@ class MessageLookup extends MessageLookupByLibrary {
             "Nevytvořeno — klepni pro nastavení"),
         "offlineCatalogTilePaused": MessageLookupByLibrary.simpleMessage(
             "Stahování pozastaveno — klepni pro obnovení"),
+        "offlineCatalogTileCheckingAvailability":
+            MessageLookupByLibrary.simpleMessage("Kontroluji dostupnost…"),
+        "offlineCatalogTileUnavailable": MessageLookupByLibrary.simpleMessage(
+            "Offline katalog je momentálně nedostupný, zkus to později"),
         "offlineCatalogTileReady": m27,
         "offlineCatalogTimeDaysAgo": m31,
         "offlineCatalogTimeHoursAgo": m32,

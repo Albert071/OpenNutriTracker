@@ -708,6 +708,8 @@
   "offlineCatalogTileBuildingPercent": "Building ({percent}%)",
   "offlineCatalogTileBuilding": "Working on it…",
   "offlineCatalogTilePaused": "Download paused — tap to resume",
+  "offlineCatalogTileCheckingAvailability": "Checking availability…",
+  "offlineCatalogTileUnavailable": "Caching currently unavailable, try again later",
   "offlineCatalogTileReady": "{count} products, {size}",
   "offlineCatalogTileLastRefreshed": " · last refreshed {when}",
   "offlineCatalogActionRefresh": "Refresh",
