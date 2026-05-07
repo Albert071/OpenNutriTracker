@@ -10,11 +10,17 @@ name: Catalog build and apply
 #
 #   push to main / feature/offline-off-catalog        → build + plan + apply
 #   workflow_dispatch on main                          → build + plan + apply
+#   schedule (Saturday 19:00 UTC, main only)           → build + plan + apply
 #   workflow_dispatch on feature/offline-off-catalog   → build + plan
 #   pull_request (catalog / opentofu / workflow paths) → build + plan
-#   schedule (Saturday 19:00 UTC, main only)           → build + plan
-#                                                        (drift detection,
-#                                                         no apply)
+#
+# The Saturday cron is the weekly content refresh: OFF
+# publishes a new dump, the build pulls it down and rechunks,
+# and apply uploads only the chunks whose content actually
+# changed (each chunk is an `aws_s3_object` resource, so
+# unchanged content produces no diff and no API call). Without
+# the cron applying, the chunks in R2 would slowly go stale
+# and search results would lag the upstream OFF data.
 #
 # A pull request runs everything except the final apply step,
 # which means a reviewer can read the plan output in CI before
@@ -229,20 +235,20 @@ jobs:
         # Apply runs on:
         #   - push to main (post-merge of a reviewed PR)
         #   - push to feature/offline-off-catalog (active dev)
+        #   - the Saturday cron — this is how the catalog
+        #     itself gets refreshed weekly from new OFF data,
+        #     so it has to apply or the chunks in R2 go stale
         #   - manual workflow_dispatch on main only
         #
         # Apply does NOT run on:
         #   - any pull_request (the merge is the approval gate)
-        #   - the Saturday cron (drift-detection plan only —
-        #     cron applies are the kind of unattended mutation
-        #     that should never be the surprise change in
-        #     Cloudflare state)
         #   - workflow_dispatch on the feature branch (the
         #     branch is mid-development; if you want to apply
         #     from it, use a push instead so the change is at
         #     least visible in git history)
         if: |
           github.event_name == 'push'
+          || github.event_name == 'schedule'
           || (github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main')
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
