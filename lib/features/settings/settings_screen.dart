@@ -14,6 +14,7 @@ import 'package:opennutritracker/features/diary/presentation/bloc/calendar_day_b
 import 'package:opennutritracker/features/diary/presentation/bloc/diary_bloc.dart';
 import 'package:opennutritracker/features/home/presentation/bloc/home_bloc.dart';
 import 'package:opennutritracker/features/offline_catalog/domain/entity/catalog_stats_entity.dart';
+import 'package:opennutritracker/features/offline_catalog/domain/usecase/check_catalog_availability_usecase.dart';
 import 'package:opennutritracker/features/offline_catalog/presentation/bloc/offline_catalog_bloc.dart';
 import 'package:opennutritracker/features/offline_catalog/presentation/offline_catalog_wizard_screen.dart';
 import 'package:opennutritracker/features/profile/presentation/bloc/profile_bloc.dart';
@@ -703,6 +704,7 @@ class _OfflineCatalogTile extends StatefulWidget {
 class _OfflineCatalogTileState extends State<_OfflineCatalogTile> {
   late OfflineCatalogBloc _bloc;
   late ConfigRepository _configRepo;
+  late CheckCatalogAvailabilityUseCase _checkAvailability;
 
   /// Cached snapshot of the auto-disabled flag from
   /// [ConfigRepository]. Polled in initState and refreshed after
@@ -711,11 +713,31 @@ class _OfflineCatalogTileState extends State<_OfflineCatalogTile> {
   /// drift in any meaningful way).
   bool _autoDisabled = false;
 
+  /// True while a tap-time CDN probe is in flight. The bloc has its
+  /// own mount-time probe, but the bloc is a lazy singleton so its
+  /// cached `idle` / `ready` state from a previous session is what
+  /// the tile renders for the very first frame, before the new
+  /// `LoadCatalogStatusEvent` has had a chance to run. A fast tap
+  /// during that window would otherwise fall through to the wizard
+  /// because the cached phase is still `idle`. Running the probe
+  /// inline on every tap closes that race and also gates wizard
+  /// entry for users with an installed catalog (where the bloc skips
+  /// the mount-time probe entirely so search keeps working offline).
+  bool _tapProbing = false;
+
+  /// Set by a failed tap-time probe so the tile subtitle flips to
+  /// "try again later" until the user taps again. Cleared at the
+  /// start of every probe and on probe success. Independent of the
+  /// bloc state because it has to override even a `ready` phase
+  /// where the bloc itself thinks everything is fine.
+  bool _tapProbeFailed = false;
+
   @override
   void initState() {
     super.initState();
     _bloc = locator<OfflineCatalogBloc>();
     _configRepo = locator<ConfigRepository>();
+    _checkAvailability = locator<CheckCatalogAvailabilityUseCase>();
     // Read current state so the subtitle is correct on first paint.
     _bloc.add(const LoadCatalogStatusEvent());
     _loadAutoDisabledFlag();
@@ -749,29 +771,45 @@ class _OfflineCatalogTileState extends State<_OfflineCatalogTile> {
     );
   }
 
-  /// Tap handler that takes the bloc's current phase into account.
-  ///
-  /// When the CDN reachability probe has marked the catalog as
-  /// unavailable, we deliberately don't open the wizard — instead we
-  /// re-run the probe so the user has a manual retry path without
-  /// having to leave settings and come back. While the probe is in
-  /// flight (the brief `checking` window) the tap is a no-op so we
-  /// don't queue duplicate probes. Any other phase falls through to
-  /// the normal wizard route.
+  /// Tap handler. Runs an unconditional CDN probe before opening the
+  /// wizard, regardless of what the bloc state currently says. This
+  /// catches both the cached-state race (lazy-singleton bloc holding
+  /// `idle` / `ready` from a previous session) and the
+  /// installed-catalog case (where the bloc's mount-time probe is
+  /// skipped because search works offline). The probe is the single
+  /// source of truth for whether the wizard should open.
   void _handleTileTap(OfflineCatalogState state) {
-    switch (state.phase) {
-      case OfflineCatalogPhase.checking:
-        return;
-      case OfflineCatalogPhase.unavailable:
+    if (_tapProbing) return;
+    if (state.phase == OfflineCatalogPhase.checking) return;
+    _probeThenOpen();
+  }
+
+  Future<void> _probeThenOpen() async {
+    final messenger = ScaffoldMessenger.of(context);
+    final s = S.of(context);
+    setState(() {
+      _tapProbing = true;
+      _tapProbeFailed = false;
+    });
+    try {
+      final available = await _checkAvailability();
+      if (!mounted) return;
+      if (!available) {
+        // Re-run the bloc's mount-time probe so a no-catalog user
+        // sees the bloc settle on `unavailable` (and the regression
+        // tests that pin that contract still apply). For an
+        // installed-catalog user the bloc stays on `ready` and
+        // _tapProbeFailed shadows the subtitle until the next tap.
         _bloc.add(const LoadCatalogStatusEvent());
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(S.of(context).offlineCatalogTileCheckingAvailability),
-          ),
+        setState(() => _tapProbeFailed = true);
+        messenger.showSnackBar(
+          SnackBar(content: Text(s.offlineCatalogTileUnavailable)),
         );
         return;
-      default:
-        _openWizard();
+      }
+      _openWizard();
+    } finally {
+      if (mounted) setState(() => _tapProbing = false);
     }
   }
 
@@ -814,7 +852,8 @@ class _OfflineCatalogTileState extends State<_OfflineCatalogTile> {
               subtitle: Text(_subtitleFor(context, state)),
               trailing: _trailingFor(context, state),
               onTap: () => _handleTileTap(state),
-              enabled: state.phase != OfflineCatalogPhase.checking,
+              enabled: state.phase != OfflineCatalogPhase.checking &&
+                  !_tapProbing,
             ),
           ],
         );
@@ -889,6 +928,12 @@ class _OfflineCatalogTileState extends State<_OfflineCatalogTile> {
       // l10n: offlineCatalogTileAutoDisabled
       return 'Paused after repeated crashes — tap to set up again';
     }
+    // Local tap-time probe outranks the bloc state: the bloc may
+    // think the catalog is `ready` (data on disk) while a tap-time
+    // probe just confirmed the CDN is unreachable. The subtitle
+    // should reflect what the user just learned.
+    if (_tapProbing) return s.offlineCatalogTileCheckingAvailability;
+    if (_tapProbeFailed) return s.offlineCatalogTileUnavailable;
     switch (state.phase) {
       case OfflineCatalogPhase.checking:
         return s.offlineCatalogTileCheckingAvailability;
