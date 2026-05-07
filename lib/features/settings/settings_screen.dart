@@ -863,14 +863,13 @@ class _OfflineCatalogTileState extends State<_OfflineCatalogTile> {
       return 'Paused after repeated crashes — tap to set up again';
     }
     switch (state.phase) {
-      case OfflineCatalogPhase.building:
+      case OfflineCatalogPhase.downloading:
+      case OfflineCatalogPhase.installing:
         final p = state.progress;
         if (p == null) return s.offlineCatalogTileBuilding;
         return s.offlineCatalogTileBuildingPercent(
           (p.fraction * 100).toStringAsFixed(0),
         );
-      case OfflineCatalogPhase.refreshing:
-        return s.offlineCatalogTileRefreshing;
       case OfflineCatalogPhase.paused:
         return s.offlineCatalogTilePaused;
       case OfflineCatalogPhase.ready:
@@ -894,8 +893,8 @@ class _OfflineCatalogTileState extends State<_OfflineCatalogTile> {
   Widget? _trailingFor(BuildContext context, OfflineCatalogState state) {
     final stats = state.stats;
     if (stats == null || !stats.isPopulated) return null;
-    if (state.phase == OfflineCatalogPhase.building ||
-        state.phase == OfflineCatalogPhase.refreshing) {
+    if (state.phase == OfflineCatalogPhase.downloading ||
+        state.phase == OfflineCatalogPhase.installing) {
       return null;
     }
     final s = S.of(context);

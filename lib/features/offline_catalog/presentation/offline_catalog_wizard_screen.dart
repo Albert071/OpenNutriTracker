@@ -7,41 +7,26 @@ import 'package:opennutritracker/features/offline_catalog/presentation/bloc/offl
 import 'package:opennutritracker/features/offline_catalog/presentation/widgets/download_progress_wizard_page.dart';
 import 'package:opennutritracker/features/offline_catalog/presentation/widgets/estimate_confirm_wizard_page.dart';
 import 'package:opennutritracker/features/offline_catalog/presentation/widgets/quality_wizard_page.dart';
-import 'package:opennutritracker/features/offline_catalog/presentation/widgets/region_wizard_page.dart';
 import 'package:opennutritracker/features/offline_catalog/presentation/widgets/welcome_wizard_page.dart';
 import 'package:opennutritracker/features/onboarding/presentation/widgets/highlight_button.dart';
 import 'package:opennutritracker/generated/l10n.dart';
 
-/// Five-page wizard that walks the user through building the offline
-/// catalog. Mirrors the visual shape of [OnboardingScreen] so the
-/// experience feels native to the app: same `IntroductionScreen`
-/// package, same dot indicators, same `HighlightButton` footer.
+/// Four-page wizard that walks the user through downloading the
+/// offline catalog. Mirrors the visual shape of `OnboardingScreen`
+/// so the experience feels native to the app: same
+/// [IntroductionScreen] package, same dot indicators, same
+/// [HighlightButton] footer.
 ///
 /// State held locally on the orchestrator:
 ///
-/// * The user's filter selection, accumulated across pages 2 and 3.
+/// * The user's filter selection, accumulated across the quality page.
 /// * The current page index (so footer buttons can be gated on the
 ///   right per-page completion criteria).
-/// * Whether the user has typed the confirmation phrase, when the
-///   estimate exceeds the hard cap.
 ///
-/// Bloc-owned state — countries taxonomy, estimate, build progress,
-/// catalog readiness — comes through `BlocBuilder` inside each page.
+/// Bloc-owned state — estimate, build progress, catalog readiness —
+/// comes through `BlocBuilder` inside each page.
 class OfflineCatalogWizardScreen extends StatefulWidget {
-  /// Optional pre-selected country code (e.g. `en:france`) inferred
-  /// from the user's app locale. The region page will mark this
-  /// country selected when the wizard opens for the first time.
-  final String? initialCountryCode;
-
-  /// Locale code (e.g. `en`, `de`) passed to OFF as `lc=` so the
-  /// returned country names are in the user's language.
-  final String? locale;
-
-  const OfflineCatalogWizardScreen({
-    super.key,
-    this.initialCountryCode,
-    this.locale,
-  });
+  const OfflineCatalogWizardScreen({super.key});
 
   @override
   State<OfflineCatalogWizardScreen> createState() =>
@@ -53,36 +38,29 @@ class _OfflineCatalogWizardScreenState
   late OfflineCatalogBloc _bloc;
   final _introKey = GlobalKey<IntroductionScreenState>();
 
-  // Mutable filter selection accumulated across pages 2 and 3.
-  late Set<String> _selectedCountries;
+  // Filter selection accumulated across the quality page. Defaults
+  // match the recommended (smallest, strictest) variant — a user who
+  // taps Next without thinking gets the 73 MB tier.
   bool _requireNutritionGrade = true;
   bool _requireMinPopularity = true;
   Duration? _maxAge = CatalogFilterEntity.defaultMaxAge;
 
-  bool _hardCapConfirmed = false;
   int _currentPage = 0;
 
-  static const _pageRegion = 1;
-  static const _pageQuality = 2;
-  static const _pageEstimate = 3;
-  static const _pageDownload = 4;
+  static const _pageQuality = 1;
+  static const _pageEstimate = 2;
+  static const _pageDownload = 3;
 
   @override
   void initState() {
     super.initState();
     _bloc = locator<OfflineCatalogBloc>();
-    _selectedCountries = {
-      if (widget.initialCountryCode != null) widget.initialCountryCode!,
-    };
-
     // Kick off the lifecycle: read current state, decide whether we're
     // landing on a fresh wizard or on the resume-build view.
     _bloc.add(const LoadCatalogStatusEvent());
-    _bloc.add(LoadCountriesEvent(locale: widget.locale));
   }
 
   CatalogFilterEntity get _currentFilters => CatalogFilterEntity(
-        countries: _selectedCountries,
         requireNutritionGrade: _requireNutritionGrade,
         requireMinPopularity: _requireMinPopularity,
         maxAge: _maxAge,
@@ -94,13 +72,7 @@ class _OfflineCatalogWizardScreenState
   }
 
   void _onPageChanged(int page) {
-    setState(() {
-      _currentPage = page;
-      // Reset typed-confirmation state when leaving / re-entering the
-      // estimate page so a previous "I understand" doesn't carry into
-      // a new filter set.
-      if (page != _pageEstimate) _hardCapConfirmed = false;
-    });
+    setState(() => _currentPage = page);
 
     // If the catalog is in a lifecycle phase (paused mid-build, fully
     // ready, etc.) and we landed on a pre-download page, the user
@@ -112,9 +84,9 @@ class _OfflineCatalogWizardScreenState
     // fight the in-flight page transition.
     final phase = _bloc.state.phase;
     final isLifecycle = phase == OfflineCatalogPhase.paused ||
-        phase == OfflineCatalogPhase.building ||
-        phase == OfflineCatalogPhase.ready ||
-        phase == OfflineCatalogPhase.refreshing;
+        phase == OfflineCatalogPhase.downloading ||
+        phase == OfflineCatalogPhase.installing ||
+        phase == OfflineCatalogPhase.ready;
     if (isLifecycle && page < _pageDownload) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (!mounted) return;
@@ -129,7 +101,8 @@ class _OfflineCatalogWizardScreenState
       // Only trigger a fresh start if we are not already mid-build /
       // paused / done — those phases mean the bloc is already on
       // task and we should not re-enter.
-      if (phase != OfflineCatalogPhase.building &&
+      if (phase != OfflineCatalogPhase.downloading &&
+          phase != OfflineCatalogPhase.installing &&
           phase != OfflineCatalogPhase.paused &&
           phase != OfflineCatalogPhase.ready) {
         _bloc.add(StartCatalogBuildEvent(_currentFilters));
@@ -156,7 +129,7 @@ class _OfflineCatalogWizardScreenState
           // isn't always fully initialised when the bloc emits its
           // first state, and a too-early animateScroll lands on an
           // intermediate page (typically the estimate page) where
-          // the user gets stranded on a state.estimate==null spinner.
+          // the user gets stranded.
           final wantJump = (state.phase == OfflineCatalogPhase.paused ||
                   state.phase == OfflineCatalogPhase.ready) &&
               _currentPage < _pageDownload;
@@ -212,23 +185,8 @@ class _OfflineCatalogWizardScreenState
         bodyWidget: const WelcomeWizardPage(),
         footer: HighlightButton(
           buttonLabel: s.offlineCatalogStartAction,
-          onButtonPressed: () => _scrollTo(_pageRegion),
-          buttonActive: true,
-        ),
-      ),
-      PageViewModel(
-        title: '',
-        decoration: decoration,
-        bodyWidget: RegionWizardPage(
-          initialSelection: _selectedCountries,
-          onSelectionChanged: (selection) {
-            setState(() => _selectedCountries = selection);
-          },
-        ),
-        footer: HighlightButton(
-          buttonLabel: s.offlineCatalogNextAction,
           onButtonPressed: () => _scrollTo(_pageQuality),
-          buttonActive: _selectedCountries.isNotEmpty,
+          buttonActive: true,
         ),
       ),
       PageViewModel(
@@ -255,18 +213,12 @@ class _OfflineCatalogWizardScreenState
       PageViewModel(
         title: '',
         decoration: decoration,
-        bodyWidget: EstimateConfirmWizardPage(
-          onConfirmedChanged: (confirmed) {
-            setState(() => _hardCapConfirmed = confirmed);
-          },
-        ),
+        bodyWidget: const EstimateConfirmWizardPage(),
         footer: BlocBuilder<OfflineCatalogBloc, OfflineCatalogState>(
           bloc: _bloc,
           builder: (context, state) {
             final estimate = state.estimate;
-            final canStart = estimate != null &&
-                estimate.rows > 0 &&
-                (!estimate.isAboveHardCap || _hardCapConfirmed);
+            final canStart = estimate != null && estimate.rows > 0;
             return HighlightButton(
               buttonLabel: s.offlineCatalogDownloadAction,
               onButtonPressed: () => _scrollTo(_pageDownload),

@@ -83,35 +83,50 @@ class OfflineCatalogDataSource {
   Future<Database> _open() async {
     final path = await resolveDbPath();
     _log.fine('Opening offline catalog at $path');
+    // We deliberately do not pass sqflite's `version: / onCreate: /
+    // onUpgrade:` machinery. Catalogs we download from the CDN come
+    // with their schema already shipped (and may be a higher minor
+    // than this client knows about — the schema convention is that
+    // higher minors only add tables/columns, never rename or remove
+    // them). Letting sqflite manage `PRAGMA user_version` would force
+    // us into its rigid migrate-or-downgrade flow against artefacts
+    // it didn't create. Instead, after the open succeeds we run an
+    // idempotent CREATE-IF-NOT-EXISTS pass so a brand-new install
+    // (no downloaded catalog yet) gets an empty schema and any
+    // already-populated catalog is left untouched.
     final db = await openDatabase(
       path,
-      version: _schemaVersion,
       onConfigure: (db) async {
-        // WAL gives us atomic writes plus much better bulk-insert speed.
-        // Synchronous=NORMAL is the right choice for WAL: durable across
-        // app crashes, only loses data on hard kernel/power failure.
+        // WAL gives us atomic writes plus better insert speed if we
+        // ever go back to writing rows on-device. Synchronous=NORMAL
+        // is the right choice for WAL: durable across app crashes,
+        // only loses recent data on hard kernel/power failure.
         await db.execute('PRAGMA journal_mode=WAL');
         await db.execute('PRAGMA synchronous=NORMAL');
       },
-      onCreate: _createSchema,
-      onUpgrade: _upgradeSchema,
     );
+    await _ensureSchema(db);
     _db = db;
     return db;
   }
 
-  Future<void> _createSchema(Database db, int version) async {
-    // The full OFFProductDTO is serialised into the [_kColData] JSON
-    // blob so a forward-compatible field addition (nutriscore_grade,
-    // eco_score, ingredients_text, allergens_tags, …) is just an
-    // extension of the OFF `fields=` projection — the new key flows
-    // straight into the JSON without any schema migration. Only fields
-    // that need to be queried, sorted, or full-text searched warrant
-    // their own column. Pair changes: when you add a sqlite column,
-    // also extend the OFF `fields=` list in OffBulkApiDataSource so
-    // refreshes and full rebuilds carry the new data forward.
+  /// Idempotent schema creation. Runs after every open. For a
+  /// downloaded catalog the build script already shipped these tables
+  /// and the CREATE-IF-NOT-EXISTS calls are no-ops; for a brand-new
+  /// install with no catalog yet they materialise an empty shape so
+  /// `count() == 0` and getStats falls through cleanly.
+  ///
+  /// Forward compatibility: a future build that adds columns or
+  /// tables we don't know about will leave them in place — sqlite
+  /// has no notion of "drop this thing the client didn't define"
+  /// and our queries name specific columns, so the unknown bits sit
+  /// quietly in the file. Major-version bumps that rename or remove
+  /// what we depend on are caught upstream by
+  /// [CatalogDownloadDataSource._verifyStagedSchema], which refuses
+  /// to install them.
+  Future<void> _ensureSchema(Database db) async {
     await db.execute('''
-      CREATE TABLE $_kTableProducts (
+      CREATE TABLE IF NOT EXISTS $_kTableProducts (
         $_kColCode TEXT PRIMARY KEY NOT NULL,
         $_kColProductName TEXT,
         $_kColProductNameEn TEXT,
@@ -124,14 +139,15 @@ class OfflineCatalogDataSource {
       )
     ''');
     await db.execute(
-      'CREATE INDEX idx_products_brands ON $_kTableProducts($_kColBrands)',
+      'CREATE INDEX IF NOT EXISTS idx_products_brands '
+      'ON $_kTableProducts($_kColBrands)',
     );
 
     // unicode61 + remove_diacritics 2 lets "creme brulee" match "crème
     // brûlée" — important for European catalogues where users won't
     // type the accents that exist in the canonical names.
     await db.execute('''
-      CREATE VIRTUAL TABLE $_kTableProductsFts USING fts5(
+      CREATE VIRTUAL TABLE IF NOT EXISTS $_kTableProductsFts USING fts5(
         $_kColCode UNINDEXED,
         $_kColProductName,
         $_kColProductNameEn,
@@ -143,47 +159,18 @@ class OfflineCatalogDataSource {
     ''');
 
     await db.execute('''
-      CREATE TABLE $_kTableMeta (
+      CREATE TABLE IF NOT EXISTS $_kTableMeta (
         key TEXT PRIMARY KEY NOT NULL,
         value TEXT
       )
     ''');
-    await db.insert(_kTableMeta, {
-      'key': metaKeySchemaVersion,
-      'value': version.toString(),
-    });
-  }
-
-  /// Upgrade hook for future schema changes. v1 has no migrations yet,
-  /// so this is intentionally a no-op — but the callback is wired up
-  /// from day one so the next migration becomes a single `if (oldVersion
-  /// < N)` block rather than a refactor.
-  ///
-  /// Two patterns to keep in mind when this fires:
-  ///
-  /// * **Adding a scalar column** — `ALTER TABLE products ADD COLUMN
-  ///   `name` `type``; existing rows hold NULL until the next refresh
-  ///   backfills them. Pair with the OFF `fields=` projection.
-  /// * **Changing the FTS5 column list** — drop and recreate
-  ///   `products_fts`, then `INSERT INTO products_fts SELECT ... FROM
-  ///   products` to repopulate. Fast at a few hundred thousand rows
-  ///   but worth a one-time progress UI when the user opens the app
-  ///   on a release that bumps the FTS shape.
-  Future<void> _upgradeSchema(
-    Database db,
-    int oldVersion,
-    int newVersion,
-  ) async {
-    _log.fine('Upgrading offline catalog from v$oldVersion to v$newVersion');
-    // Future migrations land here, e.g.:
-    //   if (oldVersion < 2) {
-    //     await db.execute('ALTER TABLE $_kTableProducts ADD COLUMN '
-    //         'nutriscore_grade TEXT');
-    //   }
-    await db.insert(
-      _kTableMeta,
-      {'key': metaKeySchemaVersion, 'value': newVersion.toString()},
-      conflictAlgorithm: ConflictAlgorithm.replace,
+    // Fresh-install fallback: if we just created an empty schema
+    // (no downloaded catalog yet) seed `schema_version` with our
+    // current major. INSERT OR IGNORE so a downloaded catalog that
+    // already carries its own value is preserved.
+    await db.rawInsert(
+      'INSERT OR IGNORE INTO $_kTableMeta(key, value) VALUES (?, ?)',
+      [metaKeySchemaVersion, _schemaVersion.toString()],
     );
   }
 

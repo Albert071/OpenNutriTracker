@@ -1,11 +1,9 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:crypto/crypto.dart';
 import 'package:logging/logging.dart';
 import 'package:opennutritracker/features/add_meal/data/dto/off/off_product_dto.dart';
-import 'package:opennutritracker/features/offline_catalog/data/data_sources/off_bulk_api_data_source.dart';
-import 'package:opennutritracker/features/offline_catalog/data/data_sources/off_csv_dump_data_source.dart';
+import 'package:opennutritracker/features/offline_catalog/data/data_sources/catalog_download_data_source.dart';
 import 'package:opennutritracker/features/offline_catalog/data/data_sources/offline_catalog_data_source.dart';
 import 'package:opennutritracker/features/offline_catalog/domain/entity/cancellation_token.dart';
 import 'package:opennutritracker/features/offline_catalog/domain/entity/catalog_estimate_entity.dart';
@@ -13,105 +11,105 @@ import 'package:opennutritracker/features/offline_catalog/domain/entity/catalog_
 import 'package:opennutritracker/features/offline_catalog/domain/entity/catalog_stats_entity.dart';
 import 'package:opennutritracker/features/offline_catalog/domain/entity/download_progress.dart';
 
-/// Conservative typical-row count we expect to keep on disk for a
-/// single-country build with default filters. Used to build the
-/// wizard's "approximately X products" line on the estimate page.
-/// Real builds vary widely; this is a friendly order-of-magnitude.
-const int _kRoughKeptRowsForSingleCountry = 18000;
+/// Approximate effective bandwidth for an ETA projection on the
+/// estimate page. Real-world transfers can be much faster (fibre,
+/// fast Wi-Fi) or much slower (mobile data); 10 MB/s is a midpoint
+/// that lands the prediction within the right order of magnitude.
+const int _kAssumedBytesPerSecond = 10 * 1024 * 1024;
 
-/// Average bytes-per-row in the on-disk sqlite catalogue (JSON blob
-/// + denormalised name/brand cells + FTS index overhead).
-const int _kBytesPerRow = 1024;
+/// Static row/byte projections per catalog variant id, derived from a
+/// real end-to-end build run. These drive the wizard's estimate page
+/// without needing a live HEAD probe per filter combination.
+///
+/// Sourced from the build output:
+/// * `s0_n0_*` family — 2.8M–3.2M rows, ~470–520 MB compressed
+/// * `s0_n1_*` family — 1.16M–1.37M rows, ~210–240 MB compressed
+/// * `s1_n0_*` family — 505k–518k rows, ~99–105 MB compressed
+/// * `s1_n1_*` family — 349k–354k rows, ~73 MB compressed
+///
+/// The compressed-to-uncompressed ratio sits at roughly 7.4x
+/// (537 MB unpacked / 73 MB gzipped on the smallest variant), and
+/// applies consistently across the family — the row contents are the
+/// same shape, only the row count varies.
+final Map<String, _VariantSizing> _kVariantSizing = {
+  's0_n0_r3': _VariantSizing(2800000, 470 * _mb, 3450 * _mb),
+  's0_n0_r5': _VariantSizing(2950000, 490 * _mb, 3600 * _mb),
+  's0_n0_r10': _VariantSizing(3050000, 505 * _mb, 3700 * _mb),
+  's0_n0_rany': _VariantSizing(3200000, 520 * _mb, 3820 * _mb),
+  's0_n1_r3': _VariantSizing(1160000, 210 * _mb, 1550 * _mb),
+  's0_n1_r5': _VariantSizing(1230000, 220 * _mb, 1620 * _mb),
+  's0_n1_r10': _VariantSizing(1300000, 230 * _mb, 1690 * _mb),
+  's0_n1_rany': _VariantSizing(1370000, 240 * _mb, 1760 * _mb),
+  's1_n0_r3': _VariantSizing(505000, 99 * _mb, 730 * _mb),
+  's1_n0_r5': _VariantSizing(509000, 101 * _mb, 745 * _mb),
+  's1_n0_r10': _VariantSizing(514000, 103 * _mb, 760 * _mb),
+  's1_n0_rany': _VariantSizing(518000, 105 * _mb, 775 * _mb),
+  's1_n1_r3': _VariantSizing(349000, 73 * _mb, 537 * _mb),
+  's1_n1_r5': _VariantSizing(351000, 73 * _mb, 537 * _mb),
+  's1_n1_r10': _VariantSizing(353000, 73 * _mb, 537 * _mb),
+  's1_n1_rany': _VariantSizing(354000, 73 * _mb, 537 * _mb),
+};
 
-/// Below this kept-ratio, the post-build sweep is refused and the
-/// repository raises [CatalogSweepGuardException]. 25% means we
-/// allow legitimate filter narrowings (e.g. UK + a stricter quality
-/// gate keeping ~30% of the previous catalog) but bail when an OFF
-/// schema change or partial parse leaves us with almost nothing.
-const double _minKeptRatioForSweep = 0.25;
+const int _mb = 1024 * 1024;
 
-/// Pre-existing catalogues smaller than this skip the wipe guard.
-/// On a tiny catalog the ratio is too noisy to be useful; the user
-/// can rebuild from scratch cheaply if anything goes wrong.
-const int _sweepGuardThreshold = 100;
+class _VariantSizing {
+  final int rows;
+  final int compressedBytes;
+  final int uncompressedBytes;
 
-/// Raised by [OfflineCatalogRepository.build] when the post-build
-/// sweep would drop more rows than the safety threshold allows.
-/// Surfaced as a recoverable error so the user can retry on a
-/// later OFF dump or update the app.
-class CatalogSweepGuardException implements Exception {
-  const CatalogSweepGuardException();
-
-  @override
-  String toString() =>
-      'Refusing to sweep the catalog — the new build wrote far fewer '
-      'rows than expected. This usually means Open Food Facts changed '
-      'the dump schema and the app needs an update. Your existing '
-      'catalog is unchanged.';
+  const _VariantSizing(
+    this.rows,
+    this.compressedBytes,
+    this.uncompressedBytes,
+  );
 }
 
-/// Orchestrates the catalog lifecycle.
+/// Orchestrates the prebuilt-catalog lifecycle.
 ///
-/// **Build path** (the heavy one): downloads the OFF CSV dump from
-/// `static.openfoodfacts.org` to a local cache, then stream-decodes
-/// + filters + writes survivors to sqlite. The CDN endpoint is
-/// reliable (unlike the legacy `cgi/search.pl` which 503s under bulk
-/// traffic), so a build either runs to completion or stops cleanly
-/// at a known byte offset for resume.
-///
-/// **Refresh path** (the lightweight one): keeps the existing API
-/// paginator in place. A few hundred modified-since-last-sync rows
-/// are well within the legacy CGI's healthy band.
+/// The pivot to download-prebuilt collapsed the old CSV parse loop
+/// into two short phases: download the gzipped sqlite for the chosen
+/// variant, then unpack it and rename it into place. The repository
+/// owns the static estimate table, the meta bookkeeping, and the
+/// thin pass-through query surface; the heavy I/O lives on
+/// [CatalogDownloadDataSource].
 ///
 /// **Pause / cancel semantics**:
-/// * Pause during download → partial gzip stays on disk, resume
-///   sends `Range: bytes=<offset>-` and continues from there.
-/// * Pause during parse → gzip stays, resume re-streams from the
-///   start; sqlite upserts are idempotent so no data is lost, just
-///   parse time is.
-/// * Cancel any phase → cached gzip is deleted, sqlite is wiped.
+/// * Pause during download → partial gzip + sidecar stay on disk;
+///   resume sends `Range: bytes=<offset>-` and continues from there.
+/// * Pause during install → leaves the partial decompressed file in
+///   place; resume restarts the gunzip from the start (the gzip is
+///   complete on disk, so this is fast and idempotent).
+/// * Cancel any phase → all partial artefacts are deleted and the
+///   live catalog (if any) is wiped.
 class OfflineCatalogRepository {
   final _log = Logger('OfflineCatalogRepository');
   final OfflineCatalogDataSource _local;
-  final OffBulkApiDataSource _remote;
-  final OffCsvDumpDataSource _csvDump;
+  final CatalogDownloadDataSource _download;
 
-  OfflineCatalogRepository(this._local, this._remote, this._csvDump);
+  OfflineCatalogRepository(this._local, this._download);
 
-  /// One-shot HEAD probe of the CSV dump. Returns size + a rough
-  /// kept-rows projection for the wizard's confirmation page.
-  ///
-  /// We can't know the exact row count up-front (we'd have to stream
-  /// the file to count), so the wizard surfaces both the precise
-  /// download-size figure and an honest "approximately X products"
-  /// for the post-filter result.
+  /// Static estimate for [filters] derived from the variant sizing
+  /// table. No network round-trip is needed — the build pipeline
+  /// produces the same set of variants every week, so the projections
+  /// drift only with corpus growth (a few percent per quarter on the
+  /// loosest tier).
   Future<CatalogEstimateEntity> estimate(CatalogFilterEntity filters) async {
-    final dumpBytes = await _csvDump.headTotalBytes();
-    if (dumpBytes == null) {
-      throw const FormatException(
-        'Open Food Facts did not advertise a download size for the CSV.',
+    final sizing = _kVariantSizing[filters.toVariantId()];
+    if (sizing == null) {
+      throw FormatException(
+        'No size table entry for variant ${filters.toVariantId()}',
       );
     }
-    // Rough on-disk catalogue size. Linear with how many countries
-    // the user picked. Anything below 1 we still surface as "1
-    // country worth" so the number doesn't read as zero.
-    final countryFactor = filters.countries.isEmpty
-        ? 1.0
-        : filters.countries.length.toDouble();
-    final keptRows = (_kRoughKeptRowsForSingleCountry * countryFactor).round();
     return CatalogEstimateEntity(
-      rows: keptRows,
-      // Storage estimate uses the post-filter row count.
-      estimatedBytes: keptRows * _kBytesPerRow,
-      // "Requests" is repurposed as "download bytes" for the CSV
-      // path; the wizard's UI label can call it that. (We could add
-      // a separate field on the entity, but reusing avoids a
-      // disruptive refactor for one number.)
-      requests: dumpBytes,
-      // Wall-clock seconds — depends on user's bandwidth, very
-      // rough. Assume 10 MB/s effective; that's a fast Wi-Fi link.
-      // Real-world will skew higher.
-      etaSeconds: (dumpBytes / (10 * 1024 * 1024)).round(),
+      rows: sizing.rows,
+      // What the wizard's "On-disk size" line surfaces.
+      estimatedBytes: sizing.uncompressedBytes,
+      // The legacy "requests" field is repurposed as the download
+      // bytes figure; see lib/features/offline_catalog/domain/entity/
+      // catalog_estimate_entity.dart for the field's notes.
+      requests: sizing.compressedBytes,
+      etaSeconds:
+          (sizing.compressedBytes / _kAssumedBytesPerSecond).ceil(),
     );
   }
 
@@ -121,280 +119,73 @@ class OfflineCatalogRepository {
   /// `phase = downloading` and bytes counters. Cancellation between
   /// chunks. Resume picks up at the on-disk file's existing length.
   ///
-  /// Phase 2 — parse + filter. Yields [DownloadProgress] with
-  /// `phase = parsing` and rows-kept counter. Cancellation checked
-  /// every ~200 rows.
-  /// CSV dumps are republished by OFF roughly daily. A cached gzip
-  /// younger than this window is reused as-is when the user runs
-  /// the wizard again — we skip the re-download and go straight to
-  /// the parse phase, since the data on disk is fresh enough.
-  static const _cachedDumpFreshness = Duration(hours: 24);
-
+  /// Phase 2 — install. Yields [DownloadProgress] with
+  /// `phase = installing` and uncompressed-bytes counters as the
+  /// gunzip stream lands on disk; ends with the atomic rename.
   Stream<DownloadProgress> build({
     required CatalogFilterEntity filters,
     required CancellationToken cancellation,
   }) async* {
+    final variantId = filters.toVariantId();
+    final sizing = _kVariantSizing[variantId];
+    if (sizing == null) {
+      throw FormatException('No variant for filter $variantId');
+    }
+    _log.info('Catalog build: variant=$variantId, '
+        'compressed=${sizing.compressedBytes ~/ _mb} MB, '
+        'rows=${sizing.rows}');
+
+    final dbPath = await _local.resolveDbPath();
+
+    yield* _download.downloadAndInstall(
+      variantId: variantId,
+      catalogDbPath: dbPath,
+      expectedUncompressedBytes: sizing.uncompressedBytes,
+      cancellation: cancellation,
+      // Close the live sqflite handle before the rename so the
+      // platform lets us swap the file (Windows, in particular,
+      // refuses to rename over an open file handle).
+      beforeInstall: () => _local.close(),
+    );
+
+    cancellation.throwIfCancelled();
+
+    // After the rename, the data source's cached handle has been
+    // closed. The next access reopens the new file and we can write
+    // our own meta entries (filters JSON + last sync time) so the
+    // settings tile and resume path know what was just installed.
     final filtersJson = _serialiseFilters(filters);
-    final filtersHash = _hashFilters(filtersJson);
-    final stopwatch = Stopwatch()..start();
-
-    // The build's start time stamps every row that survives the
-    // parse via [OfflineCatalogDataSource.upsertBatch]'s `fetched_at`
-    // write. After the parse completes we drop any row whose
-    // `fetched_at` predates this — those are leftover from a prior
-    // build that the new filter set (or new dump contents) would
-    // not have kept. This handles two distinct user flows:
-    //
-    //   1. Refresh — same filters, fresher OFF dump. Stale entries
-    //      that have been removed from OFF or no longer pass the
-    //      always-on filters get swept.
-    //   2. Filter change — different countries, toggles, recency.
-    //      Rows that match the old filters but not the new ones
-    //      get swept, while rows that match both are simply
-    //      re-stamped (kept).
-    final buildStartedAtMillis = DateTime.now().millisecondsSinceEpoch;
-
-    // Persist the filter set so the resume / refresh paths can find
-    // what the catalog was built for.
     await _local.setMeta(
       OfflineCatalogDataSource.metaKeyFiltersJson,
       filtersJson,
     );
     await _local.setMeta(
-      OfflineCatalogDataSource.metaKeyBuildCursor,
-      jsonEncode({'phase': 'downloading', 'filtersHash': filtersHash}),
-    );
-
-    // Pre-flight: verify the cache directory has enough free
-    // space for the gzip download. We probe with a slightly
-    // padded sentinel write so we abort here with a clear error
-    // instead of half-way through a hundreds-of-MB transfer.
-    // Skipped when a fresh-enough cached gzip already exists —
-    // that file already proves the space was there.
-    final cacheIsFresh = await _isCachedDumpFresh();
-    if (!cacheIsFresh) {
-      final remoteBytes = await _csvDump.headTotalBytes();
-      if (remoteBytes != null) {
-        // 1.1× headroom over the gzip size. We don't preflight the
-        // decoded stream — that never hits disk.
-        await _csvDump.preflightDiskSpace((remoteBytes * 1.1).round());
-      }
-    }
-
-    // Skip the download phase entirely when a fresh-enough gzip is
-    // already on disk. The user's wizard run still gets the most
-    // recent OFF data they have access to without paying for a
-    // second 1+ GB transfer.
-    if (cacheIsFresh) {
-      _log.info('Catalog build phase 1: skipped (cached dump is fresh)');
-      // Emit a single 100% progress event so the UI doesn't sit on
-      // 0% for the duration of the (skipped) download phase.
-      final cachedSize = await _csvDump.downloadedBytes();
-      yield DownloadProgress(
-        phase: DownloadPhase.downloading,
-        bytesDone: cachedSize,
-        bytesTotal: cachedSize,
-        rowsKept: 0,
-        rowsScanned: 0,
-        elapsed: stopwatch.elapsed,
-      );
-    } else {
-      _log.info('Catalog build phase 1: download');
-      await for (final p in _csvDump.downloadResumable(
-        cancellation: cancellation,
-      )) {
-        yield DownloadProgress(
-          phase: DownloadPhase.downloading,
-          bytesDone: p.bytesDone,
-          bytesTotal: p.bytesTotal,
-          rowsKept: 0,
-          rowsScanned: 0,
-          elapsed: stopwatch.elapsed,
-        );
-      }
-    }
-    cancellation.throwIfCancelled();
-
-    await _local.setMeta(
-      OfflineCatalogDataSource.metaKeyBuildCursor,
-      jsonEncode({'phase': 'parsing', 'filtersHash': filtersHash}),
-    );
-
-    _log.info('Catalog build phase 2: parse + filter');
-    // Bulk-insert mode: sqlite pragmas relax to favour throughput
-    // (synchronous=OFF, journal_mode=MEMORY) and FTS5 per-row
-    // updates are suspended for the duration of the parse. The
-    // FTS index is rebuilt in one bulk INSERT at the end. On
-    // success we restore safe pragmas + rebuild; on cancel /
-    // failure we restore safe pragmas but skip the FTS rebuild,
-    // leaving the index empty until the next successful build.
-    await _local.beginBulkInsertSession();
-    var parseSucceeded = false;
-    try {
-      await for (final p in _csvDump.parseAndFilter(
-        filter: filters,
-        cancellation: cancellation,
-        onBatch: (batch) async => _local.upsertBatch(batch),
-      )) {
-        yield DownloadProgress(
-          phase: DownloadPhase.parsing,
-          bytesDone: p.bytesDone,
-          bytesTotal: p.bytesTotal,
-          rowsKept: p.rowsKept,
-          rowsScanned: p.rowsScanned,
-          elapsed: stopwatch.elapsed,
-        );
-      }
-      parseSucceeded = true;
-    } finally {
-      await _local.endBulkInsertSession(rebuildFts: parseSucceeded);
-    }
-    cancellation.throwIfCancelled();
-
-    // Phase 3 — sweep stale rows from any prior build, then clean
-    // up the cached gzip. Order matters: the sweep happens before
-    // the cursor is cleared so an interruption between the two
-    // still leaves the catalogue in a consistent state.
-    //
-    // **Wipe protection.** Before sweeping we check that the build
-    // didn't accidentally produce a near-empty catalogue — the kind
-    // of outcome we'd see if OFF renamed a column and our parser
-    // started silently dropping every row. A normal refresh keeps
-    // ≥ 95% of rows; a normal filter change keeps anywhere from
-    // 0% (everything dropped, e.g. user picked a country with no
-    // products) to 100% (overlap with old filters). We bail out of
-    // the sweep when the post-build kept ratio falls below
-    // [_minKeptRatioForSweep] AND the existing catalogue had at
-    // least [_sweepGuardThreshold] rows — the threshold guards
-    // first builds (no prior data) and tiny catalogs from being
-    // misclassified.
-    final preSweepTotal = await _local.count();
-    final freshlyWritten = await _local.countWrittenSince(buildStartedAtMillis);
-    final keptRatio = preSweepTotal == 0
-        ? 1.0
-        : freshlyWritten / preSweepTotal;
-    if (preSweepTotal >= _sweepGuardThreshold &&
-        keptRatio < _minKeptRatioForSweep) {
-      _log.severe(
-        'Refusing to sweep: build wrote $freshlyWritten rows but the '
-        'existing catalog had $preSweepTotal — ratio $keptRatio is '
-        'below the safety threshold $_minKeptRatioForSweep. The '
-        'parser may have failed to recognise an OFF schema change. '
-        'Catalog data is left intact.',
-      );
-      // Bail without sweeping; raise an error the bloc can surface
-      // recoverably so the user can retry or update the app.
-      throw const CatalogSweepGuardException();
-    }
-    final sweptCount = await _local.deleteStaleRows(buildStartedAtMillis);
-    if (sweptCount > 0) {
-      _log.info('Swept $sweptCount stale rows from prior build');
-    }
-    await _csvDump.deleteCachedFile();
-    final stored = await _local.count();
-    await _local.setMeta(OfflineCatalogDataSource.metaKeyBuildCursor, null);
-    await _local.setMeta(
       OfflineCatalogDataSource.metaKeyLastFullSync,
       DateTime.now().millisecondsSinceEpoch.toString(),
     );
+    final stored = await _local.count();
     await _local.setMeta(
       OfflineCatalogDataSource.metaKeyTotalCount,
       stored.toString(),
     );
-    _log.info('Catalog build complete: $stored rows on disk');
+    _log.info('Catalog install complete: $stored rows on disk');
   }
 
-  Future<bool> _isCachedDumpFresh() async {
-    if (!await _csvDump.hasLocalFile()) return false;
-    final file = await _csvDump.resolveLocalFile();
-    final mtime = await file.lastModified();
-    final age = DateTime.now().difference(mtime);
-    if (age > _cachedDumpFreshness) return false;
-    // Sanity check: every byte must be on disk (not a partial
-    // download from an interrupted session). With the parallel
-    // downloader the file is sparse-pre-allocated to its full
-    // size from the moment the first worker starts, so file.length
-    // is no longer a useful "is it complete?" signal — we ask the
-    // data source for the sidecar-aware byte count instead.
-    final localBytes = await _csvDump.downloadedBytes();
-    final remoteBytes = await _csvDump.headTotalBytes();
-    if (remoteBytes == null) return false;
-    return localBytes >= remoteBytes;
-  }
-
-  /// Incremental refresh against the same filter set last used.
-  /// Uses the API paginator (small queries are still healthy on the
-  /// legacy CGI). Does not currently delete rows OFF has marked
-  /// obsolete — that would require a second pass we'll add when
-  /// there's evidence the catalogue drifts.
+  /// Re-download whatever variant the user last installed. Intended
+  /// for the settings-tile Refresh button: same progress UI as a
+  /// first build, no filter re-selection needed. The CDN serves a
+  /// fresh weekly artefact so the user picks up new products without
+  /// re-running the wizard.
   Stream<DownloadProgress> refresh({
     required CancellationToken cancellation,
   }) async* {
-    final filtersJson =
-        await _local.getMeta(OfflineCatalogDataSource.metaKeyFiltersJson);
-    final lastSyncRaw =
-        await _local.getMeta(OfflineCatalogDataSource.metaKeyLastFullSync);
-    if (filtersJson == null || lastSyncRaw == null) {
-      throw StateError('Cannot refresh: catalog has not been built');
-    }
-    final lastSyncMillis = int.parse(lastSyncRaw);
-    final originalFilters = _deserialiseFilters(filtersJson);
-    final lastSyncSeconds = lastSyncMillis ~/ 1000;
-    final refreshFilters = originalFilters.copyWith(
-      maxAge: Duration(
-        seconds: DateTime.now().millisecondsSinceEpoch ~/ 1000 - lastSyncSeconds,
-      ),
-    );
-
-    final pageSize = OffBulkApiDataSource.defaultPageSize;
-    final totalRows = await _remote.estimateCount(refreshFilters);
-    if (totalRows == 0) {
-      _log.info('Refresh found no new or modified rows');
-      await _local.setMeta(
-        OfflineCatalogDataSource.metaKeyLastFullSync,
-        DateTime.now().millisecondsSinceEpoch.toString(),
+    final filters = await getPersistedFilters();
+    if (filters == null) {
+      throw StateError(
+        'Cannot refresh: catalog has not been built yet',
       );
-      return;
     }
-
-    final totalPages = (totalRows / pageSize).ceil();
-    final stopwatch = Stopwatch()..start();
-    var rowsScanned = 0;
-    var rowsKept = 0;
-
-    for (var page = 1; page <= totalPages; page++) {
-      cancellation.throwIfCancelled();
-      final fetched = await _remote.fetchPage(
-        filters: refreshFilters,
-        pageNumber: page,
-        pageSize: pageSize,
-      );
-      await _local.upsertBatch(fetched.products);
-      rowsScanned += pageSize;
-      rowsKept += fetched.products.length;
-      yield DownloadProgress(
-        // Refresh is fast and small — we report it as a "parsing"
-        // phase so the UI uses the rows-progress view rather than
-        // the bytes-progress view.
-        phase: DownloadPhase.parsing,
-        bytesDone: rowsScanned,
-        bytesTotal: totalRows,
-        rowsKept: rowsKept,
-        rowsScanned: rowsScanned,
-        elapsed: stopwatch.elapsed,
-      );
-      if (fetched.isLast) break;
-    }
-
-    await _local.setMeta(
-      OfflineCatalogDataSource.metaKeyLastFullSync,
-      DateTime.now().millisecondsSinceEpoch.toString(),
-    );
-    final newTotal = await _local.count();
-    await _local.setMeta(
-      OfflineCatalogDataSource.metaKeyTotalCount,
-      newTotal.toString(),
-    );
+    yield* build(filters: filters, cancellation: cancellation);
   }
 
   /// Snapshot for the settings tile and wizard's idle/done pages.
@@ -417,11 +208,64 @@ class OfflineCatalogRepository {
     );
   }
 
+  /// The filter set the user last completed. Recovery hierarchy:
+  ///
+  /// 1. Live catalog's `catalog_meta.filters_json` — set by the
+  ///    repository after a successful install.
+  /// 2. Partial download's URL — the variant id parses back into a
+  ///    filter set when only a paused download is sitting on disk
+  ///    and the live catalog doesn't yet exist.
+  /// 3. Row-count inference against the variant sizing table — for
+  ///    catalogs that landed on disk before this code wrote a
+  ///    `filters_json` meta entry (a transient state from earlier
+  ///    install bugs). Each variant has a distinctive row count, so
+  ///    the closest match is unambiguous.
   Future<CatalogFilterEntity?> getPersistedFilters() async {
     final filtersJson =
         await _local.getMeta(OfflineCatalogDataSource.metaKeyFiltersJson);
-    if (filtersJson == null) return null;
-    return _deserialiseFilters(filtersJson);
+    if (filtersJson != null) {
+      return _deserialiseFilters(filtersJson);
+    }
+    // Fall back to the partial download. The user paused a build that
+    // is mid-flight and we have nothing in catalog_meta yet (because
+    // the file hasn't been renamed into place).
+    for (final variantId in _kVariantSizing.keys) {
+      if (await _download.hasResumeablePartial(variantId)) {
+        return CatalogFilterEntity.fromVariantId(variantId);
+      }
+    }
+    // Last resort: infer from row count. A catalog file is on disk
+    // and populated, but the meta entry is missing — possibly from a
+    // user who upgraded through a release where the post-install
+    // meta-write step crashed. Pick the variant whose expected row
+    // count is closest to what's actually on disk; the natural drift
+    // between weekly rebuilds is well within the gap between any two
+    // variants in the table, so the closest match is decisive.
+    final stored = await _local.count();
+    if (stored == 0) return null;
+    String? bestMatch;
+    var bestDelta = double.infinity;
+    for (final entry in _kVariantSizing.entries) {
+      final delta = (entry.value.rows - stored).abs().toDouble();
+      if (delta < bestDelta) {
+        bestDelta = delta;
+        bestMatch = entry.key;
+      }
+    }
+    if (bestMatch == null) return null;
+    final inferred = CatalogFilterEntity.fromVariantId(bestMatch);
+    if (inferred == null) return null;
+    // Backfill the meta entry so subsequent calls hit the fast path
+    // and the catalog is no longer in the orphan state.
+    await _local.setMeta(
+      OfflineCatalogDataSource.metaKeyFiltersJson,
+      _serialiseFilters(inferred),
+    );
+    _log.info(
+      'Inferred catalog filters from row count: $stored rows '
+      '→ variant $bestMatch (delta $bestDelta); meta backfilled',
+    );
+    return inferred;
   }
 
   Future<OFFProductDTO?> getByCode(String code) => _local.getByCode(code);
@@ -429,49 +273,42 @@ class OfflineCatalogRepository {
   Future<List<OFFProductDTO>> searchByText(String query, {int limit = 50}) =>
       _local.searchByText(query, limit: limit);
 
-  /// Drop the catalog AND any cached CSV download.
+  /// Drop the catalog AND any partial download artefacts.
   Future<void> delete() async {
     await _local.clear();
-    await _csvDump.deleteCachedFile();
+    await _download.cleanupPartials();
   }
 
-  /// True when there's a paused build to resume — either a partial
-  /// CSV download on disk, or a build_cursor recording phase=parsing.
+  /// True when there's a partial download on disk to resume. The
+  /// presence of a `.tmp.gz` plus its sidecar is the signal — when
+  /// either is missing, there is no meaningful resume.
   Future<bool> hasResumeableBuild() async {
-    final cursor =
-        await _local.getMeta(OfflineCatalogDataSource.metaKeyBuildCursor);
-    return cursor != null;
+    for (final variantId in _kVariantSizing.keys) {
+      if (await _download.hasResumeablePartial(variantId)) {
+        return true;
+      }
+    }
+    return false;
   }
 
   String _serialiseFilters(CatalogFilterEntity filters) {
     return jsonEncode({
-      'countries': filters.countries.toList()..sort(),
       'requireNutritionGrade': filters.requireNutritionGrade,
       'requireMinPopularity': filters.requireMinPopularity,
       'maxAgeSeconds': filters.maxAge?.inSeconds,
+      'variantId': filters.toVariantId(),
     });
   }
 
   CatalogFilterEntity _deserialiseFilters(String raw) {
     final map = jsonDecode(raw) as Map<String, dynamic>;
-    final countries = (map['countries'] as List<dynamic>).cast<String>();
     final maxAgeSecondsRaw = map['maxAgeSeconds'];
     return CatalogFilterEntity(
-      countries: countries.toSet(),
-      requireNutritionGrade:
-          (map['requireNutritionGrade'] as bool?) ?? true,
+      requireNutritionGrade: (map['requireNutritionGrade'] as bool?) ?? true,
       requireMinPopularity: (map['requireMinPopularity'] as bool?) ?? true,
       maxAge: maxAgeSecondsRaw is int
           ? Duration(seconds: maxAgeSecondsRaw)
           : null,
     );
   }
-
-  /// SHA-1 of the canonical filter JSON. Strong enough to make
-  /// collisions effectively impossible (the alternative would be
-  /// `String.hashCode`, which has well-known collision pairs that
-  /// could in principle let a "Resume" land on a build that the
-  /// user originally started with a different filter set).
-  String _hashFilters(String json) =>
-      sha1.convert(utf8.encode(json)).toString();
 }

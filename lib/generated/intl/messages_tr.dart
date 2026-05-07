@@ -65,18 +65,11 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m19(count) => "${count} ürün";
 
-  static String m20(phrase) =>
-      "Filtrelerin bir milyondan fazla ürünü kapsıyor. Bu çok bant genişliği ve çok zaman demek. Devam etmek için aşağıdaki kutuya „${phrase}\" yaz — bunu yanlışlıkla geçmek yerine bilinçli olarak seçmeni istiyoruz.";
-
-  static String m21(rows, total) =>
-      "${total} ürünün ${rows} tanesi indirildi";
-
-  static String m22(current, total) => "Sayfa ${current} / ${total}";
+  static String m21(done, total) => "${total} içinden ${done} indirildi";
 
   static String m23(time) => "Yaklaşık ${time} kaldı";
 
-  static String m24(rows, total) =>
-      "${total} ürünün ${rows} tanesi indirildi";
+  static String m24(done, total) => "${total} içinden ${done} indirildi";
 
   static String m25(count, size) =>
       "${count} ürün çevrimdışı kullanılabilir. Cihazda ${size}.";
@@ -966,12 +959,15 @@ class MessageLookup extends MessageLookupByLibrary {
         "offlineCatalogDownloadAction":
             MessageLookupByLibrary.simpleMessage("İndir"),
         "offlineCatalogDownloadingBody": MessageLookupByLibrary.simpleMessage(
-            "Bu ekranı açık bırakabilirsin, indirme devam eder. Duraklatır veya iptal edersen şu ana kadar indirilenleri kaydederiz."),
+            "Bu ekranı açık bırakabilirsin — indirme devam eder. Bir ara vermen gerekiyorsa duraklat — ilerlemeni saklarız."),
         "offlineCatalogDownloadingEta": m23,
-        "offlineCatalogDownloadingPage": m22,
         "offlineCatalogDownloadingProgress": m21,
         "offlineCatalogDownloadingTitle":
             MessageLookupByLibrary.simpleMessage("Kataloğun indiriliyor"),
+        "offlineCatalogInstallingTitle":
+            MessageLookupByLibrary.simpleMessage("Kataloğun açılıyor"),
+        "offlineCatalogInstallingBody": MessageLookupByLibrary.simpleMessage(
+            "Az önce indirdiğin dosyayı açıp cihazına yazıyoruz. Genelde sadece birkaç saniye sürer."),
         "offlineCatalogErrorBodyFatal": MessageLookupByLibrary.simpleMessage(
             "Bu indirme tamamlanamadı."),
         "offlineCatalogErrorBodyRecoverable":
@@ -984,15 +980,9 @@ class MessageLookup extends MessageLookupByLibrary {
         "offlineCatalogEstimateBody": MessageLookupByLibrary.simpleMessage(
             "Senin için indireceğimiz şey şu."),
         "offlineCatalogEstimateError": MessageLookupByLibrary.simpleMessage(
-            "Tahmin almak için Open Food Facts\'a ulaşamadık. İnternet bağlantını kontrol et ve yeniden dene."),
-        "offlineCatalogEstimateHardCapBody": m20,
-        "offlineCatalogEstimateHardCapPhrase":
-            MessageLookupByLibrary.simpleMessage("Anlıyorum"),
-        "offlineCatalogEstimateHardCapTitle":
-            MessageLookupByLibrary.simpleMessage(
-                "Bu çok büyük bir indirme"),
+            "İndirme boyutunu hesaplayamadık. Birazdan tekrar dene."),
         "offlineCatalogEstimateRequestsLabel":
-            MessageLookupByLibrary.simpleMessage("Ağ istekleri"),
+            MessageLookupByLibrary.simpleMessage("İndirme boyutu"),
         "offlineCatalogEstimateRowsLabel":
             MessageLookupByLibrary.simpleMessage("Ürünler"),
         "offlineCatalogEstimateSizeLabel":
@@ -1042,27 +1032,12 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Şu süre içinde güncellenmiş"),
         "offlineCatalogQualityTitle":
             MessageLookupByLibrary.simpleMessage("Kalite filtreleri"),
-        "offlineCatalogRegionBody": MessageLookupByLibrary.simpleMessage(
-            "Yalnızca seçtiğin ülkelerle etiketlenmiş ürünler indirilir. Sayılar Open Food Facts\'tan gelir ve zaman içinde değişir."),
-        "offlineCatalogRegionEmpty":
-            MessageLookupByLibrary.simpleMessage("Gösterilecek ülke yok"),
-        "offlineCatalogRegionFallbackNotice":
-            MessageLookupByLibrary.simpleMessage(
-                "Open Food Facts\'a ulaşamadığımız için kısa bir yedek listesi gösteriyoruz. İnternete bağlan ve tüm ülke listesini yüklemek için yenile."),
-        "offlineCatalogRegionNoMatches": MessageLookupByLibrary.simpleMessage(
-            "Aramanla eşleşen ülke yok"),
-        "offlineCatalogRegionRefreshTooltip":
-            MessageLookupByLibrary.simpleMessage("Ülke listesini yenile"),
-        "offlineCatalogRegionSearchHint":
-            MessageLookupByLibrary.simpleMessage("Ülkelerde ara"),
-        "offlineCatalogRegionTitle":
-            MessageLookupByLibrary.simpleMessage("Ülkelerini seç"),
         "offlineCatalogResume":
             MessageLookupByLibrary.simpleMessage("Devam et"),
         "offlineCatalogStartAction":
             MessageLookupByLibrary.simpleMessage("Başla"),
         "offlineCatalogTileBuilding":
-            MessageLookupByLibrary.simpleMessage("Oluşturuluyor…"),
+            MessageLookupByLibrary.simpleMessage("Üzerinde çalışılıyor…"),
         "offlineCatalogTileBuildingPercent": m26,
         "offlineCatalogTileLastRefreshed": m28,
         "offlineCatalogTileNotBuilt": MessageLookupByLibrary.simpleMessage(
@@ -1070,8 +1045,6 @@ class MessageLookup extends MessageLookupByLibrary {
         "offlineCatalogTilePaused": MessageLookupByLibrary.simpleMessage(
             "İndirme duraklatıldı — devam etmek için dokun"),
         "offlineCatalogTileReady": m27,
-        "offlineCatalogTileRefreshing":
-            MessageLookupByLibrary.simpleMessage("Yenileniyor…"),
         "offlineCatalogTimeDaysAgo": m31,
         "offlineCatalogTimeHoursAgo": m32,
         "offlineCatalogTimeJustNow":

@@ -52,16 +52,13 @@ import 'package:opennutritracker/features/add_meal/data/data_sources/sp_fdc_data
 import 'package:opennutritracker/features/add_meal/data/repository/products_repository.dart';
 import 'package:opennutritracker/features/add_meal/domain/usecase/search_products_usecase.dart';
 import 'package:opennutritracker/features/add_meal/presentation/bloc/add_meal_bloc.dart';
-import 'package:opennutritracker/features/offline_catalog/data/data_sources/off_bulk_api_data_source.dart';
-import 'package:opennutritracker/features/offline_catalog/data/data_sources/off_csv_dump_data_source.dart';
-import 'package:opennutritracker/features/offline_catalog/data/data_sources/off_taxonomy_data_source.dart';
+import 'package:opennutritracker/features/offline_catalog/data/data_sources/catalog_download_data_source.dart';
 import 'package:opennutritracker/features/offline_catalog/data/data_sources/offline_catalog_data_source.dart';
 import 'package:opennutritracker/features/offline_catalog/data/repository/offline_catalog_repository.dart';
 import 'package:opennutritracker/features/offline_catalog/domain/usecase/build_catalog_usecase.dart';
 import 'package:opennutritracker/features/offline_catalog/domain/usecase/delete_catalog_usecase.dart';
 import 'package:opennutritracker/features/offline_catalog/domain/usecase/estimate_catalog_usecase.dart';
 import 'package:opennutritracker/features/offline_catalog/domain/usecase/get_catalog_stats_usecase.dart';
-import 'package:opennutritracker/features/offline_catalog/domain/usecase/get_countries_taxonomy_usecase.dart';
 import 'package:opennutritracker/features/offline_catalog/domain/usecase/refresh_catalog_usecase.dart';
 import 'package:opennutritracker/features/offline_catalog/domain/usecase/search_offline_catalog_usecase.dart';
 import 'package:opennutritracker/features/offline_catalog/presentation/bloc/offline_catalog_bloc.dart';
@@ -366,20 +363,11 @@ Future<void> initLocator() async {
   locator.registerLazySingleton<OfflineCatalogDataSource>(
     () => OfflineCatalogDataSource(),
   );
-  locator.registerLazySingleton<OffTaxonomyDataSource>(
-    () => OffTaxonomyDataSource(locator()),
-  );
-  locator.registerLazySingleton<OffBulkApiDataSource>(
-    () => OffBulkApiDataSource(),
-  );
-  locator.registerLazySingleton<OffCsvDumpDataSource>(
-    () => OffCsvDumpDataSource(),
+  locator.registerLazySingleton<CatalogDownloadDataSource>(
+    () => CatalogDownloadDataSource(),
   );
   locator.registerLazySingleton<OfflineCatalogRepository>(
-    () => OfflineCatalogRepository(locator(), locator(), locator()),
-  );
-  locator.registerLazySingleton<GetCountriesTaxonomyUseCase>(
-    () => GetCountriesTaxonomyUseCase(locator()),
+    () => OfflineCatalogRepository(locator(), locator()),
   );
   locator.registerLazySingleton<EstimateCatalogUseCase>(
     () => EstimateCatalogUseCase(locator()),
@@ -400,10 +388,9 @@ Future<void> initLocator() async {
     () => SearchOfflineCatalogUseCase(locator()),
   );
   // Lazy singleton: must outlive the wizard screen so an in-flight
-  // build survives the user navigating away and back.
+  // download survives the user navigating away and back.
   locator.registerLazySingleton<OfflineCatalogBloc>(
     () => OfflineCatalogBloc(
-      locator(),
       locator(),
       locator(),
       locator(),

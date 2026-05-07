@@ -4,31 +4,16 @@ import 'package:opennutritracker/features/offline_catalog/domain/entity/catalog_
 import 'package:opennutritracker/features/offline_catalog/presentation/bloc/offline_catalog_bloc.dart';
 import 'package:opennutritracker/generated/l10n.dart';
 
-/// Page 4 of the wizard. Reads the live count for the user's filter
-/// set from the bloc and shows estimated rows, on-disk size, request
-/// count, and time. Above-cap estimates require typed confirmation
-/// before the build can start.
-class EstimateConfirmWizardPage extends StatefulWidget {
-  final ValueChanged<bool> onConfirmedChanged;
-
-  const EstimateConfirmWizardPage({
-    super.key,
-    required this.onConfirmedChanged,
-  });
-
-  @override
-  State<EstimateConfirmWizardPage> createState() =>
-      _EstimateConfirmWizardPageState();
-}
-
-class _EstimateConfirmWizardPageState extends State<EstimateConfirmWizardPage> {
-  final _typedConfirmController = TextEditingController();
-
-  @override
-  void dispose() {
-    _typedConfirmController.dispose();
-    super.dispose();
-  }
+/// Page 3 of the wizard. Reads the static estimate for the user's
+/// filter set from the bloc and shows expected products, on-disk
+/// size, download size, and a rough ETA.
+///
+/// The pivot to download-prebuilt removed the typed-confirmation
+/// footgun the old above-hard-cap path used — every variant is now a
+/// well-bounded prebuilt artefact, the largest is ~520 MB compressed,
+/// and the user makes an informed choice from the summary alone.
+class EstimateConfirmWizardPage extends StatelessWidget {
+  const EstimateConfirmWizardPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -71,22 +56,19 @@ class _EstimateConfirmWizardPageState extends State<EstimateConfirmWizardPage> {
         const SizedBox(height: 8),
         Text(s.offlineCatalogEstimateBody, style: theme.textTheme.bodyMedium),
         const SizedBox(height: 24),
-        // Roughly how many products we expect to keep on disk after
-        // the wizard's filter set runs over the CSV stream.
+        // Roughly how many products this variant carries.
         _SummaryRow(
           icon: Icons.storage,
           label: s.offlineCatalogEstimateRowsLabel,
           value: '~${_formatRows(estimate.rows)}',
         ),
-        // On-disk size of the resulting sqlite catalog.
+        // On-disk size of the resulting sqlite catalog (uncompressed).
         _SummaryRow(
           icon: Icons.sd_storage,
           label: s.offlineCatalogEstimateSizeLabel,
           value: _formatBytes(estimate.estimatedBytes),
         ),
-        // [requests] now carries the total *download* bytes (the
-        // CSV gzip from OFF). The legacy "network requests" label
-        // is recycled as a "download" line; the icon hints at it.
+        // Download bytes (compressed gzip from the catalog CDN).
         _SummaryRow(
           icon: Icons.cloud_download,
           label: s.offlineCatalogEstimateRequestsLabel,
@@ -112,56 +94,7 @@ class _EstimateConfirmWizardPageState extends State<EstimateConfirmWizardPage> {
             ],
           ),
         ),
-        if (estimate.isAboveHardCap) ...[
-          const SizedBox(height: 16),
-          _buildHardCapWarning(context),
-        ],
       ],
-    );
-  }
-
-  Widget _buildHardCapWarning(BuildContext context) {
-    final theme = Theme.of(context);
-    final s = S.of(context);
-    final phrase = s.offlineCatalogEstimateHardCapPhrase;
-    return Container(
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: theme.colorScheme.errorContainer,
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Icon(Icons.warning, color: theme.colorScheme.error),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Text(
-                  s.offlineCatalogEstimateHardCapTitle,
-                  style: const TextStyle(fontWeight: FontWeight.bold),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 8),
-          Text(s.offlineCatalogEstimateHardCapBody(phrase)),
-          const SizedBox(height: 12),
-          TextField(
-            controller: _typedConfirmController,
-            decoration: InputDecoration(
-              hintText: phrase,
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8),
-              ),
-            ),
-            onChanged: (value) {
-              widget.onConfirmedChanged(value.trim() == phrase);
-            },
-          ),
-        ],
-      ),
     );
   }
 

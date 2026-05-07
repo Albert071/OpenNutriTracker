@@ -63,16 +63,11 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m19(count) => "${count} produktů";
 
-  static String m20(phrase) =>
-      "Tvé filtry pokrývají přes milion produktů. To je hodně dat a hodně času. Pro pokračování napiš „${phrase}\" do pole níže — chceme, abys to zvolil aktivně, ne omylem.";
-
-  static String m21(rows, total) => "Staženo ${rows} z ${total} produktů";
-
-  static String m22(current, total) => "Stránka ${current} z ${total}";
+  static String m21(done, total) => "Staženo ${done} z ${total}";
 
   static String m23(time) => "Zbývá asi ${time}";
 
-  static String m24(rows, total) => "Staženo ${rows} z ${total} produktů";
+  static String m24(done, total) => "Staženo ${done} z ${total}";
 
   static String m25(count, size) =>
       "${count} produktů dostupných offline. ${size} na zařízení.";
@@ -975,12 +970,15 @@ class MessageLookup extends MessageLookupByLibrary {
         "offlineCatalogDownloadAction":
             MessageLookupByLibrary.simpleMessage("Stáhnout"),
         "offlineCatalogDownloadingBody": MessageLookupByLibrary.simpleMessage(
-            "Můžeš nechat tuto obrazovku otevřenou a stahování bude pokračovat. Pokud pozastavíš nebo zrušíš, uložíme to, co bylo dosud staženo."),
+            "Tuto obrazovku můžeš nechat otevřenou — stahování pokračuje. Pozastav, pokud si potřebuješ odskočit, tvůj postup zachováme."),
         "offlineCatalogDownloadingEta": m23,
-        "offlineCatalogDownloadingPage": m22,
         "offlineCatalogDownloadingProgress": m21,
         "offlineCatalogDownloadingTitle":
             MessageLookupByLibrary.simpleMessage("Stahujeme tvůj katalog"),
+        "offlineCatalogInstallingTitle":
+            MessageLookupByLibrary.simpleMessage("Rozbalujeme tvůj katalog"),
+        "offlineCatalogInstallingBody": MessageLookupByLibrary.simpleMessage(
+            "Rozbalujeme to, co se právě stáhlo, a zapisujeme to do tvého zařízení. Obvykle to trvá jen pár sekund."),
         "offlineCatalogErrorBodyFatal": MessageLookupByLibrary.simpleMessage(
             "Toto stahování se nepodařilo dokončit."),
         "offlineCatalogErrorBodyRecoverable":
@@ -993,15 +991,9 @@ class MessageLookup extends MessageLookupByLibrary {
         "offlineCatalogEstimateBody": MessageLookupByLibrary.simpleMessage(
             "Toto pro tebe stáhneme."),
         "offlineCatalogEstimateError": MessageLookupByLibrary.simpleMessage(
-            "Nepodařilo se kontaktovat Open Food Facts pro odhad. Zkontroluj připojení k internetu a zkus to znovu."),
-        "offlineCatalogEstimateHardCapBody": m20,
-        "offlineCatalogEstimateHardCapPhrase":
-            MessageLookupByLibrary.simpleMessage("Rozumím"),
-        "offlineCatalogEstimateHardCapTitle":
-            MessageLookupByLibrary.simpleMessage(
-                "Toto je velmi velké stahování"),
+            "Nepodařilo se zjistit velikost stahování. Zkus to za chvíli znovu."),
         "offlineCatalogEstimateRequestsLabel":
-            MessageLookupByLibrary.simpleMessage("Síťové požadavky"),
+            MessageLookupByLibrary.simpleMessage("Velikost stahování"),
         "offlineCatalogEstimateRowsLabel":
             MessageLookupByLibrary.simpleMessage("Produkty"),
         "offlineCatalogEstimateSizeLabel":
@@ -1051,27 +1043,12 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Aktualizováno za posledních"),
         "offlineCatalogQualityTitle":
             MessageLookupByLibrary.simpleMessage("Filtry kvality"),
-        "offlineCatalogRegionBody": MessageLookupByLibrary.simpleMessage(
-            "Stáhnou se jen produkty označené vybranými zeměmi. Počty pocházejí z Open Food Facts a v čase se mění."),
-        "offlineCatalogRegionEmpty":
-            MessageLookupByLibrary.simpleMessage("Žádné země k zobrazení"),
-        "offlineCatalogRegionFallbackNotice":
-            MessageLookupByLibrary.simpleMessage(
-                "Zobrazujeme krátký záložní seznam, protože jsme nemohli kontaktovat Open Food Facts. Připoj se k internetu a obnov, abys načetl plný seznam zemí."),
-        "offlineCatalogRegionNoMatches": MessageLookupByLibrary.simpleMessage(
-            "Žádné země neodpovídají hledání"),
-        "offlineCatalogRegionRefreshTooltip":
-            MessageLookupByLibrary.simpleMessage("Obnovit seznam zemí"),
-        "offlineCatalogRegionSearchHint":
-            MessageLookupByLibrary.simpleMessage("Hledat země"),
-        "offlineCatalogRegionTitle":
-            MessageLookupByLibrary.simpleMessage("Vyber země"),
         "offlineCatalogResume":
             MessageLookupByLibrary.simpleMessage("Obnovit"),
         "offlineCatalogStartAction":
             MessageLookupByLibrary.simpleMessage("Začít"),
         "offlineCatalogTileBuilding":
-            MessageLookupByLibrary.simpleMessage("Vytváří se…"),
+            MessageLookupByLibrary.simpleMessage("Pracujeme na tom…"),
         "offlineCatalogTileBuildingPercent": m26,
         "offlineCatalogTileLastRefreshed": m28,
         "offlineCatalogTileNotBuilt": MessageLookupByLibrary.simpleMessage(
@@ -1079,8 +1056,6 @@ class MessageLookup extends MessageLookupByLibrary {
         "offlineCatalogTilePaused": MessageLookupByLibrary.simpleMessage(
             "Stahování pozastaveno — klepni pro obnovení"),
         "offlineCatalogTileReady": m27,
-        "offlineCatalogTileRefreshing":
-            MessageLookupByLibrary.simpleMessage("Aktualizuje se…"),
         "offlineCatalogTimeDaysAgo": m31,
         "offlineCatalogTimeHoursAgo": m32,
         "offlineCatalogTimeJustNow":

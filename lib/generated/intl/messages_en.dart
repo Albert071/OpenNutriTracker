@@ -66,18 +66,11 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m19(count) => "${count} products";
 
-  static String m20(phrase) =>
-      "Your filter set covers more than a million products. That is a lot of bandwidth and a lot of time. To continue, type \"${phrase}\" in the box below — we want you to actively choose this rather than tap through it by accident.";
-
-  static String m21(rows, total) =>
-      "Downloaded ${rows} of ${total} products";
-
-  static String m22(current, total) => "Page ${current} of ${total}";
+  static String m21(done, total) => "Downloaded ${done} of ${total}";
 
   static String m23(time) => "About ${time} left";
 
-  static String m24(rows, total) =>
-      "${rows} of ${total} products downloaded";
+  static String m24(done, total) => "${done} of ${total} downloaded";
 
   static String m25(count, size) =>
       "${count} products available offline. ${size} on disk.";
@@ -1006,12 +999,15 @@ class MessageLookup extends MessageLookupByLibrary {
         "offlineCatalogDownloadAction":
             MessageLookupByLibrary.simpleMessage("Download"),
         "offlineCatalogDownloadingBody": MessageLookupByLibrary.simpleMessage(
-            "You can leave this screen open and the download will keep going. We will save what we have downloaded so far if you pause or cancel."),
+            "You can leave this screen open and the download keeps going. Pause if you need to step away — we'll keep your progress."),
         "offlineCatalogDownloadingEta": m23,
-        "offlineCatalogDownloadingPage": m22,
         "offlineCatalogDownloadingProgress": m21,
         "offlineCatalogDownloadingTitle":
             MessageLookupByLibrary.simpleMessage("Downloading your catalog"),
+        "offlineCatalogInstallingTitle":
+            MessageLookupByLibrary.simpleMessage("Unpacking your catalog"),
+        "offlineCatalogInstallingBody": MessageLookupByLibrary.simpleMessage(
+            "We're decompressing what you just downloaded and writing it to your device. This usually takes a few seconds."),
         "offlineCatalogErrorBodyFatal": MessageLookupByLibrary.simpleMessage(
             "We could not finish this download."),
         "offlineCatalogErrorBodyRecoverable":
@@ -1024,15 +1020,9 @@ class MessageLookup extends MessageLookupByLibrary {
         "offlineCatalogEstimateBody": MessageLookupByLibrary.simpleMessage(
             "Here is what we will download for you."),
         "offlineCatalogEstimateError": MessageLookupByLibrary.simpleMessage(
-            "We could not reach Open Food Facts to get an estimate. Check your internet connection and try again."),
-        "offlineCatalogEstimateHardCapBody": m20,
-        "offlineCatalogEstimateHardCapPhrase":
-            MessageLookupByLibrary.simpleMessage("I understand"),
-        "offlineCatalogEstimateHardCapTitle":
-            MessageLookupByLibrary.simpleMessage(
-                "This is a very large download"),
+            "We couldn't work out the download size. Try again in a moment."),
         "offlineCatalogEstimateRequestsLabel":
-            MessageLookupByLibrary.simpleMessage("Network requests"),
+            MessageLookupByLibrary.simpleMessage("Download size"),
         "offlineCatalogEstimateRowsLabel":
             MessageLookupByLibrary.simpleMessage("Products"),
         "offlineCatalogEstimateSizeLabel":
@@ -1080,26 +1070,11 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Updated within"),
         "offlineCatalogQualityTitle":
             MessageLookupByLibrary.simpleMessage("Quality filters"),
-        "offlineCatalogRegionBody": MessageLookupByLibrary.simpleMessage(
-            "Only products tagged with the countries you choose will be downloaded. Counts come from Open Food Facts and update over time."),
-        "offlineCatalogRegionEmpty":
-            MessageLookupByLibrary.simpleMessage("No countries to show"),
-        "offlineCatalogRegionFallbackNotice":
-            MessageLookupByLibrary.simpleMessage(
-                "Showing a short fallback list because we could not reach Open Food Facts. Connect to the internet and refresh to load the full country list."),
-        "offlineCatalogRegionNoMatches": MessageLookupByLibrary.simpleMessage(
-            "No countries match your search"),
-        "offlineCatalogRegionRefreshTooltip":
-            MessageLookupByLibrary.simpleMessage("Refresh country list"),
-        "offlineCatalogRegionSearchHint":
-            MessageLookupByLibrary.simpleMessage("Search countries"),
-        "offlineCatalogRegionTitle":
-            MessageLookupByLibrary.simpleMessage("Pick your countries"),
         "offlineCatalogResume": MessageLookupByLibrary.simpleMessage("Resume"),
         "offlineCatalogStartAction":
             MessageLookupByLibrary.simpleMessage("Get started"),
         "offlineCatalogTileBuilding":
-            MessageLookupByLibrary.simpleMessage("Building…"),
+            MessageLookupByLibrary.simpleMessage("Working on it…"),
         "offlineCatalogTileBuildingPercent": m26,
         "offlineCatalogTileLastRefreshed": m28,
         "offlineCatalogTileNotBuilt": MessageLookupByLibrary.simpleMessage(
@@ -1107,8 +1082,6 @@ class MessageLookup extends MessageLookupByLibrary {
         "offlineCatalogTilePaused": MessageLookupByLibrary.simpleMessage(
             "Download paused — tap to resume"),
         "offlineCatalogTileReady": m27,
-        "offlineCatalogTileRefreshing":
-            MessageLookupByLibrary.simpleMessage("Refreshing…"),
         "offlineCatalogTimeDaysAgo": m31,
         "offlineCatalogTimeHoursAgo": m32,
         "offlineCatalogTimeJustNow":

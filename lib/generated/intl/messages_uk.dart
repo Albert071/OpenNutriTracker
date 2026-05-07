@@ -63,18 +63,11 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m19(count) => "${count} продуктів";
 
-  static String m20(phrase) =>
-      "Твої фільтри охоплюють понад мільйон продуктів. Це багато трафіку та багато часу. Щоб продовжити, введи „${phrase}\" у поле нижче — ми хочемо, щоб ти обрав це свідомо, а не випадково.";
-
-  static String m21(rows, total) =>
-      "Завантажено ${rows} з ${total} продуктів";
-
-  static String m22(current, total) => "Сторінка ${current} з ${total}";
+  static String m21(done, total) => "Завантажено ${done} з ${total}";
 
   static String m23(time) => "Залишилося приблизно ${time}";
 
-  static String m24(rows, total) =>
-      "Завантажено ${rows} з ${total} продуктів";
+  static String m24(done, total) => "Завантажено ${done} з ${total}";
 
   static String m25(count, size) =>
       "${count} продуктів доступні офлайн. ${size} на пристрої.";
@@ -987,12 +980,15 @@ class MessageLookup extends MessageLookupByLibrary {
         "offlineCatalogDownloadAction":
             MessageLookupByLibrary.simpleMessage("Завантажити"),
         "offlineCatalogDownloadingBody": MessageLookupByLibrary.simpleMessage(
-            "Можеш залишити цей екран відкритим, завантаження триватиме. Якщо призупиниш або скасуєш, ми збережемо те, що завантажено досі."),
+            "Можеш залишити цей екран відкритим — завантаження триватиме. Призупини, якщо потрібно відійти — твій прогрес збережемо."),
         "offlineCatalogDownloadingEta": m23,
-        "offlineCatalogDownloadingPage": m22,
         "offlineCatalogDownloadingProgress": m21,
         "offlineCatalogDownloadingTitle":
             MessageLookupByLibrary.simpleMessage("Завантажуємо твій каталог"),
+        "offlineCatalogInstallingTitle":
+            MessageLookupByLibrary.simpleMessage("Розпаковуємо твій каталог"),
+        "offlineCatalogInstallingBody": MessageLookupByLibrary.simpleMessage(
+            "Розпаковуємо щойно завантажене та записуємо на твій пристрій. Зазвичай це триває лише кілька секунд."),
         "offlineCatalogErrorBodyFatal": MessageLookupByLibrary.simpleMessage(
             "Не вдалося завершити це завантаження."),
         "offlineCatalogErrorBodyRecoverable":
@@ -1005,15 +1001,9 @@ class MessageLookup extends MessageLookupByLibrary {
         "offlineCatalogEstimateBody": MessageLookupByLibrary.simpleMessage(
             "Ось що ми для тебе завантажимо."),
         "offlineCatalogEstimateError": MessageLookupByLibrary.simpleMessage(
-            "Не вдалося зв\'язатися з Open Food Facts для отримання оцінки. Перевір з\'єднання з інтернетом і спробуй ще раз."),
-        "offlineCatalogEstimateHardCapBody": m20,
-        "offlineCatalogEstimateHardCapPhrase":
-            MessageLookupByLibrary.simpleMessage("Розумію"),
-        "offlineCatalogEstimateHardCapTitle":
-            MessageLookupByLibrary.simpleMessage(
-                "Це дуже велике завантаження"),
+            "Не вдалося визначити розмір завантаження. Спробуй ще раз за хвилину."),
         "offlineCatalogEstimateRequestsLabel":
-            MessageLookupByLibrary.simpleMessage("Мережеві запити"),
+            MessageLookupByLibrary.simpleMessage("Розмір завантаження"),
         "offlineCatalogEstimateRowsLabel":
             MessageLookupByLibrary.simpleMessage("Продукти"),
         "offlineCatalogEstimateSizeLabel":
@@ -1063,27 +1053,12 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Оновлено за останні"),
         "offlineCatalogQualityTitle":
             MessageLookupByLibrary.simpleMessage("Фільтри якості"),
-        "offlineCatalogRegionBody": MessageLookupByLibrary.simpleMessage(
-            "Завантажаться лише продукти, позначені обраними країнами. Підрахунки беруться з Open Food Facts і змінюються з часом."),
-        "offlineCatalogRegionEmpty":
-            MessageLookupByLibrary.simpleMessage("Немає країн для показу"),
-        "offlineCatalogRegionFallbackNotice":
-            MessageLookupByLibrary.simpleMessage(
-                "Показуємо короткий резервний список, бо не змогли зв\'язатися з Open Food Facts. Підключися до інтернету та оновлю, щоб завантажити повний список країн."),
-        "offlineCatalogRegionNoMatches": MessageLookupByLibrary.simpleMessage(
-            "Жодна країна не відповідає пошуку"),
-        "offlineCatalogRegionRefreshTooltip":
-            MessageLookupByLibrary.simpleMessage("Оновити список країн"),
-        "offlineCatalogRegionSearchHint":
-            MessageLookupByLibrary.simpleMessage("Шукати країни"),
-        "offlineCatalogRegionTitle":
-            MessageLookupByLibrary.simpleMessage("Обери країни"),
         "offlineCatalogResume":
             MessageLookupByLibrary.simpleMessage("Продовжити"),
         "offlineCatalogStartAction":
             MessageLookupByLibrary.simpleMessage("Почати"),
         "offlineCatalogTileBuilding":
-            MessageLookupByLibrary.simpleMessage("Створюється…"),
+            MessageLookupByLibrary.simpleMessage("Працюємо над цим…"),
         "offlineCatalogTileBuildingPercent": m26,
         "offlineCatalogTileLastRefreshed": m28,
         "offlineCatalogTileNotBuilt": MessageLookupByLibrary.simpleMessage(
@@ -1091,8 +1066,6 @@ class MessageLookup extends MessageLookupByLibrary {
         "offlineCatalogTilePaused": MessageLookupByLibrary.simpleMessage(
             "Завантаження призупинено — торкнися, щоб продовжити"),
         "offlineCatalogTileReady": m27,
-        "offlineCatalogTileRefreshing":
-            MessageLookupByLibrary.simpleMessage("Оновлюється…"),
         "offlineCatalogTimeDaysAgo": m31,
         "offlineCatalogTimeHoursAgo": m32,
         "offlineCatalogTimeJustNow":

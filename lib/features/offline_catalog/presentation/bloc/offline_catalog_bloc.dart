@@ -4,42 +4,39 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:logging/logging.dart';
 import 'package:opennutritracker/core/data/repository/config_repository.dart';
+import 'package:opennutritracker/features/offline_catalog/data/data_sources/catalog_download_data_source.dart';
 import 'package:opennutritracker/features/offline_catalog/domain/entity/cancellation_token.dart';
 import 'package:opennutritracker/features/offline_catalog/domain/entity/catalog_estimate_entity.dart';
 import 'package:opennutritracker/features/offline_catalog/domain/entity/catalog_filter_entity.dart';
 import 'package:opennutritracker/features/offline_catalog/domain/entity/catalog_stats_entity.dart';
-import 'package:opennutritracker/features/offline_catalog/domain/entity/country_taxonomy_entry.dart';
 import 'package:opennutritracker/features/offline_catalog/domain/entity/download_progress.dart';
 import 'package:opennutritracker/features/offline_catalog/domain/usecase/build_catalog_usecase.dart';
 import 'package:opennutritracker/features/offline_catalog/domain/usecase/delete_catalog_usecase.dart';
 import 'package:opennutritracker/features/offline_catalog/domain/usecase/estimate_catalog_usecase.dart';
 import 'package:opennutritracker/features/offline_catalog/domain/usecase/get_catalog_stats_usecase.dart';
-import 'package:opennutritracker/features/offline_catalog/domain/usecase/get_countries_taxonomy_usecase.dart';
 import 'package:opennutritracker/features/offline_catalog/domain/usecase/refresh_catalog_usecase.dart';
 
 part 'offline_catalog_event.dart';
 part 'offline_catalog_state.dart';
 
-/// Lifecycle bloc for the offline OFF catalog wizard.
+/// Lifecycle bloc for the offline catalog wizard.
 ///
-/// Registered as a **lazy singleton** so an in-flight build survives
+/// Registered as a **lazy singleton** so an in-flight download survives
 /// the wizard screen being popped — the user can navigate away and
 /// come back to find their download still progressing. The bloc owns
 /// a [CancellationToken] for whatever long-running work is currently
 /// running; pause and cancel both flip the token, then the build
-/// stream completes naturally between pages.
+/// stream completes naturally.
 ///
 /// Progress emissions from the underlying repository are throttled to
-/// at most one per second before reaching the state stream. The
-/// repository emits per-page (every 100 rows by default), so without
-/// throttling the UI would rebuild ~10x/sec on a fast connection.
+/// at most one per second before reaching the state stream so the
+/// LinearProgressIndicator does not thrash on a fast connection.
 class OfflineCatalogBloc extends Bloc<OfflineCatalogEvent, OfflineCatalogState> {
   static const _progressEmitInterval = Duration(milliseconds: 1000);
 
   final _log = Logger('OfflineCatalogBloc');
 
   final GetCatalogStatsUseCase _getStats;
-  final GetCountriesTaxonomyUseCase _getCountries;
   final EstimateCatalogUseCase _estimate;
   final BuildCatalogUseCase _build;
   final RefreshCatalogUseCase _refresh;
@@ -50,7 +47,6 @@ class OfflineCatalogBloc extends Bloc<OfflineCatalogEvent, OfflineCatalogState> 
 
   OfflineCatalogBloc(
     this._getStats,
-    this._getCountries,
     this._estimate,
     this._build,
     this._refresh,
@@ -58,7 +54,6 @@ class OfflineCatalogBloc extends Bloc<OfflineCatalogEvent, OfflineCatalogState> 
     this._configRepository,
   ) : super(OfflineCatalogState.initial) {
     on<LoadCatalogStatusEvent>(_onLoadStatus);
-    on<LoadCountriesEvent>(_onLoadCountries);
     on<EstimateCatalogEvent>(_onEstimate);
     on<StartCatalogBuildEvent>(_onStartBuild);
     on<PauseCatalogBuildEvent>(_onPause);
@@ -76,8 +71,7 @@ class OfflineCatalogBloc extends Bloc<OfflineCatalogEvent, OfflineCatalogState> 
     final stats = await _getStats();
     final hasResume = await _build.hasResumeableBuild();
     if (hasResume) {
-      // Resumeable cursor sitting on disk: catalog is mid-build, the
-      // user backgrounded or killed the app. Land on Paused so the
+      // A partial gzip is sitting on disk. Land on Paused so the
       // wizard's download page surfaces a Resume CTA.
       final filters = await _build.getPersistedFilters();
       emit(state.copyWith(
@@ -99,76 +93,26 @@ class OfflineCatalogBloc extends Bloc<OfflineCatalogEvent, OfflineCatalogState> 
 
   /// Catalog "lifecycle" phases — active operations or meaningful
   /// end states. When we're in one of these, wizard-auxiliary
-  /// events (country taxonomy fetch, estimate probe) MUST NOT
-  /// overwrite the lifecycle state with a transient phase like
-  /// `loadingCountries`. Otherwise the download page would lose
-  /// its PausedView / BuildingView and fall through to a bare
-  /// spinner — which is exactly the hang we hit when reopening
-  /// the wizard onto a paused build.
+  /// events (estimate probe) MUST NOT overwrite the lifecycle state
+  /// with a transient phase. Otherwise the download page would lose
+  /// its Paused/Downloading view and fall through to a bare spinner.
   ///
-  /// Notably `idle` is NOT in this set: idle means "no catalog
-  /// yet" and the wizard's normal flow (region page → estimate
-  /// page → start build) should be allowed to transition through
-  /// loadingCountries / estimating / etc. as it always did.
+  /// Notably `idle` is NOT in this set: idle means "no catalog yet"
+  /// and the wizard's normal flow (estimate page → start build)
+  /// should be allowed to transition through `estimating` etc. as
+  /// it always did.
   static bool _isLifecyclePhase(OfflineCatalogPhase phase) {
-    return phase == OfflineCatalogPhase.building ||
+    return phase == OfflineCatalogPhase.downloading ||
+        phase == OfflineCatalogPhase.installing ||
         phase == OfflineCatalogPhase.paused ||
-        phase == OfflineCatalogPhase.refreshing ||
         phase == OfflineCatalogPhase.ready ||
         phase == OfflineCatalogPhase.error;
-  }
-
-  Future<void> _onLoadCountries(
-    LoadCountriesEvent event,
-    Emitter<OfflineCatalogState> emit,
-  ) async {
-    final preservePhase = _isLifecyclePhase(state.phase);
-    emit(state.copyWith(
-      phase: preservePhase
-          ? state.phase
-          : OfflineCatalogPhase.loadingCountries,
-    ));
-    try {
-      final countries = await _getCountries(
-        locale: event.locale,
-        forceRefresh: event.forceRefresh,
-      );
-      // Detect fallback mode by sniffing for the small static list:
-      // when the live fetch fails the data source returns 12 hand-
-      // picked countries. The wizard surfaces an offline notice in
-      // that case.
-      final fromFallback = countries.length <= 12;
-      emit(state.copyWith(
-        phase: preservePhase
-            ? state.phase
-            : OfflineCatalogPhase.countriesLoaded,
-        countries: countries,
-        countriesFromFallback: fromFallback,
-        // Clearing the error when we have a meaningful lifecycle
-        // phase would mask catalog-side errors that the user still
-        // needs to see.
-        clearError: !preservePhase,
-      ));
-    } catch (e, stack) {
-      _log.warning('LoadCountries failed', e, stack);
-      // If we have a meaningful lifecycle running, swallow this —
-      // the user is dealing with the catalog, not the country
-      // picker, and we don't want a taxonomy 503 to derail them.
-      if (preservePhase) return;
-      emit(state.copyWith(
-        phase: OfflineCatalogPhase.error,
-        errorMessage: e.toString(),
-        errorRecoverable: true,
-      ));
-    }
   }
 
   Future<void> _onEstimate(
     EstimateCatalogEvent event,
     Emitter<OfflineCatalogState> emit,
   ) async {
-    // Same lifecycle protection as _onLoadCountries — never let an
-    // estimate probe overwrite a paused / building / ready state.
     if (_isLifecyclePhase(state.phase)) {
       _log.fine(
         'Skipping estimate; catalog lifecycle phase ${state.phase} '
@@ -212,12 +156,7 @@ class OfflineCatalogBloc extends Bloc<OfflineCatalogEvent, OfflineCatalogState> 
     // Resume always uses the on-disk filter set captured when the
     // paused build was originally started. The bloc deliberately
     // ignores [state.activeFilters] here — that's the user's
-    // current wizard selection, which may have drifted away from
-    // what's actually being resumed (paused with UK selected,
-    // navigated back, picked France, hit Resume → without this
-    // pin, we'd silently swap mid-build). If the user wants
-    // different filters, they have to Cancel and start over from
-    // the wizard.
+    // current wizard selection, which may have drifted.
     final filters = await _build.getPersistedFilters();
     if (filters == null) {
       emit(state.copyWith(
@@ -230,6 +169,74 @@ class OfflineCatalogBloc extends Bloc<OfflineCatalogEvent, OfflineCatalogState> 
     await _runBuild(filters, emit, isResume: true);
   }
 
+  Future<void> _onRefresh(
+    RefreshCatalogEvent event,
+    Emitter<OfflineCatalogState> emit,
+  ) async {
+    // Refresh re-runs the download for the persisted variant. The
+    // inner stream is the same `build` pipeline, so the UI uses the
+    // same downloading/installing phases as a first install.
+    final token = CancellationToken();
+    _activeToken = token;
+    emit(state.copyWith(
+      phase: OfflineCatalogPhase.downloading,
+      clearError: true,
+      clearProgress: true,
+    ));
+    DateTime lastEmit = DateTime.fromMillisecondsSinceEpoch(0);
+    DownloadProgress? lastProgress;
+    try {
+      await for (final progress in _refresh(cancellation: token)) {
+        lastProgress = progress;
+        final targetPhase = _phaseForProgress(progress);
+        if (state.phase != OfflineCatalogPhase.downloading &&
+            state.phase != OfflineCatalogPhase.installing) {
+          continue;
+        }
+        final now = DateTime.now();
+        if (now.difference(lastEmit) >= _progressEmitInterval ||
+            targetPhase != state.phase) {
+          lastEmit = now;
+          emit(state.copyWith(phase: targetPhase, progress: progress));
+        }
+      }
+      if (lastProgress != null &&
+          (state.phase == OfflineCatalogPhase.downloading ||
+              state.phase == OfflineCatalogPhase.installing)) {
+        emit(state.copyWith(
+          phase: _phaseForProgress(lastProgress),
+          progress: lastProgress,
+        ));
+      }
+      final stats = await _getStats();
+      emit(state.copyWith(
+        phase: OfflineCatalogPhase.ready,
+        stats: stats,
+        clearProgress: true,
+      ));
+    } on CancellationException {
+      final stats = await _getStats();
+      emit(state.copyWith(
+        phase: stats.isPopulated
+            ? OfflineCatalogPhase.ready
+            : OfflineCatalogPhase.idle,
+        stats: stats,
+        clearProgress: true,
+      ));
+    } catch (e, stack) {
+      _log.warning('Refresh failed', e, stack);
+      emit(state.copyWith(
+        phase: OfflineCatalogPhase.error,
+        errorMessage: e.toString(),
+        // Same reasoning as in _runBuild: a schema-version mismatch
+        // is permanent until the app updates, so don't offer retry.
+        errorRecoverable: e is! CatalogSchemaVersionException,
+      ));
+    } finally {
+      if (identical(_activeToken, token)) _activeToken = null;
+    }
+  }
+
   Future<void> _runBuild(
     CatalogFilterEntity filters,
     Emitter<OfflineCatalogState> emit, {
@@ -239,7 +246,7 @@ class OfflineCatalogBloc extends Bloc<OfflineCatalogEvent, OfflineCatalogState> 
     _activeToken = token;
 
     emit(state.copyWith(
-      phase: OfflineCatalogPhase.building,
+      phase: OfflineCatalogPhase.downloading,
       activeFilters: filters,
       clearError: true,
     ));
@@ -253,29 +260,33 @@ class OfflineCatalogBloc extends Bloc<OfflineCatalogEvent, OfflineCatalogState> 
         cancellation: token,
       )) {
         lastProgress = progress;
-        // The parser only checks cancellation between batches, so a
+        // The stream only checks cancellation between chunks, so a
         // fraction of a second can elapse between the user tapping
-        // Pause / Cancel and the parser actually stopping. During
-        // that window we'd otherwise re-emit `building` and
+        // Pause / Cancel and the loop actually stopping. During
+        // that window we'd otherwise re-emit `downloading` and
         // overwrite the paused / idle state the handler just set,
         // leaving the UI flipped back to a frozen progress bar.
-        // Drop late events whose target phase has already moved on.
-        if (state.phase != OfflineCatalogPhase.building) continue;
+        if (state.phase != OfflineCatalogPhase.downloading &&
+            state.phase != OfflineCatalogPhase.installing) {
+          continue;
+        }
+        final targetPhase = _phaseForProgress(progress);
         final now = DateTime.now();
-        if (now.difference(lastEmit) >= _progressEmitInterval) {
+        // Always emit when phase changes (downloading → installing),
+        // even mid-throttle window — the user expects to see the
+        // bar flip from one phase to the next without waiting.
+        if (now.difference(lastEmit) >= _progressEmitInterval ||
+            targetPhase != state.phase) {
           lastEmit = now;
-          emit(state.copyWith(
-            phase: OfflineCatalogPhase.building,
-            progress: progress,
-          ));
+          emit(state.copyWith(phase: targetPhase, progress: progress));
         }
       }
       // Final emit so the wizard sees 100% before the phase flips.
-      // Same guard — if the user paused mid-stream we don't want to
-      // unwind their pause with a final 100% snapshot.
-      if (lastProgress != null && state.phase == OfflineCatalogPhase.building) {
+      if (lastProgress != null &&
+          (state.phase == OfflineCatalogPhase.downloading ||
+              state.phase == OfflineCatalogPhase.installing)) {
         emit(state.copyWith(
-          phase: OfflineCatalogPhase.building,
+          phase: _phaseForProgress(lastProgress),
           progress: lastProgress,
         ));
       }
@@ -294,7 +305,7 @@ class OfflineCatalogBloc extends Bloc<OfflineCatalogEvent, OfflineCatalogState> 
       // have already moved us to the right phase. Re-emit progress
       // so the UI keeps the latest snapshot.
       _log.fine('Build interrupted (resume=$isResume)');
-      if (lastProgress != null && state.phase == OfflineCatalogPhase.building) {
+      if (lastProgress != null && state.phase == OfflineCatalogPhase.paused) {
         emit(state.copyWith(progress: lastProgress));
       }
     } catch (e, stack) {
@@ -302,12 +313,30 @@ class OfflineCatalogBloc extends Bloc<OfflineCatalogEvent, OfflineCatalogState> 
       emit(state.copyWith(
         phase: OfflineCatalogPhase.error,
         errorMessage: e.toString(),
-        errorRecoverable: true,
+        // A schema-version mismatch means the CDN has rolled forward
+        // to a major version this app version cannot read. Retrying
+        // the same download will hit the same error every time, so
+        // the wizard renders the fatal-body copy without a retry
+        // button. The user keeps whatever they already have on disk
+        // and updates the app to pick up the new format.
+        errorRecoverable: e is! CatalogSchemaVersionException,
         progress: lastProgress,
       ));
     } finally {
       if (identical(_activeToken, token)) _activeToken = null;
     }
+  }
+
+  /// Map the data source's progress phase to the bloc's lifecycle
+  /// phase. The two are deliberately separate enums — the data
+  /// source phase is purely a data-shape signal (which fields on
+  /// [DownloadProgress] are meaningful), while the bloc phase
+  /// drives the UI's higher-level lifecycle.
+  static OfflineCatalogPhase _phaseForProgress(DownloadProgress p) {
+    return switch (p.phase) {
+      DownloadPhase.downloading => OfflineCatalogPhase.downloading,
+      DownloadPhase.installing => OfflineCatalogPhase.installing,
+    };
   }
 
   Future<void> _onPause(
@@ -338,58 +367,6 @@ class OfflineCatalogBloc extends Bloc<OfflineCatalogEvent, OfflineCatalogState> 
       clearEstimate: true,
       clearError: true,
     ));
-  }
-
-  Future<void> _onRefresh(
-    RefreshCatalogEvent event,
-    Emitter<OfflineCatalogState> emit,
-  ) async {
-    final token = CancellationToken();
-    _activeToken = token;
-    emit(state.copyWith(
-      phase: OfflineCatalogPhase.refreshing,
-      clearError: true,
-    ));
-    DateTime lastEmit = DateTime.fromMillisecondsSinceEpoch(0);
-    try {
-      await for (final progress in _refresh(cancellation: token)) {
-        // Same race guard as [_runBuild]: drop late progress events
-        // that arrived after the user paused / cancelled, so they
-        // don't overwrite the post-pause state and leave the UI
-        // stuck on a frozen progress bar.
-        if (state.phase != OfflineCatalogPhase.refreshing) continue;
-        final now = DateTime.now();
-        if (now.difference(lastEmit) >= _progressEmitInterval) {
-          lastEmit = now;
-          emit(state.copyWith(
-            phase: OfflineCatalogPhase.refreshing,
-            progress: progress,
-          ));
-        }
-      }
-      final stats = await _getStats();
-      emit(state.copyWith(
-        phase: OfflineCatalogPhase.ready,
-        stats: stats,
-        clearProgress: true,
-      ));
-    } on CancellationException {
-      final stats = await _getStats();
-      emit(state.copyWith(
-        phase: OfflineCatalogPhase.ready,
-        stats: stats,
-        clearProgress: true,
-      ));
-    } catch (e, stack) {
-      _log.warning('Refresh failed', e, stack);
-      emit(state.copyWith(
-        phase: OfflineCatalogPhase.error,
-        errorMessage: e.toString(),
-        errorRecoverable: true,
-      ));
-    } finally {
-      if (identical(_activeToken, token)) _activeToken = null;
-    }
   }
 
   Future<void> _onDelete(

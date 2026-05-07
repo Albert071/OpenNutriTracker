@@ -1,21 +1,26 @@
 import 'package:equatable/equatable.dart';
 
-/// User-controlled subset of the OFF bulk-search query.
+/// User-controlled subset of the prebuilt-catalog selection.
 ///
-/// Always-on server-side filters (human-food-only category exclusions,
-/// `completeness > 0.3`, `obsolete=0`) are not represented here — they
-/// live as constants on the bulk data source so the user cannot toggle
-/// them off accidentally.
+/// The pivot to download-prebuilt removed country selection — barcodes
+/// are international and the catalog is global. What remains are the
+/// three filter axes the build pipeline indexes by, exposed to the
+/// user as wizard toggles and a recency chip:
 ///
-/// [countries] holds canonical OFF country tags (e.g. `en:france`).
-/// An empty set means "no country filter" and triggers the typed-
-/// confirmation footgun on page 4 of the wizard.
+/// * [requireMinPopularity] — only include products with at least
+///   two scans on Open Food Facts (the well-scanned filter).
+/// * [requireNutritionGrade] — only include products with a Nutri-Score
+///   grade in `a..e` recorded.
+/// * [maxAge] — recency cutoff; `null` means "Any" (no recency filter).
+///
+/// The trio resolves to a `s{0|1}_n{0|1}_r{3|5|10|any}` variant id
+/// via [toVariantId], which is the path component the catalog CDN
+/// serves.
 class CatalogFilterEntity extends Equatable {
   /// Default recency window. Five years biases toward fresh metadata
   /// without dropping useful long-shelf-life products.
   static const Duration defaultMaxAge = Duration(days: 365 * 5);
 
-  final Set<String> countries;
   final bool requireNutritionGrade;
   final bool requireMinPopularity;
 
@@ -24,29 +29,65 @@ class CatalogFilterEntity extends Equatable {
   final Duration? maxAge;
 
   const CatalogFilterEntity({
-    required this.countries,
     this.requireNutritionGrade = true,
     this.requireMinPopularity = true,
     this.maxAge = defaultMaxAge,
   });
 
-  /// Epoch seconds threshold for `last_modified_t > <epoch>` queries,
-  /// or `null` when [maxAge] is null.
-  int? lastModifiedSinceEpoch(DateTime now) {
-    final age = maxAge;
-    if (age == null) return null;
-    return now.subtract(age).millisecondsSinceEpoch ~/ 1000;
+  /// Recommended defaults for a first-run user — the smallest
+  /// download (~73 MB) with the strictest quality filters.
+  static const recommended = CatalogFilterEntity();
+
+  /// Resolve this filter trio to the catalog variant id used by the
+  /// CDN URL pattern. Examples: `s1_n1_r5`, `s0_n0_rany`.
+  ///
+  /// Recency buckets snap to the nearest of `3` / `5` / `10` / `any`.
+  /// The wizard chip group only emits those four values, so any other
+  /// duration we see is round-tripped through the same buckets.
+  String toVariantId() {
+    final s = requireMinPopularity ? 1 : 0;
+    final n = requireNutritionGrade ? 1 : 0;
+    final r = _recencyBucket(maxAge);
+    return 's${s}_n${n}_r$r';
+  }
+
+  /// Inverse of [toVariantId]. Returns `null` if [variantId] is not
+  /// in the canonical `s{0|1}_n{0|1}_r{3|5|10|any}` shape.
+  static CatalogFilterEntity? fromVariantId(String variantId) {
+    final match = RegExp(r'^s([01])_n([01])_r(3|5|10|any)$')
+        .firstMatch(variantId.trim());
+    if (match == null) return null;
+    final s = match.group(1) == '1';
+    final n = match.group(2) == '1';
+    final r = match.group(3)!;
+    return CatalogFilterEntity(
+      requireMinPopularity: s,
+      requireNutritionGrade: n,
+      maxAge: switch (r) {
+        'any' => null,
+        '3' => const Duration(days: 365 * 3),
+        '10' => const Duration(days: 365 * 10),
+        _ => defaultMaxAge,
+      },
+    );
+  }
+
+  static String _recencyBucket(Duration? maxAge) {
+    if (maxAge == null) return 'any';
+    final days = maxAge.inDays;
+    if (days <= 365 * 3) return '3';
+    if (days <= 365 * 5) return '5';
+    if (days <= 365 * 10) return '10';
+    return 'any';
   }
 
   CatalogFilterEntity copyWith({
-    Set<String>? countries,
     bool? requireNutritionGrade,
     bool? requireMinPopularity,
     Duration? maxAge,
     bool clearMaxAge = false,
   }) =>
       CatalogFilterEntity(
-        countries: countries ?? this.countries,
         requireNutritionGrade:
             requireNutritionGrade ?? this.requireNutritionGrade,
         requireMinPopularity: requireMinPopularity ?? this.requireMinPopularity,
@@ -55,7 +96,6 @@ class CatalogFilterEntity extends Equatable {
 
   @override
   List<Object?> get props => [
-        countries,
         requireNutritionGrade,
         requireMinPopularity,
         maxAge,

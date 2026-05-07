@@ -60,16 +60,11 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m19(count) => "${count} 个产品";
 
-  static String m20(phrase) =>
-      "你的过滤器涵盖超过一百万个产品。这需要很多带宽和时间。要继续，请在下方框中输入“${phrase}” — 我们希望你主动选择，而不是误触通过。";
-
-  static String m21(rows, total) => "已下载 ${rows} / ${total} 个产品";
-
-  static String m22(current, total) => "第 ${current} 页 / 共 ${total} 页";
+  static String m21(done, total) => "已下载 ${done} / ${total}";
 
   static String m23(time) => "约剩 ${time}";
 
-  static String m24(rows, total) => "已下载 ${rows} / ${total} 个产品";
+  static String m24(done, total) => "已下载 ${done} / ${total}";
 
   static String m25(count, size) =>
       "${count} 个产品可离线使用。占用 ${size}。";
@@ -845,12 +840,15 @@ class MessageLookup extends MessageLookupByLibrary {
         "offlineCatalogDownloadAction":
             MessageLookupByLibrary.simpleMessage("下载"),
         "offlineCatalogDownloadingBody": MessageLookupByLibrary.simpleMessage(
-            "你可以保持本页面打开，下载会继续进行。如果你暂停或取消，已下载的内容会保留。"),
+            "你可以保持这个界面打开——下载会继续。如果需要离开，请暂停——我们会保留你的进度。"),
         "offlineCatalogDownloadingEta": m23,
-        "offlineCatalogDownloadingPage": m22,
         "offlineCatalogDownloadingProgress": m21,
         "offlineCatalogDownloadingTitle":
             MessageLookupByLibrary.simpleMessage("正在下载你的目录"),
+        "offlineCatalogInstallingTitle":
+            MessageLookupByLibrary.simpleMessage("正在解压你的目录"),
+        "offlineCatalogInstallingBody": MessageLookupByLibrary.simpleMessage(
+            "我们正在解压刚刚下载的文件并写入你的设备。通常只需几秒钟。"),
         "offlineCatalogErrorBodyFatal":
             MessageLookupByLibrary.simpleMessage("无法完成此次下载。"),
         "offlineCatalogErrorBodyRecoverable":
@@ -863,14 +861,9 @@ class MessageLookup extends MessageLookupByLibrary {
         "offlineCatalogEstimateBody":
             MessageLookupByLibrary.simpleMessage("这是我们将为你下载的内容。"),
         "offlineCatalogEstimateError": MessageLookupByLibrary.simpleMessage(
-            "无法连接到 Open Food Facts 获取估算。请检查你的网络连接并重试。"),
-        "offlineCatalogEstimateHardCapBody": m20,
-        "offlineCatalogEstimateHardCapPhrase":
-            MessageLookupByLibrary.simpleMessage("我了解"),
-        "offlineCatalogEstimateHardCapTitle":
-            MessageLookupByLibrary.simpleMessage("这是一次非常大的下载"),
+            "我们无法确定下载大小。请稍后再试。"),
         "offlineCatalogEstimateRequestsLabel":
-            MessageLookupByLibrary.simpleMessage("网络请求"),
+            MessageLookupByLibrary.simpleMessage("下载大小"),
         "offlineCatalogEstimateRowsLabel":
             MessageLookupByLibrary.simpleMessage("产品数"),
         "offlineCatalogEstimateSizeLabel":
@@ -917,26 +910,11 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("在以下时间内更新过"),
         "offlineCatalogQualityTitle":
             MessageLookupByLibrary.simpleMessage("质量过滤"),
-        "offlineCatalogRegionBody": MessageLookupByLibrary.simpleMessage(
-            "只会下载带有所选国家／地区标签的产品。计数来自 Open Food Facts，会随时间变化。"),
-        "offlineCatalogRegionEmpty":
-            MessageLookupByLibrary.simpleMessage("没有可显示的国家／地区"),
-        "offlineCatalogRegionFallbackNotice":
-            MessageLookupByLibrary.simpleMessage(
-                "由于无法访问 Open Food Facts，正在显示一份简短的备用列表。请连接到网络后刷新以加载完整的国家／地区列表。"),
-        "offlineCatalogRegionNoMatches":
-            MessageLookupByLibrary.simpleMessage("没有匹配你搜索的国家／地区"),
-        "offlineCatalogRegionRefreshTooltip":
-            MessageLookupByLibrary.simpleMessage("刷新国家／地区列表"),
-        "offlineCatalogRegionSearchHint":
-            MessageLookupByLibrary.simpleMessage("搜索国家／地区"),
-        "offlineCatalogRegionTitle":
-            MessageLookupByLibrary.simpleMessage("选择国家／地区"),
         "offlineCatalogResume": MessageLookupByLibrary.simpleMessage("继续"),
         "offlineCatalogStartAction":
             MessageLookupByLibrary.simpleMessage("开始"),
         "offlineCatalogTileBuilding":
-            MessageLookupByLibrary.simpleMessage("正在创建…"),
+            MessageLookupByLibrary.simpleMessage("正在处理…"),
         "offlineCatalogTileBuildingPercent": m26,
         "offlineCatalogTileLastRefreshed": m28,
         "offlineCatalogTileNotBuilt":
@@ -944,8 +922,6 @@ class MessageLookup extends MessageLookupByLibrary {
         "offlineCatalogTilePaused":
             MessageLookupByLibrary.simpleMessage("下载已暂停 — 点击以继续"),
         "offlineCatalogTileReady": m27,
-        "offlineCatalogTileRefreshing":
-            MessageLookupByLibrary.simpleMessage("正在刷新…"),
         "offlineCatalogTimeDaysAgo": m31,
         "offlineCatalogTimeHoursAgo": m32,
         "offlineCatalogTimeJustNow":

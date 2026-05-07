@@ -1,52 +1,43 @@
 import 'package:equatable/equatable.dart';
 
-/// What stage of the build a [DownloadProgress] snapshot is from.
-/// The CSV-dump build runs through three of these in sequence:
-/// downloading the gzip from OFF, then streaming + filtering the
-/// decoded CSV, then a brief commit to seal the catalog.
+/// What stage of the prebuilt-download flow a [DownloadProgress]
+/// snapshot is from. The pivot to download-prebuilt collapsed the old
+/// CSV parse phase into a smaller "installing" phase that gunzips the
+/// database into place.
 enum DownloadPhase {
-  /// HTTP transfer of the OFF CSV gzip to local cache, with HTTP
-  /// Range support so an interrupted download resumes from the byte
-  /// it stopped at rather than starting over.
+  /// HTTP transfer of the prebuilt sqlite gzip from the catalog CDN
+  /// to local cache. Supports HTTP `Range` so an interrupted download
+  /// resumes from the byte it stopped at rather than starting over.
   downloading,
 
-  /// Local stream-parse of the gzip: decompress, split lines, apply
-  /// the wizard's filter set, write survivors to sqlite.
-  parsing,
+  /// Local stream-gunzip of the partial gzip into the catalog file
+  /// path, followed by an atomic rename. Bytes-done here count
+  /// uncompressed bytes already written.
+  installing,
 }
 
-/// Per-page progress snapshot emitted by the catalog builder. Consumed
-/// by the bloc, throttled to ~1 emission per second before reaching
-/// the UI so the LinearProgressIndicator doesn't thrash.
+/// Progress snapshot emitted by the catalog downloader. Consumed by
+/// the bloc, throttled to ~1 emission per second before reaching the
+/// UI so the LinearProgressIndicator doesn't thrash.
 ///
-/// The fields carry different meanings depending on [phase]:
+/// Both phases carry a bytes pair:
 ///
 /// * [phase] = downloading → [bytesDone] / [bytesTotal] are the
-///   meaningful pair. [rowsKept] / [rowsScanned] stay zero.
-/// * [phase] = parsing → [rowsKept] is what's been written to
-///   sqlite so far, [rowsScanned] is what's been read from the
-///   csv (kept and dropped together), [bytesDone]/[bytesTotal]
-///   reflect bytes-into-decompressed-stream when known.
+///   compressed bytes pulled from the CDN.
+/// * [phase] = installing → [bytesDone] / [bytesTotal] are uncompressed
+///   bytes written. [bytesTotal] is the expected unpacked size for the
+///   variant; if the build script omitted that figure the field falls
+///   back to zero (UI renders an indeterminate spinner).
 class DownloadProgress extends Equatable {
   final DownloadPhase phase;
 
-  /// Bytes consumed in the active phase. For download this is bytes
-  /// pulled from OFF; for parsing it is bytes read from the local
-  /// gzip file (decoded csv stream length is not known up-front).
+  /// Bytes done in the active phase. Compressed bytes during download,
+  /// uncompressed bytes during install.
   final int bytesDone;
 
   /// Total bytes for the active phase, when known. Zero or negative
-  /// means "indeterminate" (rare — only when the parser stage is
-  /// running and the decoded stream length is not known).
+  /// means "indeterminate".
   final int bytesTotal;
-
-  /// Rows that survived the wizard's filter and were written to
-  /// sqlite. Non-zero only during and after the parsing phase.
-  final int rowsKept;
-
-  /// Rows read from the csv (regardless of whether they were kept).
-  /// Useful for "filtering rate" UX during a long parse.
-  final int rowsScanned;
 
   /// Wall-clock elapsed since the build (or build resume) started.
   /// Used for the ETA calculation.
@@ -56,8 +47,6 @@ class DownloadProgress extends Equatable {
     required this.phase,
     required this.bytesDone,
     required this.bytesTotal,
-    required this.rowsKept,
-    required this.rowsScanned,
     required this.elapsed,
   });
 
@@ -82,6 +71,5 @@ class DownloadProgress extends Equatable {
   }
 
   @override
-  List<Object?> get props =>
-      [phase, bytesDone, bytesTotal, rowsKept, rowsScanned, elapsed];
+  List<Object?> get props => [phase, bytesDone, bytesTotal, elapsed];
 }
