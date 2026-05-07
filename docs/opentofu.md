@@ -178,7 +178,9 @@ Two things follow from this design that are worth sitting with.
 
 The first is that the plaintext never enters OpenTofu state at all. State only ever carries the sealed ciphertext, and that ciphertext is then wrapped in the AES-GCM envelope at the storage layer, which means there are three layers of defence between an attacker and the plaintext token values.
 
-The second is that the seal itself is non-deterministic. libsodium's `crypto_box_seal` uses an ephemeral keypair on each call, so resealing the same plaintext produces different ciphertext, and OpenTofu sees the difference as drift and re-uploads all seven secrets on every apply. The plaintext on GitHub's side does not change, workflow consumers never notice, and the modify count in the apply summary is cosmetic noise rather than a real rotation. So when `tofu plan` shows seven `github_actions_secret.r2[*]` modifications, that is the expected steady state, not a problem.
+The second is that the seal itself is non-deterministic. libsodium's `crypto_box_seal` uses an ephemeral keypair on each call, so resealing the same plaintext produces different ciphertext. Left unmanaged, OpenTofu would see the difference as drift on every plan and try to re-upload all seven secrets even though nothing inside GitHub had actually changed.
+
+We sidestep that by tracking a stable plaintext hash alongside each secret. `terraform_data.r2_secret_plaintext_hash` in `github.tf` holds `sha256(plaintext)` for each entry; the `github_actions_secret.r2` resource then sets `lifecycle.ignore_changes = [value_encrypted]` (so non-deterministic ciphertext drift is invisible) and `lifecycle.replace_triggered_by = [terraform_data.r2_secret_plaintext_hash[each.key]]` (so a real plaintext change triggers a destroy-then-create with a freshly-sealed value). The result: a steady-state plan shows zero changes when nothing has been rotated, and exactly one secret being replaced when one is. The recreate is destroy-then-create rather than update-in-place because GitHub's API has no "update sealed value" semantics; the gap is sub-second and only opens during a genuine rotation, so a workflow run colliding with it is vanishingly unlikely.
 
 ## Running an apply
 
@@ -244,7 +246,7 @@ If you ever need to rebuild the OpenTofu side over from nothing:
    - Populate `opentofu/cloudflare/.env` (gitignored), or use `tofu.tfvars` if you prefer file-based variables.
    - `cd opentofu/cloudflare && tofu init && tofu apply`.
 
-The first apply mints the downstream tokens, seals all seven Tofu-managed secrets into GitHub, and writes the encrypted state to R2. Subsequent applies see no drift other than the cosmetic reseal noise.
+The first apply mints the downstream tokens, seals all seven Tofu-managed secrets into GitHub, and writes the encrypted state to R2. Subsequent applies see no drift unless a plaintext value has genuinely changed (a token rotation, a renamed bucket), thanks to the plaintext-hash trick described in the secrets section above.
 
 ## Common gotchas
 

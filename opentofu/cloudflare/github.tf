@@ -43,6 +43,21 @@ data "external" "sealed" {
   }
 }
 
+# Track a stable hash of each secret's plaintext so we can tell real
+# changes apart from the cosmetic re-seal noise. `crypto_box_seal`
+# is non-deterministic — encrypting the same plaintext twice
+# produces two different ciphertexts — so without this hash every
+# `tofu plan` would show all seven secrets being updated, even
+# though nothing has actually changed inside GitHub. The hash lives
+# in OpenTofu state; on the next plan we compute it again and only
+# trigger a replacement of the secret when the plaintext genuinely
+# differs from last time.
+resource "terraform_data" "r2_secret_plaintext_hash" {
+  for_each = local.secrets
+
+  input = sha256(each.value)
+}
+
 resource "github_actions_secret" "r2" {
   for_each = local.secrets
 
@@ -50,4 +65,19 @@ resource "github_actions_secret" "r2" {
   secret_name     = each.key
   value_encrypted = data.external.sealed[each.key].result["ciphertext"]
   key_id          = data.github_actions_public_key.repo.key_id
+
+  lifecycle {
+    # Ignore drift on the sealed ciphertext itself — it is
+    # non-deterministic and any difference between state and the
+    # current sealing call is expected and meaningless.
+    ignore_changes = [value_encrypted]
+    # Recreate the secret only when the plaintext hash above
+    # actually changes. The recreate is a destroy-then-create,
+    # which means a brief window where the secret is missing in
+    # GitHub. In practice that window is sub-second and only
+    # opens when someone has actually rotated a value (a
+    # Cloudflare token, a bucket name), so a CI run colliding
+    # with the gap is vanishingly unlikely.
+    replace_triggered_by = [terraform_data.r2_secret_plaintext_hash[each.key]]
+  }
 }
