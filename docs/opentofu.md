@@ -233,10 +233,8 @@ The trigger map and the apply gate together decide what each run does:
 | Event                                                   | Build + plan | Apply |
 | ------------------------------------------------------- | :----------: | :---: |
 | `push` to `main`                                        | yes          | yes   |
-| `push` to `feature/offline-off-catalog`                 | yes          | yes   |
 | `schedule` (Saturday 19:00 UTC, main only)              | yes          | yes   |
 | `workflow_dispatch` on `main`                           | yes          | yes   |
-| `workflow_dispatch` on `feature/offline-off-catalog`    | yes          | no    |
 | `pull_request` (catalog / opentofu / workflow paths)    | yes          | no    |
 
 The PR path is the everyday review surface: the plan that runs on a PR is the reviewer's preview of what would happen on merge, and the merge button is the approval gate. The Saturday cron is the weekly content refresh — OFF publishes a new dump, the build pulls it down, and apply uploads only the chunks whose content has actually changed (each chunk is an `aws_s3_object`, so unchanged content produces no diff and no API call). Fork PRs skip the OpenTofu steps entirely, because `secrets.*` is not exposed to fork runs; the catalog build itself still validates schema, CSV, and build-script changes for contributors.
@@ -244,8 +242,6 @@ The PR path is the everyday review surface: the plan that runs on a PR is the re
 A workflow-level `concurrency: catalog-pipeline` group with `cancel-in-progress: false` serialises everything that runs inside Actions, so the cron and a manual dispatch can never race. PRs use a per-PR concurrency group with cancellation enabled, so a fix-up push cancels the in-flight plan for the previous SHA. The `unlock_on_failure` job joins the same `catalog-pipeline` group so it can't race a fresh push that started while this run was dying.
 
 `tofu init`, `plan`, and `apply` all need `TF_VAR_state_passphrase` (because state encryption runs through `init`'s state-read path) and `TF_VAR_catalog_build_output_dir` (because the catalog module's `for_each` reads from there).
-
-When this lands on `main`, the `feature/offline-off-catalog` entry comes out of the `push` branches list, so the only path that can apply from a non-`main` ref is gone. Workflow_dispatch on `main` remains the manual escape hatch; the cron and post-merge pushes cover the everyday refresh path.
 
 ## Adding things
 

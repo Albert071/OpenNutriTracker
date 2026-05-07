@@ -167,7 +167,7 @@ The 9.7 GiB total-upload ceiling that lived in the old python upload script has 
 
 ## The CI workflow
 
-`.github/workflows/build_catalog.yml` is one workflow with one main job (`build_and_apply`) plus a small trailing `unlock_on_failure` cleanup job that only fires when the main job didn't complete cleanly. Triggers are push on `[main, feature/offline-off-catalog]`, `pull_request` filtered to catalog-relevant paths, the Saturday 19:00 UTC cron, and manual `workflow_dispatch`. PR runs stop at plan; the merge button is the approval gate. See [`docs/opentofu.md`](opentofu.md) for the full apply-side reference, including the trigger-to-apply matrix and the state-locking story.
+`.github/workflows/build_catalog.yml` is one workflow with one main job (`build_and_apply`) plus a small trailing `unlock_on_failure` cleanup job that only fires when the main job didn't complete cleanly. Triggers are push on `main`, `pull_request` filtered to catalog-relevant paths, the Saturday 19:00 UTC cron, and manual `workflow_dispatch`. PR runs stop at plan; the merge button is the approval gate. See [`docs/opentofu.md`](opentofu.md) for the full apply-side reference, including the trigger-to-apply matrix and the state-locking story.
 
 The `build_and_apply` job runs on `ubuntu-latest` and walks through these steps in order, all on the same runner with a shared filesystem:
 
