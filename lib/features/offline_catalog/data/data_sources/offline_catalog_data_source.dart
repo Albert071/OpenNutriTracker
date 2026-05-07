@@ -94,17 +94,19 @@ class OfflineCatalogDataSource {
     // idempotent CREATE-IF-NOT-EXISTS pass so a brand-new install
     // (no downloaded catalog yet) gets an empty schema and any
     // already-populated catalog is left untouched.
-    final db = await openDatabase(
-      path,
-      onConfigure: (db) async {
-        // WAL gives us atomic writes plus better insert speed if we
-        // ever go back to writing rows on-device. Synchronous=NORMAL
-        // is the right choice for WAL: durable across app crashes,
-        // only loses recent data on hard kernel/power failure.
-        await db.execute('PRAGMA journal_mode=WAL');
-        await db.execute('PRAGMA synchronous=NORMAL');
-      },
-    );
+    // No `onConfigure` PRAGMAs. The catalog is read-only after the
+    // download pipeline renames the staged file into place: the only
+    // sqflite writes from this point are a handful of `setMeta`
+    // single-row updates (filter json, last sync timestamp, count),
+    // which don't need WAL. Setting `PRAGMA journal_mode=WAL` here
+    // also blew up on Android's sqflite — WAL is a "query" PRAGMA
+    // (returns the new mode after setting it), and Android refuses
+    // it via `execute` with `DatabaseException(SQLITE_OK): Queries
+    // can be performed using SQLiteDatabase query or rawQuery
+    // methods only`. The Linux/desktop sqflite-ffi accepts the same
+    // statement via `execute`, which is why this never fired in
+    // local testing.
+    final db = await openDatabase(path);
     await _ensureSchema(db);
     _db = db;
     return db;
@@ -609,14 +611,28 @@ class OfflineCatalogDataSource {
     return null;
   }
 
-  /// Strip FTS5 query special characters and append `*` to every
-  /// non-empty token for prefix matching as the user types.
+  /// Sanitise a free-form user query for FTS5 MATCH.
+  ///
+  /// FTS5 has a small set of characters that are syntactic
+  /// (`"`, `(`, `)`, `*`, `:`, `^`, `+`, `-`, `,`) and four
+  /// boolean keywords (`AND`, `OR`, `NOT`, `NEAR`). If any of those
+  /// appear unescaped in the user's query the parser raises
+  /// `fts5: syntax error near "X"` and the search use case falls
+  /// through to the live API. To keep search robust under any
+  /// natural-language input we replace anything that isn't a Unicode
+  /// letter, digit, or whitespace with a space, drop tokens that
+  /// case-insensitively match the FTS5 keywords, and append `*` to
+  /// each surviving token for prefix matching as the user types.
   String _normaliseFtsQuery(String raw) {
-    final sanitised = raw.replaceAll(RegExp(r'["\(\)\*:]'), ' ').trim();
-    if (sanitised.isEmpty) return '';
+    final sanitised = raw.replaceAll(
+      RegExp(r'[^\p{L}\p{N}\s]', unicode: true),
+      ' ',
+    );
+    if (sanitised.trim().isEmpty) return '';
+    const ftsKeywords = {'and', 'or', 'not', 'near'};
     final tokens = sanitised
         .split(RegExp(r'\s+'))
-        .where((t) => t.isNotEmpty)
+        .where((t) => t.isNotEmpty && !ftsKeywords.contains(t.toLowerCase()))
         .map((t) => '$t*')
         .toList();
     return tokens.join(' ');

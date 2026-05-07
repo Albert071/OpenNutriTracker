@@ -472,22 +472,40 @@ class CatalogDownloadDataSource {
     var uncompressedBytes = 0;
     var lastInstallEmit = DateTime.fromMillisecondsSinceEpoch(0);
     try {
+      // The decompressed output for the largest variant is ~3.7 GB.
+      // We MUST go through `addStream` rather than the looped
+      // `out.add(chunk)` pattern: `IOSink.add` does not await the
+      // underlying file write, so chunks accumulate in a native
+      // buffer and the process gets killed by the kernel for
+      // exceeding its memory budget. `addStream` respects
+      // backpressure — it pauses the source stream while the sink
+      // is busy, keeping peak memory bounded by the gzip decoder's
+      // internal buffer rather than the full output size.
       final gzipStream = File(tmpGzPath).openRead().transform(gzip.decoder);
-      await for (final chunk in gzipStream) {
-        if (cancellation.isCancelled) break;
-        out.add(chunk);
-        uncompressedBytes += chunk.length;
-        final now = DateTime.now();
-        if (now.difference(lastInstallEmit) >= _installEmitInterval) {
-          lastInstallEmit = now;
-          controller.add(DownloadProgress(
-            phase: DownloadPhase.installing,
-            bytesDone: uncompressedBytes,
-            bytesTotal: expectedUncompressedBytes,
-            elapsed: stopwatch.elapsed,
-          ));
-        }
-      }
+      final tracked = gzipStream.transform(
+        StreamTransformer<List<int>, List<int>>.fromHandlers(
+          handleData: (chunk, sink) {
+            if (cancellation.isCancelled) {
+              sink.addError(const CancellationException());
+              sink.close();
+              return;
+            }
+            uncompressedBytes += chunk.length;
+            final now = DateTime.now();
+            if (now.difference(lastInstallEmit) >= _installEmitInterval) {
+              lastInstallEmit = now;
+              controller.add(DownloadProgress(
+                phase: DownloadPhase.installing,
+                bytesDone: uncompressedBytes,
+                bytesTotal: expectedUncompressedBytes,
+                elapsed: stopwatch.elapsed,
+              ));
+            }
+            sink.add(chunk);
+          },
+        ),
+      );
+      await out.addStream(tracked);
       await out.flush();
     } finally {
       await out.close();
@@ -705,6 +723,15 @@ class CatalogDownloadDataSource {
   /// part: bytes flow simultaneously into the per-part hasher, the
   /// combined hasher, and the output sink, so peak memory is the
   /// underlying file-read buffer rather than a whole part in RAM.
+  ///
+  /// Backpressure note: we route bytes through `IOSink.addStream`
+  /// rather than the looped `sink.add(chunk)` pattern. Without the
+  /// stream's natural pause/resume, the largest variant's 520 MB of
+  /// concatenated output piles up in the sink's native buffer and
+  /// the process gets killed for exceeding its memory budget. With
+  /// `addStream`, the source pauses whenever the sink is busy, so
+  /// peak memory stays bounded by the in-flight chunk plus the
+  /// hasher state.
   Future<void> _verifyAndConcatenate({
     required _CatalogManifest manifest,
     required Directory dir,
@@ -729,11 +756,21 @@ class CatalogDownloadDataSource {
         }
         final partSink = _DigestSink();
         final partHasher = sha256.startChunkedConversion(partSink);
-        await for (final chunk in partFile.openRead()) {
-          partHasher.add(chunk);
-          combinedHasher.add(chunk);
-          sink.add(chunk);
-        }
+        // Tee the read stream into the two hashers while letting
+        // `addStream` push the bytes into the sink under proper
+        // backpressure. The transformer doesn't buffer — each
+        // chunk lands in both hashers and then re-emerges into the
+        // sink in the same call.
+        final teed = partFile.openRead().transform(
+          StreamTransformer<List<int>, List<int>>.fromHandlers(
+            handleData: (chunk, downstream) {
+              partHasher.add(chunk);
+              combinedHasher.add(chunk);
+              downstream.add(chunk);
+            },
+          ),
+        );
+        await sink.addStream(teed);
         partHasher.close();
         final partActual = partSink.digest!.toString();
         if (partActual != part.sha256Hex) {

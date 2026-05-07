@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -42,10 +41,14 @@ import 'package:sentry_flutter/sentry_flutter.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   LoggerConfig.intiLogger();
-  // Desktop runtimes (Linux / macOS / Windows) need an explicit FFI
-  // database factory before any sqflite call. Android and iOS use the
-  // platform plugin at runtime and skip this branch entirely.
-  if (!kIsWeb && (Platform.isLinux || Platform.isMacOS || Platform.isWindows)) {
+  // Use the FFI-backed sqflite factory on every native platform.
+  // Android's bundled sqlite has FTS5 disabled, which the offline
+  // catalog feature depends on; pairing `sqflite_common_ffi` with
+  // `sqlite3_flutter_libs` ships a recent sqlite (with FTS5) inside
+  // the APK so search works the same way on Android, iOS, and
+  // desktop. Web is the only platform we keep on the original
+  // platform-plugin path, since FFI doesn't apply there.
+  if (!kIsWeb) {
     sqfliteFfiInit();
     databaseFactory = databaseFactoryFfi;
   }

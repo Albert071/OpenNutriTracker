@@ -333,6 +333,69 @@ void main() {
       },
     );
   });
+
+  group('OfflineCatalogDataSource.searchByText (FTS5 query sanitisation)',
+      () {
+    late Directory tmp;
+    late OfflineCatalogDataSource source;
+
+    setUp(() async {
+      tmp = await Directory.systemTemp.createTemp('offline-catalog-test-');
+      source = _TestDataSource(p.join(tmp.path, 'catalog.db'));
+      await source.upsertBatch([
+        _dto('p1', name: 'Fior di Latte Mozzarella'),
+        _dto('p2', name: 'Cherry Tomato and Basil Pesto Pizza'),
+        _dto('p3', name: 'Salt and Vinegar Crisps'),
+      ]);
+    });
+
+    tearDown(() async {
+      await source.close();
+      await tmp.delete(recursive: true);
+    });
+
+    test(
+        'punctuation in the query does not raise an FTS5 syntax error '
+        '(regression: a comma after a token blew up the parser)',
+        () async {
+      // The exact shape of free-form input we got from a sideloaded
+      // device test. Without sanitisation the query lands in FTS5 as
+      // `Fior* latte* Mozzarella,*` and the parser raises
+      // `fts5: syntax error near ","`, falling all the way through
+      // to the live API. The point of this test is that the call
+      // returns rather than throws — the search semantics
+      // (default-AND across tokens) are tested elsewhere.
+      final results = await source.searchByText(
+        'Fior latte Mozzarella, Cherry Tomato and Basil Pesto Pizza',
+      );
+      expect(results, isA<List<OFFProductDTO>>());
+    });
+
+    test('a punctuation-laden subset query still returns its row',
+        () async {
+      // A more realistic case: the user types part of one product's
+      // name with a stray comma. The sanitiser should drop the comma
+      // and the query should match the row that contains every
+      // remaining token.
+      final results = await source.searchByText('Fior, Mozzarella');
+      expect(results.map((d) => d.code), contains('p1'));
+    });
+
+    test('FTS5 boolean keywords in the query are dropped, not parsed',
+        () async {
+      // "and" appears in real product names ("Salt and Vinegar Crisps").
+      // FTS5 treats unquoted AND/OR/NOT/NEAR as binary operators, so
+      // typing the natural-language phrase verbatim used to break.
+      final results = await source.searchByText('salt and vinegar');
+      expect(results.map((d) => d.code), contains('p3'));
+    });
+
+    test('an empty or all-punctuation query is a clean no-op', () async {
+      expect(await source.searchByText(''), isEmpty);
+      expect(await source.searchByText(',,, '), isEmpty);
+      expect(await source.searchByText('()*:'), isEmpty);
+    });
+  });
 }
 
 /// Subclass that points the catalog at a caller-provided sqlite

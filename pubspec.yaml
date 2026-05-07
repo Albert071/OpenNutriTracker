@@ -60,12 +60,18 @@ dependencies:
   # is fine — the win is on phones where a long build would
   # otherwise sleep the screen and (on iOS) suspend the app.
   wakelock_plus: ^1.2.8
-  # Desktop FFI bindings for sqflite — only activated at runtime on
-  # Linux / macOS / Windows (see main.dart). On Android and iOS the
-  # plain `sqflite` plugin handles it natively, and this package adds
-  # negligible weight to mobile builds because its native library is
-  # only loaded when explicitly initialised.
+  # FFI bindings for sqflite. Used on every platform — not just
+  # desktop — because Android's bundled sqlite has FTS5 disabled,
+  # which the offline catalog feature depends on. Pairing this
+  # with `sqlite3_flutter_libs` below ships a recent sqlite (with
+  # FTS5 compiled in) inside the APK so search works consistently
+  # across Android, iOS, and desktop.
   sqflite_common_ffi: ^2.3.0
+  # Bundles a recent sqlite shared library (with FTS5 enabled) into
+  # the Android, iOS, macOS, and Linux builds. Adds roughly 3 MB
+  # to the APK; the Android system sqlite that we'd otherwise be
+  # using is older and missing FTS5 entirely.
+  sqlite3_flutter_libs: ^0.5.27
   path: ^1.9.1
 
   flutter_bloc: ^9.1.1
