@@ -187,6 +187,34 @@ Calculation utilities live in `lib/core/utils/calc/`:
 
 Settings screen exports to a `.zip` containing three JSON files (user activities, intakes, tracked days). Import merges from a user-selected zip. User profile data is **not** included in the export.
 
+## Catalog infrastructure
+
+The offline catalog feature is backed by Cloudflare-side infrastructure managed in code at `opentofu/cloudflare/`. A weekly GitHub Actions workflow builds 16 prebuilt sqlite databases from the OpenFoodFacts CSV dump, splits each into ≤256 MiB chunks, and uploads them to a public-read R2 bucket served through `catalog.opennutritracker.org`. The Flutter client (`lib/features/offline_catalog/data/data_sources/catalog_download_data_source.dart`) downloads from that domain.
+
+What OpenTofu manages:
+
+- The catalog R2 bucket and its custom-domain mapping.
+- A zone-level cache rule that overrides R2's missing `Cache-Control` header so responses can actually hit the edge.
+- Two downstream Cloudflare API tokens (object-write on the bucket; cache-purge on the zone).
+- Seven GitHub Actions secrets sealed against the repo's libsodium public key, consumed by the catalog-build workflow.
+
+State lives in a separate private R2 bucket (`opennutritracker-tf-state`) and is encrypted at rest at the OpenTofu layer using PBKDF2 (SHA-512, 600k iterations) into AES-256-GCM. The passphrase comes from `TF_VAR_state_passphrase`, which is mirrored to the `TF_VAR_STATE_PASSPHRASE` GitHub Actions secret and to the gitignored `opentofu/cloudflare/.env`.
+
+The CI workflow at `.github/workflows/tofu_apply.yml` runs `tofu init && tofu apply -auto-approve` on push to `opentofu/cloudflare/**` (currently filtered to the feature branch), on a weekly Saturday cron, or manually via `workflow_dispatch`. A successful apply chains via `workflow_run` into `.github/workflows/build_catalog.yml`, which rebuilds and uploads the catalog.
+
+For the full reference on the OpenTofu side (resource list, secrets matrix, bootstrap-from-scratch procedure, recovery story if the passphrase is lost, common gotchas), see [`docs/opentofu.md`](docs/opentofu.md). For the build pipeline that produces what gets uploaded into all this infrastructure (variant matrix, the chunked layout, schema versioning, the CI workflow that orchestrates it), see [`docs/catalog_build.md`](docs/catalog_build.md).
+
+Local OpenTofu apply, when needed:
+
+```sh
+cd opentofu/cloudflare
+set -a && source .env && set +a
+~/.tenv/OpenTofu/1.11.6/tofu init
+~/.tenv/OpenTofu/1.11.6/tofu apply
+```
+
+The `.env` file is gitignored and lives next to the rest of the OpenTofu config. Per-project `tenv` already pins the matching binary version on the dev box.
+
 ## Naming Conventions
 
 | Suffix                     | Meaning                                                       |
