@@ -1158,6 +1158,36 @@ class S {
     );
   }
 
+  /// `Notification permission denied.`
+  String get notificationsPermissionDeniedSnack {
+    return Intl.message(
+      'Notification permission denied.',
+      name: 'notificationsPermissionDeniedSnack',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `OpenNutriTracker`
+  String get notificationsDailyReminderTitle {
+    return Intl.message(
+      'OpenNutriTracker',
+      name: 'notificationsDailyReminderTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Don't forget to log your meals today!`
+  String get notificationsDailyReminderBody {
+    return Intl.message(
+      'Don\'t forget to log your meals today!',
+      name: 'notificationsDailyReminderBody',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Source Code`
   String get settingsSourceCodeLabel {
     return Intl.message(
@@ -3163,10 +3193,10 @@ class S {
     );
   }
 
-  /// `We use an averaged calorie reference for non-binary users by default. ...`
+  /// `There isn't a published non-binary calorie baseline ...`
   String get caloriesProfileInfoBody {
     return Intl.message(
-      "We use an averaged calorie reference for non-binary users by default. If you're on HRT or want a more accurate starting point, you can set your hormone profile here. This affects only the calorie calculation — it isn't shared anywhere or shown elsewhere in the app.",
+      "There isn't a published non-binary calorie baseline — the reference equations are built around male and female samples. We use an average of the two by default, a neutral starting point that doesn't ask you to disclose more about your body. The kcal slider in Settings is always available to fine-tune; this is a starting point, not a precise estimate.",
       name: 'caloriesProfileInfoBody',
       desc: '',
       args: [],
@@ -3203,10 +3233,10 @@ class S {
     );
   }
 
-  /// `We estimate your daily calories using an average of the male and female reference formulas. ...`
+  /// `There's no published non-binary calorie baseline ...`
   String get onboardingNonBinaryDisclaimer {
     return Intl.message(
-      'We estimate your daily calories using an average of the male and female reference formulas. You can fine-tune this anytime in Settings → Calculations.',
+      "There's no published non-binary calorie baseline, so by default we use an average of the male and female formulas — a starting point, not a precise estimate. You can fine-tune anytime in Settings → Calculations.",
       name: 'onboardingNonBinaryDisclaimer',
       desc: '',
       args: [],
