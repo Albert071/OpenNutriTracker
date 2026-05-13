@@ -72,6 +72,7 @@ jobs:
           SENTRY_DNS="https://stub@sentry.io/0"
           SUPABASE_PROJECT_URL="https://stub.supabase.co"
           SUPABASE_PROJECT_ANON_KEY="ci-stub"
+          CATALOG_ACCESS_TOKEN="ci-stub"
           EOF
 
       # `just ci` would also run `dart format --set-exit-if-changed`, but the
@@ -148,6 +149,7 @@ jobs:
           SENTRY_DNS="https://stub@sentry.io/0"
           SUPABASE_PROJECT_URL="https://stub.supabase.co"
           SUPABASE_PROJECT_ANON_KEY="ci-stub"
+          CATALOG_ACCESS_TOKEN="ci-stub"
           EOF
 
       - name: Install Flutter packages
@@ -232,6 +234,7 @@ jobs:
           SENTRY_DNS="https://stub@sentry.io/0"
           SUPABASE_PROJECT_URL="https://stub.supabase.co"
           SUPABASE_PROJECT_ANON_KEY="ci-stub"
+          CATALOG_ACCESS_TOKEN="ci-stub"
           EOF
 
       - name: Install Flutter packages
@@ -311,6 +314,7 @@ jobs:
           SENTRY_DNS="https://stub@sentry.io/0"
           SUPABASE_PROJECT_URL="https://stub.supabase.co"
           SUPABASE_PROJECT_ANON_KEY="ci-stub"
+          CATALOG_ACCESS_TOKEN="ci-stub"
           EOF
 
       - name: Install Flutter packages
@@ -389,6 +393,7 @@ jobs:
           SENTRY_DNS="https://stub@sentry.io/0"
           SUPABASE_PROJECT_URL="https://stub.supabase.co"
           SUPABASE_PROJECT_ANON_KEY="ci-stub"
+          CATALOG_ACCESS_TOKEN="ci-stub"
           EOF
 
       - name: Install Flutter packages
