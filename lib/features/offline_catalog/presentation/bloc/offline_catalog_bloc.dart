@@ -258,9 +258,14 @@ class OfflineCatalogBloc extends Bloc<OfflineCatalogEvent, OfflineCatalogState> 
       emit(state.copyWith(
         phase: OfflineCatalogPhase.error,
         errorMessage: e.toString(),
-        // Same reasoning as in _runBuild: a schema-version mismatch
-        // is permanent until the app updates, so don't offer retry.
-        errorRecoverable: e is! CatalogSchemaVersionException,
+        // Same reasoning as in _runBuild: a schema-version mismatch is
+        // permanent until the app updates, and a 403 from the WAF gate
+        // means this APK's bearer token has been rotated out of
+        // validity — neither one will get better by tapping retry, so
+        // the wizard renders the fatal copy and points at "update the
+        // app".
+        errorRecoverable: e is! CatalogSchemaVersionException &&
+            e is! CatalogAccessDeniedException,
       ));
     } finally {
       if (identical(_activeToken, token)) _activeToken = null;
@@ -344,12 +349,15 @@ class OfflineCatalogBloc extends Bloc<OfflineCatalogEvent, OfflineCatalogState> 
         phase: OfflineCatalogPhase.error,
         errorMessage: e.toString(),
         // A schema-version mismatch means the CDN has rolled forward
-        // to a major version this app version cannot read. Retrying
-        // the same download will hit the same error every time, so
-        // the wizard renders the fatal-body copy without a retry
-        // button. The user keeps whatever they already have on disk
-        // and updates the app to pick up the new format.
-        errorRecoverable: e is! CatalogSchemaVersionException,
+        // to a major version this app version cannot read; a 403 from
+        // the WAF gate means this APK's bearer token has been rotated
+        // out of validity. Either way, retrying the same download
+        // will hit the same error every time, so the wizard renders
+        // the fatal-body copy without a retry button. The user keeps
+        // whatever they already have on disk and updates the app to
+        // recover.
+        errorRecoverable: e is! CatalogSchemaVersionException &&
+            e is! CatalogAccessDeniedException,
         progress: lastProgress,
       ));
     } finally {

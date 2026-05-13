@@ -30,6 +30,23 @@
 #   has changed. Replaces the previous bash-and-boto3 upload step
 #   with a delta-driven, plan-reviewable upload path.
 
+# Long-lived shared bearer token used by the catalog-access WAF rule
+# (inside `module.cloudflare`) and by the OpenNutriTracker app (which
+# bakes it into the APK via envied at build time). The token is
+# generated once on the first apply and reused indefinitely — there
+# are no `keepers`, and `prevent_destroy` stops a routine apply from
+# regenerating it. Rotation is emergency-only and is performed with
+# `tofu taint random_password.catalog_access_token` followed by
+# `tofu apply` and a fresh APK build.
+resource "random_password" "catalog_access_token" {
+  length  = 48
+  special = false
+
+  lifecycle {
+    prevent_destroy = true
+  }
+}
+
 module "cloudflare" {
   source = "./modules/cloudflare"
 
@@ -41,6 +58,7 @@ module "cloudflare" {
   zone_id_opennutritracker_org = var.zone_id_opennutritracker_org
   edge_cache_seconds           = var.edge_cache_seconds
   browser_cache_seconds        = var.browser_cache_seconds
+  catalog_access_token         = random_password.catalog_access_token.result
 }
 
 module "secret" {

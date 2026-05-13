@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:crypto/crypto.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
+import 'package:opennutritracker/core/utils/env.dart';
 import 'package:opennutritracker/features/offline_catalog/data/data_sources/catalog_download_data_source.dart';
 import 'package:opennutritracker/features/offline_catalog/domain/entity/cancellation_token.dart';
 import 'package:opennutritracker/features/offline_catalog/domain/entity/download_progress.dart';
@@ -23,12 +24,38 @@ class _FakeCatalogServer {
   /// simulate Cloudflare's "Range request returns 200" quirk.
   final Map<String, int> nextStatusOverride = {};
 
+  /// When true, every incoming request is answered with 403 before any
+  /// other logic runs. Simulates the Cloudflare WAF Custom Rule
+  /// rejecting a request whose `X-Catalog-Access` header is missing or
+  /// stale (e.g. an APK pre-dating a token rotation).
+  bool forbidAll = false;
+
+  /// All `X-Catalog-Access` header values observed by the server,
+  /// keyed by request path. Tests assert against this to confirm the
+  /// data source attaches the bearer token to every catalog HTTP call
+  /// — the HEAD probe, the manifest GET, and every chunk GET / send.
+  final Map<String, List<String>> receivedAccessTokens = {};
+
   Future<int> start() async {
     _server = await HttpServer.bind(InternetAddress.loopbackIPv4, 0);
     _server!.listen((HttpRequest req) async {
       final path = req.uri.path;
       // Path looks like /v1/<filename>; strip leading /v1/.
       final name = path.startsWith('/v1/') ? path.substring(4) : path;
+
+      // Record the X-Catalog-Access header so tests can assert that
+      // every catalog request carried it. Header names are
+      // case-insensitive on the wire; `HttpHeaders.value` normalises.
+      final token = req.headers.value('x-catalog-access') ?? '';
+      receivedAccessTokens.putIfAbsent(path, () => []).add(token);
+
+      if (forbidAll) {
+        req.response.statusCode = 403;
+        req.response.headers.set('content-type', 'text/plain');
+        req.response.write('forbidden');
+        await req.response.close();
+        return;
+      }
 
       if (req.method == 'HEAD') {
         if (name.endsWith('.manifest.json')) {
@@ -574,6 +601,93 @@ void main() {
         }
         expect(caught, isA<CatalogVariantRotatedException>());
         expect(File(dbPath).existsSync(), isFalse);
+      },
+    );
+
+    test(
+      'every catalog HTTP request carries the X-Catalog-Access header '
+      'with the envied token',
+      () async {
+        // Drive the full download-and-install flow, plus the lighter
+        // HEAD probe paths, so the fake server sees a representative
+        // mix of catalog HTTP calls: HEAD on the manifest (probe),
+        // GET on the manifest, GETs on every chunk.
+        await ds.probeAvailability();
+        await ds.probeContentLength('s1_n1_r5');
+
+        final dbPath = p.join(tmp.path, 'offline_catalog.db');
+        await for (final _ in ds.downloadAndInstall(
+          variantId: 's1_n1_r5',
+          catalogDbPath: dbPath,
+          expectedUncompressedBytes: 0,
+          beforeInstall: () async {},
+          cancellation: CancellationToken(),
+        )) {}
+
+        // At least the probe (HEAD on s1_n1_r5.manifest.json), the
+        // manifest GET, and a GET per chunk should all be present.
+        expect(server.receivedAccessTokens, isNotEmpty);
+        expect(
+          server.receivedAccessTokens.keys,
+          contains('/v1/s1_n1_r5.manifest.json'),
+        );
+        for (final partName in fixtureParts.keys) {
+          expect(
+            server.receivedAccessTokens.keys,
+            contains('/v1/$partName'),
+            reason: 'no request observed for chunk $partName',
+          );
+        }
+        // Every observed value must equal the envied token. There
+        // must be no empty values — that would mean a code path
+        // somewhere constructed a client without the headers.
+        final expectedToken = Env.catalogAccessToken;
+        for (final entry in server.receivedAccessTokens.entries) {
+          for (final observed in entry.value) {
+            expect(observed, equals(expectedToken),
+                reason:
+                    'request to ${entry.key} did not carry the catalog '
+                    'access token');
+          }
+        }
+      },
+    );
+
+    test(
+      'downloadAndInstall throws CatalogAccessDeniedException when the '
+      'CDN returns 403 (WAF gate rejected the bearer token)',
+      () async {
+        server.forbidAll = true;
+        final dbPath = p.join(tmp.path, 'offline_catalog.db');
+        Object? caught;
+        try {
+          await for (final _ in ds.downloadAndInstall(
+            variantId: 's1_n1_r5',
+            catalogDbPath: dbPath,
+            expectedUncompressedBytes: 0,
+            beforeInstall: () async {},
+            cancellation: CancellationToken(),
+          )) {}
+        } catch (e) {
+          caught = e;
+        }
+        expect(caught, isA<CatalogAccessDeniedException>());
+        // No catalog should have landed at the final path.
+        expect(File(dbPath).existsSync(), isFalse);
+      },
+    );
+
+    test(
+      'probeContentLength throws CatalogAccessDeniedException on a 403',
+      () async {
+        server.forbidAll = true;
+        Object? caught;
+        try {
+          await ds.probeContentLength('s1_n1_r5');
+        } catch (e) {
+          caught = e;
+        }
+        expect(caught, isA<CatalogAccessDeniedException>());
       },
     );
 

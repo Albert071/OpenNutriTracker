@@ -24,6 +24,16 @@ terraform {
       source  = "hashicorp/aws"
       version = "~> 5.70"
     }
+    # Used at the root to mint the long-lived `catalog_access_token`
+    # — a 48-character alphanumeric bearer token that the Cloudflare
+    # WAF Custom Rule checks for on every request to catalog.opennutritracker.org.
+    # The token is held in encrypted state and never rotated by the
+    # provider itself (`prevent_destroy` plus no `keepers`); emergency
+    # rotation is a deliberate `tofu taint` operation.
+    random = {
+      source  = "hashicorp/random"
+      version = "~> 3.6"
+    }
   }
 
   # State lives in a private R2 bucket (`opennutritracker-tf-state`)

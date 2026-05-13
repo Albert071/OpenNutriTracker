@@ -7,6 +7,7 @@ import 'package:crypto/crypto.dart';
 import 'package:http/http.dart' as http;
 import 'package:logging/logging.dart';
 import 'package:opennutritracker/core/utils/app_const.dart';
+import 'package:opennutritracker/core/utils/env.dart';
 import 'package:opennutritracker/core/utils/ont_http_client.dart';
 import 'package:opennutritracker/features/offline_catalog/domain/entity/cancellation_token.dart';
 import 'package:opennutritracker/features/offline_catalog/domain/entity/download_progress.dart';
@@ -45,6 +46,23 @@ class CatalogSchemaVersionException implements Exception {
       'The downloaded catalog reports schema version $downloaded, but '
       'this app only knows how to read up to version $supported. Update '
       'the app to use this catalog.';
+}
+
+/// Raised when the catalog CDN responds 403 to a request that
+/// already carried the `X-Catalog-Access` header. In practice this
+/// means the token compiled into the installed APK is no longer
+/// accepted by the Cloudflare WAF Custom Rule — usually because an
+/// emergency rotation happened on the server side and this build of
+/// the app pre-dates it. The best recovery is to update the app, so
+/// the bloc surfaces this as a non-recoverable error with that
+/// guidance rather than offering a doomed retry.
+class CatalogAccessDeniedException implements Exception {
+  const CatalogAccessDeniedException();
+
+  @override
+  String toString() =>
+      'The catalog server refused this request. Update OpenNutriTracker '
+      'to pick up the latest catalog access credentials.';
 }
 
 /// Raised when a part's freshly-downloaded bytes do not hash to the
@@ -224,6 +242,16 @@ class CatalogDownloadDataSource {
   /// manifest already include the variant prefix.
   Uri partUrlFor(String partName) => Uri.parse('$_baseUrl/$partName');
 
+  /// Headers every catalog HTTP request carries. The bearer token
+  /// gates `catalog.opennutritracker.org` at the Cloudflare edge —
+  /// the WAF Custom Rule 403s any request whose `X-Catalog-Access`
+  /// header does not match the value baked into the APK. Declaring
+  /// the headers once here means every code path that constructs an
+  /// `ONTHttpClient` for catalog traffic picks them up automatically.
+  Map<String, String> get _catalogRequestHeaders => {
+        'X-Catalog-Access': Env.catalogAccessToken,
+      };
+
   /// Quick "is the catalog CDN reachable?" probe. Issues a HEAD
   /// against the recommended default variant's manifest with a tight
   /// timeout, and folds every failure mode (timeout, DNS error, TLS
@@ -241,7 +269,11 @@ class CatalogDownloadDataSource {
     Duration timeout = const Duration(seconds: 5),
   }) async {
     final userAgent = await _userAgentResolver();
-    final client = ONTHttpClient(userAgent, _httpClientFactory());
+    final client = ONTHttpClient(
+      userAgent,
+      _httpClientFactory(),
+      extraHeaders: _catalogRequestHeaders,
+    );
     try {
       final response = await client
           .head(manifestUrlFor('s1_n1_r5'))
@@ -260,11 +292,18 @@ class CatalogDownloadDataSource {
   /// check before committing to the full download.
   Future<int?> probeContentLength(String variantId) async {
     final userAgent = await _userAgentResolver();
-    final client = ONTHttpClient(userAgent, _httpClientFactory());
+    final client = ONTHttpClient(
+      userAgent,
+      _httpClientFactory(),
+      extraHeaders: _catalogRequestHeaders,
+    );
     try {
       final response = await client
           .head(manifestUrlFor(variantId))
           .timeout(const Duration(seconds: 30));
+      if (response.statusCode == 403) {
+        throw const CatalogAccessDeniedException();
+      }
       if (response.statusCode != 200) return null;
       final raw = response.headers['content-length'];
       if (raw == null) return null;
@@ -386,7 +425,11 @@ class CatalogDownloadDataSource {
     final tmpDbPath = p.join(dir.path, _tmpDbFilename);
     final userAgent = await _userAgentResolver();
 
-    final client = ONTHttpClient(userAgent, _httpClientFactory());
+    final client = ONTHttpClient(
+      userAgent,
+      _httpClientFactory(),
+      extraHeaders: _catalogRequestHeaders,
+    );
     final _CatalogManifest manifest;
     try {
       manifest = await _resolveManifest(
@@ -544,6 +587,9 @@ class CatalogDownloadDataSource {
     final freshResponse = await client
         .get(manifestUrlFor(variantId))
         .timeout(const Duration(seconds: 30));
+    if (freshResponse.statusCode == 403) {
+      throw const CatalogAccessDeniedException();
+    }
     if (freshResponse.statusCode != 200) {
       throw HttpException(
         'GET ${manifestUrlFor(variantId)} returned '
@@ -627,7 +673,11 @@ class CatalogDownloadDataSource {
     final workerCount = math.min(_workerConcurrency, queue.length);
 
     Future<void> worker() async {
-      final client = ONTHttpClient(userAgent, _httpClientFactory());
+      final client = ONTHttpClient(
+        userAgent,
+        _httpClientFactory(),
+        extraHeaders: _catalogRequestHeaders,
+      );
       try {
         while (queue.isNotEmpty) {
           if (cancellation.isCancelled) return;
@@ -682,6 +732,9 @@ class CatalogDownloadDataSource {
     }
 
     final response = await client.send(request);
+    if (response.statusCode == 403) {
+      throw const CatalogAccessDeniedException();
+    }
     if (resumeFrom > 0 && response.statusCode == 200) {
       // Cloudflare ignored the Range header. Truncate and start over.
       _log.info(

@@ -19,6 +19,11 @@ locals {
     R2_ACCESS_KEY_ID       = module.cloudflare.catalog_upload_token_id
     R2_SECRET_ACCESS_KEY   = module.cloudflare.r2_secret_access_key
     CLOUDFLARE_PURGE_TOKEN = module.cloudflare.cache_purge_token_value
+    # Consumed by the eventual automated APK release pipeline so
+    # envied can obfuscate the value into the APK at build time.
+    # The same value lives in the gitignored local `.env` for the
+    # current manual-build workflow.
+    CATALOG_ACCESS_TOKEN   = random_password.catalog_access_token.result
   }
 
   # Non-sensitive: the configuration the build workflow consults to

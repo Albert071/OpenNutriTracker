@@ -71,8 +71,10 @@ Cloudflare resources, all defined in `opentofu/infrastructure/*.tf`:
 | `cloudflare_r2_bucket.catalog` (`opennutritracker-catalog`) | `r2.tf`      | Public-read bucket the catalog chunks live in.                                      |
 | `cloudflare_r2_custom_domain.catalog`                       | `r2.tf`      | `catalog.opennutritracker.org`. Canonical app-facing host.                          |
 | `cloudflare_ruleset.cache`                                  | `cache.tf`   | 7-day edge TTL, 2-minute browser `max-age`, on responses from the custom domain.    |
+| `cloudflare_ruleset.catalog_access`                         | `firewall.tf`| WAF Custom Rule blocking catalog requests missing the `X-Catalog-Access` header.    |
 | `cloudflare_api_token.catalog_upload`                       | `tokens.tf`  | Bucket-scoped, object-write only. Used by the build workflow to upload chunks.      |
 | `cloudflare_api_token.cache_purge`                          | `tokens.tf`  | Zone-scoped, purge only. Used after each upload to invalidate the new URLs.         |
+| `random_password.catalog_access_token`                      | `main.tf`    | Long-lived 48-char bearer token threaded into the WAF rule and into the APK via envied. |
 
 Plus seven GitHub Actions secrets, defined by `local.secrets` in `locals.tf` and produced via `module.secret`, that publish the values above into the build workflow:
 
@@ -178,6 +180,7 @@ Published by OpenTofu into two GitHub Actions stores: credentials go to **secret
 | `R2_ACCESS_KEY_ID`       | secret   | `module.cloudflare.catalog_upload_token_id`            |
 | `R2_SECRET_ACCESS_KEY`   | secret   | `module.cloudflare.r2_secret_access_key`               |
 | `CLOUDFLARE_PURGE_TOKEN` | secret   | `module.cloudflare.cache_purge_token_value`            |
+| `CATALOG_ACCESS_TOKEN`   | secret   | `random_password.catalog_access_token.result`          |
 | `R2_BUCKET`              | variable | `module.cloudflare.bucket_name`                        |
 | `R2_ENDPOINT`            | variable | `module.cloudflare.r2_endpoint`                        |
 | `CDN_HOST`               | variable | `module.cloudflare.custom_domain`                      |
@@ -191,6 +194,30 @@ output "r2_secret_access_key" {
   sensitive = true
 }
 ```
+
+## Catalog access token
+
+A single shared bearer token gates the catalog domain at the Cloudflare edge. Any request to `catalog.opennutritracker.org` whose `X-Catalog-Access` header does not match the expected value is blocked by `cloudflare_ruleset.catalog_access` before R2 is touched — so random crawlers and drive-by downloaders cannot pull a 500 MiB sqlite of Open Food Facts data without going through the app, and a blocked request costs nothing on R2 reads or egress.
+
+The token itself is `random_password.catalog_access_token`: 48 alphanumeric characters, minted once on the first apply, held in the encrypted state file, and reused indefinitely. The resource has no `keepers` and carries `lifecycle { prevent_destroy = true }`, so routine applies never regenerate it and an accidental `tofu destroy` will refuse rather than silently invalidate every APK already in the wild. The value flows in three directions from state, all handled automatically by the existing modules:
+
+1. **Into the WAF rule** via `module.cloudflare`'s `catalog_access_token` input, interpolated into the wirefilter expression on `cloudflare_ruleset.catalog_access`.
+2. **Into the `CATALOG_ACCESS_TOKEN` GitHub Actions secret** via `local.secrets`, so the eventual automated release pipeline can read it the same way the build workflow already reads `R2_SECRET_ACCESS_KEY`.
+3. **Into the local `.env`** for today's manual `fvm flutter build apk` workflow — copy it once with `tofu output -raw catalog_access_token` and keep it there. The OpenNutriTracker app's `envied` configuration consumes it at build time and obfuscates it into the APK as `Env.catalogAccessToken`.
+
+The token is long-lived on purpose. The same value needs to keep working across every APK release we ship, because a user on yesterday's APK still needs to be able to download today's catalog rebuild. Rotation is reserved for emergencies — a credible report that the token has leaked outside our control, or a deliberate cycle on a major-version release where we have already decided we no longer support older clients. The procedure is:
+
+```bash
+cd opentofu/infrastructure
+set -a && source .env && set +a
+~/.tenv/OpenTofu/1.11.6/tofu taint random_password.catalog_access_token
+~/.tenv/OpenTofu/1.11.6/tofu apply
+~/.tenv/OpenTofu/1.11.6/tofu output -raw catalog_access_token
+# copy the new value into the gitignored local .env
+fvm flutter build apk --release    # ship a new APK with the new envied token
+```
+
+Apply re-mints the random_password, the WAF rule updates atomically to the new value, the `CATALOG_ACCESS_TOKEN` secret is re-sealed into GitHub. Every APK built before the rotation will start receiving 403s on catalog requests the moment the rule updates; the app surfaces those as a "please update OpenNutriTracker" message so users in that situation get a legible nudge rather than a generic network error. The whole loop is intentional and not something a routine apply will ever trigger.
 
 ## Sealing GitHub Actions secrets
 
@@ -351,19 +378,21 @@ Local apply continues to work throughout. The provider authenticates via the PAT
 
 ```text
 opentofu/infrastructure/
-  main.tf             ← composition: module.cloudflare + module.secret + module.variable
+  main.tf             ← composition: random_password + module.cloudflare + module.secret + module.variable
   tofu.tf             ← terraform { } block, R2 backend, state encryption
   providers.tf        ← provider "cloudflare" + provider "github"
   data.tf             ← github_actions_public_key data source
   variables.tf        ← input variables (account_id, zone_id, passphrase, ...)
+  outputs.tf          ← sensitive root outputs (catalog_access_token)
   locals.tf           ← `local.secrets` and `local.config_variables` maps
   modules/
-    cloudflare/       ← R2 bucket + custom domain + cache rule + tokens
+    cloudflare/       ← R2 bucket + custom domain + cache rule + WAF gate + tokens
       main.tf         ← required_providers
       r2.tf           ← bucket + custom domain
       cache.tf        ← zone-level cache rule
+      firewall.tf     ← WAF Custom Rule (X-Catalog-Access bearer-token gate)
       tokens.tf       ← downstream Cloudflare API tokens
-      variables.tf    ← module inputs (account_id, zone_id, cache TTLs)
+      variables.tf    ← module inputs (account_id, zone_id, cache TTLs, catalog_access_token)
       outputs.tf      ← bucket_name, custom_domain, r2_endpoint, ...
     sealed_github_secret/
       main.tf         ← per-secret seal + plaintext hash + secret resource
