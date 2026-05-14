@@ -71,6 +71,8 @@ class MessageLookup extends MessageLookupByLibrary {
   static String m21(count, customCount) =>
       "JSON\'dan ${count} kayıt eklendi, ${customCount} özel öğün olarak kaydedildi";
 
+  static String m22(value) => "Hedefine ${value} kaldı";
+
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "activityExample": MessageLookupByLibrary.simpleMessage(
@@ -1077,5 +1079,20 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Protein (çoktan aza)"),
         "diarySortByTime":
             MessageLookupByLibrary.simpleMessage("Eklenme zamanı"),
+        "profileTargetWeightLabel":
+            MessageLookupByLibrary.simpleMessage("Hedef kilo"),
+        "profileTargetWeightNotSetLabel":
+            MessageLookupByLibrary.simpleMessage("Ayarlanmadı"),
+        "profileTargetWeightClearAction":
+            MessageLookupByLibrary.simpleMessage("Temizle"),
+        "profileTargetWeightReached":
+            MessageLookupByLibrary.simpleMessage("Hedefine ulaştın"),
+        "settingsCaloriesTaperDescription": MessageLookupByLibrary.simpleMessage(
+            "Günlük açığı kademeli olarak azaltır, böylece son birkaç kilo bir duvar gibi hissettirmez."),
+        "settingsCaloriesTaperLabel": MessageLookupByLibrary.simpleMessage(
+            "Hedefine yaklaştıkça kalori hedefini ayarla"),
+        "settingsTargetWeightLabel":
+            MessageLookupByLibrary.simpleMessage("Hedef kilo"),
+        "profileTargetWeightToGo": m22,
       };
 }

@@ -66,6 +66,8 @@ class MessageLookup extends MessageLookupByLibrary {
   static String m21(count, customCount) =>
       "已从 JSON 记录 ${count} 条，其中 ${customCount} 条保存为自定义餐食";
 
+  static String m22(value) => "距离目标还差 ${value}";
+
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "activityExample":
@@ -948,5 +950,20 @@ class MessageLookup extends MessageLookupByLibrary {
         "diarySortByProtein":
             MessageLookupByLibrary.simpleMessage("蛋白质（从高到低）"),
         "diarySortByTime": MessageLookupByLibrary.simpleMessage("添加时间"),
+        "profileTargetWeightLabel":
+            MessageLookupByLibrary.simpleMessage("目标体重"),
+        "profileTargetWeightNotSetLabel":
+            MessageLookupByLibrary.simpleMessage("未设置"),
+        "profileTargetWeightClearAction":
+            MessageLookupByLibrary.simpleMessage("清除"),
+        "profileTargetWeightReached":
+            MessageLookupByLibrary.simpleMessage("你已达到目标"),
+        "settingsCaloriesTaperDescription":
+            MessageLookupByLibrary.simpleMessage("逐渐减小每日热量缺口，让最后几公斤不再像一堵墙。"),
+        "settingsCaloriesTaperLabel":
+            MessageLookupByLibrary.simpleMessage("接近目标时调整卡路里目标"),
+        "settingsTargetWeightLabel":
+            MessageLookupByLibrary.simpleMessage("目标体重"),
+        "profileTargetWeightToGo": m22,
       };
 }

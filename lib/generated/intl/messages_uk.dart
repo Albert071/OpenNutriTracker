@@ -69,6 +69,8 @@ class MessageLookup extends MessageLookupByLibrary {
   static String m21(count, customCount) =>
       "Записано ${count} з JSON, ${customCount} збережено як власні страви";
 
+  static String m22(value) => "Залишилось ${value} до цілі";
+
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "activityExample": MessageLookupByLibrary.simpleMessage(
@@ -1102,5 +1104,20 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Білки (за спаданням)"),
         "diarySortByTime":
             MessageLookupByLibrary.simpleMessage("Часом додавання"),
+        "profileTargetWeightLabel":
+            MessageLookupByLibrary.simpleMessage("Цільова вага"),
+        "profileTargetWeightNotSetLabel":
+            MessageLookupByLibrary.simpleMessage("Не задано"),
+        "profileTargetWeightClearAction":
+            MessageLookupByLibrary.simpleMessage("Очистити"),
+        "profileTargetWeightReached":
+            MessageLookupByLibrary.simpleMessage("Ви досягли своєї цілі"),
+        "settingsCaloriesTaperDescription": MessageLookupByLibrary.simpleMessage(
+            "Поступово зменшує щоденний дефіцит, щоб останні кілограми не здавалися стіною."),
+        "settingsCaloriesTaperLabel": MessageLookupByLibrary.simpleMessage(
+            "Коригувати калорійну ціль у міру наближення до цілі"),
+        "settingsTargetWeightLabel":
+            MessageLookupByLibrary.simpleMessage("Цільова вага"),
+        "profileTargetWeightToGo": m22,
       };
 }

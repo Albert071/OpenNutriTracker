@@ -64,6 +64,7 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
           offCacheCount: offCacheCount,
           offCacheSizeBytes: offCacheSizeBytes,
           showMicronutrients: userConfig.showMicronutrients,
+          caloriesTaperEnabled: userConfig.caloriesTaperEnabled,
         ),
       );
     });
@@ -110,6 +111,10 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
 
   void setShowMicronutrients(bool show) {
     _addConfigUsecase.setConfigShowMicronutrients(show);
+  }
+
+  void setCaloriesTaperEnabled(bool enabled) {
+    _addConfigUsecase.setConfigCaloriesTaperEnabled(enabled);
   }
 
   Future<Map<String, int>?> getDiarySortPreferences() async {

@@ -72,6 +72,8 @@ class MessageLookup extends MessageLookupByLibrary {
   static String m21(count, customCount) =>
       "${count} aus JSON eingetragen, ${customCount} als eigene Mahlzeit gespeichert";
 
+  static String m22(value) => "Noch ${value} bis zum Ziel";
+
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "activityExample": MessageLookupByLibrary.simpleMessage(
@@ -1113,5 +1115,20 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Protein (absteigend)"),
         "diarySortByTime":
             MessageLookupByLibrary.simpleMessage("Hinzugefügt am"),
+        "profileTargetWeightLabel":
+            MessageLookupByLibrary.simpleMessage("Zielgewicht"),
+        "profileTargetWeightNotSetLabel":
+            MessageLookupByLibrary.simpleMessage("Nicht festgelegt"),
+        "profileTargetWeightClearAction":
+            MessageLookupByLibrary.simpleMessage("Löschen"),
+        "profileTargetWeightReached":
+            MessageLookupByLibrary.simpleMessage("Du hast dein Ziel erreicht"),
+        "settingsCaloriesTaperDescription": MessageLookupByLibrary.simpleMessage(
+            "Reduziert das tägliche Defizit allmählich, damit die letzten Kilos nicht wie eine Wand wirken."),
+        "settingsCaloriesTaperLabel": MessageLookupByLibrary.simpleMessage(
+            "Kalorienziel anpassen, wenn du dich dem Ziel näherst"),
+        "settingsTargetWeightLabel":
+            MessageLookupByLibrary.simpleMessage("Zielgewicht"),
+        "profileTargetWeightToGo": m22,
       };
 }

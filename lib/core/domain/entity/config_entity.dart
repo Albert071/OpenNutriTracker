@@ -19,6 +19,7 @@ class ConfigEntity extends Equatable {
   final int notificationMinute;
   final String? selectedLocale;
   final bool showMicronutrients; // #237
+  final bool caloriesTaperEnabled;
   final Map<String, int>? diarySortPreferences;
   // #160 follow-up: per-nutrient show/hide overrides for the daily panel.
   // Keys are nutrient identifiers (see `DailyNutrientPanel.nutrientKeys`),
@@ -44,6 +45,7 @@ class ConfigEntity extends Equatable {
     this.notificationMinute = 0,
     this.selectedLocale,
     this.showMicronutrients = false,
+    this.caloriesTaperEnabled = false,
     this.diarySortPreferences,
     this.nutrientPanelVisibility = const <String, bool>{},
   });
@@ -70,6 +72,7 @@ class ConfigEntity extends Equatable {
         notificationMinute: dbo.notificationMinute ?? 0,
         selectedLocale: dbo.selectedLocale,
         showMicronutrients: dbo.showMicronutrients ?? false,
+        caloriesTaperEnabled: dbo.caloriesTaperEnabled,
         diarySortPreferences: dbo.diarySortPreferences,
         nutrientPanelVisibility:
             dbo.nutrientPanelVisibility ?? const <String, bool>{},
@@ -92,6 +95,7 @@ class ConfigEntity extends Equatable {
         notificationMinute,
         selectedLocale,
         showMicronutrients,
+        caloriesTaperEnabled,
         diarySortPreferences,
         nutrientPanelVisibility,
       ];

@@ -79,6 +79,13 @@
       }
     }
   },
+  "@profileTargetWeightToGo": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
   "@recipeIngredientCountLabel": {
     "placeholders": {
       "count": {
@@ -589,6 +596,11 @@
   "potassiumLabel": "potassium",
   "privacyPolicyLabel": "Privacy policy",
   "profileLabel": "Profile",
+  "profileTargetWeightClearAction": "Clear",
+  "profileTargetWeightLabel": "Target weight",
+  "profileTargetWeightNotSetLabel": "Not set",
+  "profileTargetWeightReached": "You've reached your target",
+  "profileTargetWeightToGo": "{value} to your target",
   "proteinLabel": "protein",
   "proteinLabelShort": "p",
   "quantityLabel": "Quantity",
@@ -648,6 +660,8 @@
   "settingsCalciumGoalDescription": "Daily calcium target in milligrams. Default reference is 1000mg.",
   "settingsCalciumGoalLabel": "Calcium goal",
   "settingsCalculationsLabel": "Calculations",
+  "settingsCaloriesTaperDescription": "Reduces the daily deficit gradually so the last few kg don't feel like a wall.",
+  "settingsCaloriesTaperLabel": "Adjust calorie goal as you approach target",
   "settingsCustomMealsLabel": "Custom Meals",
   "settingsDisclaimerLabel": "Disclaimer",
   "settingsDistanceLabel": "Distance",
@@ -686,6 +700,7 @@
   "settingsSugarsGoalDescription": "Daily sugars cap in grams. Default reference is 50g.",
   "settingsSugarsGoalLabel": "Sugars goal",
   "settingsSystemLabel": "System",
+  "settingsTargetWeightLabel": "Target weight",
   "settingsThemeDarkLabel": "Dark",
   "settingsThemeLabel": "Theme",
   "settingsThemeLightLabel": "Light",

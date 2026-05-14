@@ -78,6 +78,13 @@
       }
     }
   },
+  "@profileTargetWeightToGo": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
   "@recipeIngredientCountLabel": {
     "placeholders": {
       "count": {
@@ -588,6 +595,11 @@
   "potassiumLabel": "draslík",
   "privacyPolicyLabel": "Zásady ochrany súkromia",
   "profileLabel": "Profil",
+  "profileTargetWeightClearAction": "Vymazať",
+  "profileTargetWeightLabel": "Cieľová hmotnosť",
+  "profileTargetWeightNotSetLabel": "Nenastavené",
+  "profileTargetWeightReached": "Dosiahli ste svoj cieľ",
+  "profileTargetWeightToGo": "{value} do cieľa",
   "proteinLabel": "bielkoviny",
   "proteinLabelShort": "b",
   "quantityLabel": "Množstvo",
@@ -647,6 +659,8 @@
   "settingsCalciumGoalDescription": "Denný cieľ vápnika v miligramoch. Predvolená referencia je 1000 mg.",
   "settingsCalciumGoalLabel": "Cieľ vápnika",
   "settingsCalculationsLabel": "Výpočty",
+  "settingsCaloriesTaperDescription": "Postupne znižuje denný kalorický deficit, aby posledné kilá nepôsobili ako stena.",
+  "settingsCaloriesTaperLabel": "Upraviť kalorický cieľ s blížením k cieľovej hmotnosti",
   "settingsCustomMealsLabel": "Vlastné jedlá",
   "settingsDisclaimerLabel": "Upozornenie",
   "settingsDistanceLabel": "Vzdialenosť",
@@ -685,6 +699,7 @@
   "settingsSugarsGoalDescription": "Denný limit cukrov v gramoch. Predvolená referencia je 50 g.",
   "settingsSugarsGoalLabel": "Cieľ cukrov",
   "settingsSystemLabel": "Systém",
+  "settingsTargetWeightLabel": "Cieľová hmotnosť",
   "settingsThemeDarkLabel": "Tmavá",
   "settingsThemeLabel": "Vzhľad",
   "settingsThemeLightLabel": "Svetlá",

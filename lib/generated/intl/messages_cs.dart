@@ -69,6 +69,8 @@ class MessageLookup extends MessageLookupByLibrary {
   static String m21(count, customCount) =>
       "Zaznamenáno ${count} z JSON, ${customCount} uloženo jako vlastní jídla";
 
+  static String m22(value) => "Zbývá ${value} do cíle";
+
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "activityExample": MessageLookupByLibrary.simpleMessage(
@@ -1090,5 +1092,20 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Bílkoviny (sestupně)"),
         "diarySortByTime":
             MessageLookupByLibrary.simpleMessage("Času přidání"),
+        "profileTargetWeightLabel":
+            MessageLookupByLibrary.simpleMessage("Cílová hmotnost"),
+        "profileTargetWeightNotSetLabel":
+            MessageLookupByLibrary.simpleMessage("Nenastaveno"),
+        "profileTargetWeightClearAction":
+            MessageLookupByLibrary.simpleMessage("Vymazat"),
+        "profileTargetWeightReached":
+            MessageLookupByLibrary.simpleMessage("Dosáhli jste svého cíle"),
+        "settingsCaloriesTaperDescription": MessageLookupByLibrary.simpleMessage(
+            "Postupně zmenšuje denní deficit, aby posledních pár kilogramů nepůsobilo jako zeď."),
+        "settingsCaloriesTaperLabel": MessageLookupByLibrary.simpleMessage(
+            "Upravovat kalorický cíl, jak se blížíte k cílové váze"),
+        "settingsTargetWeightLabel":
+            MessageLookupByLibrary.simpleMessage("Cílová hmotnost"),
+        "profileTargetWeightToGo": m22,
       };
 }
