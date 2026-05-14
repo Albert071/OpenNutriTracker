@@ -177,6 +177,16 @@ class MessageLookup extends MessageLookupByLibrary {
             "Nie można odczytać pliku CSV. Sprawdź format i spróbuj ponownie."),
         "csvImportPartialLabel": m13,
         "csvImportSuccessLabel": m12,
+        "barcodeInvalidEan13CheckDigit": MessageLookupByLibrary.simpleMessage(
+            "Ten 13-cyfrowy kod kreskowy wygląda na błędnie wpisany: ostatnia cyfra nie pasuje do pozostałych"),
+        "customMealBarcodeHint": MessageLookupByLibrary.simpleMessage(
+            "Zeskanuj lub wpisz kod kreskowy, aby później przywołać ten posiłek"),
+        "customMealBarcodeInvalid": MessageLookupByLibrary.simpleMessage(
+            "Kod kreskowy musi mieć od 8 do 14 cyfr"),
+        "customMealBarcodeLabel":
+            MessageLookupByLibrary.simpleMessage("Kod kreskowy"),
+        "customMealBarcodeScanButton":
+            MessageLookupByLibrary.simpleMessage("Skanuj kod kreskowy"),
         "customMealsDeleteConfirmContent": MessageLookupByLibrary.simpleMessage(
             "Wszystkie wpisy w dzienniku używające tego posiłku zostaną również usunięte."),
         "customMealsDeleteConfirmTitle":

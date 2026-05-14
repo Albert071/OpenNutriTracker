@@ -1106,5 +1106,15 @@ class MessageLookup extends MessageLookupByLibrary {
         "settingsTargetWeightLabel":
             MessageLookupByLibrary.simpleMessage("Cieľová hmotnosť"),
         "profileTargetWeightToGo": m22,
+        "barcodeInvalidEan13CheckDigit":
+            MessageLookupByLibrary.simpleMessage("Tento 13-miestny čiarový kód vyzerá ako preklep: posledná číslica nesedí so zvyškom"),
+        "customMealBarcodeHint":
+            MessageLookupByLibrary.simpleMessage("Naskenujte alebo zadajte čiarový kód, aby ste si toto jedlo neskôr ľahko vyvolali"),
+        "customMealBarcodeInvalid":
+            MessageLookupByLibrary.simpleMessage("Čiarový kód musí mať 8 až 14 číslic"),
+        "customMealBarcodeLabel":
+            MessageLookupByLibrary.simpleMessage("Čiarový kód"),
+        "customMealBarcodeScanButton":
+            MessageLookupByLibrary.simpleMessage("Naskenovať kód"),
       };
 }

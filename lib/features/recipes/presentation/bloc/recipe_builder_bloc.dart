@@ -32,6 +32,7 @@ class RecipeBuilderBloc
     on<SaveRecipeEvent>(_onSave);
   }
 
+
   void _onInitialize(
     InitializeBuilderEvent event,
     Emitter<RecipeBuilderState> emit,

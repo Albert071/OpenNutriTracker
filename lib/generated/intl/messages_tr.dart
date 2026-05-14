@@ -179,6 +179,16 @@ class MessageLookup extends MessageLookupByLibrary {
             "CSV dosyası okunamadı. Biçimi kontrol edin ve tekrar deneyin."),
         "csvImportPartialLabel": m13,
         "csvImportSuccessLabel": m12,
+        "barcodeInvalidEan13CheckDigit": MessageLookupByLibrary.simpleMessage(
+            "Bu 13 haneli barkod yanlış girilmiş gibi: son hane diğerleriyle uyuşmuyor"),
+        "customMealBarcodeHint": MessageLookupByLibrary.simpleMessage(
+            "Bu yemeği daha sonra hatırlamak için barkodu tarat veya yaz"),
+        "customMealBarcodeInvalid": MessageLookupByLibrary.simpleMessage(
+            "Barkod 8 ile 14 hane arasında olmalı"),
+        "customMealBarcodeLabel":
+            MessageLookupByLibrary.simpleMessage("Barkod"),
+        "customMealBarcodeScanButton":
+            MessageLookupByLibrary.simpleMessage("Barkod tara"),
         "customMealsDeleteConfirmContent": MessageLookupByLibrary.simpleMessage(
             "Bu yemeği kullanan tüm günlük girişleri de kaldırılacak."),
         "customMealsDeleteConfirmTitle":

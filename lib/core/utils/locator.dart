@@ -227,7 +227,11 @@ Future<void> initLocator() async {
     ),
   );
   locator.registerLazySingleton<SearchProductByBarcodeUseCase>(
-    () => SearchProductByBarcodeUseCase(locator(), locator(), locator()),
+    () => SearchProductByBarcodeUseCase(
+      locator(),
+      locator(),
+      locator(),
+    ),
   );
   locator.registerLazySingleton<GetIntakeUsecase>(
     () => GetIntakeUsecase(locator()),
