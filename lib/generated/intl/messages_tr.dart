@@ -920,8 +920,53 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Özel Yemekler"),
         "settingsDisclaimerLabel":
             MessageLookupByLibrary.simpleMessage("Sorumluluk Reddi"),
+        "settingsFibreGoalDescription": MessageLookupByLibrary.simpleMessage(
+            "Günlük lif hedefi (gram). Varsayılan referans 30 g."),
+        "settingsFibreGoalLabel":
+            MessageLookupByLibrary.simpleMessage("Lif hedefi"),
+        "settingsNutrientGoalsHint": MessageLookupByLibrary.simpleMessage(
+            "Günlük paneldeki her besin için kişisel hedefler. Bir hedef belirlediğinde günlük, varsayılan günlük referanslar yerine bu değerleri kullanır."),
+        "settingsNutrientGoalsLabel":
+            MessageLookupByLibrary.simpleMessage("Besin hedefleri"),
+        "settingsSaturatedFatGoalDescription":
+            MessageLookupByLibrary.simpleMessage(
+                "Günlük doymuş yağ üst sınırı (gram). Varsayılan referans 20 g."),
+        "settingsSaturatedFatGoalLabel":
+            MessageLookupByLibrary.simpleMessage("Doymuş yağ hedefi"),
         "settingsSourcesLabel":
             MessageLookupByLibrary.simpleMessage("Kaynaklar ve Referanslar"),
+        "settingsSugarsGoalDescription": MessageLookupByLibrary.simpleMessage(
+            "Günlük şeker üst sınırı (gram). Varsayılan referans 50 g."),
+        "settingsSugarsGoalLabel":
+            MessageLookupByLibrary.simpleMessage("Şeker hedefi"),
+        "settingsSodiumGoalLabel":
+            MessageLookupByLibrary.simpleMessage("Sodyum hedefi"),
+        "settingsSodiumGoalDescription": MessageLookupByLibrary.simpleMessage(
+            "Günlük sodyum üst sınırı (miligram). Varsayılan referans 2300 mg."),
+        "settingsCalciumGoalLabel":
+            MessageLookupByLibrary.simpleMessage("Kalsiyum hedefi"),
+        "settingsCalciumGoalDescription": MessageLookupByLibrary.simpleMessage(
+            "Günlük kalsiyum hedefi (miligram). Varsayılan referans 1000 mg."),
+        "settingsIronGoalLabel":
+            MessageLookupByLibrary.simpleMessage("Demir hedefi"),
+        "settingsIronGoalDescription": MessageLookupByLibrary.simpleMessage(
+            "Günlük demir hedefi (miligram). Varsayılan değer cinsiyete göre değişir (8 mg erkek, 18 mg kadın, diğerleri için 14 mg)."),
+        "settingsPotassiumGoalLabel":
+            MessageLookupByLibrary.simpleMessage("Potasyum hedefi"),
+        "settingsPotassiumGoalDescription": MessageLookupByLibrary.simpleMessage(
+            "Günlük potasyum hedefi (miligram). Varsayılan referans 3500 mg."),
+        "settingsMagnesiumGoalLabel":
+            MessageLookupByLibrary.simpleMessage("Magnezyum hedefi"),
+        "settingsMagnesiumGoalDescription": MessageLookupByLibrary.simpleMessage(
+            "Günlük magnezyum hedefi (miligram). Varsayılan değer cinsiyete göre değişir (400 mg erkek, 310 mg kadın, diğerleri için 355 mg)."),
+        "settingsVitaminDGoalLabel":
+            MessageLookupByLibrary.simpleMessage("D vitamini hedefi"),
+        "settingsVitaminDGoalDescription": MessageLookupByLibrary.simpleMessage(
+            "Günlük D vitamini hedefi (mikrogram). Varsayılan referans 15 µg."),
+        "settingsVitaminB12GoalLabel":
+            MessageLookupByLibrary.simpleMessage("B12 vitamini hedefi"),
+        "settingsVitaminB12GoalDescription": MessageLookupByLibrary.simpleMessage(
+            "Günlük B12 vitamini hedefi (mikrogram). Varsayılan referans 2,4 µg."),
         "sourcesIconTooltip":
             MessageLookupByLibrary.simpleMessage("Kaynakları görüntüle"),
         "sourcesScreenIntro": MessageLookupByLibrary.simpleMessage(

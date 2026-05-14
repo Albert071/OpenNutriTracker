@@ -939,8 +939,53 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Власні страви"),
         "settingsDisclaimerLabel": MessageLookupByLibrary.simpleMessage(
             "Відмова від відповідальності"),
+        "settingsFibreGoalDescription": MessageLookupByLibrary.simpleMessage(
+            "Денна ціль клітковини в грамах. Стандартне значення — 30 г."),
+        "settingsFibreGoalLabel":
+            MessageLookupByLibrary.simpleMessage("Ціль клітковини"),
+        "settingsNutrientGoalsHint": MessageLookupByLibrary.simpleMessage(
+            "Особисті цілі для кожної поживної речовини в щоденній панелі. Щоденник використовує їх замість стандартних добових норм щоразу, коли ти задаєш будь-яку з них."),
+        "settingsNutrientGoalsLabel":
+            MessageLookupByLibrary.simpleMessage("Цілі поживних речовин"),
+        "settingsSaturatedFatGoalDescription":
+            MessageLookupByLibrary.simpleMessage(
+                "Денний ліміт насичених жирів у грамах. Стандартне значення — 20 г."),
+        "settingsSaturatedFatGoalLabel":
+            MessageLookupByLibrary.simpleMessage("Ціль насичених жирів"),
         "settingsSourcesLabel":
             MessageLookupByLibrary.simpleMessage("Джерела та посилання"),
+        "settingsSugarsGoalDescription": MessageLookupByLibrary.simpleMessage(
+            "Денний ліміт цукрів у грамах. Стандартне значення — 50 г."),
+        "settingsSugarsGoalLabel":
+            MessageLookupByLibrary.simpleMessage("Ціль цукрів"),
+        "settingsSodiumGoalLabel":
+            MessageLookupByLibrary.simpleMessage("Ціль натрію"),
+        "settingsSodiumGoalDescription": MessageLookupByLibrary.simpleMessage(
+            "Денний ліміт натрію в міліграмах. Стандартне значення — 2300 мг."),
+        "settingsCalciumGoalLabel":
+            MessageLookupByLibrary.simpleMessage("Ціль кальцію"),
+        "settingsCalciumGoalDescription": MessageLookupByLibrary.simpleMessage(
+            "Денна ціль кальцію в міліграмах. Стандартне значення — 1000 мг."),
+        "settingsIronGoalLabel":
+            MessageLookupByLibrary.simpleMessage("Ціль заліза"),
+        "settingsIronGoalDescription": MessageLookupByLibrary.simpleMessage(
+            "Денна ціль заліза в міліграмах. Стандартне значення залежить від статі (8 мг чоловік, 18 мг жінка, інакше 14 мг)."),
+        "settingsPotassiumGoalLabel":
+            MessageLookupByLibrary.simpleMessage("Ціль калію"),
+        "settingsPotassiumGoalDescription": MessageLookupByLibrary.simpleMessage(
+            "Денна ціль калію в міліграмах. Стандартне значення — 3500 мг."),
+        "settingsMagnesiumGoalLabel":
+            MessageLookupByLibrary.simpleMessage("Ціль магнію"),
+        "settingsMagnesiumGoalDescription": MessageLookupByLibrary.simpleMessage(
+            "Денна ціль магнію в міліграмах. Стандартне значення залежить від статі (400 мг чоловік, 310 мг жінка, інакше 355 мг)."),
+        "settingsVitaminDGoalLabel":
+            MessageLookupByLibrary.simpleMessage("Ціль вітаміну D"),
+        "settingsVitaminDGoalDescription": MessageLookupByLibrary.simpleMessage(
+            "Денна ціль вітаміну D в мікрограмах. Стандартне значення — 15 мкг."),
+        "settingsVitaminB12GoalLabel":
+            MessageLookupByLibrary.simpleMessage("Ціль вітаміну B12"),
+        "settingsVitaminB12GoalDescription": MessageLookupByLibrary.simpleMessage(
+            "Денна ціль вітаміну B12 в мікрограмах. Стандартне значення — 2,4 мкг."),
         "sourcesIconTooltip":
             MessageLookupByLibrary.simpleMessage("Переглянути джерела"),
         "sourcesScreenIntro": MessageLookupByLibrary.simpleMessage(

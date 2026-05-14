@@ -1033,5 +1033,49 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Živiny"),
         "settingsNutrientsSubtitle":
             MessageLookupByLibrary.simpleMessage("Vyberte, ktoré živiny sa objavia v paneli denníka"),
+        "settingsCalciumGoalDescription":
+            MessageLookupByLibrary.simpleMessage("Denný cieľ vápnika v miligramoch. Predvolená referencia je 1000 mg."),
+        "settingsCalciumGoalLabel":
+            MessageLookupByLibrary.simpleMessage("Cieľ vápnika"),
+        "settingsFibreGoalDescription":
+            MessageLookupByLibrary.simpleMessage("Denný cieľ vlákniny v gramoch. Predvolená referencia je 30 g."),
+        "settingsFibreGoalLabel":
+            MessageLookupByLibrary.simpleMessage("Cieľ vlákniny"),
+        "settingsIronGoalDescription":
+            MessageLookupByLibrary.simpleMessage("Denný cieľ železa v miligramoch. Predvolená referencia sa líši podľa pohlavia (8 mg muž, 18 mg žena, 14 mg inak)."),
+        "settingsIronGoalLabel":
+            MessageLookupByLibrary.simpleMessage("Cieľ železa"),
+        "settingsMagnesiumGoalDescription":
+            MessageLookupByLibrary.simpleMessage("Denný cieľ horčíka v miligramoch. Predvolená referencia sa líši podľa pohlavia (400 mg muž, 310 mg žena, 355 mg inak)."),
+        "settingsMagnesiumGoalLabel":
+            MessageLookupByLibrary.simpleMessage("Cieľ horčíka"),
+        "settingsNutrientGoalsHint":
+            MessageLookupByLibrary.simpleMessage("Osobné ciele pre každú živinu v dennom paneli. Denník ich použije namiesto predvolených denných referencií vždy, keď jednu nastavíte."),
+        "settingsNutrientGoalsLabel":
+            MessageLookupByLibrary.simpleMessage("Ciele živín"),
+        "settingsPotassiumGoalDescription":
+            MessageLookupByLibrary.simpleMessage("Denný cieľ draslíka v miligramoch. Predvolená referencia je 3500 mg."),
+        "settingsPotassiumGoalLabel":
+            MessageLookupByLibrary.simpleMessage("Cieľ draslíka"),
+        "settingsSaturatedFatGoalDescription":
+            MessageLookupByLibrary.simpleMessage("Denný limit nasýtených tukov v gramoch. Predvolená referencia je 20 g."),
+        "settingsSaturatedFatGoalLabel":
+            MessageLookupByLibrary.simpleMessage("Cieľ nasýtených tukov"),
+        "settingsSodiumGoalDescription":
+            MessageLookupByLibrary.simpleMessage("Denný limit sodíka v miligramoch. Predvolená referencia je 2300 mg."),
+        "settingsSodiumGoalLabel":
+            MessageLookupByLibrary.simpleMessage("Cieľ sodíka"),
+        "settingsSugarsGoalDescription":
+            MessageLookupByLibrary.simpleMessage("Denný limit cukrov v gramoch. Predvolená referencia je 50 g."),
+        "settingsSugarsGoalLabel":
+            MessageLookupByLibrary.simpleMessage("Cieľ cukrov"),
+        "settingsVitaminB12GoalDescription":
+            MessageLookupByLibrary.simpleMessage("Denný cieľ vitamínu B12 v mikrogramoch. Predvolená referencia je 2,4 µg."),
+        "settingsVitaminB12GoalLabel":
+            MessageLookupByLibrary.simpleMessage("Cieľ vitamínu B12"),
+        "settingsVitaminDGoalDescription":
+            MessageLookupByLibrary.simpleMessage("Denný cieľ vitamínu D v mikrogramoch. Predvolená referencia je 15 µg."),
+        "settingsVitaminDGoalLabel":
+            MessageLookupByLibrary.simpleMessage("Cieľ vitamínu D"),
       };
 }

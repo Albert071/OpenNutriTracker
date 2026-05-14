@@ -156,6 +156,7 @@ Future<void> initLocator() async {
       locator(),
       locator(),
       locator(),
+      locator(), // #173: GetTrackedDayUsecase for nutrient-goal pre-fill
     ),
   );
   locator.registerFactory(

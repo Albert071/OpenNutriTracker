@@ -141,16 +141,20 @@ class DayInfoWidget extends StatelessWidget {
                     ),
                   )
                 : const SizedBox(),
-            // #160: Daily micronutrient panel — aggregates ten nutrients
-            // (fibre, sodium, saturated fat, sugar, calcium, iron, potassium,
-            // vitamin D, vitamin B12, magnesium) across the day's intake
-            // list. The panel now also supports a Day/Week toggle, which
-            // pulls the previous six days' intakes itself via the locator.
-            // No-op when there's nothing logged for the current day yet.
+            // #160 + #173 + #404: Daily micronutrient panel — aggregates
+            // ten nutrients (fibre, sodium, saturated fat, sugar, calcium,
+            // iron, potassium, vitamin D, vitamin B12, magnesium) across
+            // the day's intake list, with a Day/Week toggle that pulls the
+            // previous six days' intakes itself via the locator. The
+            // tracked-day entity is forwarded so the panel can prefer the
+            // user's per-nutrient targets from Settings → Nutrient goals
+            // when they've configured any (#173). No-op when there's
+            // nothing logged for the current day yet.
             if (_allIntakes.isNotEmpty)
               DailyNutrientPanel(
                 intakes: _allIntakes,
                 selectedDay: selectedDay,
+                trackedDay: trackedDayEntity,
               ),
             const SizedBox(height: 8.0),
             ActivityVerticalList(

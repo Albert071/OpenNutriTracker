@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:opennutritracker/core/domain/entity/calories_profile_entity.dart';
 import 'package:opennutritracker/core/domain/entity/config_entity.dart';
 import 'package:opennutritracker/core/domain/entity/intake_entity.dart';
+import 'package:opennutritracker/core/domain/entity/tracked_day_entity.dart';
 import 'package:opennutritracker/core/domain/entity/user_entity.dart';
 import 'package:opennutritracker/core/domain/entity/user_gender_entity.dart';
 import 'package:opennutritracker/core/domain/usecase/get_config_usecase.dart';
@@ -40,7 +42,71 @@ class DailyNutrientPanel extends StatefulWidget {
   /// rolling average (today + the previous 6 days). Defaults to "today".
   final DateTime? selectedDay;
 
-  const DailyNutrientPanel({super.key, required this.intakes, this.selectedDay});
+  /// Forwarded from the diary day view so the panel can prefer the user's
+  /// per-nutrient goals (set in Settings → Nutrient goals, #173) over
+  /// the published daily references. Null on days the user hasn't tracked
+  /// yet — in which case the panel falls back to the default DRIs.
+  final TrackedDayEntity? trackedDay;
+
+  const DailyNutrientPanel({
+    super.key,
+    required this.intakes,
+    this.selectedDay,
+    this.trackedDay,
+  });
+
+  // ---- Default daily references (#173) ----------------------------------
+  // Published DRIs / FDA Daily Values used when the user hasn't set their
+  // own target in Settings → Nutrient goals. Iron and magnesium default
+  // to a gender-aware value; the rest are gender-neutral.
+  static const double defaultFibreRefG = 30.0;
+  static const double defaultSaturatedFatRefG = 20.0;
+  static const double defaultSugarRefG = 50.0;
+  static const double defaultSodiumRefMg = 2300.0;
+  static const double defaultCalciumRefMg = 1000.0;
+  static const double defaultPotassiumRefMg = 3500.0;
+  static const double defaultVitaminDRefUg = 15.0;
+  static const double defaultVitaminB12RefUg = 2.4;
+  static const double defaultMagnesiumRefMg = 355.0; // non-binary midpoint
+
+  /// Pure helpers that prefer the user's [TrackedDayEntity] per-nutrient
+  /// goal when set, falling back to the published default otherwise.
+  /// Public because the unit test suite asserts each one in isolation.
+  static double resolveFibreReference(TrackedDayEntity? trackedDay) =>
+      trackedDay?.fibreGoal ?? defaultFibreRefG;
+
+  static double resolveSatFatReference(TrackedDayEntity? trackedDay) =>
+      trackedDay?.satFatGoal ?? defaultSaturatedFatRefG;
+
+  static double resolveSugarsReference(TrackedDayEntity? trackedDay) =>
+      trackedDay?.sugarsGoal ?? defaultSugarRefG;
+
+  static double resolveSodiumReference(TrackedDayEntity? trackedDay) =>
+      trackedDay?.sodiumGoal ?? defaultSodiumRefMg;
+
+  static double resolveCalciumReference(TrackedDayEntity? trackedDay) =>
+      trackedDay?.calciumGoal ?? defaultCalciumRefMg;
+
+  /// Iron uses a gender-aware default that the caller supplies, since the
+  /// female / male DRIs (18 vs 8 mg) are far enough apart that an averaged
+  /// number would mislead one group.
+  static double resolveIronReference(
+    TrackedDayEntity? trackedDay,
+    double genderDefault,
+  ) =>
+      trackedDay?.ironGoal ?? genderDefault;
+
+  static double resolvePotassiumReference(TrackedDayEntity? trackedDay) =>
+      trackedDay?.potassiumGoal ?? defaultPotassiumRefMg;
+
+  static double resolveVitaminDReference(TrackedDayEntity? trackedDay) =>
+      trackedDay?.vitaminDGoal ?? defaultVitaminDRefUg;
+
+  static double resolveVitaminB12Reference(TrackedDayEntity? trackedDay) =>
+      trackedDay?.vitaminB12Goal ?? defaultVitaminB12RefUg;
+
+  static double resolveMagnesiumReference(TrackedDayEntity? trackedDay) =>
+      trackedDay?.magnesiumGoal ?? defaultMagnesiumRefMg;
 
   @override
   State<DailyNutrientPanel> createState() => _DailyNutrientPanelState();
@@ -160,16 +226,22 @@ class _DailyNutrientPanelState extends State<DailyNutrientPanel> {
     // magnesium follows the same gender-aware pattern (400/310). Non-binary
     // users get a midpoint, in line with the app's existing averaged-
     // reference convention for non-binary calculations.
-    const fiberRefG = 30.0;
-    const sodiumRefMg = 2300.0;
-    const saturatedFatRefG = 20.0;
-    const sugarRefG = 50.0;
-    const calciumRefMg = 1000.0;
-    final ironRefMg = _ironRefForGender(user?.gender);
-    const potassiumRefMg = 3500.0;
-    const vitaminDRefMcg = 15.0;
-    const vitaminB12RefMcg = 2.4;
-    final magnesiumRefMg = _magnesiumRefForGender(user?.gender);
+    // Per-nutrient targets — route through the public resolver helpers so
+    // the unit tests and the build method share a single source of truth.
+    final td = widget.trackedDay;
+    final fiberRefG = DailyNutrientPanel.resolveFibreReference(td);
+    final sodiumRefMg = DailyNutrientPanel.resolveSodiumReference(td);
+    final saturatedFatRefG = DailyNutrientPanel.resolveSatFatReference(td);
+    final sugarRefG = DailyNutrientPanel.resolveSugarsReference(td);
+    final calciumRefMg = DailyNutrientPanel.resolveCalciumReference(td);
+    final ironRefMg = DailyNutrientPanel.resolveIronReference(
+      td,
+      _ironRefForUser(user),
+    );
+    final potassiumRefMg = DailyNutrientPanel.resolvePotassiumReference(td);
+    final vitaminDRefMcg = DailyNutrientPanel.resolveVitaminDReference(td);
+    final vitaminB12RefMcg = DailyNutrientPanel.resolveVitaminB12Reference(td);
+    final magnesiumRefMg = td?.magnesiumGoal ?? _magnesiumRefForUser(user);
 
     final s = S.of(context);
     final allRows = <_PanelRow>[
@@ -382,27 +454,59 @@ class _DailyNutrientPanelState extends State<DailyNutrientPanel> {
     );
   }
 
-  static double _ironRefForGender(UserGenderEntity? gender) {
-    switch (gender) {
-      case UserGenderEntity.female:
-        return 18.0;
-      case UserGenderEntity.male:
-        return 8.0;
-      case UserGenderEntity.nonBinary:
-      case null:
-        return 14.0;
-    }
+  // Gender-aware defaults for the two nutrients where female / male DRIs
+  // disagree substantively. Non-binary users route through their chosen
+  // [CaloriesProfileEntity] just like the BMR calculator does
+  // (see [BMRCalc._dispatch]): Estrogen-typical → female value,
+  // Testosterone-typical → male value, Averaged (default) → midpoint.
+  // This keeps a single source of truth for what "non-binary → which
+  // reference" means across the app, rather than the nutrient panel
+  // silently disagreeing with the calorie panel a few sections above.
+  static double _ironRefForUser(UserEntity? user) {
+    const female = 18.0;
+    const male = 8.0;
+    const averaged = 14.0;
+    return _dispatchGenderReference(
+      user,
+      female: female,
+      male: male,
+      averaged: averaged,
+    );
   }
 
-  static double _magnesiumRefForGender(UserGenderEntity? gender) {
-    switch (gender) {
+  static double _magnesiumRefForUser(UserEntity? user) {
+    const female = 310.0;
+    const male = 400.0;
+    const averaged = 355.0;
+    return _dispatchGenderReference(
+      user,
+      female: female,
+      male: male,
+      averaged: averaged,
+    );
+  }
+
+  static double _dispatchGenderReference(
+    UserEntity? user, {
+    required double female,
+    required double male,
+    required double averaged,
+  }) {
+    if (user == null) return averaged;
+    switch (user.gender) {
       case UserGenderEntity.female:
-        return 310.0;
+        return female;
       case UserGenderEntity.male:
-        return 400.0;
+        return male;
       case UserGenderEntity.nonBinary:
-      case null:
-        return 355.0;
+        switch (user.caloriesProfile ?? CaloriesProfileEntity.averaged) {
+          case CaloriesProfileEntity.averaged:
+            return averaged;
+          case CaloriesProfileEntity.estrogenTypical:
+            return female;
+          case CaloriesProfileEntity.testosteroneTypical:
+            return male;
+        }
     }
   }
 }
