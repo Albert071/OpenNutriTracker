@@ -1155,5 +1155,23 @@ class MessageLookup extends MessageLookupByLibrary {
         "settingsTargetWeightLabel":
             MessageLookupByLibrary.simpleMessage("Cílová hmotnost"),
         "profileTargetWeightToGo": m22,
+        "customActivityDescription": MessageLookupByLibrary.simpleMessage(
+            "Zadejte spálené kalorie přímo, pro tréninky, které nejsou na seznamu, nebo hodnoty z fitness náramku"),
+        "customActivityKcalHint":
+            MessageLookupByLibrary.simpleMessage("např. 250"),
+        "customActivityKcalLabel":
+            MessageLookupByLibrary.simpleMessage("Spálené kalorie"),
+        "customActivityName":
+            MessageLookupByLibrary.simpleMessage("Vlastní aktivita"),
+        "customActivityNameFieldHint": MessageLookupByLibrary.simpleMessage(
+            "např. Večerní jízda do práce"),
+        "customActivityNameFieldLabel":
+            MessageLookupByLibrary.simpleMessage("Název (nepovinné)"),
+        "customActivityPickFromTemplate": MessageLookupByLibrary.simpleMessage(
+            "Vybrat z uložených šablon"),
+        "customActivitySaveAsTemplate": MessageLookupByLibrary.simpleMessage(
+            "Uložit jako šablonu pro příště"),
+        "customActivityTemplatesEmpty": MessageLookupByLibrary.simpleMessage(
+            "Zatím nemáte uložené žádné šablony. Zaškrtněte „Uložit jako šablonu pro příště“, abyste si vlastní aktivitu zapamatovali na později."),
       };
 }

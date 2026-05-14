@@ -6551,6 +6551,96 @@ class S {
       args: [],
     );
   }
+
+  /// `Custom activity`
+  String get customActivityName {
+    return Intl.message(
+      'Custom activity',
+      name: 'customActivityName',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Enter calories burned directly, for workouts that aren't in the list or readings from a fitness tracker`
+  String get customActivityDescription {
+    return Intl.message(
+      'Enter calories burned directly, for workouts that aren\'t in the list or readings from a fitness tracker',
+      name: 'customActivityDescription',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Calories burned`
+  String get customActivityKcalLabel {
+    return Intl.message(
+      'Calories burned',
+      name: 'customActivityKcalLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `e.g. 250`
+  String get customActivityKcalHint {
+    return Intl.message(
+      'e.g. 250',
+      name: 'customActivityKcalHint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Name (optional)`
+  String get customActivityNameFieldLabel {
+    return Intl.message(
+      'Name (optional)',
+      name: 'customActivityNameFieldLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `e.g. Evening bike commute`
+  String get customActivityNameFieldHint {
+    return Intl.message(
+      'e.g. Evening bike commute',
+      name: 'customActivityNameFieldHint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Save as template for next time`
+  String get customActivitySaveAsTemplate {
+    return Intl.message(
+      'Save as template for next time',
+      name: 'customActivitySaveAsTemplate',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Pick from saved templates`
+  String get customActivityPickFromTemplate {
+    return Intl.message(
+      'Pick from saved templates',
+      name: 'customActivityPickFromTemplate',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `You haven't saved any templates yet. Tick "Save as template for next time" to remember a Custom activity for later.`
+  String get customActivityTemplatesEmpty {
+    return Intl.message(
+      'You haven\'t saved any templates yet. Tick "Save as template for next time" to remember a Custom activity for later.',
+      name: 'customActivityTemplatesEmpty',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

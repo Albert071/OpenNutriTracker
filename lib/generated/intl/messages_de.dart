@@ -1179,5 +1179,23 @@ class MessageLookup extends MessageLookupByLibrary {
         "settingsTargetWeightLabel":
             MessageLookupByLibrary.simpleMessage("Zielgewicht"),
         "profileTargetWeightToGo": m22,
+        "customActivityDescription": MessageLookupByLibrary.simpleMessage(
+            "Trage verbrannte Kalorien direkt ein – für Trainings, die nicht in der Liste sind, oder Werte aus einem Fitnesstracker"),
+        "customActivityKcalHint":
+            MessageLookupByLibrary.simpleMessage("z. B. 250"),
+        "customActivityKcalLabel":
+            MessageLookupByLibrary.simpleMessage("Verbrannte Kalorien"),
+        "customActivityName":
+            MessageLookupByLibrary.simpleMessage("Eigene Aktivität"),
+        "customActivityNameFieldHint":
+            MessageLookupByLibrary.simpleMessage("z. B. Fahrt nach Hause"),
+        "customActivityNameFieldLabel":
+            MessageLookupByLibrary.simpleMessage("Name (optional)"),
+        "customActivityPickFromTemplate": MessageLookupByLibrary.simpleMessage(
+            "Aus gespeicherten Vorlagen wählen"),
+        "customActivitySaveAsTemplate": MessageLookupByLibrary.simpleMessage(
+            "Als Vorlage für später speichern"),
+        "customActivityTemplatesEmpty": MessageLookupByLibrary.simpleMessage(
+            "Du hast noch keine Vorlagen gespeichert. Setze das Häkchen bei „Als Vorlage für später speichern“, um eine eigene Aktivität für die Zukunft zu merken."),
       };
 }

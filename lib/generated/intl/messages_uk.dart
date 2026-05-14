@@ -1167,5 +1167,23 @@ class MessageLookup extends MessageLookupByLibrary {
         "settingsTargetWeightLabel":
             MessageLookupByLibrary.simpleMessage("Цільова вага"),
         "profileTargetWeightToGo": m22,
+        "customActivityDescription": MessageLookupByLibrary.simpleMessage(
+            "Введіть спалені калорії безпосередньо — для тренувань, яких немає у списку, або показників із фітнес-трекера"),
+        "customActivityKcalHint":
+            MessageLookupByLibrary.simpleMessage("напр. 250"),
+        "customActivityKcalLabel":
+            MessageLookupByLibrary.simpleMessage("Спалені калорії"),
+        "customActivityName":
+            MessageLookupByLibrary.simpleMessage("Власна активність"),
+        "customActivityNameFieldHint": MessageLookupByLibrary.simpleMessage(
+            "напр. Вечірня поїздка на велосипеді"),
+        "customActivityNameFieldLabel": MessageLookupByLibrary.simpleMessage(
+            "Назва (необов\'язково)"),
+        "customActivityPickFromTemplate": MessageLookupByLibrary.simpleMessage(
+            "Вибрати зі збережених шаблонів"),
+        "customActivitySaveAsTemplate": MessageLookupByLibrary.simpleMessage(
+            "Зберегти як шаблон на майбутнє"),
+        "customActivityTemplatesEmpty": MessageLookupByLibrary.simpleMessage(
+            "Ви ще не зберегли жодного шаблону. Поставте позначку «Зберегти як шаблон на майбутнє», щоб запам\'ятати власну активність для пізнішого використання."),
       };
 }

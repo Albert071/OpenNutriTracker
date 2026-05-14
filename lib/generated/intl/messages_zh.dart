@@ -1013,5 +1013,23 @@ class MessageLookup extends MessageLookupByLibrary {
         "settingsTargetWeightLabel":
             MessageLookupByLibrary.simpleMessage("目标体重"),
         "profileTargetWeightToGo": m22,
+        "customActivityDescription": MessageLookupByLibrary.simpleMessage(
+            "直接输入消耗的卡路里，适用于列表中没有的训练或来自健身追踪器的读数"),
+        "customActivityKcalHint":
+            MessageLookupByLibrary.simpleMessage("例如 250"),
+        "customActivityKcalLabel":
+            MessageLookupByLibrary.simpleMessage("消耗的卡路里"),
+        "customActivityName":
+            MessageLookupByLibrary.simpleMessage("自定义活动"),
+        "customActivityNameFieldHint":
+            MessageLookupByLibrary.simpleMessage("例如 晚间骑行通勤"),
+        "customActivityNameFieldLabel":
+            MessageLookupByLibrary.simpleMessage("名称（可选）"),
+        "customActivityPickFromTemplate":
+            MessageLookupByLibrary.simpleMessage("从已保存的模板中选择"),
+        "customActivitySaveAsTemplate":
+            MessageLookupByLibrary.simpleMessage("保存为模板以便下次使用"),
+        "customActivityTemplatesEmpty": MessageLookupByLibrary.simpleMessage(
+            "你还没有保存任何模板。勾选「保存为模板以便下次使用」以便日后记住自定义活动。"),
       };
 }

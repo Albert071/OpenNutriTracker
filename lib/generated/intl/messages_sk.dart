@@ -1154,5 +1154,23 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Čiarový kód"),
         "customMealBarcodeScanButton":
             MessageLookupByLibrary.simpleMessage("Naskenovať kód"),
+        "customActivityDescription":
+            MessageLookupByLibrary.simpleMessage("Zadajte spálené kalórie priamo, pre tréningy ktoré nie sú v zozname, alebo údaje z fitness náramku"),
+        "customActivityKcalHint":
+            MessageLookupByLibrary.simpleMessage("napr. 250"),
+        "customActivityKcalLabel":
+            MessageLookupByLibrary.simpleMessage("Spálené kalórie"),
+        "customActivityName":
+            MessageLookupByLibrary.simpleMessage("Vlastná aktivita"),
+        "customActivityNameFieldHint":
+            MessageLookupByLibrary.simpleMessage("napr. Bicykel domov z práce"),
+        "customActivityNameFieldLabel":
+            MessageLookupByLibrary.simpleMessage("Názov (voliteľný)"),
+        "customActivityPickFromTemplate":
+            MessageLookupByLibrary.simpleMessage("Vybrať z uložených šablón"),
+        "customActivitySaveAsTemplate":
+            MessageLookupByLibrary.simpleMessage("Uložiť ako šablónu na nabudúce"),
+        "customActivityTemplatesEmpty": MessageLookupByLibrary.simpleMessage(
+            "Zatiaľ ste si neuložili žiadne šablóny. Zaškrtnite „Uložiť ako šablónu na nabudúce\", ak chcete vlastnú aktivitu zapamätať."),
       };
 }

@@ -1142,5 +1142,23 @@ class MessageLookup extends MessageLookupByLibrary {
         "settingsTargetWeightLabel":
             MessageLookupByLibrary.simpleMessage("Hedef kilo"),
         "profileTargetWeightToGo": m22,
+        "customActivityDescription": MessageLookupByLibrary.simpleMessage(
+            "Listede olmayan antrenmanlar veya bir fitness takip cihazından okumalar için yakılan kaloriyi doğrudan girin"),
+        "customActivityKcalHint":
+            MessageLookupByLibrary.simpleMessage("örn. 250"),
+        "customActivityKcalLabel":
+            MessageLookupByLibrary.simpleMessage("Yakılan kalori"),
+        "customActivityName":
+            MessageLookupByLibrary.simpleMessage("Özel etkinlik"),
+        "customActivityNameFieldHint": MessageLookupByLibrary.simpleMessage(
+            "örn. Akşam bisiklet yolculuğu"),
+        "customActivityNameFieldLabel":
+            MessageLookupByLibrary.simpleMessage("Ad (isteğe bağlı)"),
+        "customActivityPickFromTemplate": MessageLookupByLibrary.simpleMessage(
+            "Kaydedilmiş şablonlardan seç"),
+        "customActivitySaveAsTemplate": MessageLookupByLibrary.simpleMessage(
+            "Bir sonraki sefer için şablon olarak kaydet"),
+        "customActivityTemplatesEmpty": MessageLookupByLibrary.simpleMessage(
+            "Henüz kaydedilmiş bir şablonun yok. Bir özel etkinliği sonradan hatırlamak için „Bir sonraki sefer için şablon olarak kaydet“ kutusunu işaretle."),
       };
 }

@@ -5,6 +5,7 @@ import 'dart:typed_data';
 import 'package:archive/archive_io.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:opennutritracker/core/data/data_source/custom_meal_data_source.dart';
+import 'package:opennutritracker/core/data/repository/custom_activity_template_repository.dart';
 import 'package:opennutritracker/core/data/repository/intake_repository.dart';
 import 'package:opennutritracker/core/data/repository/recipe_repository.dart';
 import 'package:opennutritracker/core/data/repository/tracked_day_repository.dart';
@@ -25,6 +26,7 @@ class ExportDataUsecase {
   final RecipeRepository _recipeRepository;
   final CustomMealDataSource _customMealDataSource;
   final WeightLogRepository _weightLogRepository;
+  final CustomActivityTemplateRepository _customActivityTemplateRepository;
 
   ExportDataUsecase(
     this._userActivityRepository,
@@ -33,25 +35,27 @@ class ExportDataUsecase {
     this._recipeRepository,
     this._customMealDataSource,
     this._weightLogRepository,
+    this._customActivityTemplateRepository,
   );
 
-  /// Exports user activity, intake, tracked day, recipe, and weight-log
-  /// data to a zip at a user-specified location, in the [format] the
-  /// user picked.
+  /// Exports user activity, intake, tracked day, recipe, weight-log and
+  /// Custom activity template data to a zip at a user-specified location,
+  /// in the [format] the user picked.
   ///
   /// JSON export contains JSON files only and is what the app re-imports
   /// from. CSV export contains CSV files only and is intended for
-  /// opening in a spreadsheet — recipes, photos and the weight log are
-  /// omitted from CSV because their shape doesn't flatten cleanly. A
-  /// user who wants both can run the export twice. See
-  /// `docs/export-format.md` for the schema.
+  /// opening in a spreadsheet — recipes, photos, the weight log and
+  /// Custom activity templates are omitted from CSV because their shape
+  /// doesn't flatten cleanly. A user who wants both can run the export
+  /// twice. See `docs/export-format.md` for the schema.
   Future<bool> exportData(
     String exportZipFileName,
     String userActivityJsonFileName,
     String userIntakeJsonFileName,
     String trackedDayJsonFileName,
     String recipeJsonFileName,
-    String weightLogJsonFileName, {
+    String weightLogJsonFileName,
+    String customActivityTemplateJsonFileName, {
     ExportFormat format = ExportFormat.json,
     String userActivityCsvFileName = 'user_activity.csv',
     String userIntakeCsvFileName = 'user_intake.csv',
@@ -112,12 +116,13 @@ class ExportDataUsecase {
       );
     }
 
-    // Recipes, photos and weight log — JSON only. The recipe shape
-    // doesn't flatten to CSV without lossy denormalisation; meal /
-    // recipe photos are binary blobs; the weight log is a JSON-only
-    // dataset for now. A user who needs spreadsheet-shaped recipes can
-    // fall back to the dedicated Sample / Import recipes CSV path
-    // under Import Custom Food Data.
+    // Recipes, photos, weight log and Custom activity templates — JSON
+    // only. The recipe shape doesn't flatten to CSV without lossy
+    // denormalisation; meal / recipe photos are binary blobs; the
+    // weight log is a JSON-only dataset for now; templates are a small
+    // JSON-only convenience. A user who needs spreadsheet-shaped
+    // recipes can fall back to the dedicated Sample / Import recipes
+    // CSV path under Import Custom Food Data.
     if (format == ExportFormat.json) {
       final fullRecipes = _recipeRepository.getAllRecipesDBO();
       final recipeBytes = utf8.encode(jsonEncode(
@@ -136,10 +141,7 @@ class ExportDataUsecase {
       }
 
       // Custom-meal photos travel through the same `meal_images/`
-      // subdirectory their relative slug names. Like recipes, these
-      // only travel with JSON exports — CSV is one-way and meal
-      // photos are a custom-meals concept that wouldn't survive the
-      // spreadsheet round-trip anyway.
+      // subdirectory their relative slug names.
       final customMeals = _customMealDataSource.getAllCustomMeals();
       for (final meal in customMeals) {
         await _addUserImageIfPresent(archive, meal.localImagePath);
@@ -155,6 +157,20 @@ class ExportDataUsecase {
           weightLogJsonFileName,
           weightLogBytes.length,
           weightLogBytes,
+        ),
+      );
+
+      // Custom activity templates (#70 follow-up)
+      final fullTemplates =
+          await _customActivityTemplateRepository.allTemplateDBOs();
+      final templatesBytes = utf8.encode(jsonEncode(
+        fullTemplates.map((template) => template.toJson()).toList(),
+      ));
+      archive.addFile(
+        ArchiveFile(
+          customActivityTemplateJsonFileName,
+          templatesBytes.length,
+          templatesBytes,
         ),
       );
     }

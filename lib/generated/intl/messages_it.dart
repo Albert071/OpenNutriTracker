@@ -1166,5 +1166,23 @@ class MessageLookup extends MessageLookupByLibrary {
         "settingsTargetWeightLabel":
             MessageLookupByLibrary.simpleMessage("Peso obiettivo"),
         "profileTargetWeightToGo": m22,
+        "customActivityDescription": MessageLookupByLibrary.simpleMessage(
+            "Inserisci direttamente le calorie bruciate, per allenamenti non in elenco o letture da un fitness tracker"),
+        "customActivityKcalHint":
+            MessageLookupByLibrary.simpleMessage("es. 250"),
+        "customActivityKcalLabel":
+            MessageLookupByLibrary.simpleMessage("Calorie bruciate"),
+        "customActivityName":
+            MessageLookupByLibrary.simpleMessage("Attività personalizzata"),
+        "customActivityNameFieldHint": MessageLookupByLibrary.simpleMessage(
+            "es. Tragitto serale in bici"),
+        "customActivityNameFieldLabel":
+            MessageLookupByLibrary.simpleMessage("Nome (facoltativo)"),
+        "customActivityPickFromTemplate": MessageLookupByLibrary.simpleMessage(
+            "Scegli da modelli salvati"),
+        "customActivitySaveAsTemplate": MessageLookupByLibrary.simpleMessage(
+            "Salva come modello per la prossima volta"),
+        "customActivityTemplatesEmpty": MessageLookupByLibrary.simpleMessage(
+            "Non hai ancora salvato modelli. Spunta «Salva come modello per la prossima volta» per ricordare un\'attività personalizzata da riutilizzare."),
       };
 }

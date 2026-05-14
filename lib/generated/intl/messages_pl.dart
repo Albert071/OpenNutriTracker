@@ -1166,5 +1166,23 @@ class MessageLookup extends MessageLookupByLibrary {
         "settingsTargetWeightLabel":
             MessageLookupByLibrary.simpleMessage("Docelowa waga"),
         "profileTargetWeightToGo": m22,
+        "customActivityDescription": MessageLookupByLibrary.simpleMessage(
+            "Wprowadź spalone kalorie bezpośrednio – dla treningów spoza listy lub odczytów z opaski fitness"),
+        "customActivityKcalHint":
+            MessageLookupByLibrary.simpleMessage("np. 250"),
+        "customActivityKcalLabel":
+            MessageLookupByLibrary.simpleMessage("Spalone kalorie"),
+        "customActivityName":
+            MessageLookupByLibrary.simpleMessage("Aktywność niestandardowa"),
+        "customActivityNameFieldHint": MessageLookupByLibrary.simpleMessage(
+            "np. Wieczorny dojazd rowerem"),
+        "customActivityNameFieldLabel":
+            MessageLookupByLibrary.simpleMessage("Nazwa (opcjonalnie)"),
+        "customActivityPickFromTemplate": MessageLookupByLibrary.simpleMessage(
+            "Wybierz z zapisanych szablonów"),
+        "customActivitySaveAsTemplate": MessageLookupByLibrary.simpleMessage(
+            "Zapisz jako szablon na później"),
+        "customActivityTemplatesEmpty": MessageLookupByLibrary.simpleMessage(
+            "Nie masz jeszcze zapisanych szablonów. Zaznacz „Zapisz jako szablon na później”, aby zapamiętać aktywność niestandardową na przyszłość."),
       };
 }
