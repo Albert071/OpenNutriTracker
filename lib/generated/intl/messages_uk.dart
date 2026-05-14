@@ -271,7 +271,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "exportImportAppDataLabel": MessageLookupByLibrary.simpleMessage(
             "Експортувати / Імпортувати дані застосунку"),
         "exportImportCsvRecipesNote":
-            MessageLookupByLibrary.simpleMessage("Рецепти зберігаються лише при експорті й імпорті у форматі JSON. Перемкніть на JSON, щоб включити їх до резервної копії."),
+            MessageLookupByLibrary.simpleMessage("CSV зберігає активність, журнал прийомів їжі та відстежувані дні. Рецепти й додані фото зберігаються лише в JSON — перейдіть на JSON, якщо хочете залишити їх у резервній копії."),
         "exportImportDescription": MessageLookupByLibrary.simpleMessage(
             "Ви можете експортувати дані додатка у zip-файл і імпортувати їх пізніше. Це корисно, якщо ви хочете зробити резервну копію або перенести дані на інший пристрій. Додаток не використовує жодних хмарних сервісів для зберігання ваших даних."),
         "exportImportErrorLabel":
@@ -899,6 +899,26 @@ class MessageLookup extends MessageLookupByLibrary {
         "recipeTagsHelper": MessageLookupByLibrary.simpleMessage(
             "Через кому, напр. \"сніданок, веганське\""),
         "recipeTagsLabel": MessageLookupByLibrary.simpleMessage("Теги"),
+        "recipeImageLabel":
+            MessageLookupByLibrary.simpleMessage("Додати фото"),
+        "recipeImagePickFromGallery":
+            MessageLookupByLibrary.simpleMessage("Вибрати з галереї"),
+        "recipeImageTakePhoto":
+            MessageLookupByLibrary.simpleMessage("Зробити фото"),
+        "recipeImageRemove":
+            MessageLookupByLibrary.simpleMessage("Видалити фото"),
+        "recipeImageReplace":
+            MessageLookupByLibrary.simpleMessage("Замінити фото"),
+        "mealImageLabel":
+            MessageLookupByLibrary.simpleMessage("Додати фото"),
+        "mealImagePickFromGallery":
+            MessageLookupByLibrary.simpleMessage("Вибрати з галереї"),
+        "mealImageTakePhoto":
+            MessageLookupByLibrary.simpleMessage("Зробити фото"),
+        "mealImageRemove":
+            MessageLookupByLibrary.simpleMessage("Видалити фото"),
+        "mealImageReplace":
+            MessageLookupByLibrary.simpleMessage("Замінити фото"),
         "recipeTotalWeightHelper": MessageLookupByLibrary.simpleMessage(
             "За замовчуванням сума інгредієнтів. Рідини приблизно як 1 мл ≈ 1 г."),
         "recipeTotalWeightLabel":

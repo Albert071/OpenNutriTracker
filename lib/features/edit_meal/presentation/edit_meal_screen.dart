@@ -1,13 +1,18 @@
 import 'dart:math' as math;
 
+import 'dart:io';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:logging/logging.dart';
 import 'package:opennutritracker/core/domain/entity/intake_type_entity.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
+import 'package:opennutritracker/core/presentation/widgets/user_image_picker_tile.dart';
 import 'package:opennutritracker/core/utils/barcode_validator.dart';
+import 'package:opennutritracker/core/utils/user_image_storage.dart';
 import 'package:opennutritracker/core/utils/calc/unit_calc.dart';
 import 'package:opennutritracker/core/utils/custom_text_input_formatter.dart';
 import 'package:opennutritracker/core/utils/extensions.dart';
@@ -70,6 +75,13 @@ class _EditMealScreenState extends State<EditMealScreen> {
   String baseQuantity = "100";
   String baseQuantityUnit = " g/ml";
 
+  // #64 follow-up: user-attached photo for a custom meal. Mirrors
+  // _mealEntity.localImagePath but is held separately so the picker
+  // can update the on-screen preview before the parent entity is
+  // rebuilt at save time.
+  String? _localImagePath;
+  bool _localImageCleared = false;
+
   @override
   void initState() {
     super.initState();
@@ -114,6 +126,7 @@ class _EditMealScreenState extends State<EditMealScreen> {
     _fatTextController.text = _mealEntity.nutriments.fat100.toStringOrEmpty();
     _proteinTextController.text =
         _mealEntity.nutriments.proteins100.toStringOrEmpty();
+    _localImagePath = _mealEntity.localImagePath;
     selectedUnit = _switchButtonUnit(_mealEntity.mealUnit);
 
     // Convert meal size to imperial units if necessary
@@ -205,20 +218,24 @@ class _EditMealScreenState extends State<EditMealScreen> {
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
-        Center(
-          child: ClipOval(
-            child: CachedNetworkImage(
-              cacheManager: locator<CacheManager>(),
-              width: 120,
-              height: 120,
-              placeholder: (context, string) => const DefaultMealImage(),
-              errorWidget: (context, exception, stacktrace) =>
-                  const DefaultMealImage(),
-              fit: BoxFit.cover,
-              imageUrl: _mealEntity.mainImageUrl ?? "",
+        // Custom meals get the same picker tile recipes use — a single
+        // tappable circle with an overlay camera icon, "Add a photo"
+        // text beneath, and a bottom-sheet for the action choice.
+        // OFF / FDC entries keep the existing remote-image avatar:
+        // they cannot have a user-attached photo, so showing the
+        // picker affordance would be misleading.
+        if (_mealEntity.source == MealSourceEntity.custom)
+          Center(
+            child: UserImagePickerTile(
+              kind: UserImageKind.meal,
+              imagePath: _localImagePath,
+              onPickFromGallery: () => _onPickMealImage(ImageSource.gallery),
+              onTakePhoto: () => _onPickMealImage(ImageSource.camera),
+              onRemove: _onRemoveMealImage,
             ),
-          ),
-        ),
+          )
+        else
+          Center(child: _buildRemoteMealImage()),
         const SizedBox(height: 32),
         TextFormField(
           controller: _nameTextController,
@@ -532,6 +549,12 @@ class _EditMealScreenState extends State<EditMealScreen> {
         // Empty-string clears the barcode; whitespace was already trimmed
         // during validation above so we can pass the raw value through.
         barcodeOverride: rawBarcode.isEmpty ? null : rawBarcode,
+        // The picker mutates _localImagePath synchronously when the user
+        // taps Remove; pass that through so the save wipes the slug
+        // from the saved meal rather than carrying the stale value
+        // forward.
+        localImagePathOverride: _localImagePath,
+        clearLocalImagePath: _localImageCleared && _localImagePath == null,
       );
 
       // Persist custom meal template (#267). Skipped for one-off entries
@@ -586,6 +609,66 @@ class _EditMealScreenState extends State<EditMealScreen> {
       _barcodeTextController.text = result;
     });
     log.fine('Barcode text controller after set: ${_barcodeTextController.text}');
+  }
+
+  Widget _buildRemoteMealImage() {
+    return ClipOval(
+      child: CachedNetworkImage(
+        cacheManager: locator<CacheManager>(),
+        width: 120,
+        height: 120,
+        placeholder: (context, string) => const DefaultMealImage(),
+        errorWidget: (context, exception, stacktrace) =>
+            const DefaultMealImage(),
+        fit: BoxFit.cover,
+        imageUrl: _mealEntity.mainImageUrl ?? "",
+      ),
+    );
+  }
+
+  Future<void> _onPickMealImage(ImageSource source) async {
+    // For custom meals the entity's `code` is a stable UUID seeded at
+    // MealEntity.empty() time; we use it as the photo's filename so a
+    // re-edit of the same meal lands at the same on-disk slug. If the
+    // user has typed a real barcode into the code field, fall back to
+    // the entity's original code rather than the in-progress text — the
+    // photo identity is the meal, not the barcode.
+    final ownerId = _mealEntity.code;
+    if (ownerId == null) return;
+    try {
+      final picker = ImagePicker();
+      final picked = await picker.pickImage(source: source);
+      if (picked == null) return;
+      final relative = await UserImageStorage.importFrom(
+        kind: UserImageKind.meal,
+        ownerId: ownerId,
+        sourcePath: picked.path,
+      );
+      // Bust the in-memory Image.file cache so the new picture shows up
+      // immediately instead of redrawing previous bytes for this path.
+      FileImage(File(await UserImageStorage.absolutePath(relative))).evict();
+      if (!mounted) return;
+      setState(() {
+        _localImagePath = relative;
+        _localImageCleared = false;
+      });
+    } catch (e, st) {
+      // Pick / encode failure is rare; surfacing a SnackBar from inside
+      // the picker flow felt noisier than the failure deserves. The user
+      // can simply tap the picker again.
+      log.warning('Failed to pick meal image', e, st);
+    }
+  }
+
+  Future<void> _onRemoveMealImage() async {
+    final current = _localImagePath;
+    if (current == null) return;
+    await UserImageStorage.delete(current);
+    if (!mounted) return;
+    setState(() {
+      _localImagePath = null;
+      _localImageCleared = true;
+    });
   }
 
   Future<bool?> _showAtwaterWarningDialog() {

@@ -253,7 +253,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "settingsCustomMealsLabel":
             MessageLookupByLibrary.simpleMessage("Custom Meals"),
         "exportImportCsvRecipesNote":
-            MessageLookupByLibrary.simpleMessage("Recipes are kept only with JSON exports and imports. Switch to JSON to include them in your backup."),
+            MessageLookupByLibrary.simpleMessage("CSV keeps your activity, meal log and tracked days. Recipes and any photos you've attached are JSON-only — switch to JSON if you want them in your backup."),
         "exportImportDescription": MessageLookupByLibrary.simpleMessage(
             "You can export the app data to a zip file and import it later. This is useful if you want to backup your data or transfer it to another device.\n\nThe app does not use any cloud service to store your data."),
         "exportImportErrorLabel":
@@ -1104,5 +1104,25 @@ class MessageLookup extends MessageLookupByLibrary {
         "settingsTargetWeightLabel":
             MessageLookupByLibrary.simpleMessage("Target weight"),
         "profileTargetWeightToGo": m21,
+        "recipeImageLabel":
+            MessageLookupByLibrary.simpleMessage("Add a photo"),
+        "recipeImagePickFromGallery":
+            MessageLookupByLibrary.simpleMessage("Choose from gallery"),
+        "recipeImageRemove":
+            MessageLookupByLibrary.simpleMessage("Remove photo"),
+        "recipeImageReplace":
+            MessageLookupByLibrary.simpleMessage("Replace photo"),
+        "mealImageLabel":
+            MessageLookupByLibrary.simpleMessage("Add a photo"),
+        "mealImagePickFromGallery":
+            MessageLookupByLibrary.simpleMessage("Choose from gallery"),
+        "mealImageTakePhoto":
+            MessageLookupByLibrary.simpleMessage("Take photo"),
+        "mealImageRemove":
+            MessageLookupByLibrary.simpleMessage("Remove photo"),
+        "mealImageReplace":
+            MessageLookupByLibrary.simpleMessage("Replace photo"),
+        "recipeImageTakePhoto":
+            MessageLookupByLibrary.simpleMessage("Take photo"),
       };
 }

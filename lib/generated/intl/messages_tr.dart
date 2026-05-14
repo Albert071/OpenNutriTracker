@@ -272,7 +272,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "exportImportAppDataLabel": MessageLookupByLibrary.simpleMessage(
             "Uygulama Verilerini Dışa / İçe Aktar"),
         "exportImportCsvRecipesNote":
-            MessageLookupByLibrary.simpleMessage("Tarifler yalnızca JSON dışa ve içe aktarımıyla korunur. Yedeklemenize dahil etmek için JSON'a geçin."),
+            MessageLookupByLibrary.simpleMessage("CSV; etkinliklerinizi, öğün günlüğünüzü ve takip edilen günleri saklar. Tarifler ve eklediğiniz fotoğraflar yalnızca JSON'da yer alır — yedeklemenizde olmalarını isterseniz JSON'a geçin."),
         "exportImportDescription": MessageLookupByLibrary.simpleMessage(
             "Uygulama verilerini bir zip dosyasına dışa aktarabilir ve daha sonra içe aktarabilirsiniz. Bu, verilerinizi yedeklemek veya başka bir cihaza aktarmak istiyorsanız kullanışlıdır.\n\nUygulama, verilerinizi saklamak için herhangi bir bulut hizmeti kullanmaz."),
         "exportImportErrorLabel": MessageLookupByLibrary.simpleMessage(
@@ -882,6 +882,26 @@ class MessageLookup extends MessageLookupByLibrary {
         "recipeTagsHelper": MessageLookupByLibrary.simpleMessage(
             "Virgülle ayırın, örn. \"kahvaltı, vegan\""),
         "recipeTagsLabel": MessageLookupByLibrary.simpleMessage("Etiketler"),
+        "recipeImageLabel":
+            MessageLookupByLibrary.simpleMessage("Fotoğraf ekle"),
+        "recipeImagePickFromGallery":
+            MessageLookupByLibrary.simpleMessage("Galeriden seç"),
+        "recipeImageTakePhoto":
+            MessageLookupByLibrary.simpleMessage("Fotoğraf çek"),
+        "recipeImageRemove":
+            MessageLookupByLibrary.simpleMessage("Fotoğrafı kaldır"),
+        "recipeImageReplace":
+            MessageLookupByLibrary.simpleMessage("Fotoğrafı değiştir"),
+        "mealImageLabel":
+            MessageLookupByLibrary.simpleMessage("Fotoğraf ekle"),
+        "mealImagePickFromGallery":
+            MessageLookupByLibrary.simpleMessage("Galeriden seç"),
+        "mealImageTakePhoto":
+            MessageLookupByLibrary.simpleMessage("Fotoğraf çek"),
+        "mealImageRemove":
+            MessageLookupByLibrary.simpleMessage("Fotoğrafı kaldır"),
+        "mealImageReplace":
+            MessageLookupByLibrary.simpleMessage("Fotoğrafı değiştir"),
         "recipeTotalWeightHelper": MessageLookupByLibrary.simpleMessage(
             "Varsayılan olarak malzemelerin toplamı. Sıvılar yaklaşık 1 ml ≈ 1 g olarak hesaplanır."),
         "recipeTotalWeightLabel":

@@ -174,6 +174,26 @@ class MessageLookup extends MessageLookupByLibrary {
             "CSV súbor sa nepodarilo prečítať. Skontrolujte formát a skúste to znova."),
         "csvImportPartialLabel": m13,
         "csvImportSuccessLabel": m12,
+        "recipeImageLabel":
+            MessageLookupByLibrary.simpleMessage("Pridať fotografiu"),
+        "recipeImagePickFromGallery":
+            MessageLookupByLibrary.simpleMessage("Vybrať z galérie"),
+        "recipeImageRemove":
+            MessageLookupByLibrary.simpleMessage("Odstrániť fotografiu"),
+        "recipeImageReplace":
+            MessageLookupByLibrary.simpleMessage("Nahradiť fotografiu"),
+        "mealImageLabel":
+            MessageLookupByLibrary.simpleMessage("Pridať fotku"),
+        "mealImagePickFromGallery":
+            MessageLookupByLibrary.simpleMessage("Vybrať z galérie"),
+        "mealImageTakePhoto":
+            MessageLookupByLibrary.simpleMessage("Odfotiť"),
+        "mealImageRemove":
+            MessageLookupByLibrary.simpleMessage("Odstrániť fotku"),
+        "mealImageReplace":
+            MessageLookupByLibrary.simpleMessage("Nahradiť fotku"),
+        "recipeImageTakePhoto":
+            MessageLookupByLibrary.simpleMessage("Odfotiť"),
         "customMealsDeleteConfirmContent": MessageLookupByLibrary.simpleMessage(
             "Všetky záznamy v denníku, ktoré používajú toto jedlo, budú tiež odstránené."),
         "customMealsDeleteConfirmTitle":
@@ -255,7 +275,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "exportImportAppDataLabel": MessageLookupByLibrary.simpleMessage(
             "Exportovať / Importovať údaje aplikácie"),
         "exportImportCsvRecipesNote":
-            MessageLookupByLibrary.simpleMessage("Recepty sa zachovávajú iba pri JSON exporte a importe. Prepnite na JSON, ak ich chcete zahrnúť do zálohy."),
+            MessageLookupByLibrary.simpleMessage("CSV obsahuje aktivitu, denník jedál a zaznamenané dni. Recepty a pripojené fotky sa ukladajú len do JSON — prepni na JSON, ak ich chceš mať v zálohe."),
         "exportImportDescription": MessageLookupByLibrary.simpleMessage(
             "Údaje aplikácie môžete exportovať do zip súboru a neskôr ich importovať. Hodí sa to, keď si chcete údaje zálohovať alebo preniesť do iného zariadenia.\n\nAplikácia nepoužíva na ukladanie vašich údajov žiadnu cloudovú službu."),
         "exportImportErrorLabel":

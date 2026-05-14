@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:archive/archive_io.dart';
@@ -8,6 +9,8 @@ import 'package:opennutritracker/core/data/repository/recipe_repository.dart';
 import 'package:opennutritracker/core/data/repository/tracked_day_repository.dart';
 import 'package:opennutritracker/core/data/repository/user_activity_repository.dart';
 import 'package:opennutritracker/core/utils/csv_data_exporter.dart';
+import 'package:opennutritracker/core/data/data_source/custom_meal_data_source.dart';
+import 'package:opennutritracker/core/utils/user_image_storage.dart';
 
 /// The two export shapes available from Settings → Export / Import App Data.
 /// JSON is the canonical backup-and-restore format the app re-imports from;
@@ -19,12 +22,14 @@ class ExportDataUsecase {
   final IntakeRepository _intakeRepository;
   final TrackedDayRepository _trackedDayRepository;
   final RecipeRepository _recipeRepository;
+  final CustomMealDataSource _customMealDataSource;
 
   ExportDataUsecase(
     this._userActivityRepository,
     this._intakeRepository,
     this._trackedDayRepository,
     this._recipeRepository,
+    this._customMealDataSource,
   );
 
   /// Exports user activity, intake, tracked day, and recipe data to a zip
@@ -114,6 +119,25 @@ class ExportDataUsecase {
       archive.addFile(
         ArchiveFile(recipeJsonFileName, bytes.length, bytes),
       );
+
+      // Include any user-attached recipe photos under their relative slug
+      // (e.g. `recipe_images/<id>.webp`). The slug matches what we persist
+      // on RecipeDBO.imagePath, so import can drop the bytes back into
+      // place without translating filenames. CSV exports skip this for
+      // the same reason they skip recipes — the format doesn't carry it.
+      for (final recipe in fullRecipes) {
+        await _addUserImageIfPresent(archive, recipe.imagePath);
+      }
+
+      // Custom-meal photos travel through the same `meal_images/`
+      // subdirectory their relative slug names. Like recipes, these
+      // only travel with JSON exports — CSV is one-way and meal photos
+      // are a custom-meals concept that wouldn't survive the
+      // spreadsheet round-trip anyway.
+      final customMeals = _customMealDataSource.getAllCustomMeals();
+      for (final meal in customMeals) {
+        await _addUserImageIfPresent(archive, meal.localImagePath);
+      }
     }
 
     // Save the zip file to the user-specified location
@@ -126,5 +150,19 @@ class ExportDataUsecase {
     );
 
     return result != null && result.isNotEmpty;
+  }
+
+  Future<void> _addUserImageIfPresent(
+    Archive archive,
+    String? relativePath,
+  ) async {
+    if (relativePath == null) return;
+    final sanitized = UserImageStorage.sanitizeRelative(relativePath);
+    if (sanitized == null) return;
+    final absolute = await UserImageStorage.absolutePath(sanitized);
+    final file = File(absolute);
+    if (!await file.exists()) return;
+    final bytes = await file.readAsBytes();
+    archive.addFile(ArchiveFile(sanitized, bytes.length, bytes));
   }
 }

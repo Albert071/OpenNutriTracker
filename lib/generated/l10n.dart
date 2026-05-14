@@ -530,11 +530,31 @@ class S {
     );
   }
 
+  /// `Add a photo`
+  String get recipeImageLabel {
+    return Intl.message(
+      'Add a photo',
+      name: 'recipeImageLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Barcode`
   String get customMealBarcodeLabel {
     return Intl.message(
       'Barcode',
       name: 'customMealBarcodeLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Choose from gallery`
+  String get recipeImagePickFromGallery {
+    return Intl.message(
+      'Choose from gallery',
+      name: 'recipeImagePickFromGallery',
       desc: '',
       args: [],
     );
@@ -550,6 +570,16 @@ class S {
     );
   }
 
+  /// `Take photo`
+  String get recipeImageTakePhoto {
+    return Intl.message(
+      'Take photo',
+      name: 'recipeImageTakePhoto',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Scan barcode`
   String get customMealBarcodeScanButton {
     return Intl.message(
@@ -560,11 +590,81 @@ class S {
     );
   }
 
+  /// `Remove photo`
+  String get recipeImageRemove {
+    return Intl.message(
+      'Remove photo',
+      name: 'recipeImageRemove',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Barcode must be 8 to 14 digits`
   String get customMealBarcodeInvalid {
     return Intl.message(
       'Barcode must be 8 to 14 digits',
       name: 'customMealBarcodeInvalid',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Replace photo`
+  String get recipeImageReplace {
+    return Intl.message(
+      'Replace photo',
+      name: 'recipeImageReplace',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Add a photo`
+  String get mealImageLabel {
+    return Intl.message(
+      'Add a photo',
+      name: 'mealImageLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Choose from gallery`
+  String get mealImagePickFromGallery {
+    return Intl.message(
+      'Choose from gallery',
+      name: 'mealImagePickFromGallery',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Take photo`
+  String get mealImageTakePhoto {
+    return Intl.message(
+      'Take photo',
+      name: 'mealImageTakePhoto',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Remove photo`
+  String get mealImageRemove {
+    return Intl.message(
+      'Remove photo',
+      name: 'mealImageRemove',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Replace photo`
+  String get mealImageReplace {
+    return Intl.message(
+      'Replace photo',
+      name: 'mealImageReplace',
       desc: '',
       args: [],
     );
@@ -1962,10 +2062,10 @@ class S {
     );
   }
 
-  /// `Recipes are kept only with JSON exports and imports. Switch to JSON to include them in your backup.`
+  /// `CSV keeps your activity, meal log and tracked days. Recipes and any photos you've attached are JSON-only — switch to JSON if you want them in your backup.`
   String get exportImportCsvRecipesNote {
     return Intl.message(
-      'Recipes are kept only with JSON exports and imports. Switch to JSON to include them in your backup.',
+      'CSV keeps your activity, meal log and tracked days. Recipes and any photos you\'ve attached are JSON-only — switch to JSON if you want them in your backup.',
       name: 'exportImportCsvRecipesNote',
       desc: '',
       args: [],

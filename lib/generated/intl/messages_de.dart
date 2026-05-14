@@ -276,7 +276,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "exportImportAppDataLabel": MessageLookupByLibrary.simpleMessage(
             "App-Daten exportieren / importieren"),
         "exportImportCsvRecipesNote":
-            MessageLookupByLibrary.simpleMessage("Rezepte werden nur mit JSON-Export und -Import beibehalten. Wechsle zu JSON, um sie in dein Backup einzuschließen."),
+            MessageLookupByLibrary.simpleMessage("CSV speichert Aktivitäten, das Essensprotokoll und protokollierte Tage. Rezepte und angehängte Fotos werden nur in JSON gesichert — wähle JSON, wenn du sie im Backup behalten möchtest."),
         "exportImportDescription": MessageLookupByLibrary.simpleMessage(
             "Sie können die App-Daten in eine Zip-Datei exportieren und später importieren. Dies ist nützlich, wenn Sie Ihre Daten sichern oder auf ein anderes Gerät übertragen möchten.\n\nDie App nutzt keinen Cloud-Dienst, um Ihre Daten zu speichern."),
         "exportImportErrorLabel":
@@ -910,6 +910,26 @@ class MessageLookup extends MessageLookupByLibrary {
         "recipeTagsHelper": MessageLookupByLibrary.simpleMessage(
             "Kommagetrennt, z. B. \"Frühstück, vegan\""),
         "recipeTagsLabel": MessageLookupByLibrary.simpleMessage("Tags"),
+        "recipeImageLabel":
+            MessageLookupByLibrary.simpleMessage("Foto hinzufügen"),
+        "recipeImagePickFromGallery":
+            MessageLookupByLibrary.simpleMessage("Aus Galerie wählen"),
+        "recipeImageTakePhoto":
+            MessageLookupByLibrary.simpleMessage("Foto aufnehmen"),
+        "recipeImageRemove":
+            MessageLookupByLibrary.simpleMessage("Foto entfernen"),
+        "recipeImageReplace":
+            MessageLookupByLibrary.simpleMessage("Foto ersetzen"),
+        "mealImageLabel":
+            MessageLookupByLibrary.simpleMessage("Foto hinzufügen"),
+        "mealImagePickFromGallery":
+            MessageLookupByLibrary.simpleMessage("Aus Galerie wählen"),
+        "mealImageTakePhoto":
+            MessageLookupByLibrary.simpleMessage("Foto aufnehmen"),
+        "mealImageRemove":
+            MessageLookupByLibrary.simpleMessage("Foto entfernen"),
+        "mealImageReplace":
+            MessageLookupByLibrary.simpleMessage("Foto ersetzen"),
         "recipeTotalWeightHelper": MessageLookupByLibrary.simpleMessage(
             "Standardmäßig die Summe der Zutaten. Flüssigkeiten werden mit 1 ml ≈ 1 g angenähert."),
         "recipeTotalWeightLabel":
