@@ -17,6 +17,7 @@ import 'package:opennutritracker/core/utils/locator.dart';
 import 'package:opennutritracker/core/utils/logger_config.dart';
 import 'package:opennutritracker/core/utils/notification_service.dart';
 import 'package:opennutritracker/core/utils/navigation_options.dart';
+import 'package:opennutritracker/core/utils/energy_unit_provider.dart';
 import 'package:opennutritracker/core/utils/locale_provider.dart';
 import 'package:opennutritracker/core/utils/theme_mode_provider.dart';
 import 'package:opennutritracker/features/activity_detail/activity_detail_screen.dart';
@@ -70,16 +71,19 @@ Future<void> main() async {
   final savedLocaleCode = await configRepo.getSelectedLocale();
   final savedLocale =
       savedLocaleCode != null ? Locale(savedLocaleCode) : null;
+  final savedUsesKilojoules = config.usesKilojoules;
   final log = Logger('main');
 
   // If the user has accepted anonymous data collection, run the app with
   // sentry enabled, else run without it
   if (kReleaseMode && hasAcceptedAnonymousData) {
     log.info('Starting App with Sentry enabled ...');
-    _runAppWithSentryReporting(isUserInitialized, savedAppTheme, savedLocale);
+    _runAppWithSentryReporting(
+        isUserInitialized, savedAppTheme, savedLocale, savedUsesKilojoules);
   } else {
     log.info('Starting App ...');
-    runAppWithChangeNotifiers(isUserInitialized, savedAppTheme, savedLocale);
+    runAppWithChangeNotifiers(
+        isUserInitialized, savedAppTheme, savedLocale, savedUsesKilojoules);
   }
 }
 
@@ -87,14 +91,15 @@ void _runAppWithSentryReporting(
   bool isUserInitialized,
   AppThemeEntity savedAppTheme,
   Locale? savedLocale,
+  bool savedUsesKilojoules,
 ) async {
   await SentryFlutter.init(
     (options) {
       options.dsn = Env.sentryDns;
       options.tracesSampleRate = 1.0;
     },
-    appRunner: () =>
-        runAppWithChangeNotifiers(isUserInitialized, savedAppTheme, savedLocale),
+    appRunner: () => runAppWithChangeNotifiers(
+        isUserInitialized, savedAppTheme, savedLocale, savedUsesKilojoules),
   );
 }
 
@@ -102,6 +107,7 @@ void runAppWithChangeNotifiers(
   bool userInitialized,
   AppThemeEntity savedAppTheme,
   Locale? savedLocale,
+  bool savedUsesKilojoules,
 ) =>
     runApp(
       MultiProvider(
@@ -111,6 +117,10 @@ void runAppWithChangeNotifiers(
           ),
           ChangeNotifierProvider(
             create: (_) => LocaleProvider(locale: savedLocale),
+          ),
+          ChangeNotifierProvider(
+            create: (_) =>
+                EnergyUnitProvider(usesKilojoules: savedUsesKilojoules),
           ),
         ],
         child: OpenNutriTrackerApp(userInitialized: userInitialized),

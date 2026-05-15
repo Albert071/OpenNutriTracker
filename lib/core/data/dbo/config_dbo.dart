@@ -40,9 +40,8 @@ class ConfigDBO extends HiveObject {
   bool? showMealMacros;
   @HiveField(15)
   bool? showMicronutrients; // #237: null means default (false)
-  // Fields 16-19 are reserved for the pre-rebased ConfigDBO chain on
-  // adjacent in-flight branches. Keep this index at 20 so the follow-up
-  // taper toggle does not collide when those branches land.
+  @HiveField(16)
+  bool? usesKilojoules; // #177: null means default (false → kcal)
   @HiveField(20)
   bool caloriesTaperEnabled;
   // #160 follow-up: per-nutrient show/hide map for the daily nutrient panel.
@@ -75,6 +74,7 @@ class ConfigDBO extends HiveObject {
     this.notificationMinute,
     this.selectedLocale,
     this.showMicronutrients,
+    this.usesKilojoules,
     this.caloriesTaperEnabled = false,
     this.diarySortPreferences,
     this.nutrientPanelVisibility,

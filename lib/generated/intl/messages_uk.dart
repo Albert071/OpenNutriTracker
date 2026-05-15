@@ -195,6 +195,8 @@ class MessageLookup extends MessageLookupByLibrary {
             "Ще немає збережених власних страв."),
         "dailyKcalAdjustmentLabel":
             MessageLookupByLibrary.simpleMessage("Щоденна корекція калорій:"),
+        "dailyKjAdjustmentLabel":
+            MessageLookupByLibrary.simpleMessage("Щоденна корекція кДж:"),
         "dataCollectionLabel": MessageLookupByLibrary.simpleMessage(
             "Підтримайте розробку, надаючи анонімні дані про використання"),
         "deleteAllLabel": MessageLookupByLibrary.simpleMessage("Видалити все"),
@@ -347,10 +349,22 @@ class MessageLookup extends MessageLookupByLibrary {
         "itemUpdatedSnackbar":
             MessageLookupByLibrary.simpleMessage("Елемент оновлено"),
         "kcalLabel": MessageLookupByLibrary.simpleMessage("ккал"),
+        "kjLabel": MessageLookupByLibrary.simpleMessage("кДж"),
         "kcalLeftLabel":
             MessageLookupByLibrary.simpleMessage("залишилось ккал"),
         "kcalTooMuchLabel":
             MessageLookupByLibrary.simpleMessage("ккал понад норму"),
+        "energyLeftLabel": MessageLookupByLibrary.simpleMessage("залишилось"),
+        "energyTooMuchLabel":
+            MessageLookupByLibrary.simpleMessage("понад норму"),
+        "settingsEnergyUnitLabel":
+            MessageLookupByLibrary.simpleMessage("Одиниця енергії"),
+        "energyUnitKcalLabel":
+            MessageLookupByLibrary.simpleMessage("Кілокалорії (ккал)"),
+        "energyUnitKjLabel":
+            MessageLookupByLibrary.simpleMessage("Кілоджоулі (кДж)"),
+        "onboardingKjPerDayLabel":
+            MessageLookupByLibrary.simpleMessage("кДж на день"),
         "kgLabel": MessageLookupByLibrary.simpleMessage("кг"),
         "lbsLabel": MessageLookupByLibrary.simpleMessage("фунт"),
         "lunchExample": MessageLookupByLibrary.simpleMessage(
@@ -363,6 +377,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "mealCarbsLabel": MessageLookupByLibrary.simpleMessage("вуглеводи на"),
         "mealFatLabel": MessageLookupByLibrary.simpleMessage("жири на"),
         "mealKcalLabel": MessageLookupByLibrary.simpleMessage("ккал на"),
+        "mealEnergyLabel": MessageLookupByLibrary.simpleMessage("Енергія"),
         "mealNameLabel": MessageLookupByLibrary.simpleMessage("Назва страви"),
         "mealNameValidationError": MessageLookupByLibrary.simpleMessage(
             "Назва страви повинна містити принаймні одну літеру"),
@@ -1169,6 +1184,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "profileTargetWeightToGo": m22,
         "customActivityDescription": MessageLookupByLibrary.simpleMessage(
             "Введіть спалені калорії безпосередньо — для тренувань, яких немає у списку, або показників із фітнес-трекера"),
+        "customActivityDescriptionKj":
+            MessageLookupByLibrary.simpleMessage("Введіть спалені кілоджоулі безпосередньо — для тренувань, яких немає у списку, або показників із фітнес-трекера"),
         "customActivityKcalHint":
             MessageLookupByLibrary.simpleMessage("напр. 250"),
         "customActivityKcalLabel":

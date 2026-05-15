@@ -1969,6 +1969,16 @@ class S {
     );
   }
 
+  /// `Daily kJ adjustment:`
+  String get dailyKjAdjustmentLabel {
+    return Intl.message(
+      'Daily kJ adjustment:',
+      name: 'dailyKjAdjustmentLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Macronutrient Distribution:`
   String get macroDistributionLabel {
     return Intl.message(
@@ -2852,6 +2862,76 @@ class S {
     );
   }
 
+  /// `kJ`
+  String get kjLabel {
+    return Intl.message(
+      'kJ',
+      name: 'kjLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `left`
+  String get energyLeftLabel {
+    return Intl.message(
+      'left',
+      name: 'energyLeftLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `too much`
+  String get energyTooMuchLabel {
+    return Intl.message(
+      'too much',
+      name: 'energyTooMuchLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Energy unit`
+  String get settingsEnergyUnitLabel {
+    return Intl.message(
+      'Energy unit',
+      name: 'settingsEnergyUnitLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Kilocalories (kcal)`
+  String get energyUnitKcalLabel {
+    return Intl.message(
+      'Kilocalories (kcal)',
+      name: 'energyUnitKcalLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Kilojoules (kJ)`
+  String get energyUnitKjLabel {
+    return Intl.message(
+      'Kilojoules (kJ)',
+      name: 'energyUnitKjLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `kJ per day`
+  String get onboardingKjPerDayLabel {
+    return Intl.message(
+      'kJ per day',
+      name: 'onboardingKjPerDayLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `carbs`
   String get carbsLabel {
     return Intl.message(
@@ -3507,6 +3587,16 @@ class S {
     return Intl.message(
       'kcal',
       name: 'mealKcalLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Energy`
+  String get mealEnergyLabel {
+    return Intl.message(
+      'Energy',
+      name: 'mealEnergyLabel',
       desc: '',
       args: [],
     );
@@ -6567,6 +6657,16 @@ class S {
     return Intl.message(
       'Enter calories burned directly, for workouts that aren\'t in the list or readings from a fitness tracker',
       name: 'customActivityDescription',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Enter kilojoules burned directly, for workouts that aren't in the list or readings from a fitness tracker`
+  String get customActivityDescriptionKj {
+    return Intl.message(
+      'Enter kilojoules burned directly, for workouts that aren\'t in the list or readings from a fitness tracker',
+      name: 'customActivityDescriptionKj',
       desc: '',
       args: [],
     );

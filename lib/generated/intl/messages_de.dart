@@ -200,6 +200,8 @@ class MessageLookup extends MessageLookupByLibrary {
             "Noch keine eigenen Mahlzeiten gespeichert."),
         "dailyKcalAdjustmentLabel":
             MessageLookupByLibrary.simpleMessage("Tägliche kcal-Anpassung:"),
+        "dailyKjAdjustmentLabel":
+            MessageLookupByLibrary.simpleMessage("Tägliche kJ-Anpassung:"),
         "dataCollectionLabel": MessageLookupByLibrary.simpleMessage(
             "Unterstützen der Entwicklung durch Bereitstellung anonymer Nutzungsdaten"),
         "deleteAllLabel": MessageLookupByLibrary.simpleMessage("Alle löschen"),
@@ -356,9 +358,20 @@ class MessageLookup extends MessageLookupByLibrary {
         "kcalExceededLabel":
             MessageLookupByLibrary.simpleMessage("kcal überschritten"),
         "kcalLabel": MessageLookupByLibrary.simpleMessage("kcal"),
+        "kjLabel": MessageLookupByLibrary.simpleMessage("kJ"),
         "kcalLeftLabel": MessageLookupByLibrary.simpleMessage("kcal übrig"),
         "kcalTooMuchLabel":
             MessageLookupByLibrary.simpleMessage("kcal zu viel"),
+        "energyLeftLabel": MessageLookupByLibrary.simpleMessage("übrig"),
+        "energyTooMuchLabel": MessageLookupByLibrary.simpleMessage("zu viel"),
+        "settingsEnergyUnitLabel":
+            MessageLookupByLibrary.simpleMessage("Energieeinheit"),
+        "energyUnitKcalLabel":
+            MessageLookupByLibrary.simpleMessage("Kilokalorien (kcal)"),
+        "energyUnitKjLabel":
+            MessageLookupByLibrary.simpleMessage("Kilojoule (kJ)"),
+        "onboardingKjPerDayLabel":
+            MessageLookupByLibrary.simpleMessage("kJ pro Tag"),
         "kgLabel": MessageLookupByLibrary.simpleMessage("kg"),
         "lbsLabel": MessageLookupByLibrary.simpleMessage("lbs"),
         "lunchExample": MessageLookupByLibrary.simpleMessage(
@@ -374,6 +387,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Fett pro 100 g/ml"),
         "mealKcalLabel":
             MessageLookupByLibrary.simpleMessage("kcal pro 100 g/ml"),
+        "mealEnergyLabel": MessageLookupByLibrary.simpleMessage("Energie"),
         "mealNameLabel": MessageLookupByLibrary.simpleMessage("Mahlzeitenname"),
         "mealNameValidationError": MessageLookupByLibrary.simpleMessage(
             "Mahlzeitenname muss mindestens einen Buchstaben enthalten"),
@@ -1181,6 +1195,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "profileTargetWeightToGo": m22,
         "customActivityDescription": MessageLookupByLibrary.simpleMessage(
             "Trage verbrannte Kalorien direkt ein – für Trainings, die nicht in der Liste sind, oder Werte aus einem Fitnesstracker"),
+        "customActivityDescriptionKj":
+            MessageLookupByLibrary.simpleMessage("Trage verbrannte Kilojoule direkt ein – für Trainings, die nicht in der Liste sind, oder Werte aus einem Fitnesstracker"),
         "customActivityKcalHint":
             MessageLookupByLibrary.simpleMessage("z. B. 250"),
         "customActivityKcalLabel":

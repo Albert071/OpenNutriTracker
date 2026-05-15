@@ -147,6 +147,13 @@ class ConfigDataSource {
     await config?.save();
   }
 
+  Future<void> setConfigUsesKilojoules(bool usesKilojoules) async {
+    _log.fine('Updating config usesKilojoules to $usesKilojoules');
+    final config = _configBox.get(_configKey);
+    config?.usesKilojoules = usesKilojoules;
+    await config?.save();
+  }
+
   Future<bool> getCaloriesTaperEnabled() async {
     final config = _configBox.get(_configKey);
     return config?.caloriesTaperEnabled ?? false;

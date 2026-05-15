@@ -194,6 +194,8 @@ class MessageLookup extends MessageLookupByLibrary {
             "Zatím žádná vlastní jídla uložena."),
         "dailyKcalAdjustmentLabel": MessageLookupByLibrary.simpleMessage(
             "Úprava denního kalorického příjmu:"),
+        "dailyKjAdjustmentLabel":
+            MessageLookupByLibrary.simpleMessage("Úprava denního příjmu (kJ):"),
         "dataCollectionLabel": MessageLookupByLibrary.simpleMessage(
             "Poskytněte anonymní data týkající se používání aplikace pro pomoc s jejím vývojem"),
         "deleteAllLabel": MessageLookupByLibrary.simpleMessage("Smazat vše"),
@@ -345,8 +347,19 @@ class MessageLookup extends MessageLookupByLibrary {
         "itemUpdatedSnackbar":
             MessageLookupByLibrary.simpleMessage("Záznam upraven"),
         "kcalLabel": MessageLookupByLibrary.simpleMessage("kcal"),
+        "kjLabel": MessageLookupByLibrary.simpleMessage("kJ"),
         "kcalLeftLabel": MessageLookupByLibrary.simpleMessage("kcal zbývá"),
         "kcalTooMuchLabel": MessageLookupByLibrary.simpleMessage("kcal navíc"),
+        "energyLeftLabel": MessageLookupByLibrary.simpleMessage("zbývá"),
+        "energyTooMuchLabel": MessageLookupByLibrary.simpleMessage("navíc"),
+        "settingsEnergyUnitLabel":
+            MessageLookupByLibrary.simpleMessage("Jednotka energie"),
+        "energyUnitKcalLabel":
+            MessageLookupByLibrary.simpleMessage("Kilokalorie (kcal)"),
+        "energyUnitKjLabel":
+            MessageLookupByLibrary.simpleMessage("Kilojouly (kJ)"),
+        "onboardingKjPerDayLabel":
+            MessageLookupByLibrary.simpleMessage("kJ denně"),
         "kgLabel": MessageLookupByLibrary.simpleMessage("kg"),
         "lbsLabel": MessageLookupByLibrary.simpleMessage("lbs"),
         "lunchExample":
@@ -360,6 +373,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "mealCarbsLabel": MessageLookupByLibrary.simpleMessage("sacharidů na"),
         "mealFatLabel": MessageLookupByLibrary.simpleMessage("tuků na"),
         "mealKcalLabel": MessageLookupByLibrary.simpleMessage("kcal na"),
+        "mealEnergyLabel": MessageLookupByLibrary.simpleMessage("Energie"),
         "mealNameLabel": MessageLookupByLibrary.simpleMessage("Název jídla"),
         "mealNameValidationError": MessageLookupByLibrary.simpleMessage(
             "Název jídla musí obsahovat alespoň jedno písmeno"),
@@ -1157,6 +1171,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "profileTargetWeightToGo": m22,
         "customActivityDescription": MessageLookupByLibrary.simpleMessage(
             "Zadejte spálené kalorie přímo, pro tréninky, které nejsou na seznamu, nebo hodnoty z fitness náramku"),
+        "customActivityDescriptionKj":
+            MessageLookupByLibrary.simpleMessage("Zadejte spálené kilojouly přímo, pro tréninky, které nejsou na seznamu, nebo hodnoty z fitness náramku"),
         "customActivityKcalHint":
             MessageLookupByLibrary.simpleMessage("např. 250"),
         "customActivityKcalLabel":

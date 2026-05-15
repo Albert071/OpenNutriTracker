@@ -185,6 +185,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("尚未保存自定义餐食。"),
         "dailyKcalAdjustmentLabel":
             MessageLookupByLibrary.simpleMessage("每日卡路里调整："),
+        "dailyKjAdjustmentLabel":
+            MessageLookupByLibrary.simpleMessage("每日千焦调整："),
         "dataCollectionLabel":
             MessageLookupByLibrary.simpleMessage("通过提供匿名使用数据支持开发"),
         "deleteAllLabel": MessageLookupByLibrary.simpleMessage("删除全部"),
@@ -318,8 +320,15 @@ class MessageLookup extends MessageLookupByLibrary {
         "itemDeletedSnackbar": MessageLookupByLibrary.simpleMessage("项目已删除"),
         "itemUpdatedSnackbar": MessageLookupByLibrary.simpleMessage("项目已更新"),
         "kcalLabel": MessageLookupByLibrary.simpleMessage("卡路里"),
+        "kjLabel": MessageLookupByLibrary.simpleMessage("千焦"),
         "kcalLeftLabel": MessageLookupByLibrary.simpleMessage("剩余卡路里"),
         "kcalTooMuchLabel": MessageLookupByLibrary.simpleMessage("卡路里过多"),
+        "energyLeftLabel": MessageLookupByLibrary.simpleMessage("剩余"),
+        "energyTooMuchLabel": MessageLookupByLibrary.simpleMessage("过多"),
+        "settingsEnergyUnitLabel": MessageLookupByLibrary.simpleMessage("能量单位"),
+        "energyUnitKcalLabel": MessageLookupByLibrary.simpleMessage("千卡（kcal）"),
+        "energyUnitKjLabel": MessageLookupByLibrary.simpleMessage("千焦（kJ）"),
+        "onboardingKjPerDayLabel": MessageLookupByLibrary.simpleMessage("每日千焦"),
         "kgLabel": MessageLookupByLibrary.simpleMessage("千克"),
         "lbsLabel": MessageLookupByLibrary.simpleMessage("磅"),
         "lunchExample": MessageLookupByLibrary.simpleMessage("例如：披萨、沙拉、米饭..."),
@@ -331,6 +340,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "mealCarbsLabel": MessageLookupByLibrary.simpleMessage("碳水每"),
         "mealFatLabel": MessageLookupByLibrary.simpleMessage("脂肪每"),
         "mealKcalLabel": MessageLookupByLibrary.simpleMessage("卡路里每"),
+        "mealEnergyLabel": MessageLookupByLibrary.simpleMessage("能量"),
         "mealNameLabel": MessageLookupByLibrary.simpleMessage("餐食名称"),
         "mealNameValidationError":
             MessageLookupByLibrary.simpleMessage("餐食名称必须至少包含一个字母"),
@@ -1015,6 +1025,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "profileTargetWeightToGo": m22,
         "customActivityDescription": MessageLookupByLibrary.simpleMessage(
             "直接输入消耗的卡路里，适用于列表中没有的训练或来自健身追踪器的读数"),
+        "customActivityDescriptionKj":
+            MessageLookupByLibrary.simpleMessage("直接输入消耗的千焦，适用于列表中没有的训练或来自健身追踪器的读数"),
         "customActivityKcalHint":
             MessageLookupByLibrary.simpleMessage("例如 250"),
         "customActivityKcalLabel":

@@ -202,6 +202,8 @@ class MessageLookup extends MessageLookupByLibrary {
             "Zatiaľ nie sú uložené žiadne vlastné jedlá."),
         "dailyKcalAdjustmentLabel": MessageLookupByLibrary.simpleMessage(
             "Denná úprava kcal:"),
+        "dailyKjAdjustmentLabel":
+            MessageLookupByLibrary.simpleMessage("Denná úprava kJ:"),
         "dataCollectionLabel": MessageLookupByLibrary.simpleMessage(
             "Podporte vývoj poskytnutím anonymných údajov o používaní"),
         "deleteAllLabel": MessageLookupByLibrary.simpleMessage("Zmazať všetko"),
@@ -1156,6 +1158,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Naskenovať kód"),
         "customActivityDescription":
             MessageLookupByLibrary.simpleMessage("Zadajte spálené kalórie priamo, pre tréningy ktoré nie sú v zozname, alebo údaje z fitness náramku"),
+        "customActivityDescriptionKj":
+            MessageLookupByLibrary.simpleMessage("Zadajte spálené kilojouly priamo, pre tréningy ktoré nie sú v zozname, alebo údaje z fitness náramku"),
         "customActivityKcalHint":
             MessageLookupByLibrary.simpleMessage("napr. 250"),
         "customActivityKcalLabel":
@@ -1172,5 +1176,21 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Uložiť ako šablónu na nabudúce"),
         "customActivityTemplatesEmpty": MessageLookupByLibrary.simpleMessage(
             "Zatiaľ ste si neuložili žiadne šablóny. Zaškrtnite „Uložiť ako šablónu na nabudúce\", ak chcete vlastnú aktivitu zapamätať."),
+        "energyLeftLabel":
+            MessageLookupByLibrary.simpleMessage("zostáva"),
+        "energyTooMuchLabel":
+            MessageLookupByLibrary.simpleMessage("navyše"),
+        "energyUnitKcalLabel":
+            MessageLookupByLibrary.simpleMessage("Kilokalórie (kcal)"),
+        "energyUnitKjLabel":
+            MessageLookupByLibrary.simpleMessage("Kilojouly (kJ)"),
+        "kjLabel":
+            MessageLookupByLibrary.simpleMessage("kJ"),
+        "mealEnergyLabel":
+            MessageLookupByLibrary.simpleMessage("Energia"),
+        "onboardingKjPerDayLabel":
+            MessageLookupByLibrary.simpleMessage("kJ za deň"),
+        "settingsEnergyUnitLabel":
+            MessageLookupByLibrary.simpleMessage("Jednotka energie"),
       };
 }

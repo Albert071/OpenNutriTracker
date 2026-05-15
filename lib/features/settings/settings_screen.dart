@@ -4,6 +4,7 @@ import 'package:opennutritracker/core/domain/entity/app_theme_entity.dart';
 import 'package:opennutritracker/core/presentation/widgets/app_banner_version.dart';
 import 'package:opennutritracker/core/presentation/widgets/disclaimer_dialog.dart';
 import 'package:opennutritracker/core/utils/app_const.dart';
+import 'package:opennutritracker/core/utils/energy_unit_provider.dart';
 import 'package:opennutritracker/core/utils/locator.dart';
 import 'package:opennutritracker/core/utils/notification_service.dart';
 import 'package:opennutritracker/core/utils/locale_provider.dart';
@@ -76,6 +77,18 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   title: Text(S.of(context).settingsUnitsLabel),
                   onTap: () =>
                       _showUnitsDialog(context, state.usesImperialUnits),
+                ),
+                Semantics(
+                  identifier: 'settings-energy-unit',
+                  child: ListTile(
+                    leading: const Icon(Icons.local_fire_department_outlined),
+                    title: Text(S.of(context).settingsEnergyUnitLabel),
+                    subtitle: Text(state.usesKilojoules
+                        ? S.of(context).energyUnitKjLabel
+                        : S.of(context).energyUnitKcalLabel),
+                    onTap: () =>
+                        _showEnergyUnitDialog(context, state.usesKilojoules),
+                  ),
                 ),
                 ListTile(
                   leading: const Icon(Icons.calculate_outlined),
@@ -336,6 +349,67 @@ class _SettingsScreenState extends State<SettingsScreen> {
       _profileBloc.add(LoadProfileEvent());
       _homeBloc.add(LoadItemsEvent());
       _diaryBloc.add(const LoadDiaryYearEvent());
+    }
+  }
+
+  // #177: Pick between kilocalories (default) and kilojoules for the
+  // energy display unit. Internal storage stays in kcal; this only
+  // toggles how energy is rendered everywhere it appears.
+  void _showEnergyUnitDialog(
+      BuildContext context, bool currentUsesKilojoules) async {
+    bool selectedUsesKilojoules = currentUsesKilojoules;
+    final shouldUpdate = await showDialog<bool?>(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          contentPadding: EdgeInsets.zero,
+          title: Text(S.of(context).settingsEnergyUnitLabel),
+          content: StatefulBuilder(
+            builder: (BuildContext context,
+                void Function(void Function()) setState) {
+              return RadioGroup<bool>(
+                groupValue: selectedUsesKilojoules,
+                onChanged: (value) {
+                  setState(() {
+                    selectedUsesKilojoules = value ?? false;
+                  });
+                },
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    RadioListTile<bool>(
+                      title: Text(S.of(context).energyUnitKcalLabel),
+                      value: false,
+                    ),
+                    RadioListTile<bool>(
+                      title: Text(S.of(context).energyUnitKjLabel),
+                      value: true,
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: Text(S.of(context).dialogCancelLabel),
+            ),
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(true),
+              child: Text(S.of(context).dialogOKLabel),
+            ),
+          ],
+        );
+      },
+    );
+    if (shouldUpdate == true) {
+      _settingsBloc.setUsesKilojoules(selectedUsesKilojoules);
+      _settingsBloc.add(LoadSettingsEvent());
+      if (context.mounted) {
+        Provider.of<EnergyUnitProvider>(context, listen: false)
+            .updateUsesKilojoules(selectedUsesKilojoules);
+      }
     }
   }
 

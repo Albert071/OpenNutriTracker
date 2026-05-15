@@ -158,6 +158,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Create custom meal item?"),
         "dailyKcalAdjustmentLabel":
             MessageLookupByLibrary.simpleMessage("Daily Kcal adjustment:"),
+        "dailyKjAdjustmentLabel":
+            MessageLookupByLibrary.simpleMessage("Daily kJ adjustment:"),
         "dataCollectionLabel": MessageLookupByLibrary.simpleMessage(
             "Support development by providing anonymous usage data"),
         "deleteAllLabel": MessageLookupByLibrary.simpleMessage("Delete all"),
@@ -240,6 +242,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Custom activity"),
         "customActivityDescription": MessageLookupByLibrary.simpleMessage(
             "Enter calories burned directly, for workouts that aren\'t in the list or readings from a fitness tracker"),
+        "customActivityDescriptionKj":
+            MessageLookupByLibrary.simpleMessage("Enter kilojoules burned directly, for workouts that aren't in the list or readings from a fitness tracker"),
         "customActivityKcalLabel":
             MessageLookupByLibrary.simpleMessage("Calories burned"),
         "customActivityKcalHint":
@@ -339,9 +343,20 @@ class MessageLookup extends MessageLookupByLibrary {
         "kcalExceededLabel":
             MessageLookupByLibrary.simpleMessage("kcal exceeded"),
         "kcalLabel": MessageLookupByLibrary.simpleMessage("kcal"),
+        "kjLabel": MessageLookupByLibrary.simpleMessage("kJ"),
         "kcalLeftLabel": MessageLookupByLibrary.simpleMessage("kcal left"),
         "kcalTooMuchLabel":
             MessageLookupByLibrary.simpleMessage("kcal too much"),
+        "energyLeftLabel": MessageLookupByLibrary.simpleMessage("left"),
+        "energyTooMuchLabel": MessageLookupByLibrary.simpleMessage("too much"),
+        "settingsEnergyUnitLabel":
+            MessageLookupByLibrary.simpleMessage("Energy unit"),
+        "energyUnitKcalLabel":
+            MessageLookupByLibrary.simpleMessage("Kilocalories (kcal)"),
+        "energyUnitKjLabel":
+            MessageLookupByLibrary.simpleMessage("Kilojoules (kJ)"),
+        "onboardingKjPerDayLabel":
+            MessageLookupByLibrary.simpleMessage("kJ per day"),
         "kgLabel": MessageLookupByLibrary.simpleMessage("kg"),
         "lbsLabel": MessageLookupByLibrary.simpleMessage("lbs"),
         "lunchExample":
@@ -353,6 +368,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "mealCarbsLabel": MessageLookupByLibrary.simpleMessage("carbs per"),
         "mealFatLabel": MessageLookupByLibrary.simpleMessage("fat per"),
         "mealKcalLabel": MessageLookupByLibrary.simpleMessage("kcal per"),
+        "mealEnergyLabel": MessageLookupByLibrary.simpleMessage("Energy"),
         "mealNameLabel": MessageLookupByLibrary.simpleMessage("Meal name"),
         "mealNameValidationError": MessageLookupByLibrary.simpleMessage(
             "Meal name must contain at least one letter"),

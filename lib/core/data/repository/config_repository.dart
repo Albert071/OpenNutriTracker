@@ -97,6 +97,10 @@ class ConfigRepository {
     await _configDataSource.setConfigShowMicronutrients(show);
   }
 
+  Future<void> setConfigUsesKilojoules(bool usesKilojoules) async {
+    await _configDataSource.setConfigUsesKilojoules(usesKilojoules);
+  }
+
   Future<bool> getCaloriesTaperEnabled() async {
     return await _configDataSource.getCaloriesTaperEnabled();
   }

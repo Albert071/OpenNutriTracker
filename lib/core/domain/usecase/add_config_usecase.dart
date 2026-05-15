@@ -72,6 +72,10 @@ class AddConfigUsecase {
     _configRepository.setConfigShowMicronutrients(show);
   }
 
+  Future<void> setConfigUsesKilojoules(bool usesKilojoules) async {
+    await _configRepository.setConfigUsesKilojoules(usesKilojoules);
+  }
+
   Future<void> setConfigCaloriesTaperEnabled(bool enabled) async {
     await _configRepository.setConfigCaloriesTaperEnabled(enabled);
   }

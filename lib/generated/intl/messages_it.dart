@@ -197,6 +197,8 @@ class MessageLookup extends MessageLookupByLibrary {
             "Nessun pasto personalizzato salvato."),
         "dailyKcalAdjustmentLabel": MessageLookupByLibrary.simpleMessage(
             "Regolazione kcal giornaliere:"),
+        "dailyKjAdjustmentLabel":
+            MessageLookupByLibrary.simpleMessage("Regolazione kJ giornalieri:"),
         "dataCollectionLabel": MessageLookupByLibrary.simpleMessage(
             "Supporta lo sviluppo inviando dati di utilizzo anonimi"),
         "deleteAllLabel": MessageLookupByLibrary.simpleMessage("Elimina tutto"),
@@ -348,9 +350,21 @@ class MessageLookup extends MessageLookupByLibrary {
         "itemUpdatedSnackbar":
             MessageLookupByLibrary.simpleMessage("Alimento aggiornato"),
         "kcalLabel": MessageLookupByLibrary.simpleMessage("kcal"),
+        "kjLabel": MessageLookupByLibrary.simpleMessage("kJ"),
         "kcalLeftLabel": MessageLookupByLibrary.simpleMessage("kcal rimanenti"),
         "kcalTooMuchLabel":
             MessageLookupByLibrary.simpleMessage("kcal in eccesso"),
+        "energyLeftLabel": MessageLookupByLibrary.simpleMessage("rimanenti"),
+        "energyTooMuchLabel":
+            MessageLookupByLibrary.simpleMessage("in eccesso"),
+        "settingsEnergyUnitLabel":
+            MessageLookupByLibrary.simpleMessage("Unità di energia"),
+        "energyUnitKcalLabel":
+            MessageLookupByLibrary.simpleMessage("Kilocalorie (kcal)"),
+        "energyUnitKjLabel":
+            MessageLookupByLibrary.simpleMessage("Kilojoule (kJ)"),
+        "onboardingKjPerDayLabel":
+            MessageLookupByLibrary.simpleMessage("kJ al giorno"),
         "kgLabel": MessageLookupByLibrary.simpleMessage("kg"),
         "lbsLabel": MessageLookupByLibrary.simpleMessage("lbs"),
         "lunchExample": MessageLookupByLibrary.simpleMessage(
@@ -364,6 +378,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("carboidrati per"),
         "mealFatLabel": MessageLookupByLibrary.simpleMessage("grassi per"),
         "mealKcalLabel": MessageLookupByLibrary.simpleMessage("kcal per"),
+        "mealEnergyLabel": MessageLookupByLibrary.simpleMessage("Energia"),
         "mealNameLabel": MessageLookupByLibrary.simpleMessage("Nome pasto"),
         "mealNameValidationError": MessageLookupByLibrary.simpleMessage(
             "Il nome del pasto deve contenere almeno una lettera"),
@@ -1168,6 +1183,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "profileTargetWeightToGo": m22,
         "customActivityDescription": MessageLookupByLibrary.simpleMessage(
             "Inserisci direttamente le calorie bruciate, per allenamenti non in elenco o letture da un fitness tracker"),
+        "customActivityDescriptionKj":
+            MessageLookupByLibrary.simpleMessage("Inserisci direttamente i kilojoule bruciati, per allenamenti non in elenco o letture da un fitness tracker"),
         "customActivityKcalHint":
             MessageLookupByLibrary.simpleMessage("es. 250"),
         "customActivityKcalLabel":

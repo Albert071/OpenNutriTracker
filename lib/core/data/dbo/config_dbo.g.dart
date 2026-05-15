@@ -30,6 +30,7 @@ class ConfigDBOAdapter extends TypeAdapter<ConfigDBO> {
         notificationMinute: (fields[12] as num?)?.toInt(),
         selectedLocale: fields[13] as String?,
         showMicronutrients: fields[15] as bool?,
+        usesKilojoules: fields[16] as bool?,
         caloriesTaperEnabled: fields[20] == null ? false : fields[20] as bool,
         diarySortPreferences: (fields[21] as Map?)?.cast<String, int>(),
         nutrientPanelVisibility: (fields[22] as Map?)?.cast<String, bool>(),
@@ -42,7 +43,7 @@ class ConfigDBOAdapter extends TypeAdapter<ConfigDBO> {
   @override
   void write(BinaryWriter writer, ConfigDBO obj) {
     writer
-      ..writeByte(19)
+      ..writeByte(20)
       ..writeByte(0)
       ..write(obj.hasAcceptedDisclaimer)
       ..writeByte(1)
@@ -75,6 +76,8 @@ class ConfigDBOAdapter extends TypeAdapter<ConfigDBO> {
       ..write(obj.showMealMacros)
       ..writeByte(15)
       ..write(obj.showMicronutrients)
+      ..writeByte(16)
+      ..write(obj.usesKilojoules)
       ..writeByte(20)
       ..write(obj.caloriesTaperEnabled)
       ..writeByte(21)
@@ -113,6 +116,7 @@ ConfigDBO _$ConfigDBOFromJson(Map<String, dynamic> json) =>
         notificationMinute: (json['notificationMinute'] as num?)?.toInt(),
         selectedLocale: json['selectedLocale'] as String?,
         showMicronutrients: json['showMicronutrients'] as bool?,
+        usesKilojoules: json['usesKilojoules'] as bool?,
         caloriesTaperEnabled: json['caloriesTaperEnabled'] as bool? ?? false,
         diarySortPreferences:
             (json['diarySortPreferences'] as Map<String, dynamic>?)?.map(
@@ -144,6 +148,7 @@ Map<String, dynamic> _$ConfigDBOToJson(ConfigDBO instance) => <String, dynamic>{
   'selectedLocale': instance.selectedLocale,
   'showMealMacros': instance.showMealMacros,
   'showMicronutrients': instance.showMicronutrients,
+  'usesKilojoules': instance.usesKilojoules,
   'caloriesTaperEnabled': instance.caloriesTaperEnabled,
   'nutrientPanelVisibility': instance.nutrientPanelVisibility,
   'diarySortPreferences': instance.diarySortPreferences,

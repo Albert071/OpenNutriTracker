@@ -64,6 +64,7 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
           offCacheCount: offCacheCount,
           offCacheSizeBytes: offCacheSizeBytes,
           showMicronutrients: userConfig.showMicronutrients,
+          usesKilojoules: userConfig.usesKilojoules,
           caloriesTaperEnabled: userConfig.caloriesTaperEnabled,
         ),
       );
@@ -111,6 +112,10 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
 
   void setShowMicronutrients(bool show) {
     _addConfigUsecase.setConfigShowMicronutrients(show);
+  }
+
+  void setUsesKilojoules(bool usesKilojoules) {
+    _addConfigUsecase.setConfigUsesKilojoules(usesKilojoules);
   }
 
   void setCaloriesTaperEnabled(bool enabled) {

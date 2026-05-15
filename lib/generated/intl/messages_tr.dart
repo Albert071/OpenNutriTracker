@@ -197,6 +197,8 @@ class MessageLookup extends MessageLookupByLibrary {
             "Henüz özel yemek kaydedilmedi."),
         "dailyKcalAdjustmentLabel":
             MessageLookupByLibrary.simpleMessage("Günlük Kcal ayarı:"),
+        "dailyKjAdjustmentLabel":
+            MessageLookupByLibrary.simpleMessage("Günlük kJ ayarı:"),
         "dataCollectionLabel": MessageLookupByLibrary.simpleMessage(
             "Anonim kullanım verileri sağlayarak geliştirmeyi destekleyin"),
         "deleteAllLabel": MessageLookupByLibrary.simpleMessage("Tümünü sil"),
@@ -348,8 +350,19 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Öğe güncellendi"),
         "kcalExceededLabel": MessageLookupByLibrary.simpleMessage("kcal aşıldı"),
         "kcalLabel": MessageLookupByLibrary.simpleMessage("kcal"),
+        "kjLabel": MessageLookupByLibrary.simpleMessage("kJ"),
         "kcalLeftLabel": MessageLookupByLibrary.simpleMessage("kalan kcal"),
         "kcalTooMuchLabel": MessageLookupByLibrary.simpleMessage("fazla kcal"),
+        "energyLeftLabel": MessageLookupByLibrary.simpleMessage("kalan"),
+        "energyTooMuchLabel": MessageLookupByLibrary.simpleMessage("fazla"),
+        "settingsEnergyUnitLabel":
+            MessageLookupByLibrary.simpleMessage("Enerji birimi"),
+        "energyUnitKcalLabel":
+            MessageLookupByLibrary.simpleMessage("Kilokalori (kcal)"),
+        "energyUnitKjLabel":
+            MessageLookupByLibrary.simpleMessage("Kilojul (kJ)"),
+        "onboardingKjPerDayLabel":
+            MessageLookupByLibrary.simpleMessage("günlük kJ"),
         "kgLabel": MessageLookupByLibrary.simpleMessage("kg"),
         "lbsLabel": MessageLookupByLibrary.simpleMessage("lbs"),
         "lunchExample": MessageLookupByLibrary.simpleMessage(
@@ -363,6 +376,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("karbonhidrat başına"),
         "mealFatLabel": MessageLookupByLibrary.simpleMessage("yağ başına"),
         "mealKcalLabel": MessageLookupByLibrary.simpleMessage("kcal başına"),
+        "mealEnergyLabel": MessageLookupByLibrary.simpleMessage("Enerji"),
         "mealNameLabel": MessageLookupByLibrary.simpleMessage("Yemek adı"),
         "mealNameValidationError": MessageLookupByLibrary.simpleMessage(
             "Yemek adı en az bir harf içermelidir"),
@@ -1144,6 +1158,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "profileTargetWeightToGo": m22,
         "customActivityDescription": MessageLookupByLibrary.simpleMessage(
             "Listede olmayan antrenmanlar veya bir fitness takip cihazından okumalar için yakılan kaloriyi doğrudan girin"),
+        "customActivityDescriptionKj":
+            MessageLookupByLibrary.simpleMessage("Listede olmayan antrenmanlar veya bir fitness takip cihazından okumalar için yakılan kilojulleri doğrudan girin"),
         "customActivityKcalHint":
             MessageLookupByLibrary.simpleMessage("örn. 250"),
         "customActivityKcalLabel":

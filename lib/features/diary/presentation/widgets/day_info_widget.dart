@@ -9,7 +9,9 @@ import 'package:opennutritracker/core/presentation/widgets/copy_or_delete_dialog
 import 'package:opennutritracker/core/presentation/widgets/macro_nutriments_widget.dart';
 import 'package:opennutritracker/core/presentation/widgets/copy_dialog.dart';
 import 'package:opennutritracker/core/presentation/widgets/delete_dialog.dart';
+import 'package:opennutritracker/core/utils/calc/unit_calc.dart';
 import 'package:opennutritracker/core/utils/custom_icons.dart';
+import 'package:opennutritracker/core/utils/energy_unit_provider.dart';
 import 'package:opennutritracker/core/utils/locator.dart';
 import 'package:opennutritracker/features/add_meal/presentation/add_meal_type.dart';
 import 'package:opennutritracker/features/diary/presentation/bloc/calendar_day_bloc.dart';
@@ -17,6 +19,7 @@ import 'package:opennutritracker/features/diary/presentation/widgets/daily_nutri
 import 'package:opennutritracker/features/diary/presentation/widgets/diary_sort_type.dart';
 import 'package:opennutritracker/features/home/presentation/widgets/intake_vertical_list.dart';
 import 'package:opennutritracker/generated/l10n.dart';
+import 'package:provider/provider.dart';
 
 class DayInfoWidget extends StatefulWidget {
   final DateTime selectedDay;
@@ -189,7 +192,8 @@ class _DayInfoWidgetState extends State<DayInfoWidget> {
                               vertical: 8.0,
                             ),
                             child: Text(
-                              _getCaloriesTrackedDisplayString(trackedDay),
+                              _getCaloriesTrackedDisplayString(
+                                  context, trackedDay),
                               style: Theme.of(
                                 context,
                               ).textTheme.titleLarge?.copyWith(
@@ -342,10 +346,20 @@ class _DayInfoWidgetState extends State<DayInfoWidget> {
         ...widget.snackIntake,
       ];
 
-  String _getCaloriesTrackedDisplayString(TrackedDayEntity trackedDay) {
+  String _getCaloriesTrackedDisplayString(
+      BuildContext context, TrackedDayEntity trackedDay) {
     final actualKcal = _allIntakes.fold(0.0, (sum, i) => sum + i.totalKcal);
-    final caloriesTracked = actualKcal < 0 ? 0 : actualKcal.toInt();
-    return '$caloriesTracked/${trackedDay.calorieGoal.toInt()} kcal';
+    final usesKilojoules =
+        context.watch<EnergyUnitProvider>().usesKilojoules;
+    final clampedKcal = actualKcal < 0 ? 0.0 : actualKcal;
+    final displayActual = usesKilojoules
+        ? UnitCalc.kcalToKj(clampedKcal).toInt()
+        : clampedKcal.toInt();
+    final displayGoal = usesKilojoules
+        ? UnitCalc.kcalToKj(trackedDay.calorieGoal).toInt()
+        : trackedDay.calorieGoal.toInt();
+    final unit = usesKilojoules ? S.of(context).kjLabel : S.of(context).kcalLabel;
+    return '$displayActual/$displayGoal $unit';
   }
 
   void showCopyOrDeleteIntakeDialog(
