@@ -71,6 +71,8 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m22(value) => "Zbývá ${value} do cíle";
 
+  static String m23(consumed, target) => "${consumed} / ${target} kcal";
+
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "activityExample": MessageLookupByLibrary.simpleMessage(
@@ -1189,5 +1191,30 @@ class MessageLookup extends MessageLookupByLibrary {
             "Uložit jako šablonu pro příště"),
         "customActivityTemplatesEmpty": MessageLookupByLibrary.simpleMessage(
             "Zatím nemáte uložené žádné šablony. Zaškrtněte „Uložit jako šablonu pro příště“, abyste si vlastní aktivitu zapamatovali na později."),
+        "mealPatternFiveSmall":
+            MessageLookupByLibrary.simpleMessage("5 malých"),
+        "mealPatternMediterranean":
+            MessageLookupByLibrary.simpleMessage("Středomořský"),
+        "mealPatternOmad":
+            MessageLookupByLibrary.simpleMessage("1 jídlo"),
+        "mealPatternPresetsLabel":
+            MessageLookupByLibrary.simpleMessage("Rychlé předvolby"),
+        "mealPatternStandard":
+            MessageLookupByLibrary.simpleMessage("Standardní"),
+        "mealPatternTwoMeal":
+            MessageLookupByLibrary.simpleMessage("2 jídla"),
+        "settingsPerMealKcalShareBreakfast":
+            MessageLookupByLibrary.simpleMessage("Snídaně"),
+        "settingsPerMealKcalShareDescription": MessageLookupByLibrary.simpleMessage(
+            "Rozdělte denní cíl kcal mezi snídani, oběd, večeři a svačiny. Součet podílů musí být 100 %."),
+        "settingsPerMealKcalShareDinner":
+            MessageLookupByLibrary.simpleMessage("Večeře"),
+        "settingsPerMealKcalShareLabel":
+            MessageLookupByLibrary.simpleMessage("Podíl kcal na jídlo"),
+        "settingsPerMealKcalShareLunch":
+            MessageLookupByLibrary.simpleMessage("Oběd"),
+        "settingsPerMealKcalShareSnack":
+            MessageLookupByLibrary.simpleMessage("Svačina"),
+        "diaryMealKcalConsumedOfTarget": m23,
       };
 }

@@ -34,6 +34,16 @@
       }
     }
   },
+  "@diaryMealKcalConsumedOfTarget": {
+    "placeholders": {
+      "consumed": {
+        "type": "String"
+      },
+      "target": {
+        "type": "String"
+      }
+    }
+  },
   "@importActivityConfirmTitle": {
     "placeholders": {
       "count": {
@@ -218,6 +228,7 @@
   "dialogOKLabel": "OK",
   "diaryFutureDateWarning": "You are editing a future date",
   "diaryLabel": "Diary",
+  "diaryMealKcalConsumedOfTarget": "{consumed} / {target} kcal",
   "diaryNutrientPanelDataDisclaimer": "Only nutrients tracked on the meals you logged are summed here. A meal missing a value contributes nothing to that nutrient — so these totals may underreport.",
   "diaryNutrientPanelTitle": "Today's nutrients",
   "diarySortByCarbs": "Carbs (high to low)",
@@ -330,6 +341,12 @@
   "mealNameValidationError": "Meal name must contain at least one letter",
   "mealNutrientsPerQtyLabel": "Per {qty} {unit}",
   "mealNutrientsTotalLabel": "Total amount",
+  "mealPatternFiveSmall": "Five-small",
+  "mealPatternMediterranean": "Mediterranean",
+  "mealPatternOmad": "OMAD",
+  "mealPatternPresetsLabel": "Quick presets",
+  "mealPatternStandard": "Standard",
+  "mealPatternTwoMeal": "Two-meal",
   "mealProteinLabel": "Protein (g)",
   "mealSizeLabel": "Meal size (g/ml)",
   "mealSizeLabelImperial": "Meal size (oz/fl oz)",
@@ -721,6 +738,12 @@
   "settingsNutrientsHelp": "Choose which nutrients are visible on the daily panel. Hidden ones can be turned back on at any time.",
   "settingsNutrientsLabel": "Nutrients",
   "settingsNutrientsSubtitle": "Pick which nutrients appear on the diary panel",
+  "settingsPerMealKcalShareBreakfast": "Breakfast",
+  "settingsPerMealKcalShareDescription": "Split your daily kcal goal across breakfast, lunch, dinner, and snacks. The shares must add up to 100%.",
+  "settingsPerMealKcalShareDinner": "Dinner",
+  "settingsPerMealKcalShareLabel": "Per-meal kcal share",
+  "settingsPerMealKcalShareLunch": "Lunch",
+  "settingsPerMealKcalShareSnack": "Snack",
   "settingsPotassiumGoalDescription": "Daily potassium target in milligrams. Default reference is 3500mg.",
   "settingsPotassiumGoalLabel": "Potassium goal",
   "settingsPrivacySettings": "Privacy Settings",

@@ -71,6 +71,8 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m21(value) => "${value} to your target";
 
+  static String m22(consumed, target) => "${consumed} / ${target} kcal";
+
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "activityExample": MessageLookupByLibrary.simpleMessage(
@@ -1176,5 +1178,29 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Replace photo"),
         "recipeImageTakePhoto":
             MessageLookupByLibrary.simpleMessage("Take photo"),
+        "mealPatternFiveSmall":
+            MessageLookupByLibrary.simpleMessage("Five-small"),
+        "mealPatternMediterranean":
+            MessageLookupByLibrary.simpleMessage("Mediterranean"),
+        "mealPatternOmad": MessageLookupByLibrary.simpleMessage("OMAD"),
+        "mealPatternPresetsLabel":
+            MessageLookupByLibrary.simpleMessage("Quick presets"),
+        "mealPatternStandard":
+            MessageLookupByLibrary.simpleMessage("Standard"),
+        "mealPatternTwoMeal":
+            MessageLookupByLibrary.simpleMessage("Two-meal"),
+        "settingsPerMealKcalShareBreakfast":
+            MessageLookupByLibrary.simpleMessage("Breakfast"),
+        "settingsPerMealKcalShareDescription": MessageLookupByLibrary.simpleMessage(
+            "Split your daily kcal goal across breakfast, lunch, dinner, and snacks. The shares must add up to 100%."),
+        "settingsPerMealKcalShareDinner":
+            MessageLookupByLibrary.simpleMessage("Dinner"),
+        "settingsPerMealKcalShareLabel":
+            MessageLookupByLibrary.simpleMessage("Per-meal kcal share"),
+        "settingsPerMealKcalShareLunch":
+            MessageLookupByLibrary.simpleMessage("Lunch"),
+        "settingsPerMealKcalShareSnack":
+            MessageLookupByLibrary.simpleMessage("Snack"),
+        "diaryMealKcalConsumedOfTarget": m22,
       };
 }

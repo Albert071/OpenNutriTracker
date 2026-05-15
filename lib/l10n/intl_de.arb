@@ -33,6 +33,16 @@
       }
     }
   },
+  "@diaryMealKcalConsumedOfTarget": {
+    "placeholders": {
+      "consumed": {
+        "type": "String"
+      },
+      "target": {
+        "type": "String"
+      }
+    }
+  },
   "@importActivityConfirmTitle": {
     "placeholders": {
       "count": {
@@ -218,6 +228,7 @@
   "dialogOKLabel": "OK",
   "diaryFutureDateWarning": "Du bearbeitest ein zukünftiges Datum",
   "diaryLabel": "Tagebuch",
+  "diaryMealKcalConsumedOfTarget": "{consumed} / {target} kcal",
   "diaryNutrientPanelDataDisclaimer": "Hier werden nur Nährstoffe summiert, die auf deinen protokollierten Mahlzeiten erfasst sind. Eine Mahlzeit ohne einen Wert trägt nichts zu diesem Nährstoff bei — die Summen können also zu niedrig sein.",
   "diaryNutrientPanelTitle": "Heutige Nährstoffe",
   "diarySortByCarbs": "Kohlenhydrate (absteigend)",
@@ -330,6 +341,12 @@
   "mealNameValidationError": "Mahlzeitenname muss mindestens einen Buchstaben enthalten",
   "mealNutrientsPerQtyLabel": "Pro {qty} {unit}",
   "mealNutrientsTotalLabel": "Gesamtmenge",
+  "mealPatternFiveSmall": "5 kleine",
+  "mealPatternMediterranean": "Mediterran",
+  "mealPatternOmad": "1 Mahlzeit",
+  "mealPatternPresetsLabel": "Voreinstellungen",
+  "mealPatternStandard": "Standard",
+  "mealPatternTwoMeal": "Zwei Mahlzeiten",
   "mealProteinLabel": "Protein (g)",
   "mealSizeLabel": "Mahlzeitsgröße (g/ml)",
   "mealSizeLabelImperial": "Mahlzeitsgröße (oz/fl oz)",
@@ -721,6 +738,12 @@
   "settingsNutrientsHelp": "Wähle, welche Nährstoffe im Tagespanel sichtbar sind. Ausgeblendete kannst du jederzeit wieder einschalten.",
   "settingsNutrientsLabel": "Nährstoffe",
   "settingsNutrientsSubtitle": "Wähle, welche Nährstoffe im Tagebuch erscheinen",
+  "settingsPerMealKcalShareBreakfast": "Frühstück",
+  "settingsPerMealKcalShareDescription": "Verteile dein tägliches kcal-Ziel auf Frühstück, Mittagessen, Abendessen und Snacks. Die Anteile müssen zusammen 100 % ergeben.",
+  "settingsPerMealKcalShareDinner": "Abendessen",
+  "settingsPerMealKcalShareLabel": "kcal-Anteil je Mahlzeit",
+  "settingsPerMealKcalShareLunch": "Mittagessen",
+  "settingsPerMealKcalShareSnack": "Snack",
   "settingsPotassiumGoalDescription": "Tägliches Kaliumziel in Milligramm. Standardreferenz: 3500 mg.",
   "settingsPotassiumGoalLabel": "Kaliumziel",
   "settingsPrivacySettings": "Datenschutzeinstellungen",

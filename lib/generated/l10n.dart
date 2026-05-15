@@ -1818,11 +1818,31 @@ class S {
     );
   }
 
+  /// `Per-meal kcal share`
+  String get settingsPerMealKcalShareLabel {
+    return Intl.message(
+      'Per-meal kcal share',
+      name: 'settingsPerMealKcalShareLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Nutrients`
   String get settingsNutrientsLabel {
     return Intl.message(
       'Nutrients',
       name: 'settingsNutrientsLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Split your daily kcal goal across breakfast, lunch, dinner, and snacks. The shares must add up to 100%.`
+  String get settingsPerMealKcalShareDescription {
+    return Intl.message(
+      'Split your daily kcal goal across breakfast, lunch, dinner, and snacks. The shares must add up to 100%.',
+      name: 'settingsPerMealKcalShareDescription',
       desc: '',
       args: [],
     );
@@ -1838,6 +1858,16 @@ class S {
     );
   }
 
+  /// `Breakfast`
+  String get settingsPerMealKcalShareBreakfast {
+    return Intl.message(
+      'Breakfast',
+      name: 'settingsPerMealKcalShareBreakfast',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Choose which nutrients are visible on the daily panel. Hidden ones can be turned back on at any time.`
   String get settingsNutrientsHelp {
     return Intl.message(
@@ -1847,6 +1877,107 @@ class S {
       args: [],
     );
   }
+
+  /// `Lunch`
+  String get settingsPerMealKcalShareLunch {
+    return Intl.message(
+      'Lunch',
+      name: 'settingsPerMealKcalShareLunch',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Dinner`
+  String get settingsPerMealKcalShareDinner {
+    return Intl.message(
+      'Dinner',
+      name: 'settingsPerMealKcalShareDinner',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Snack`
+  String get settingsPerMealKcalShareSnack {
+    return Intl.message(
+      'Snack',
+      name: 'settingsPerMealKcalShareSnack',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Quick presets`
+  String get mealPatternPresetsLabel {
+    return Intl.message(
+      'Quick presets',
+      name: 'mealPatternPresetsLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Standard`
+  String get mealPatternStandard {
+    return Intl.message(
+      'Standard',
+      name: 'mealPatternStandard',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Mediterranean`
+  String get mealPatternMediterranean {
+    return Intl.message(
+      'Mediterranean',
+      name: 'mealPatternMediterranean',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Two-meal`
+  String get mealPatternTwoMeal {
+    return Intl.message(
+      'Two-meal',
+      name: 'mealPatternTwoMeal',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `OMAD`
+  String get mealPatternOmad {
+    return Intl.message(
+      'OMAD',
+      name: 'mealPatternOmad',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Five-small`
+  String get mealPatternFiveSmall {
+    return Intl.message(
+      'Five-small',
+      name: 'mealPatternFiveSmall',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `{consumed} / {target} kcal`
+  String diaryMealKcalConsumedOfTarget(String consumed, String target) {
+    return Intl.message(
+      '$consumed / $target kcal',
+      name: 'diaryMealKcalConsumedOfTarget',
+      desc: '',
+      args: [consumed, target],
+    );
+  }
+
 
   /// `Distance`
   String get settingsDistanceLabel {

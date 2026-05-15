@@ -71,6 +71,8 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m22(value) => "${value} do cieľa";
 
+  static String m23(consumed, target) => "${consumed} / ${target} kcal";
+
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "activityExample": MessageLookupByLibrary.simpleMessage(
@@ -1192,5 +1194,30 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("kJ za deň"),
         "settingsEnergyUnitLabel":
             MessageLookupByLibrary.simpleMessage("Jednotka energie"),
+        "mealPatternFiveSmall":
+            MessageLookupByLibrary.simpleMessage("Päť malých"),
+        "mealPatternMediterranean":
+            MessageLookupByLibrary.simpleMessage("Stredomorský"),
+        "mealPatternOmad":
+            MessageLookupByLibrary.simpleMessage("OMAD"),
+        "mealPatternPresetsLabel":
+            MessageLookupByLibrary.simpleMessage("Rýchle predvoľby"),
+        "mealPatternStandard":
+            MessageLookupByLibrary.simpleMessage("Štandardný"),
+        "mealPatternTwoMeal":
+            MessageLookupByLibrary.simpleMessage("Dvojjedlový"),
+        "settingsPerMealKcalShareBreakfast":
+            MessageLookupByLibrary.simpleMessage("Raňajky"),
+        "settingsPerMealKcalShareDescription":
+            MessageLookupByLibrary.simpleMessage("Rozdeľte svoj denný kcal cieľ medzi raňajky, obed, večeru a snacky. Podiely musia spolu dať 100 %."),
+        "settingsPerMealKcalShareDinner":
+            MessageLookupByLibrary.simpleMessage("Večera"),
+        "settingsPerMealKcalShareLabel":
+            MessageLookupByLibrary.simpleMessage("Podiel kcal na jedlo"),
+        "settingsPerMealKcalShareLunch":
+            MessageLookupByLibrary.simpleMessage("Obed"),
+        "settingsPerMealKcalShareSnack":
+            MessageLookupByLibrary.simpleMessage("Snack"),
+        "diaryMealKcalConsumedOfTarget": m23,
       };
 }

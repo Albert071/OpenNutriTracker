@@ -131,7 +131,6 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
     await _addConfigUsecase.setDiarySortPreference(mealKey, sortIndex);
   }
 
-
   Future<double> getKcalAdjustment() async {
     final config = await _getConfigUsecase.getConfig();
     return config.userKcalAdjustment ?? 0;
@@ -166,6 +165,16 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
       proteinGoalPct.toInt() / 100,
       fatGoalPct.toInt() / 100,
     );
+  }
+
+  // #150: per-meal kcal share configuration
+  Future<Map<String, int>> getMealKcalSharesPct() async {
+    final config = await _getConfigUsecase.getConfig();
+    return config.mealKcalSharesPct;
+  }
+
+  Future<void> setMealKcalSharesPct(Map<String, int> shares) async {
+    await _addConfigUsecase.setConfigMealKcalSharesPct(shares);
   }
 
   /// #173: read today's per-nutrient goal overrides from the stored

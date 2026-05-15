@@ -33,6 +33,16 @@
       }
     }
   },
+  "@diaryMealKcalConsumedOfTarget": {
+    "placeholders": {
+      "consumed": {
+        "type": "String"
+      },
+      "target": {
+        "type": "String"
+      }
+    }
+  },
   "@importActivityConfirmTitle": {
     "placeholders": {
       "count": {
@@ -187,6 +197,7 @@
   "dialogOKLabel": "OK",
   "diaryFutureDateWarning": "Stai modificando una data futura",
   "diaryLabel": "Diario",
+  "diaryMealKcalConsumedOfTarget": "{consumed} / {target} kcal",
   "diaryNutrientPanelDataDisclaimer": "Vengono sommati solo i nutrienti registrati sui pasti che hai inserito. Un pasto senza un valore non contribuisce a quel nutriente — i totali potrebbero quindi essere sottostimati.",
   "diaryNutrientPanelTitle": "Nutrienti di oggi",
   "diarySortByCarbs": "Carboidrati (dal più alto al più basso)",
@@ -299,6 +310,12 @@
   "mealNameValidationError": "Il nome del pasto deve contenere almeno una lettera",
   "mealNutrientsPerQtyLabel": "Per {qty} {unit}",
   "mealNutrientsTotalLabel": "Quantità totale",
+  "mealPatternFiveSmall": "Cinque piccoli",
+  "mealPatternMediterranean": "Mediterranea",
+  "mealPatternOmad": "Un pasto",
+  "mealPatternPresetsLabel": "Preset rapidi",
+  "mealPatternStandard": "Standard",
+  "mealPatternTwoMeal": "Due pasti",
   "mealProteinLabel": "proteine per 100 g/ml",
   "mealSizeLabel": "Dimensione pasto (g/ml)",
   "mealSizeLabelImperial": "Dimensione pasto (oz/fl oz)",
@@ -690,6 +707,12 @@
   "settingsNutrientsHelp": "Scegli quali nutrienti sono visibili nel pannello giornaliero. Quelli nascosti possono essere riattivati in qualsiasi momento.",
   "settingsNutrientsLabel": "Nutrienti",
   "settingsNutrientsSubtitle": "Scegli quali nutrienti compaiono nel pannello del diario",
+  "settingsPerMealKcalShareBreakfast": "Colazione",
+  "settingsPerMealKcalShareDescription": "Distribuisci il tuo obiettivo giornaliero di kcal tra colazione, pranzo, cena e spuntini. Le quote devono sommare al 100%.",
+  "settingsPerMealKcalShareDinner": "Cena",
+  "settingsPerMealKcalShareLabel": "Quota kcal per pasto",
+  "settingsPerMealKcalShareLunch": "Pranzo",
+  "settingsPerMealKcalShareSnack": "Spuntino",
   "settingsPotassiumGoalDescription": "Obiettivo giornaliero di potassio in milligrammi. Il valore di riferimento predefinito è 3500 mg.",
   "settingsPotassiumGoalLabel": "Obiettivo potassio",
   "settingsPrivacySettings": "Impostazioni privacy",

@@ -74,6 +74,8 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m22(value) => "Noch ${value} bis zum Ziel";
 
+  static String m23(consumed, target) => "${consumed} / ${target} kcal";
+
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "activityExample": MessageLookupByLibrary.simpleMessage(
@@ -1213,5 +1215,30 @@ class MessageLookup extends MessageLookupByLibrary {
             "Als Vorlage für später speichern"),
         "customActivityTemplatesEmpty": MessageLookupByLibrary.simpleMessage(
             "Du hast noch keine Vorlagen gespeichert. Setze das Häkchen bei „Als Vorlage für später speichern“, um eine eigene Aktivität für die Zukunft zu merken."),
+        "mealPatternFiveSmall":
+            MessageLookupByLibrary.simpleMessage("5 kleine"),
+        "mealPatternMediterranean":
+            MessageLookupByLibrary.simpleMessage("Mediterran"),
+        "mealPatternOmad":
+            MessageLookupByLibrary.simpleMessage("1 Mahlzeit"),
+        "mealPatternPresetsLabel":
+            MessageLookupByLibrary.simpleMessage("Voreinstellungen"),
+        "mealPatternStandard":
+            MessageLookupByLibrary.simpleMessage("Standard"),
+        "mealPatternTwoMeal":
+            MessageLookupByLibrary.simpleMessage("Zwei Mahlzeiten"),
+        "settingsPerMealKcalShareBreakfast":
+            MessageLookupByLibrary.simpleMessage("Frühstück"),
+        "settingsPerMealKcalShareDescription": MessageLookupByLibrary.simpleMessage(
+            "Verteile dein tägliches kcal-Ziel auf Frühstück, Mittagessen, Abendessen und Snacks. Die Anteile müssen zusammen 100 % ergeben."),
+        "settingsPerMealKcalShareDinner":
+            MessageLookupByLibrary.simpleMessage("Abendessen"),
+        "settingsPerMealKcalShareLabel":
+            MessageLookupByLibrary.simpleMessage("kcal-Anteil je Mahlzeit"),
+        "settingsPerMealKcalShareLunch":
+            MessageLookupByLibrary.simpleMessage("Mittagessen"),
+        "settingsPerMealKcalShareSnack":
+            MessageLookupByLibrary.simpleMessage("Snack"),
+        "diaryMealKcalConsumedOfTarget": m23,
       };
 }

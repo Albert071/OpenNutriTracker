@@ -33,6 +33,16 @@
       }
     }
   },
+  "@diaryMealKcalConsumedOfTarget": {
+    "placeholders": {
+      "consumed": {
+        "type": "String"
+      },
+      "target": {
+        "type": "String"
+      }
+    }
+  },
   "@importActivityConfirmTitle": {
     "placeholders": {
       "count": {
@@ -218,6 +228,7 @@
   "dialogOKLabel": "TAMAM",
   "diaryFutureDateWarning": "Gelecekteki bir tarihi düzenliyorsunuz",
   "diaryLabel": "Günlük",
+  "diaryMealKcalConsumedOfTarget": "{consumed} / {target} kcal",
   "diaryNutrientPanelDataDisclaimer": "Yalnızca kaydettiğin öğünlerde takip edilen besinler burada toplanır. Bir değeri eksik olan öğün o besine katkıda bulunmaz — bu nedenle toplamlar olduğundan az görünebilir.",
   "diaryNutrientPanelTitle": "Bugünün besinleri",
   "diarySortByCarbs": "Karbonhidrat (çoktan aza)",
@@ -330,6 +341,12 @@
   "mealNameValidationError": "Yemek adı en az bir harf içermelidir",
   "mealNutrientsPerQtyLabel": "{qty} {unit} başına",
   "mealNutrientsTotalLabel": "Toplam miktar",
+  "mealPatternFiveSmall": "Beş küçük",
+  "mealPatternMediterranean": "Akdeniz",
+  "mealPatternOmad": "Tek öğün",
+  "mealPatternPresetsLabel": "Hızlı önayarlar",
+  "mealPatternStandard": "Standart",
+  "mealPatternTwoMeal": "İki öğün",
   "mealProteinLabel": "Protein (g)",
   "mealSizeLabel": "Yemek boyutu (g/ml)",
   "mealSizeLabelImperial": "Yemek boyutu (oz/fl oz)",
@@ -721,6 +738,12 @@
   "settingsNutrientsHelp": "Günlük panelde hangi besinlerin görüneceğini seç. Gizlenenler istediğin zaman tekrar açılabilir.",
   "settingsNutrientsLabel": "Besinler",
   "settingsNutrientsSubtitle": "Günlük panelinde hangi besinlerin görüneceğini seç",
+  "settingsPerMealKcalShareBreakfast": "Kahvaltı",
+  "settingsPerMealKcalShareDescription": "Günlük kcal hedefini kahvaltı, öğle yemeği, akşam yemeği ve atıştırmalıklara bölün. Paylar toplam %100 olmalıdır.",
+  "settingsPerMealKcalShareDinner": "Akşam Yemeği",
+  "settingsPerMealKcalShareLabel": "Öğün başına kcal payı",
+  "settingsPerMealKcalShareLunch": "Öğle Yemeği",
+  "settingsPerMealKcalShareSnack": "Atıştırmalık",
   "settingsPotassiumGoalDescription": "Günlük potasyum hedefi (miligram). Varsayılan referans 3500 mg.",
   "settingsPotassiumGoalLabel": "Potasyum hedefi",
   "settingsPrivacySettings": "Gizlilik Ayarları",

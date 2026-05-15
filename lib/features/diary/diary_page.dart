@@ -131,6 +131,14 @@ class _DiaryPageState extends State<DiaryPage> with WidgetsBindingObserver {
                 onEditActivity: _onEditActivityItem,
                 usesImperialUnits: usesImperialUnits,
                 showMealMacros: showMealMacros,
+                breakfastKcalTarget: state.breakfastKcalTarget,
+                lunchKcalTarget: state.lunchKcalTarget,
+                dinnerKcalTarget: state.dinnerKcalTarget,
+                snackKcalTarget: state.snackKcalTarget,
+                breakfastSharePct: state.breakfastSharePct,
+                lunchSharePct: state.lunchSharePct,
+                dinnerSharePct: state.dinnerSharePct,
+                snackSharePct: state.snackSharePct,
                 diarySortPreferences: state.diarySortPreferences,
               );
             }

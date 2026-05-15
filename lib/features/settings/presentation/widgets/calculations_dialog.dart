@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:opennutritracker/core/domain/entity/calories_profile_entity.dart';
+import 'package:opennutritracker/core/domain/entity/config_entity.dart';
+import 'package:opennutritracker/core/domain/entity/meal_pattern_entity.dart';
 import 'package:opennutritracker/core/domain/entity/user_entity.dart';
 import 'package:opennutritracker/core/domain/entity/user_gender_entity.dart';
 import 'package:opennutritracker/core/presentation/widgets/calories_profile_info_dialog.dart';
@@ -130,6 +132,22 @@ class _CalculationsDialogState extends State<CalculationsDialog> {
   late TextEditingController _vitaminDController;
   late TextEditingController _vitaminB12Controller;
 
+  // #150: per-meal kcal share sliders. Stored as doubles so the slider can
+  // hand back fractional values mid-drag; we round and re-balance against
+  // 100 on every change.
+  double _breakfastSharePct =
+      (ConfigEntity.defaultMealKcalSharesPct[ConfigEntity.mealKeyBreakfast]!)
+          .toDouble();
+  double _lunchSharePct =
+      (ConfigEntity.defaultMealKcalSharesPct[ConfigEntity.mealKeyLunch]!)
+          .toDouble();
+  double _dinnerSharePct =
+      (ConfigEntity.defaultMealKcalSharesPct[ConfigEntity.mealKeyDinner]!)
+          .toDouble();
+  double _snackSharePct =
+      (ConfigEntity.defaultMealKcalSharesPct[ConfigEntity.mealKeySnack]!)
+          .toDouble();
+
   UserEntity? _user;
   bool _usesImperialUnits = false;
   // #119 follow-up: opt-in taper that scales the daily kcal deficit
@@ -253,6 +271,9 @@ class _CalculationsDialogState extends State<CalculationsDialog> {
     final userProteinPct = await widget.settingsBloc.getUserProteinGoalPct();
     final userFatPct = await widget.settingsBloc.getUserFatGoalPct();
     final user = await widget.profileBloc.getUser();
+    // #150: load existing per-meal kcal share so the sliders open at the
+    // user's current setting rather than the defaults each time.
+    final mealShares = await widget.settingsBloc.getMealKcalSharesPct();
     // #119: Read the unit preference once, on dialog open. The settings
     // screen has already loaded its state by the time this dialog can be
     // pushed, so reading from the bloc's state avoids a second async hop.
@@ -275,6 +296,14 @@ class _CalculationsDialogState extends State<CalculationsDialog> {
       _proteinPctSelection =
           (userProteinPct ?? _defaultProteinPctSelection) * 100;
       _fatPctSelection = (userFatPct ?? _defaultFatPctSelection) * 100;
+      _breakfastSharePct =
+          (mealShares[ConfigEntity.mealKeyBreakfast] ?? 30).toDouble();
+      _lunchSharePct =
+          (mealShares[ConfigEntity.mealKeyLunch] ?? 40).toDouble();
+      _dinnerSharePct =
+          (mealShares[ConfigEntity.mealKeyDinner] ?? 20).toDouble();
+      _snackSharePct =
+          (mealShares[ConfigEntity.mealKeySnack] ?? 10).toDouble();
       _fibreGoalGrams = today?.fibreGoal;
       _satFatGoalGrams = today?.satFatGoal;
       _sugarsGoalGrams = today?.sugarsGoal;
@@ -388,6 +417,19 @@ class _CalculationsDialogState extends State<CalculationsDialog> {
                 _carbsPctSelection = _defaultCarbsPctSelection * 100;
                 _proteinPctSelection = _defaultProteinPctSelection * 100;
                 _fatPctSelection = _defaultFatPctSelection * 100;
+                // #150: also restore the recommended meal-share defaults.
+                _breakfastSharePct =
+                    (ConfigEntity.defaultMealKcalSharesPct[
+                        ConfigEntity.mealKeyBreakfast]!).toDouble();
+                _lunchSharePct =
+                    (ConfigEntity.defaultMealKcalSharesPct[
+                        ConfigEntity.mealKeyLunch]!).toDouble();
+                _dinnerSharePct =
+                    (ConfigEntity.defaultMealKcalSharesPct[
+                        ConfigEntity.mealKeyDinner]!).toDouble();
+                _snackSharePct =
+                    (ConfigEntity.defaultMealKcalSharesPct[
+                        ConfigEntity.mealKeySnack]!).toDouble();
                 // #173 (+follow-up): reset clears every nutrient
                 // override so the panel goes back to the built-in
                 // default references across the board.
@@ -697,6 +739,82 @@ class _CalculationsDialogState extends State<CalculationsDialog> {
               onTextSubmitted: () => _applyDirectMacroInput(
                   _fatController, (v) => _fatPctSelection = v),
             ),
+            // ── #150 Per-meal kcal share ────────────────────────────────────
+            const SizedBox(height: 24),
+            Text(
+              S.of(context).settingsPerMealKcalShareLabel,
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
+            const SizedBox(height: 4),
+            Text(
+              S.of(context).settingsPerMealKcalShareDescription,
+              style: Theme.of(context).textTheme.bodySmall,
+            ),
+            const SizedBox(height: 8),
+            // #150 follow-up: preset chips. One tap fills the four sliders;
+            // users can still nudge things afterward. Useful for IF/OMAD
+            // routines that don't fit the four-meal frame.
+            Text(
+              S.of(context).mealPatternPresetsLabel,
+              style: Theme.of(context).textTheme.bodySmall,
+            ),
+            const SizedBox(height: 4),
+            Wrap(
+              spacing: 8,
+              runSpacing: 4,
+              children: [
+                for (final pattern in MealPatternEntity.values)
+                  Semantics(
+                    identifier: 'calculations-meal-pattern-${pattern.id}',
+                    child: OutlinedButton(
+                      onPressed: () => _applyMealPattern(pattern),
+                      child: Text(_mealPatternLabel(context, pattern)),
+                    ),
+                  ),
+              ],
+            ),
+            const SizedBox(height: 8),
+            Text(
+              '${_breakfastSharePct.round() + _lunchSharePct.round() + _dinnerSharePct.round() + _snackSharePct.round()}% total',
+              style: Theme.of(context).textTheme.bodySmall,
+            ),
+            const SizedBox(height: 8),
+            _buildMealShareRow(
+              S.of(context).settingsPerMealKcalShareBreakfast,
+              _breakfastSharePct,
+              (value) => _rebalanceMealShares(
+                changedMeal: ConfigEntity.mealKeyBreakfast,
+                newValue: value,
+              ),
+              identifier: 'calculations-meal-share-breakfast',
+            ),
+            _buildMealShareRow(
+              S.of(context).settingsPerMealKcalShareLunch,
+              _lunchSharePct,
+              (value) => _rebalanceMealShares(
+                changedMeal: ConfigEntity.mealKeyLunch,
+                newValue: value,
+              ),
+              identifier: 'calculations-meal-share-lunch',
+            ),
+            _buildMealShareRow(
+              S.of(context).settingsPerMealKcalShareDinner,
+              _dinnerSharePct,
+              (value) => _rebalanceMealShares(
+                changedMeal: ConfigEntity.mealKeyDinner,
+                newValue: value,
+              ),
+              identifier: 'calculations-meal-share-dinner',
+            ),
+            _buildMealShareRow(
+              S.of(context).settingsPerMealKcalShareSnack,
+              _snackSharePct,
+              (value) => _rebalanceMealShares(
+                changedMeal: ConfigEntity.mealKeySnack,
+                newValue: value,
+              ),
+              identifier: 'calculations-meal-share-snack',
+            ),
             // #173: per-nutrient gram targets. These persist on today's
             // TrackedDayDBO row (fibre / sat-fat / sugars columns) and
             // the diary panel uses them as reference values when set.
@@ -1004,6 +1122,117 @@ class _CalculationsDialogState extends State<CalculationsDialog> {
     );
   }
 
+  /// #150: build a single per-meal share row (label, % text, slider). Sliders
+  /// emit integer percentages between 0 and 100; the rebalance keeps the
+  /// remaining three rows summing to 100 with the changed value held fixed.
+  Widget _buildMealShareRow(
+    String label,
+    double value,
+    ValueChanged<double> onSliderChanged, {
+    required String identifier,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Expanded(child: Text(label)),
+            Text('${value.round()}%'),
+          ],
+        ),
+        Semantics(
+          identifier: identifier,
+          child: Slider(
+            min: 0,
+            max: 100,
+            value: value.clamp(0, 100),
+            divisions: 100,
+            onChanged: (v) => onSliderChanged(v.roundToDouble()),
+          ),
+        ),
+      ],
+    );
+  }
+
+  /// #150: hold [changedMeal] at [newValue] and redistribute what remains
+  /// across the other three meals proportional to their current shares. Falls
+  /// back to an even split when the other three are all zero.
+  void _rebalanceMealShares({
+    required String changedMeal,
+    required double newValue,
+  }) {
+    final clamped = newValue.clamp(0, 100).toDouble();
+    final shares = {
+      ConfigEntity.mealKeyBreakfast: _breakfastSharePct,
+      ConfigEntity.mealKeyLunch: _lunchSharePct,
+      ConfigEntity.mealKeyDinner: _dinnerSharePct,
+      ConfigEntity.mealKeySnack: _snackSharePct,
+    };
+    shares[changedMeal] = clamped;
+
+    final others = shares.keys.where((k) => k != changedMeal).toList();
+    final remaining = 100 - clamped;
+    final othersTotal = others.fold<double>(0, (acc, k) => acc + shares[k]!);
+
+    if (remaining <= 0) {
+      for (final k in others) {
+        shares[k] = 0;
+      }
+    } else if (othersTotal == 0) {
+      final even = remaining / others.length;
+      for (final k in others) {
+        shares[k] = even;
+      }
+    } else {
+      for (final k in others) {
+        shares[k] = (shares[k]! / othersTotal) * remaining;
+      }
+    }
+
+    // Round to integers and patch the largest "other" to absorb any drift.
+    final rounded = {for (final k in shares.keys) k: shares[k]!.round()};
+    final drift = 100 - rounded.values.fold<int>(0, (a, b) => a + b);
+    if (drift != 0) {
+      final adjustTarget = others.reduce(
+        (a, b) => (rounded[a]! >= rounded[b]!) ? a : b,
+      );
+      rounded[adjustTarget] = rounded[adjustTarget]! + drift;
+    }
+
+    setState(() {
+      _breakfastSharePct = rounded[ConfigEntity.mealKeyBreakfast]!.toDouble();
+      _lunchSharePct = rounded[ConfigEntity.mealKeyLunch]!.toDouble();
+      _dinnerSharePct = rounded[ConfigEntity.mealKeyDinner]!.toDouble();
+      _snackSharePct = rounded[ConfigEntity.mealKeySnack]!.toDouble();
+    });
+  }
+
+  /// #150 follow-up: drop the preset's percentages straight into the four
+  /// sliders. No rebalancing — every preset is already authored to sum to 100.
+  void _applyMealPattern(MealPatternEntity pattern) {
+    setState(() {
+      _breakfastSharePct = pattern.breakfastPct.toDouble();
+      _lunchSharePct = pattern.lunchPct.toDouble();
+      _dinnerSharePct = pattern.dinnerPct.toDouble();
+      _snackSharePct = pattern.snackPct.toDouble();
+    });
+  }
+
+  String _mealPatternLabel(BuildContext context, MealPatternEntity pattern) {
+    switch (pattern) {
+      case MealPatternEntity.standard:
+        return S.of(context).mealPatternStandard;
+      case MealPatternEntity.mediterranean:
+        return S.of(context).mealPatternMediterranean;
+      case MealPatternEntity.twoMeal:
+        return S.of(context).mealPatternTwoMeal;
+      case MealPatternEntity.omad:
+        return S.of(context).mealPatternOmad;
+      case MealPatternEntity.fiveSmall:
+        return S.of(context).mealPatternFiveSmall;
+    }
+  }
+
   /// #173 (+follow-up): render a single nutrient-goal row. Mirrors the
   /// macro row layout — a label, an editable text field for direct
   /// entry, and a slider underneath — but operates in a fixed unit (g,
@@ -1225,6 +1454,14 @@ class _CalculationsDialogState extends State<CalculationsDialog> {
       _proteinPctSelection,
       _fatPctSelection,
     );
+
+    // #150: persist the four meal-share percentages alongside macro goals.
+    widget.settingsBloc.setMealKcalSharesPct({
+      ConfigEntity.mealKeyBreakfast: _breakfastSharePct.round(),
+      ConfigEntity.mealKeyLunch: _lunchSharePct.round(),
+      ConfigEntity.mealKeyDinner: _dinnerSharePct.round(),
+      ConfigEntity.mealKeySnack: _snackSharePct.round(),
+    });
 
     // #119: Persist target weight on the user entity. Empty/blank input
     // clears the stored value, matching the "Not set" framing on the

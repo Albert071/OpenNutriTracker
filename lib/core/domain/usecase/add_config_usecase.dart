@@ -76,6 +76,10 @@ class AddConfigUsecase {
     await _configRepository.setConfigUsesKilojoules(usesKilojoules);
   }
 
+  Future<void> setConfigMealKcalSharesPct(Map<String, int> shares) async {
+    await _configRepository.setConfigMealKcalSharesPct(shares);
+  }
+
   Future<void> setConfigCaloriesTaperEnabled(bool enabled) async {
     await _configRepository.setConfigCaloriesTaperEnabled(enabled);
   }

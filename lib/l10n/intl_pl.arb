@@ -33,6 +33,16 @@
       }
     }
   },
+  "@diaryMealKcalConsumedOfTarget": {
+    "placeholders": {
+      "consumed": {
+        "type": "String"
+      },
+      "target": {
+        "type": "String"
+      }
+    }
+  },
   "@importActivityConfirmTitle": {
     "placeholders": {
       "count": {
@@ -187,6 +197,7 @@
   "dialogOKLabel": "OK",
   "diaryFutureDateWarning": "Edytujesz przyszłą datę",
   "diaryLabel": "Dziennik",
+  "diaryMealKcalConsumedOfTarget": "{consumed} / {target} kcal",
   "diaryNutrientPanelDataDisclaimer": "Sumowane są tylko składniki odżywcze zapisane na zalogowanych posiłkach. Posiłek bez wartości nie wnosi nic do danego składnika — sumy mogą być więc zaniżone.",
   "diaryNutrientPanelTitle": "Dzisiejsze składniki odżywcze",
   "diarySortByCarbs": "Węglowodany (malejąco)",
@@ -299,6 +310,12 @@
   "mealNameValidationError": "Nazwa posiłku musi zawierać co najmniej jedną literę",
   "mealNutrientsPerQtyLabel": "Na {qty} {unit}",
   "mealNutrientsTotalLabel": "Łączna ilość",
+  "mealPatternFiveSmall": "5 małych",
+  "mealPatternMediterranean": "Śródziemnomorski",
+  "mealPatternOmad": "1 posiłek",
+  "mealPatternPresetsLabel": "Szybkie ustawienia",
+  "mealPatternStandard": "Standardowy",
+  "mealPatternTwoMeal": "2 posiłki",
   "mealProteinLabel": "białko na 100 g/ml",
   "mealSizeLabel": "Rozmiar posiłku (g/ml)",
   "mealSizeLabelImperial": "Rozmiar posiłku (oz/fl oz)",
@@ -690,6 +707,12 @@
   "settingsNutrientsHelp": "Wybierz, które składniki są widoczne w panelu dziennym. Ukryte możesz w każdej chwili włączyć ponownie.",
   "settingsNutrientsLabel": "Składniki odżywcze",
   "settingsNutrientsSubtitle": "Wybierz, które składniki pojawiają się w panelu dziennika",
+  "settingsPerMealKcalShareBreakfast": "Śniadanie",
+  "settingsPerMealKcalShareDescription": "Rozłóż dzienny cel kcal na śniadanie, obiad, kolację i przekąski. Udziały muszą sumować się do 100%.",
+  "settingsPerMealKcalShareDinner": "Kolacja",
+  "settingsPerMealKcalShareLabel": "Udział kcal na posiłek",
+  "settingsPerMealKcalShareLunch": "Obiad",
+  "settingsPerMealKcalShareSnack": "Przekąska",
   "settingsPotassiumGoalDescription": "Dzienny cel potasu w miligramach. Wartość referencyjna to 3500 mg.",
   "settingsPotassiumGoalLabel": "Cel potasu",
   "settingsPrivacySettings": "Ustawienia prywatności",

@@ -29,6 +29,20 @@ class DayInfoWidget extends StatefulWidget {
   final List<IntakeEntity> lunchIntake;
   final List<IntakeEntity> dinnerIntake;
   final List<IntakeEntity> snackIntake;
+  // #150: per-meal recommended kcal targets for the selected calendar day.
+  // 0 means no target should be shown for that section (e.g. days with no
+  // tracked daily goal).
+  final double breakfastKcalTarget;
+  final double lunchKcalTarget;
+  final double dinnerKcalTarget;
+  final double snackKcalTarget;
+  // #150 follow-up: per-meal share percentages. A 0% share hides the section
+  // entirely — useful for OMAD / two-meal users who don't want an empty meal
+  // slot they've explicitly opted out of staring back at them.
+  final int breakfastSharePct;
+  final int lunchSharePct;
+  final int dinnerSharePct;
+  final int snackSharePct;
 
   final bool usesImperialUnits;
   final bool showMealMacros;
@@ -75,6 +89,14 @@ class DayInfoWidget extends StatefulWidget {
     required this.onCopyActivity,
     this.onEditIntake,
     this.onEditActivity,
+    this.breakfastKcalTarget = 0,
+    this.lunchKcalTarget = 0,
+    this.dinnerKcalTarget = 0,
+    this.snackKcalTarget = 0,
+    this.breakfastSharePct = 30,
+    this.lunchSharePct = 40,
+    this.dinnerSharePct = 20,
+    this.snackSharePct = 10,
   });
 
   @override
@@ -248,89 +270,101 @@ class _DayInfoWidgetState extends State<DayInfoWidget> {
                       : (activity) =>
                           widget.onCopyActivity(activity, widget.trackedDayEntity),
             ),
-            IntakeVerticalList(
-              day: widget.selectedDay,
-              title: S.of(context).breakfastLabel,
-              listIcon: Icons.bakery_dining_outlined,
-              addMealType: AddMealType.breakfastType,
-              intakeList: _sortByMeal[IntakeTypeEntity.breakfast]!
-                  .apply(widget.breakfastIntake),
-              onDeleteIntakeCallback: widget.onDeleteIntake,
-              onItemLongPressedCallback: onIntakeItemLongPressed,
-              onItemTappedCallback: widget.onEditIntake,
-              onCopyIntakeCallback:
-                  DateUtils.isSameDay(widget.selectedDay, DateTime.now())
-                      ? null
-                      : widget.onCopyIntake,
-              usesImperialUnits: widget.usesImperialUnits,
-              showMealMacros: widget.showMealMacros,
-              trackedDayEntity: trackedDay,
-              sortType: _sortByMeal[IntakeTypeEntity.breakfast],
-              onSortTypeChanged: (sort) =>
-                  _setSortFor(IntakeTypeEntity.breakfast, sort),
-            ),
-            IntakeVerticalList(
-              day: widget.selectedDay,
-              title: S.of(context).lunchLabel,
-              listIcon: Icons.lunch_dining_outlined,
-              addMealType: AddMealType.lunchType,
-              intakeList: _sortByMeal[IntakeTypeEntity.lunch]!
-                  .apply(widget.lunchIntake),
-              onDeleteIntakeCallback: widget.onDeleteIntake,
-              onItemLongPressedCallback: onIntakeItemLongPressed,
-              onItemTappedCallback: widget.onEditIntake,
-              usesImperialUnits: widget.usesImperialUnits,
-              showMealMacros: widget.showMealMacros,
-              onCopyIntakeCallback:
-                  DateUtils.isSameDay(widget.selectedDay, DateTime.now())
-                      ? null
-                      : widget.onCopyIntake,
-              trackedDayEntity: trackedDay,
-              sortType: _sortByMeal[IntakeTypeEntity.lunch],
-              onSortTypeChanged: (sort) =>
-                  _setSortFor(IntakeTypeEntity.lunch, sort),
-            ),
-            IntakeVerticalList(
-              day: widget.selectedDay,
-              title: S.of(context).dinnerLabel,
-              listIcon: Icons.dinner_dining_outlined,
-              addMealType: AddMealType.dinnerType,
-              intakeList: _sortByMeal[IntakeTypeEntity.dinner]!
-                  .apply(widget.dinnerIntake),
-              onDeleteIntakeCallback: widget.onDeleteIntake,
-              onItemLongPressedCallback: onIntakeItemLongPressed,
-              onItemTappedCallback: widget.onEditIntake,
-              onCopyIntakeCallback:
-                  DateUtils.isSameDay(widget.selectedDay, DateTime.now())
-                      ? null
-                      : widget.onCopyIntake,
-              usesImperialUnits: widget.usesImperialUnits,
-              showMealMacros: widget.showMealMacros,
-              sortType: _sortByMeal[IntakeTypeEntity.dinner],
-              onSortTypeChanged: (sort) =>
-                  _setSortFor(IntakeTypeEntity.dinner, sort),
-            ),
-            IntakeVerticalList(
-              day: widget.selectedDay,
-              title: S.of(context).snackLabel,
-              listIcon: CustomIcons.food_apple_outline,
-              addMealType: AddMealType.snackType,
-              intakeList: _sortByMeal[IntakeTypeEntity.snack]!
-                  .apply(widget.snackIntake),
-              onDeleteIntakeCallback: widget.onDeleteIntake,
-              onItemLongPressedCallback: onIntakeItemLongPressed,
-              onItemTappedCallback: widget.onEditIntake,
-              usesImperialUnits: widget.usesImperialUnits,
-              showMealMacros: widget.showMealMacros,
-              onCopyIntakeCallback:
-                  DateUtils.isSameDay(widget.selectedDay, DateTime.now())
-                      ? null
-                      : widget.onCopyIntake,
-              trackedDayEntity: trackedDay,
-              sortType: _sortByMeal[IntakeTypeEntity.snack],
-              onSortTypeChanged: (sort) =>
-                  _setSortFor(IntakeTypeEntity.snack, sort),
-            ),
+            // #150 follow-up: a 0% share hides the section entirely so OMAD
+            // users (and anyone else who's set a meal slot to 0%) don't see
+            // a meal type they explicitly opted out of. Logged intakes for a
+            // hidden section still count toward the day's totals.
+            if (widget.breakfastSharePct > 0)
+              IntakeVerticalList(
+                day: widget.selectedDay,
+                title: S.of(context).breakfastLabel,
+                listIcon: Icons.bakery_dining_outlined,
+                addMealType: AddMealType.breakfastType,
+                intakeList: _sortByMeal[IntakeTypeEntity.breakfast]!
+                    .apply(widget.breakfastIntake),
+                onDeleteIntakeCallback: widget.onDeleteIntake,
+                onItemLongPressedCallback: onIntakeItemLongPressed,
+                onItemTappedCallback: widget.onEditIntake,
+                onCopyIntakeCallback:
+                    DateUtils.isSameDay(widget.selectedDay, DateTime.now())
+                        ? null
+                        : widget.onCopyIntake,
+                usesImperialUnits: widget.usesImperialUnits,
+                showMealMacros: widget.showMealMacros,
+                trackedDayEntity: trackedDay,
+                mealKcalTarget: widget.breakfastKcalTarget,
+                sortType: _sortByMeal[IntakeTypeEntity.breakfast],
+                onSortTypeChanged: (sort) =>
+                    _setSortFor(IntakeTypeEntity.breakfast, sort),
+              ),
+            if (widget.lunchSharePct > 0)
+              IntakeVerticalList(
+                day: widget.selectedDay,
+                title: S.of(context).lunchLabel,
+                listIcon: Icons.lunch_dining_outlined,
+                addMealType: AddMealType.lunchType,
+                intakeList: _sortByMeal[IntakeTypeEntity.lunch]!
+                    .apply(widget.lunchIntake),
+                onDeleteIntakeCallback: widget.onDeleteIntake,
+                onItemLongPressedCallback: onIntakeItemLongPressed,
+                onItemTappedCallback: widget.onEditIntake,
+                usesImperialUnits: widget.usesImperialUnits,
+                showMealMacros: widget.showMealMacros,
+                onCopyIntakeCallback:
+                    DateUtils.isSameDay(widget.selectedDay, DateTime.now())
+                        ? null
+                        : widget.onCopyIntake,
+                trackedDayEntity: trackedDay,
+                mealKcalTarget: widget.lunchKcalTarget,
+                sortType: _sortByMeal[IntakeTypeEntity.lunch],
+                onSortTypeChanged: (sort) =>
+                    _setSortFor(IntakeTypeEntity.lunch, sort),
+              ),
+            if (widget.dinnerSharePct > 0)
+              IntakeVerticalList(
+                day: widget.selectedDay,
+                title: S.of(context).dinnerLabel,
+                listIcon: Icons.dinner_dining_outlined,
+                addMealType: AddMealType.dinnerType,
+                intakeList: _sortByMeal[IntakeTypeEntity.dinner]!
+                    .apply(widget.dinnerIntake),
+                onDeleteIntakeCallback: widget.onDeleteIntake,
+                onItemLongPressedCallback: onIntakeItemLongPressed,
+                onItemTappedCallback: widget.onEditIntake,
+                onCopyIntakeCallback:
+                    DateUtils.isSameDay(widget.selectedDay, DateTime.now())
+                        ? null
+                        : widget.onCopyIntake,
+                usesImperialUnits: widget.usesImperialUnits,
+                showMealMacros: widget.showMealMacros,
+                mealKcalTarget: widget.dinnerKcalTarget,
+                sortType: _sortByMeal[IntakeTypeEntity.dinner],
+                onSortTypeChanged: (sort) =>
+                    _setSortFor(IntakeTypeEntity.dinner, sort),
+              ),
+            if (widget.snackSharePct > 0)
+              IntakeVerticalList(
+                day: widget.selectedDay,
+                title: S.of(context).snackLabel,
+                listIcon: CustomIcons.food_apple_outline,
+                addMealType: AddMealType.snackType,
+                intakeList: _sortByMeal[IntakeTypeEntity.snack]!
+                    .apply(widget.snackIntake),
+                onDeleteIntakeCallback: widget.onDeleteIntake,
+                onItemLongPressedCallback: onIntakeItemLongPressed,
+                onItemTappedCallback: widget.onEditIntake,
+                usesImperialUnits: widget.usesImperialUnits,
+                showMealMacros: widget.showMealMacros,
+                onCopyIntakeCallback:
+                    DateUtils.isSameDay(widget.selectedDay, DateTime.now())
+                        ? null
+                        : widget.onCopyIntake,
+                trackedDayEntity: trackedDay,
+                mealKcalTarget: widget.snackKcalTarget,
+                sortType: _sortByMeal[IntakeTypeEntity.snack],
+                onSortTypeChanged: (sort) =>
+                    _setSortFor(IntakeTypeEntity.snack, sort),
+              ),
             const SizedBox(height: 16.0),
           ],
         ),

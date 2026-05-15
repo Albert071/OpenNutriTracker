@@ -33,6 +33,16 @@
       }
     }
   },
+  "@diaryMealKcalConsumedOfTarget": {
+    "placeholders": {
+      "consumed": {
+        "type": "String"
+      },
+      "target": {
+        "type": "String"
+      }
+    }
+  },
   "@importActivityConfirmTitle": {
     "placeholders": {
       "count": {
@@ -187,6 +197,7 @@
   "dialogOKLabel": "ОК",
   "diaryFutureDateWarning": "Ви редагуєте майбутню дату",
   "diaryLabel": "Щоденник",
+  "diaryMealKcalConsumedOfTarget": "{consumed} / {target} kcal",
   "diaryNutrientPanelDataDisclaimer": "Тут підсумовуються лише ті поживні речовини, які записані для зареєстрованих страв. Страва без значення не додає нічого до відповідного показника — тож суми можуть бути занижені.",
   "diaryNutrientPanelTitle": "Поживні речовини за сьогодні",
   "diarySortByCarbs": "Вуглеводи (за спаданням)",
@@ -299,6 +310,12 @@
   "mealNameValidationError": "Назва страви повинна містити принаймні одну літеру",
   "mealNutrientsPerQtyLabel": "На {qty} {unit}",
   "mealNutrientsTotalLabel": "Загальна кількість",
+  "mealPatternFiveSmall": "5 малих",
+  "mealPatternMediterranean": "Середземноморський",
+  "mealPatternOmad": "1 прийом",
+  "mealPatternPresetsLabel": "Швидкі шаблони",
+  "mealPatternStandard": "Стандарт",
+  "mealPatternTwoMeal": "2 прийоми",
   "mealProteinLabel": "білки на 100 г/мл",
   "mealSizeLabel": "Розмір страви (г/мл)",
   "mealSizeLabelImperial": "Розмір страви (унція/рідка унція)",
@@ -690,6 +707,12 @@
   "settingsNutrientsHelp": "Обери, які поживні речовини видимі на щоденній панелі. Приховані можна знову увімкнути будь-коли.",
   "settingsNutrientsLabel": "Поживні речовини",
   "settingsNutrientsSubtitle": "Обери, які поживні речовини показувати на панелі щоденника",
+  "settingsPerMealKcalShareBreakfast": "Сніданок",
+  "settingsPerMealKcalShareDescription": "Розподіліть денну ціль у ккал між сніданком, обідом, вечерею та перекусами. Частки мають у сумі давати 100 %.",
+  "settingsPerMealKcalShareDinner": "Вечеря",
+  "settingsPerMealKcalShareLabel": "Частка ккал на прийом їжі",
+  "settingsPerMealKcalShareLunch": "Обід",
+  "settingsPerMealKcalShareSnack": "Перекус",
   "settingsPotassiumGoalDescription": "Денна ціль калію в міліграмах. Стандартне значення — 3500 мг.",
   "settingsPotassiumGoalLabel": "Ціль калію",
   "settingsPrivacySettings": "Налаштування конфіденційності",

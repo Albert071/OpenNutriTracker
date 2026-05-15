@@ -42,6 +42,10 @@ class ConfigDBO extends HiveObject {
   bool? showMicronutrients; // #237: null means default (false)
   @HiveField(16)
   bool? usesKilojoules; // #177: null means default (false → kcal)
+  // #150: per-meal kcal share, percent values keyed by meal type
+  // ("breakfast" / "lunch" / "dinner" / "snack"). Null means use defaults.
+  @HiveField(17)
+  Map<String, int>? mealKcalSharesPct;
   @HiveField(20)
   bool caloriesTaperEnabled;
   // #160 follow-up: per-nutrient show/hide map for the daily nutrient panel.
@@ -75,6 +79,7 @@ class ConfigDBO extends HiveObject {
     this.selectedLocale,
     this.showMicronutrients,
     this.usesKilojoules,
+    this.mealKcalSharesPct,
     this.caloriesTaperEnabled = false,
     this.diarySortPreferences,
     this.nutrientPanelVisibility,

@@ -34,6 +34,16 @@
       }
     }
   },
+  "@diaryMealKcalConsumedOfTarget": {
+    "placeholders": {
+      "consumed": {
+        "type": "String"
+      },
+      "target": {
+        "type": "String"
+      }
+    }
+  },
   "@importActivityConfirmTitle": {
     "placeholders": {
       "count": {
@@ -188,6 +198,7 @@
   "dialogOKLabel": "确定",
   "diaryFutureDateWarning": "您正在编辑未来的日期",
   "diaryLabel": "日记",
+  "diaryMealKcalConsumedOfTarget": "{consumed} / {target} 千卡",
   "diaryNutrientPanelDataDisclaimer": "此处仅汇总你已记录餐食中已追踪的营养素。如果某餐缺少某项数值,它就不会计入该营养素的总和,因此总量可能偏低。",
   "diaryNutrientPanelTitle": "今日营养素",
   "diarySortByCarbs": "碳水化合物（从高到低）",
@@ -300,6 +311,12 @@
   "mealNameValidationError": "餐食名称必须至少包含一个字母",
   "mealNutrientsPerQtyLabel": "每 {qty} {unit}",
   "mealNutrientsTotalLabel": "总量",
+  "mealPatternFiveSmall": "五餐",
+  "mealPatternMediterranean": "地中海",
+  "mealPatternOmad": "一日一餐",
+  "mealPatternPresetsLabel": "快速预设",
+  "mealPatternStandard": "标准",
+  "mealPatternTwoMeal": "两餐",
   "mealProteinLabel": "蛋白质每 100 克/毫升",
   "mealSizeLabel": "餐食大小 (克/毫升)",
   "mealSizeLabelImperial": "餐食大小 (盎司/液量盎司)",
@@ -691,6 +708,12 @@
   "settingsNutrientsHelp": "选择每日面板中显示哪些营养素。隐藏的可以随时重新开启。",
   "settingsNutrientsLabel": "营养素",
   "settingsNutrientsSubtitle": "选择在日记面板中显示哪些营养素",
+  "settingsPerMealKcalShareBreakfast": "早餐",
+  "settingsPerMealKcalShareDescription": "将每日千卡目标分配到早餐、午餐、晚餐和零食。各占比之和必须为 100%。",
+  "settingsPerMealKcalShareDinner": "晚餐",
+  "settingsPerMealKcalShareLabel": "每餐千卡占比",
+  "settingsPerMealKcalShareLunch": "午餐",
+  "settingsPerMealKcalShareSnack": "零食",
   "settingsPotassiumGoalDescription": "每日钾目标（毫克）。默认参考值为 3500 毫克。",
   "settingsPotassiumGoalLabel": "钾目标",
   "settingsPrivacySettings": "隐私设置",

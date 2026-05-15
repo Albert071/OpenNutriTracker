@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:opennutritracker/core/domain/entity/config_entity.dart';
 import 'package:opennutritracker/core/domain/entity/intake_entity.dart';
 import 'package:opennutritracker/core/domain/entity/tracked_day_entity.dart';
 import 'package:opennutritracker/core/domain/entity/user_activity_entity.dart';
@@ -79,6 +80,26 @@ class CalendarDayBloc extends Bloc<CalendarDayEvent, CalendarDayState> {
     final snackIntakeList = await _getIntakeUsecase.getSnackIntakeByDay(day);
 
     final trackedDayEntity = await _getTrackedDayUsecase.getTrackedDay(day);
+    final configData = await _getConfigUsecase.getConfig();
+
+    // #150: only surface per-meal targets when this calendar day has a
+    // tracked daily kcal goal — otherwise the share has nothing to divide
+    // and "0 / 0 kcal" reads as broken rather than helpful.
+    final dailyKcalGoal = trackedDayEntity?.calorieGoal ?? 0;
+    final breakfastKcalTarget = dailyKcalGoal > 0
+        ? configData.targetKcalForMeal(
+            ConfigEntity.mealKeyBreakfast, dailyKcalGoal)
+        : 0.0;
+    final lunchKcalTarget = dailyKcalGoal > 0
+        ? configData.targetKcalForMeal(ConfigEntity.mealKeyLunch, dailyKcalGoal)
+        : 0.0;
+    final dinnerKcalTarget = dailyKcalGoal > 0
+        ? configData.targetKcalForMeal(
+            ConfigEntity.mealKeyDinner, dailyKcalGoal)
+        : 0.0;
+    final snackKcalTarget = dailyKcalGoal > 0
+        ? configData.targetKcalForMeal(ConfigEntity.mealKeySnack, dailyKcalGoal)
+        : 0.0;
 
     final config = await _getConfigUsecase.getConfig();
 
@@ -90,6 +111,14 @@ class CalendarDayBloc extends Bloc<CalendarDayEvent, CalendarDayState> {
         lunchIntakeList,
         dinnerIntakeList,
         snackIntakeList,
+        breakfastKcalTarget,
+        lunchKcalTarget,
+        dinnerKcalTarget,
+        snackKcalTarget,
+        configData.mealKcalSharesPct[ConfigEntity.mealKeyBreakfast] ?? 0,
+        configData.mealKcalSharesPct[ConfigEntity.mealKeyLunch] ?? 0,
+        configData.mealKcalSharesPct[ConfigEntity.mealKeyDinner] ?? 0,
+        configData.mealKcalSharesPct[ConfigEntity.mealKeySnack] ?? 0,
         diarySortPreferences: config.diarySortPreferences,
       ),
     );

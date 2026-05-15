@@ -71,6 +71,8 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m22(value) => "${value} al tuo obiettivo";
 
+  static String m23(consumed, target) => "${consumed} / ${target} kcal";
+
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "activityExample": MessageLookupByLibrary.simpleMessage(
@@ -1201,5 +1203,30 @@ class MessageLookup extends MessageLookupByLibrary {
             "Salva come modello per la prossima volta"),
         "customActivityTemplatesEmpty": MessageLookupByLibrary.simpleMessage(
             "Non hai ancora salvato modelli. Spunta «Salva come modello per la prossima volta» per ricordare un\'attività personalizzata da riutilizzare."),
+        "mealPatternFiveSmall":
+            MessageLookupByLibrary.simpleMessage("Cinque piccoli"),
+        "mealPatternMediterranean":
+            MessageLookupByLibrary.simpleMessage("Mediterranea"),
+        "mealPatternOmad":
+            MessageLookupByLibrary.simpleMessage("Un pasto"),
+        "mealPatternPresetsLabel":
+            MessageLookupByLibrary.simpleMessage("Preset rapidi"),
+        "mealPatternStandard":
+            MessageLookupByLibrary.simpleMessage("Standard"),
+        "mealPatternTwoMeal":
+            MessageLookupByLibrary.simpleMessage("Due pasti"),
+        "settingsPerMealKcalShareBreakfast":
+            MessageLookupByLibrary.simpleMessage("Colazione"),
+        "settingsPerMealKcalShareDescription": MessageLookupByLibrary.simpleMessage(
+            "Distribuisci il tuo obiettivo giornaliero di kcal tra colazione, pranzo, cena e spuntini. Le quote devono sommare al 100%."),
+        "settingsPerMealKcalShareDinner":
+            MessageLookupByLibrary.simpleMessage("Cena"),
+        "settingsPerMealKcalShareLabel":
+            MessageLookupByLibrary.simpleMessage("Quota kcal per pasto"),
+        "settingsPerMealKcalShareLunch":
+            MessageLookupByLibrary.simpleMessage("Pranzo"),
+        "settingsPerMealKcalShareSnack":
+            MessageLookupByLibrary.simpleMessage("Spuntino"),
+        "diaryMealKcalConsumedOfTarget": m23,
       };
 }

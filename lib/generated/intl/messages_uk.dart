@@ -71,6 +71,8 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m22(value) => "Залишилось ${value} до цілі";
 
+  static String m23(consumed, target) => "${consumed} / ${target} kcal";
+
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "activityExample": MessageLookupByLibrary.simpleMessage(
@@ -1202,5 +1204,30 @@ class MessageLookup extends MessageLookupByLibrary {
             "Зберегти як шаблон на майбутнє"),
         "customActivityTemplatesEmpty": MessageLookupByLibrary.simpleMessage(
             "Ви ще не зберегли жодного шаблону. Поставте позначку «Зберегти як шаблон на майбутнє», щоб запам\'ятати власну активність для пізнішого використання."),
+        "mealPatternFiveSmall":
+            MessageLookupByLibrary.simpleMessage("5 малих"),
+        "mealPatternMediterranean":
+            MessageLookupByLibrary.simpleMessage("Середземноморський"),
+        "mealPatternOmad":
+            MessageLookupByLibrary.simpleMessage("1 прийом"),
+        "mealPatternPresetsLabel":
+            MessageLookupByLibrary.simpleMessage("Швидкі шаблони"),
+        "mealPatternStandard":
+            MessageLookupByLibrary.simpleMessage("Стандарт"),
+        "mealPatternTwoMeal":
+            MessageLookupByLibrary.simpleMessage("2 прийоми"),
+        "settingsPerMealKcalShareBreakfast":
+            MessageLookupByLibrary.simpleMessage("Сніданок"),
+        "settingsPerMealKcalShareDescription": MessageLookupByLibrary.simpleMessage(
+            "Розподіліть денну ціль у ккал між сніданком, обідом, вечерею та перекусами. Частки мають у сумі давати 100 %."),
+        "settingsPerMealKcalShareDinner":
+            MessageLookupByLibrary.simpleMessage("Вечеря"),
+        "settingsPerMealKcalShareLabel":
+            MessageLookupByLibrary.simpleMessage("Частка ккал на прийом їжі"),
+        "settingsPerMealKcalShareLunch":
+            MessageLookupByLibrary.simpleMessage("Обід"),
+        "settingsPerMealKcalShareSnack":
+            MessageLookupByLibrary.simpleMessage("Перекус"),
+        "diaryMealKcalConsumedOfTarget": m23,
       };
 }

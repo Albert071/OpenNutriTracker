@@ -33,6 +33,16 @@
       }
     }
   },
+  "@diaryMealKcalConsumedOfTarget": {
+    "placeholders": {
+      "consumed": {
+        "type": "String"
+      },
+      "target": {
+        "type": "String"
+      }
+    }
+  },
   "@importActivityConfirmTitle": {
     "placeholders": {
       "count": {
@@ -187,6 +197,7 @@
   "dialogOKLabel": "OK",
   "diaryFutureDateWarning": "Upravujete datum v budoucnosti",
   "diaryLabel": "Diář",
+  "diaryMealKcalConsumedOfTarget": "{consumed} / {target} kcal",
   "diaryNutrientPanelDataDisclaimer": "Sčítají se zde pouze živiny, které jsou u zaznamenaných jídel zachyceny. Jídlo bez hodnoty k dané živině nepřispěje — součty proto mohou být podhodnocené.",
   "diaryNutrientPanelTitle": "Dnešní živiny",
   "diarySortByCarbs": "Sacharidy (sestupně)",
@@ -299,6 +310,12 @@
   "mealNameValidationError": "Název jídla musí obsahovat alespoň jedno písmeno",
   "mealNutrientsPerQtyLabel": "Na {qty} {unit}",
   "mealNutrientsTotalLabel": "Celkové množství",
+  "mealPatternFiveSmall": "5 malých",
+  "mealPatternMediterranean": "Středomořský",
+  "mealPatternOmad": "1 jídlo",
+  "mealPatternPresetsLabel": "Rychlé předvolby",
+  "mealPatternStandard": "Standardní",
+  "mealPatternTwoMeal": "2 jídla",
   "mealProteinLabel": "bílkovin na 100 g/ml",
   "mealSizeLabel": "Velikost jídla (g/ml)",
   "mealSizeLabelImperial": "Velikost jídla (oz/fl oz)",
@@ -690,6 +707,12 @@
   "settingsNutrientsHelp": "Zvol, které živiny jsou v denním panelu vidět. Skryté lze kdykoli znovu zapnout.",
   "settingsNutrientsLabel": "Živiny",
   "settingsNutrientsSubtitle": "Vyber, které živiny se zobrazí v panelu deníku",
+  "settingsPerMealKcalShareBreakfast": "Snídaně",
+  "settingsPerMealKcalShareDescription": "Rozdělte denní cíl kcal mezi snídani, oběd, večeři a svačiny. Součet podílů musí být 100 %.",
+  "settingsPerMealKcalShareDinner": "Večeře",
+  "settingsPerMealKcalShareLabel": "Podíl kcal na jídlo",
+  "settingsPerMealKcalShareLunch": "Oběd",
+  "settingsPerMealKcalShareSnack": "Svačina",
   "settingsPotassiumGoalDescription": "Denní cíl draslíku v miligramech. Výchozí reference je 3500 mg.",
   "settingsPotassiumGoalLabel": "Cíl draslíku",
   "settingsPrivacySettings": "Nastavení soukromí",

@@ -33,6 +33,16 @@
       }
     }
   },
+  "@diaryMealKcalConsumedOfTarget": {
+    "placeholders": {
+      "consumed": {
+        "type": "String"
+      },
+      "target": {
+        "type": "String"
+      }
+    }
+  },
   "@importActivityConfirmTitle": {
     "placeholders": {
       "count": {
@@ -217,6 +227,7 @@
   "dialogOKLabel": "OK",
   "diaryFutureDateWarning": "Upravujete dátum v budúcnosti",
   "diaryLabel": "Denník",
+  "diaryMealKcalConsumedOfTarget": "{consumed} / {target} kcal",
   "diaryNutrientPanelDataDisclaimer": "Sčítavajú sa iba živiny zaznamenané pri zalogovaných jedlách. Jedlo bez hodnoty k danej živine neprispeje — súčty preto môžu byť podhodnotené.",
   "diaryNutrientPanelTitle": "Dnešné živiny",
   "diarySortByCarbs": "Sacharidy (od najvyšších)",
@@ -329,6 +340,12 @@
   "mealNameValidationError": "Názov jedla musí obsahovať aspoň jedno písmeno",
   "mealNutrientsPerQtyLabel": "Na {qty} {unit}",
   "mealNutrientsTotalLabel": "Celkové množstvo",
+  "mealPatternFiveSmall": "Päť malých",
+  "mealPatternMediterranean": "Stredomorský",
+  "mealPatternOmad": "OMAD",
+  "mealPatternPresetsLabel": "Rýchle predvoľby",
+  "mealPatternStandard": "Štandardný",
+  "mealPatternTwoMeal": "Dvojjedlový",
   "mealProteinLabel": "Bielkoviny (g)",
   "mealSizeLabel": "Veľkosť jedla (g/ml)",
   "mealSizeLabelImperial": "Veľkosť jedla (oz/fl oz)",
@@ -720,6 +737,12 @@
   "settingsNutrientsHelp": "Vyberte, ktoré živiny sa zobrazujú v dennom paneli. Skryté sa kedykoľvek dajú zapnúť späť.",
   "settingsNutrientsLabel": "Živiny",
   "settingsNutrientsSubtitle": "Vyberte, ktoré živiny sa objavia v paneli denníka",
+  "settingsPerMealKcalShareBreakfast": "Raňajky",
+  "settingsPerMealKcalShareDescription": "Rozdeľte svoj denný kcal cieľ medzi raňajky, obed, večeru a snacky. Podiely musia spolu dať 100 %.",
+  "settingsPerMealKcalShareDinner": "Večera",
+  "settingsPerMealKcalShareLabel": "Podiel kcal na jedlo",
+  "settingsPerMealKcalShareLunch": "Obed",
+  "settingsPerMealKcalShareSnack": "Snack",
   "settingsPotassiumGoalDescription": "Denný cieľ draslíka v miligramoch. Predvolená referencia je 3500 mg.",
   "settingsPotassiumGoalLabel": "Cieľ draslíka",
   "settingsPrivacySettings": "Nastavenia súkromia",

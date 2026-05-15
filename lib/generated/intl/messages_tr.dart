@@ -73,6 +73,8 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m22(value) => "Hedefine ${value} kaldı";
 
+  static String m23(consumed, target) => "${consumed} / ${target} kcal";
+
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "activityExample": MessageLookupByLibrary.simpleMessage(
@@ -1176,5 +1178,30 @@ class MessageLookup extends MessageLookupByLibrary {
             "Bir sonraki sefer için şablon olarak kaydet"),
         "customActivityTemplatesEmpty": MessageLookupByLibrary.simpleMessage(
             "Henüz kaydedilmiş bir şablonun yok. Bir özel etkinliği sonradan hatırlamak için „Bir sonraki sefer için şablon olarak kaydet“ kutusunu işaretle."),
+        "mealPatternFiveSmall":
+            MessageLookupByLibrary.simpleMessage("Beş küçük"),
+        "mealPatternMediterranean":
+            MessageLookupByLibrary.simpleMessage("Akdeniz"),
+        "mealPatternOmad":
+            MessageLookupByLibrary.simpleMessage("Tek öğün"),
+        "mealPatternPresetsLabel":
+            MessageLookupByLibrary.simpleMessage("Hızlı önayarlar"),
+        "mealPatternStandard":
+            MessageLookupByLibrary.simpleMessage("Standart"),
+        "mealPatternTwoMeal":
+            MessageLookupByLibrary.simpleMessage("İki öğün"),
+        "settingsPerMealKcalShareBreakfast":
+            MessageLookupByLibrary.simpleMessage("Kahvaltı"),
+        "settingsPerMealKcalShareDescription": MessageLookupByLibrary.simpleMessage(
+            "Günlük kcal hedefini kahvaltı, öğle yemeği, akşam yemeği ve atıştırmalıklara bölün. Paylar toplam %100 olmalıdır."),
+        "settingsPerMealKcalShareDinner":
+            MessageLookupByLibrary.simpleMessage("Akşam Yemeği"),
+        "settingsPerMealKcalShareLabel":
+            MessageLookupByLibrary.simpleMessage("Öğün başına kcal payı"),
+        "settingsPerMealKcalShareLunch":
+            MessageLookupByLibrary.simpleMessage("Öğle Yemeği"),
+        "settingsPerMealKcalShareSnack":
+            MessageLookupByLibrary.simpleMessage("Atıştırmalık"),
+        "diaryMealKcalConsumedOfTarget": m23,
       };
 }

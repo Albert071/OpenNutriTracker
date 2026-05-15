@@ -68,6 +68,8 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m22(value) => "距离目标还差 ${value}";
 
+  static String m23(consumed, target) => "${consumed} / ${target} 千卡";
+
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "activityExample":
@@ -1043,5 +1045,30 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("保存为模板以便下次使用"),
         "customActivityTemplatesEmpty": MessageLookupByLibrary.simpleMessage(
             "你还没有保存任何模板。勾选「保存为模板以便下次使用」以便日后记住自定义活动。"),
+        "mealPatternFiveSmall":
+            MessageLookupByLibrary.simpleMessage("五餐"),
+        "mealPatternMediterranean":
+            MessageLookupByLibrary.simpleMessage("地中海"),
+        "mealPatternOmad":
+            MessageLookupByLibrary.simpleMessage("一日一餐"),
+        "mealPatternPresetsLabel":
+            MessageLookupByLibrary.simpleMessage("快速预设"),
+        "mealPatternStandard":
+            MessageLookupByLibrary.simpleMessage("标准"),
+        "mealPatternTwoMeal":
+            MessageLookupByLibrary.simpleMessage("两餐"),
+        "settingsPerMealKcalShareBreakfast":
+            MessageLookupByLibrary.simpleMessage("早餐"),
+        "settingsPerMealKcalShareDescription": MessageLookupByLibrary.simpleMessage(
+            "将每日千卡目标分配到早餐、午餐、晚餐和零食。各占比之和必须为 100%。"),
+        "settingsPerMealKcalShareDinner":
+            MessageLookupByLibrary.simpleMessage("晚餐"),
+        "settingsPerMealKcalShareLabel":
+            MessageLookupByLibrary.simpleMessage("每餐千卡占比"),
+        "settingsPerMealKcalShareLunch":
+            MessageLookupByLibrary.simpleMessage("午餐"),
+        "settingsPerMealKcalShareSnack":
+            MessageLookupByLibrary.simpleMessage("零食"),
+        "diaryMealKcalConsumedOfTarget": m23,
       };
 }

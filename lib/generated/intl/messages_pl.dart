@@ -71,6 +71,8 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m22(value) => "${value} do celu";
 
+  static String m23(consumed, target) => "${consumed} / ${target} kcal";
+
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "activityExample": MessageLookupByLibrary.simpleMessage(
@@ -1200,5 +1202,30 @@ class MessageLookup extends MessageLookupByLibrary {
             "Zapisz jako szablon na później"),
         "customActivityTemplatesEmpty": MessageLookupByLibrary.simpleMessage(
             "Nie masz jeszcze zapisanych szablonów. Zaznacz „Zapisz jako szablon na później”, aby zapamiętać aktywność niestandardową na przyszłość."),
+        "mealPatternFiveSmall":
+            MessageLookupByLibrary.simpleMessage("5 małych"),
+        "mealPatternMediterranean":
+            MessageLookupByLibrary.simpleMessage("Śródziemnomorski"),
+        "mealPatternOmad":
+            MessageLookupByLibrary.simpleMessage("1 posiłek"),
+        "mealPatternPresetsLabel":
+            MessageLookupByLibrary.simpleMessage("Szybkie ustawienia"),
+        "mealPatternStandard":
+            MessageLookupByLibrary.simpleMessage("Standardowy"),
+        "mealPatternTwoMeal":
+            MessageLookupByLibrary.simpleMessage("2 posiłki"),
+        "settingsPerMealKcalShareBreakfast":
+            MessageLookupByLibrary.simpleMessage("Śniadanie"),
+        "settingsPerMealKcalShareDescription": MessageLookupByLibrary.simpleMessage(
+            "Rozłóż dzienny cel kcal na śniadanie, obiad, kolację i przekąski. Udziały muszą sumować się do 100%."),
+        "settingsPerMealKcalShareDinner":
+            MessageLookupByLibrary.simpleMessage("Kolacja"),
+        "settingsPerMealKcalShareLabel":
+            MessageLookupByLibrary.simpleMessage("Udział kcal na posiłek"),
+        "settingsPerMealKcalShareLunch":
+            MessageLookupByLibrary.simpleMessage("Obiad"),
+        "settingsPerMealKcalShareSnack":
+            MessageLookupByLibrary.simpleMessage("Przekąska"),
+        "diaryMealKcalConsumedOfTarget": m23,
       };
 }

@@ -101,6 +101,10 @@ class ConfigRepository {
     await _configDataSource.setConfigUsesKilojoules(usesKilojoules);
   }
 
+  Future<void> setConfigMealKcalSharesPct(Map<String, int> shares) async {
+    await _configDataSource.setConfigMealKcalSharesPct(shares);
+  }
+
   Future<bool> getCaloriesTaperEnabled() async {
     return await _configDataSource.getCaloriesTaperEnabled();
   }
