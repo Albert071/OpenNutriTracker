@@ -9,6 +9,7 @@ import 'package:opennutritracker/core/domain/entity/user_weight_goal_entity.dart
 import 'package:opennutritracker/core/presentation/widgets/calories_profile_info_dialog.dart';
 import 'package:opennutritracker/core/utils/calc/unit_calc.dart';
 import 'package:opennutritracker/core/utils/locator.dart';
+import 'package:opennutritracker/core/utils/navigation_options.dart';
 import 'package:opennutritracker/features/profile/presentation/bloc/profile_bloc.dart';
 import 'package:opennutritracker/features/profile/presentation/widgets/bmi_overview.dart';
 import 'package:opennutritracker/features/profile/presentation/widgets/set_gender_dialog.dart';
@@ -16,6 +17,7 @@ import 'package:opennutritracker/features/profile/presentation/widgets/set_goal_
 import 'package:opennutritracker/features/profile/presentation/widgets/set_height_dialog.dart';
 import 'package:opennutritracker/features/profile/presentation/widgets/set_weekly_weight_goal_dialog.dart';
 import 'package:opennutritracker/features/profile/presentation/widgets/set_pal_category_dialog.dart';
+import 'package:opennutritracker/features/profile/presentation/widgets/set_target_weight_dialog.dart';
 import 'package:opennutritracker/features/profile/presentation/widgets/set_weight_dialog.dart';
 import 'package:opennutritracker/generated/l10n.dart';
 
@@ -77,138 +79,239 @@ class _ProfilePageState extends State<ProfilePage> {
           nutritionalStatus: userBMIEntity.nutritionalStatus,
         ),
         const SizedBox(height: 32.0),
-        ListTile(
-          title: Text(
-            S.of(context).activityLabel,
-            style: Theme.of(context).textTheme.titleLarge,
-          ),
-          subtitle: Text(
-            user.pal.getName(context),
-            style: Theme.of(context).textTheme.titleMedium,
-          ),
-          leading: const SizedBox(
-            height: double.infinity,
-            child: Icon(Icons.directions_walk_outlined),
-          ),
-          onTap: () => _showSetPALCategoryDialog(context, user),
-        ),
-        ListTile(
-          title: Text(
-            S.of(context).goalLabel,
-            style: Theme.of(context).textTheme.titleLarge,
-          ),
-          subtitle: Text(
-            user.goal.getName(context),
-            style: Theme.of(context).textTheme.titleMedium,
-          ),
-          leading: const SizedBox(
-            height: double.infinity,
-            child: Icon(Icons.flag_outlined),
-          ),
-          onTap: () => _showSetGoalDialog(context, user),
-        ),
-        ListTile(
-          title: Text(
-            S.of(context).weeklyWeightGoalLabel,
-            style: Theme.of(context).textTheme.titleLarge,
-          ),
-          subtitle: Text(
-            _weeklyGoalSubtitle(context, user, usesImperialUnits),
-            style: Theme.of(context).textTheme.titleMedium,
-          ),
-          leading: const SizedBox(
-            height: double.infinity,
-            child: Icon(Icons.trending_down_outlined),
-          ),
-          onTap: () =>
-              _showSetWeeklyWeightGoalDialog(context, user, usesImperialUnits),
-        ),
-        ListTile(
-          title: Text(
-            S.of(context).weightLabel,
-            style: Theme.of(context).textTheme.titleLarge,
-          ),
-          subtitle: Text(
-            '${_profileBloc.getDisplayWeight(user, usesImperialUnits)} ${usesImperialUnits ? S.of(context).lbsLabel : S.of(context).kgLabel}',
-            style: Theme.of(context).textTheme.titleMedium,
-          ),
-          leading: const SizedBox(
-            height: double.infinity,
-            child: Icon(Icons.monitor_weight_outlined),
-          ),
-          onTap: () {
-            _showSetWeightDialog(context, user, usesImperialUnits);
-          },
-        ),
-        ListTile(
-          title: Text(
-            S.of(context).heightLabel,
-            style: Theme.of(context).textTheme.titleLarge,
-          ),
-          subtitle: Text(
-            '${_profileBloc.getDisplayHeight(user, usesImperialUnits)} ${usesImperialUnits ? S.of(context).ftLabel : S.of(context).cmLabel}',
-            style: Theme.of(context).textTheme.titleMedium,
-          ),
-          leading: const SizedBox(
-            height: double.infinity,
-            child: Icon(Icons.height_outlined),
-          ),
-          onTap: () {
-            _showSetHeightDialog(context, user, usesImperialUnits);
-          },
-        ),
-        ListTile(
-          title: Text(
-            S.of(context).ageLabel,
-            style: Theme.of(context).textTheme.titleLarge,
-          ),
-          subtitle: Text(
-            S.of(context).yearsLabel(user.age),
-            style: Theme.of(context).textTheme.titleMedium,
-          ),
-          leading: const SizedBox(
-            height: double.infinity,
-            child: Icon(Icons.cake_outlined),
-          ),
-          onTap: () {
-            _showSetBirthdayDialog(context, user);
-          },
-        ),
-        ListTile(
-          title: Text(
-            S.of(context).genderLabel,
-            style: Theme.of(context).textTheme.titleLarge,
-          ),
-          subtitle: Text(
-            user.gender.getName(context),
-            style: Theme.of(context).textTheme.titleMedium,
-          ),
-          leading: SizedBox(
-            height: double.infinity,
-            child: user.gender.getIcon(),
-          ),
-          onTap: () {
-            _showSetGenderDialog(context, user);
-          },
-        ),
-        if (user.gender == UserGenderEntity.nonBinary)
-          ListTile(
+        Semantics(
+          identifier: 'profile-activity',
+          child: ListTile(
             title: Text(
-              S.of(context).caloriesProfileInfoTitle,
+              S.of(context).activityLabel,
               style: Theme.of(context).textTheme.titleLarge,
             ),
             subtitle: Text(
-              (user.caloriesProfile ?? CaloriesProfileEntity.averaged)
-                  .getName(context),
+              user.pal.getName(context),
               style: Theme.of(context).textTheme.titleMedium,
             ),
             leading: const SizedBox(
               height: double.infinity,
-              child: Icon(Icons.tune_outlined),
+              child: Icon(Icons.directions_walk_outlined),
+            ),
+            onTap: () => _showSetPALCategoryDialog(context, user),
+          ),
+        ),
+        Semantics(
+          identifier: 'profile-goal',
+          child: ListTile(
+            title: Text(
+              S.of(context).goalLabel,
+              style: Theme.of(context).textTheme.titleLarge,
+            ),
+            subtitle: Text(
+              user.goal.getName(context),
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
+            leading: const SizedBox(
+              height: double.infinity,
+              child: Icon(Icons.flag_outlined),
+            ),
+            onTap: () => _showSetGoalDialog(context, user),
+          ),
+        ),
+        Semantics(
+          identifier: 'profile-weekly-goal',
+          child: ListTile(
+            title: Text(
+              S.of(context).weeklyWeightGoalLabel,
+              style: Theme.of(context).textTheme.titleLarge,
+            ),
+            subtitle: Text(
+              _weeklyGoalSubtitle(context, user, usesImperialUnits),
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
+            leading: const SizedBox(
+              height: double.infinity,
+              child: Icon(Icons.trending_down_outlined),
+            ),
+            onTap: () => _showSetWeeklyWeightGoalDialog(
+                context, user, usesImperialUnits),
+          ),
+        ),
+        Semantics(
+          identifier: 'profile-weight',
+          child: ListTile(
+            title: Text(
+              S.of(context).weightLabel,
+              style: Theme.of(context).textTheme.titleLarge,
+            ),
+            subtitle: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  '${_profileBloc.getDisplayWeight(user, usesImperialUnits)} ${usesImperialUnits ? S.of(context).lbsLabel : S.of(context).kgLabel}',
+                  style: Theme.of(context).textTheme.titleMedium,
+                ),
+                // #119: When the user has set a concrete target weight, surface
+                // the distance to it directly below the current weight. The
+                // delta is signed-agnostic — the message holds whether the
+                // target is above or below current (cut or gain).
+                if (user.targetWeightKg != null)
+                  Text(
+                    _targetWeightSubLabel(context, user, usesImperialUnits),
+                    style: Theme.of(context).textTheme.bodySmall,
+                  ),
+              ],
+            ),
+            leading: const SizedBox(
+              height: double.infinity,
+              child: Icon(Icons.monitor_weight_outlined),
             ),
             onTap: () {
-              _showCaloriesProfileDialog(context, user);
+              _showSetWeightDialog(context, user, usesImperialUnits);
             },
+          ),
+        ),
+        Semantics(
+          identifier: 'profile-target-weight',
+          child: ListTile(
+            title: Text(
+              S.of(context).profileTargetWeightLabel,
+              style: Theme.of(context).textTheme.titleLarge,
+            ),
+            subtitle: Text(
+              user.targetWeightKg == null
+                  ? S.of(context).profileTargetWeightNotSetLabel
+                  : '${_formatTargetWeightDisplay(user.targetWeightKg!, usesImperialUnits)} '
+                      '${usesImperialUnits ? S.of(context).lbsLabel : S.of(context).kgLabel}',
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
+            leading: const SizedBox(
+              height: double.infinity,
+              child: Icon(Icons.flag_outlined),
+            ),
+            onTap: () =>
+                _showSetTargetWeightDialog(context, user, usesImperialUnits),
+          ),
+        ),
+        // The opt-in linear taper scales the daily kcal deficit down
+        // as current weight approaches the target. Surfaced here only
+        // once a target weight is set, since without one the toggle
+        // has nothing to scale against.
+        if (user.targetWeightKg != null)
+          Semantics(
+            identifier: 'profile-calorie-taper',
+            child: SwitchListTile(
+              title: Text(
+                S.of(context).settingsCaloriesTaperLabel,
+                style: Theme.of(context).textTheme.titleLarge,
+              ),
+              subtitle: Text(
+                S.of(context).settingsCaloriesTaperDescription,
+                style: Theme.of(context).textTheme.bodySmall,
+              ),
+              secondary: const SizedBox(
+                height: double.infinity,
+                child: Icon(Icons.trending_down_outlined),
+              ),
+              value: user.caloriesTaperEnabled,
+              onChanged: (v) => _profileBloc.setCaloriesTaperEnabled(v),
+            ),
+          ),
+        Semantics(
+          identifier: 'profile-weight-history',
+          child: ListTile(
+            title: Text(
+              S.of(context).profileWeightHistoryTitle,
+              style: Theme.of(context).textTheme.titleLarge,
+            ),
+            leading: const SizedBox(
+              height: double.infinity,
+              child: Icon(Icons.show_chart_outlined),
+            ),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () => Navigator.of(context)
+                .pushNamed(NavigationOptions.weightHistoryRoute),
+          ),
+        ),
+        Semantics(
+          identifier: 'profile-height',
+          child: ListTile(
+            title: Text(
+              S.of(context).heightLabel,
+              style: Theme.of(context).textTheme.titleLarge,
+            ),
+            subtitle: Text(
+              '${_profileBloc.getDisplayHeight(user, usesImperialUnits)} ${usesImperialUnits ? S.of(context).ftLabel : S.of(context).cmLabel}',
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
+            leading: const SizedBox(
+              height: double.infinity,
+              child: Icon(Icons.height_outlined),
+            ),
+            onTap: () {
+              _showSetHeightDialog(context, user, usesImperialUnits);
+            },
+          ),
+        ),
+        Semantics(
+          identifier: 'profile-age',
+          child: ListTile(
+            title: Text(
+              S.of(context).ageLabel,
+              style: Theme.of(context).textTheme.titleLarge,
+            ),
+            subtitle: Text(
+              S.of(context).yearsLabel(user.age),
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
+            leading: const SizedBox(
+              height: double.infinity,
+              child: Icon(Icons.cake_outlined),
+            ),
+            onTap: () {
+              _showSetBirthdayDialog(context, user);
+            },
+          ),
+        ),
+        Semantics(
+          identifier: 'profile-gender',
+          child: ListTile(
+            title: Text(
+              S.of(context).genderLabel,
+              style: Theme.of(context).textTheme.titleLarge,
+            ),
+            subtitle: Text(
+              user.gender.getName(context),
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
+            leading: SizedBox(
+              height: double.infinity,
+              child: user.gender.getIcon(),
+            ),
+            onTap: () {
+              _showSetGenderDialog(context, user);
+            },
+          ),
+        ),
+        if (user.gender == UserGenderEntity.nonBinary)
+          Semantics(
+            identifier: 'profile-calories-profile',
+            child: ListTile(
+              title: Text(
+                S.of(context).caloriesProfileInfoTitle,
+                style: Theme.of(context).textTheme.titleLarge,
+              ),
+              subtitle: Text(
+                (user.caloriesProfile ?? CaloriesProfileEntity.averaged)
+                    .getName(context),
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
+              leading: const SizedBox(
+                height: double.infinity,
+                child: Icon(Icons.tune_outlined),
+              ),
+              onTap: () {
+                _showCaloriesProfileDialog(context, user);
+              },
+            ),
           ),
       ],
     );
@@ -328,6 +431,46 @@ class _ProfilePageState extends State<ProfilePage> {
     }
   }
 
+  Future<void> _showSetTargetWeightDialog(
+    BuildContext context,
+    UserEntity userEntity,
+    bool usesImperialSystem,
+  ) async {
+    // Seed the picker from the existing target if set, otherwise from the
+    // user's current weight so the wheel doesn't snap to a wildly different
+    // value on first use. The dialog returns a TargetWeightDialogResult so
+    // we can distinguish "user cancelled" (null) from "user picked a value"
+    // (set) and from "user explicitly cleared the target" (clear flag).
+    final seedKg = userEntity.targetWeightKg ?? userEntity.weightKG;
+    final seedDisplay =
+        usesImperialSystem ? UnitCalc.kgToLbs(seedKg) : seedKg;
+    final result = await showDialog<TargetWeightDialogResult>(
+      context: context,
+      builder: (context) => SetTargetWeightDialog(
+        initialTargetWeight: seedDisplay,
+        hasExistingTarget: userEntity.targetWeightKg != null,
+        usesImperialUnits: usesImperialSystem,
+      ),
+    );
+    if (result == null) return;
+    if (result.clear) {
+      userEntity.targetWeightKg = null;
+    } else if (result.value != null) {
+      userEntity.targetWeightKg = usesImperialSystem
+          ? UnitCalc.lbsToKg(result.value!)
+          : result.value;
+    }
+    _profileBloc.updateUser(userEntity);
+  }
+
+  String _formatTargetWeightDisplay(double kg, bool usesImperialUnits) {
+    final display = usesImperialUnits ? UnitCalc.kgToLbs(kg) : kg;
+    // One decimal is enough — the picker grain is 0.1 — but trim trailing
+    // .0 so a whole-number target reads as "75 kg" rather than "75.0 kg".
+    final s = display.toStringAsFixed(1);
+    return s.endsWith('.0') ? s.substring(0, s.length - 2) : s;
+  }
+
   Future<void> _showSetBirthdayDialog(
     BuildContext context,
     UserEntity userEntity,
@@ -400,5 +543,23 @@ class _ProfilePageState extends State<ProfilePage> {
     if (selected == null) return;
     userEntity.caloriesProfile = selected;
     await _profileBloc.updateUser(userEntity);
+  }
+
+  String _targetWeightSubLabel(
+      BuildContext context, UserEntity user, bool usesImperialUnits) {
+    final target = user.targetWeightKg;
+    if (target == null) return '';
+    final deltaKg = (target - user.weightKG).abs();
+    // Treat "close enough" as reached — under 0.1 kg the noise in body
+    // weight measurements outweighs the difference and a "you've reached
+    // your target" message lands better than "0.0 kg to go".
+    if (deltaKg < 0.1) {
+      return S.of(context).profileTargetWeightReached;
+    }
+    final displayDelta =
+        usesImperialUnits ? deltaKg * 2.20462 : deltaKg;
+    final formatted =
+        '${displayDelta.toStringAsFixed(1)} ${usesImperialUnits ? S.of(context).lbsLabel : S.of(context).kgLabel}';
+    return S.of(context).profileTargetWeightToGo(formatted);
   }
 }

@@ -41,6 +41,36 @@ class ConfigDBO extends HiveObject {
   @HiveField(15)
   bool? showMicronutrients; // #237: null means default (false)
   @HiveField(16)
+  bool? usesKilojoules; // #177: null means default (false → kcal)
+  // #150: per-meal kcal share, percent values keyed by meal type
+  // ("breakfast" / "lunch" / "dinner" / "snack"). Null means use defaults.
+  @HiveField(17)
+  Map<String, int>? mealKcalSharesPct;
+  @HiveField(18)
+  String? customMealFormMode; // #232: 'simple' or 'advanced'; null means default (simple)
+  @HiveField(19)
+  int? dayStartOffsetHours; // #139: 0-23, null means default (0 = wall-clock midnight)
+  // #160 follow-up: per-nutrient show/hide map for the daily nutrient panel.
+  // Keys are nutrient identifiers from [DailyNutrientPanel]; values are
+  // explicit user overrides. A nutrient not present in the map (or a null
+  // map altogether) means "use the default visibility", which is currently
+  // visible for every nutrient — see [ConfigEntity.isNutrientVisible].
+  @HiveField(22)
+  Map<String, bool>? nutrientPanelVisibility;
+
+  /// Per-meal sort preference for the diary day view. Keys are meal type
+  /// strings (`breakfast` / `lunch` / `dinner` / `snack`) and values are the
+  /// `DiarySortType` enum index. Nullable so existing configs without a
+  /// persisted preference keep falling back to the widget-state default
+  /// (`DiarySortType.timeAdded`) until the user picks a sort.
+  @HiveField(21)
+  Map<String, int>? diarySortPreferences;
+  // #139 follow-up: 0-59 minute companion. Composes additively with
+  // dayStartOffsetHours so existing users with hours=4 and a null minutes
+  // value see a 4:00 boundary, unchanged.
+  @HiveField(23)
+  int? dayStartOffsetMinutes;
+  @HiveField(20)
   bool? offlineCatalogEnabled;
   // Crash-safety switch for the offline catalog.
   // [catalogConsecutiveCrashes] is incremented at every app start
@@ -49,15 +79,15 @@ class ConfigDBO extends HiveObject {
   // [offlineCatalogEnabled] to false and sets
   // [catalogAutoDisabled] to true so settings can surface the
   // reason and offer a one-tap re-enable.
-  @HiveField(17)
+  @HiveField(24)
   int? catalogConsecutiveCrashes;
-  @HiveField(18)
+  @HiveField(25)
   bool? catalogAutoDisabled;
   /// True once the user has been told (via snackbar on Home) that
   /// the catalog was auto-disabled. Reset to false at the moment
   /// of auto-disable so the next launch shows the notice exactly
   /// once. Subsequent launches don't nag.
-  @HiveField(19)
+  @HiveField(26)
   bool? catalogAutoDisableNoticeAcknowledged;
 
   ConfigDBO(
@@ -74,6 +104,13 @@ class ConfigDBO extends HiveObject {
     this.notificationMinute,
     this.selectedLocale,
     this.showMicronutrients,
+    this.usesKilojoules,
+    this.mealKcalSharesPct,
+    this.customMealFormMode,
+    this.dayStartOffsetHours,
+    this.diarySortPreferences,
+    this.nutrientPanelVisibility,
+    this.dayStartOffsetMinutes,
     this.offlineCatalogEnabled,
     this.catalogConsecutiveCrashes,
     this.catalogAutoDisabled,

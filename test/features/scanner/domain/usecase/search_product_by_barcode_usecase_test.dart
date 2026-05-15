@@ -166,6 +166,7 @@ void main() {
       expect(result.name, 'My Custom');
       expect(repo.getOFFProductByBarcodeCalls, 0);
     });
+
   });
 }
 
@@ -204,6 +205,7 @@ class _FakeCustomMealDataSource implements CustomMealDataSource {
   dynamic noSuchMethod(Invocation invocation) =>
       throw UnimplementedError('Unexpected call: ${invocation.memberName}');
 }
+
 
 class _FakeRemoteSearchCacheDataSource implements RemoteSearchCacheDataSource {
   final List<MealDBO> entries = [];

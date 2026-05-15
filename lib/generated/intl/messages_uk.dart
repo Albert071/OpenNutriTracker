@@ -64,6 +64,24 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m19(count) => "Імпортувати ${count} активностей?";
 
+  static String m20(detail) => "Не вдалося розпарсити: ${detail}";
+
+  static String m21(count, customCount) =>
+      "Записано ${count} з JSON, ${customCount} збережено як власні страви";
+
+  static String m22(value) => "Залишилось ${value} до цілі";
+
+  static String m23(consumed, target) => "${consumed} / ${target} kcal";
+
+  static String m24(unit) => "${unit} в одній порції";
+
+  static String m25(hour) => "${hour}:00";
+
+  static String m26(hour, minute) => "${hour}:${minute}";
+
+  static String mLowKcal(threshold) =>
+      "Дорослим без медичного нагляду не варто тривало споживати менше ніж ${threshold} ккал на день. Будь ласка, перш ніж залишати такий низький рівень, проконсультуйтеся з лікарем.";
+
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "activityExample": MessageLookupByLibrary.simpleMessage(
@@ -115,7 +133,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "calculationsRecommendedLabel":
             MessageLookupByLibrary.simpleMessage("(рекомендовано)"),
         "calculationsTDEEIOM2006Label": MessageLookupByLibrary.simpleMessage(
-            "Розрахунок Інституту Медицини"),
+            "Розрахунок Інституту Медицини (2005)"),
         "calculationsTDEELabel":
             MessageLookupByLibrary.simpleMessage("Розрахунок TDEE"),
         "caloriesProfileAveragedLabel": MessageLookupByLibrary.simpleMessage(
@@ -170,6 +188,16 @@ class MessageLookup extends MessageLookupByLibrary {
             "Не вдалося прочитати CSV файл. Перевірте формат і спробуйте знову."),
         "csvImportPartialLabel": m13,
         "csvImportSuccessLabel": m12,
+        "barcodeInvalidEan13CheckDigit": MessageLookupByLibrary.simpleMessage(
+            "Цей 13-значний штрих-код, схоже, введено з помилкою: остання цифра не збігається з рештою"),
+        "customMealBarcodeHint": MessageLookupByLibrary.simpleMessage(
+            "Скануй або введи штрих-код, щоб згодом знайти цю страву"),
+        "customMealBarcodeInvalid": MessageLookupByLibrary.simpleMessage(
+            "Штрих-код має містити від 8 до 14 цифр"),
+        "customMealBarcodeLabel":
+            MessageLookupByLibrary.simpleMessage("Штрих-код"),
+        "customMealBarcodeScanButton":
+            MessageLookupByLibrary.simpleMessage("Сканувати штрих-код"),
         "customMealsDeleteConfirmContent": MessageLookupByLibrary.simpleMessage(
             "Усі записи в щоденнику, що використовують цю страву, також буде видалено."),
         "customMealsDeleteConfirmTitle":
@@ -178,9 +206,26 @@ class MessageLookup extends MessageLookupByLibrary {
             "Ще немає збережених власних страв."),
         "dailyKcalAdjustmentLabel":
             MessageLookupByLibrary.simpleMessage("Щоденна корекція калорій:"),
+        "dailyKjAdjustmentLabel":
+            MessageLookupByLibrary.simpleMessage("Щоденна корекція кДж:"),
         "dataCollectionLabel": MessageLookupByLibrary.simpleMessage(
-            "Підтримайте розробку, надаючи анонімні дані про використання"),
+            "Надсилати анонімні звіти про збої, щоб допомогти виправляти помилки. Жодні дані про їжу, вагу чи особисті дані не передаються."),
         "deleteAllLabel": MessageLookupByLibrary.simpleMessage("Видалити все"),
+        "settingsDeleteAllDataLabel": MessageLookupByLibrary.simpleMessage(
+            "Видалити всі мої дані"),
+        "settingsDeleteAllDataSubtitle": MessageLookupByLibrary.simpleMessage(
+            "Профіль, прийоми їжі, активності та історію ваги"),
+        "settingsDeleteAllDataConfirmTitle":
+            MessageLookupByLibrary.simpleMessage("Видалити всі ваші дані?"),
+        "settingsDeleteAllDataConfirmContent": MessageLookupByLibrary.simpleMessage(
+            "Це остаточно видалить з цього пристрою ваш профіль, прийоми їжі, активності, історію ваги та всі власні рецепти. Бази Open Food Facts та USDA Food Data Central залишаться без змін. Цю дію не можна скасувати."),
+        "settingsDeleteAllDataConfirmAction":
+            MessageLookupByLibrary.simpleMessage("Видалити все"),
+        "lowKcalWarningTitle": MessageLookupByLibrary.simpleMessage(
+            "Ця денна ціль доволі низька"),
+        "lowKcalWarningBody": mLowKcal,
+        "lowKcalWarningViewDisclaimer":
+            MessageLookupByLibrary.simpleMessage("Переглянути застереження"),
         "deleteSelectedRecipesConfirmTitle": m18,
         "deleteTimeDialogContent": MessageLookupByLibrary.simpleMessage(
             "Ви хочете видалити вибраний елемент?"),
@@ -195,9 +240,13 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Скопіювати на сьогодні"),
         "dialogDeleteLabel": MessageLookupByLibrary.simpleMessage("ВИДАЛИТИ"),
         "dialogOKLabel": MessageLookupByLibrary.simpleMessage("ОК"),
+        "diaryNutrientPanelDataDisclaimer":
+            MessageLookupByLibrary.simpleMessage("Тут підсумовуються лише ті поживні речовини, які записані для зареєстрованих страв. Страва без значення не додає нічого до відповідного показника — тож суми можуть бути занижені."),
         "diaryFutureDateWarning": MessageLookupByLibrary.simpleMessage(
             "Ви редагуєте майбутню дату"),
         "diaryLabel": MessageLookupByLibrary.simpleMessage("Щоденник"),
+        "diaryNutrientPanelTitle": MessageLookupByLibrary.simpleMessage(
+            "Поживні речовини за сьогодні"),
         "dinnerExample": MessageLookupByLibrary.simpleMessage(
             "наприклад, суп, курка, вино ..."),
         "dinnerLabel": MessageLookupByLibrary.simpleMessage("Вечеря"),
@@ -208,9 +257,17 @@ class MessageLookup extends MessageLookupByLibrary {
         "discardChangesTitle":
             MessageLookupByLibrary.simpleMessage("Скасувати зміни?"),
         "disclaimerText": MessageLookupByLibrary.simpleMessage(
-            "OpenNutriTracker не є медичним додатком. Всі надані дані не перевіряються і повинні використовуватися з обережністю. Будь ласка, ведіть здоровий спосіб життя і консультуйтеся з фахівцем, якщо у вас виникли проблеми. Використання під час хвороби, вагітності або лактації не рекомендується."),
+            "OpenNutriTracker не є медичним додатком. Всі надані дані не перевіряються і повинні використовуватися з обережністю. Будь ласка, ведіть здоровий спосіб життя і консультуйтеся з фахівцем, якщо у вас виникли проблеми. Використання під час хвороби, вагітності або лактації не рекомендується. Рецензовані джерела для кожного розрахунку відкриваються через піктограму інформації на екрані Головна або Профіль."),
         "downloadSampleCsvAction":
             MessageLookupByLibrary.simpleMessage("Зразкові страви (csv)"),
+        "downloadSampleJsonAction":
+            MessageLookupByLibrary.simpleMessage("Зразкові страви (json)"),
+        "importMealsJsonAction":
+            MessageLookupByLibrary.simpleMessage("Імпортувати страви (json)"),
+        "downloadSampleRecipesJsonAction":
+            MessageLookupByLibrary.simpleMessage("Зразкові рецепти (json)"),
+        "importRecipesJsonAction":
+            MessageLookupByLibrary.simpleMessage("Імпортувати рецепти (json)"),
         "downloadSampleRecipesCsvAction":
             MessageLookupByLibrary.simpleMessage("Зразкові рецепти (csv)"),
         "duplicateMealDialogContent":
@@ -241,6 +298,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "exportAction": MessageLookupByLibrary.simpleMessage("Експортувати"),
         "exportImportAppDataLabel": MessageLookupByLibrary.simpleMessage(
             "Експортувати / Імпортувати дані застосунку"),
+        "exportImportCsvRecipesNote":
+            MessageLookupByLibrary.simpleMessage("CSV зберігає активність, журнал прийомів їжі та відстежувані дні. Рецепти й додані фото зберігаються лише в JSON — перейдіть на JSON, якщо хочете залишити їх у резервній копії."),
         "exportImportDescription": MessageLookupByLibrary.simpleMessage(
             "Ви можете експортувати дані додатка у zip-файл і імпортувати їх пізніше. Це корисно, якщо ви хочете зробити резервну копію або перенести дані на інший пристрій. Додаток не використовує жодних хмарних сервісів для зберігання ваших даних."),
         "exportImportErrorLabel":
@@ -275,7 +334,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "importActivitySuccessLabel":
             MessageLookupByLibrary.simpleMessage("Тренування імпортовано"),
         "importCustomFoodDataDescription": MessageLookupByLibrary.simpleMessage(
-            "Імпортуйте власні страви з CSV файлу. Завантажте зразок, щоб побачити очікуваний формат стовпців та обов'язкові поля."),
+            "Імпортуйте власні страви з CSV-файлу або вставивши JSON. Завантажте зразок, щоб побачити очікувану форму та обовʼязкові поля."),
         "importCustomFoodDataLabel": MessageLookupByLibrary.simpleMessage(
             "Імпортувати власні дані про їжу"),
         "importMealConfirmContent": m4,
@@ -298,6 +357,14 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Рецепт імпортовано"),
         "importRecipesCsvAction": MessageLookupByLibrary.simpleMessage(
             "Імпортувати рецепти (csv)"),
+        "inconsistentNutritionWarningBody": MessageLookupByLibrary.simpleMessage(
+            "Ці значення не зовсім сходяться — введені калорії не відповідають енергії з вуглеводів, жирів і білків. Зберегти все одно чи переглянути ще раз?"),
+        "inconsistentNutritionWarningEdit":
+            MessageLookupByLibrary.simpleMessage("Переглянути ще раз"),
+        "inconsistentNutritionWarningSaveAnyway":
+            MessageLookupByLibrary.simpleMessage("Зберегти все одно"),
+        "inconsistentNutritionWarningTitle":
+            MessageLookupByLibrary.simpleMessage("Числа не зовсім сходяться"),
         "infoAddedActivityLabel":
             MessageLookupByLibrary.simpleMessage("Додано нову активність"),
         "infoAddedIntakeLabel":
@@ -308,10 +375,22 @@ class MessageLookup extends MessageLookupByLibrary {
         "itemUpdatedSnackbar":
             MessageLookupByLibrary.simpleMessage("Елемент оновлено"),
         "kcalLabel": MessageLookupByLibrary.simpleMessage("ккал"),
+        "kjLabel": MessageLookupByLibrary.simpleMessage("кДж"),
         "kcalLeftLabel":
             MessageLookupByLibrary.simpleMessage("залишилось ккал"),
         "kcalTooMuchLabel":
             MessageLookupByLibrary.simpleMessage("ккал понад норму"),
+        "energyLeftLabel": MessageLookupByLibrary.simpleMessage("залишилось"),
+        "energyTooMuchLabel":
+            MessageLookupByLibrary.simpleMessage("понад норму"),
+        "settingsEnergyUnitLabel":
+            MessageLookupByLibrary.simpleMessage("Одиниця енергії"),
+        "energyUnitKcalLabel":
+            MessageLookupByLibrary.simpleMessage("Кілокалорії (ккал)"),
+        "energyUnitKjLabel":
+            MessageLookupByLibrary.simpleMessage("Кілоджоулі (кДж)"),
+        "onboardingKjPerDayLabel":
+            MessageLookupByLibrary.simpleMessage("кДж на день"),
         "kgLabel": MessageLookupByLibrary.simpleMessage("кг"),
         "lbsLabel": MessageLookupByLibrary.simpleMessage("фунт"),
         "lunchExample": MessageLookupByLibrary.simpleMessage(
@@ -321,9 +400,10 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Розподіл макроелементів:"),
         "magnesiumLabel": MessageLookupByLibrary.simpleMessage("магній"),
         "mealBrandsLabel": MessageLookupByLibrary.simpleMessage("Бренди"),
-        "mealCarbsLabel": MessageLookupByLibrary.simpleMessage("вуглеводи на"),
-        "mealFatLabel": MessageLookupByLibrary.simpleMessage("жири на"),
+        "mealCarbsLabel": MessageLookupByLibrary.simpleMessage("Вуглеводи"),
+        "mealFatLabel": MessageLookupByLibrary.simpleMessage("Жири"),
         "mealKcalLabel": MessageLookupByLibrary.simpleMessage("ккал на"),
+        "mealEnergyLabel": MessageLookupByLibrary.simpleMessage("Енергія"),
         "mealNameLabel": MessageLookupByLibrary.simpleMessage("Назва страви"),
         "mealNameValidationError": MessageLookupByLibrary.simpleMessage(
             "Назва страви повинна містити принаймні одну літеру"),
@@ -331,7 +411,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "mealNutrientsTotalLabel":
             MessageLookupByLibrary.simpleMessage("Загальна кількість"),
         "mealProteinLabel":
-            MessageLookupByLibrary.simpleMessage("білки на 100 г/мл"),
+            MessageLookupByLibrary.simpleMessage("Білки"),
         "mealSizeLabel":
             MessageLookupByLibrary.simpleMessage("Розмір страви (г/мл)"),
         "mealSizeLabelImperial": MessageLookupByLibrary.simpleMessage(
@@ -354,6 +434,11 @@ class MessageLookup extends MessageLookupByLibrary {
         "notAvailableLabel": MessageLookupByLibrary.simpleMessage("Н/Д"),
         "nothingAddedLabel":
             MessageLookupByLibrary.simpleMessage("Нічого не додано"),
+        "nutrientPanelDayLabel": MessageLookupByLibrary.simpleMessage("День"),
+        "nutrientPanelWeekLabel":
+            MessageLookupByLibrary.simpleMessage("Тиждень"),
+        "nutrientPanelAllHiddenLabel": MessageLookupByLibrary.simpleMessage(
+            "Усі поживні речовини приховано — увімкни деякі в Налаштування → Поживні речовини."),
         "nutritionInfoLabel":
             MessageLookupByLibrary.simpleMessage("Інформація про харчування"),
         "nutritionalStatusNormalWeight":
@@ -418,6 +503,10 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("наприклад, 132"),
         "onboardingWeightQuestionSubtitle":
             MessageLookupByLibrary.simpleMessage("Яка ваша поточна вага?"),
+        "onboardingTargetWeightSubtitle":
+            MessageLookupByLibrary.simpleMessage("Чи є вага, до якої ти прагнеш? Це поле можна залишити порожнім або змінити пізніше у Профілі."),
+        "onboardingTargetWeightHintOptional":
+            MessageLookupByLibrary.simpleMessage("Необов\'язково"),
         "onboardingWelcomeLabel":
             MessageLookupByLibrary.simpleMessage("Ласкаво просимо до"),
         "onboardingWrongHeightLabel":
@@ -842,6 +931,10 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Поживність (загалом)"),
         "recipeSaveErrorLabel":
             MessageLookupByLibrary.simpleMessage("Не вдалося зберегти рецепт."),
+        "recipeSaveForLaterDescription": MessageLookupByLibrary.simpleMessage(
+            "Увімкніть, щоб ця страва залишилася у вашому збереженому списку на наступний раз. Залиште вимкненим для одноразової страви, яку ви більше не їстимете."),
+        "recipeSaveForLaterLabel":
+            MessageLookupByLibrary.simpleMessage("Зберегти на потім"),
         "recipeSaveLabel":
             MessageLookupByLibrary.simpleMessage("Зберегти рецепт"),
         "recipeServingsCountHelper": MessageLookupByLibrary.simpleMessage(
@@ -851,6 +944,26 @@ class MessageLookup extends MessageLookupByLibrary {
         "recipeTagsHelper": MessageLookupByLibrary.simpleMessage(
             "Через кому, напр. \"сніданок, веганське\""),
         "recipeTagsLabel": MessageLookupByLibrary.simpleMessage("Теги"),
+        "recipeImageLabel":
+            MessageLookupByLibrary.simpleMessage("Додати фото"),
+        "recipeImagePickFromGallery":
+            MessageLookupByLibrary.simpleMessage("Вибрати з галереї"),
+        "recipeImageTakePhoto":
+            MessageLookupByLibrary.simpleMessage("Зробити фото"),
+        "recipeImageRemove":
+            MessageLookupByLibrary.simpleMessage("Видалити фото"),
+        "recipeImageReplace":
+            MessageLookupByLibrary.simpleMessage("Замінити фото"),
+        "mealImageLabel":
+            MessageLookupByLibrary.simpleMessage("Додати фото"),
+        "mealImagePickFromGallery":
+            MessageLookupByLibrary.simpleMessage("Вибрати з галереї"),
+        "mealImageTakePhoto":
+            MessageLookupByLibrary.simpleMessage("Зробити фото"),
+        "mealImageRemove":
+            MessageLookupByLibrary.simpleMessage("Видалити фото"),
+        "mealImageReplace":
+            MessageLookupByLibrary.simpleMessage("Замінити фото"),
         "recipeTotalWeightHelper": MessageLookupByLibrary.simpleMessage(
             "За замовчуванням сума інгредієнтів. Рідини приблизно як 1 мл ≈ 1 г."),
         "recipeTotalWeightLabel":
@@ -897,19 +1010,95 @@ class MessageLookup extends MessageLookupByLibrary {
         "settingAboutLabel":
             MessageLookupByLibrary.simpleMessage("Про додаток"),
         "settingFeedbackLabel": MessageLookupByLibrary.simpleMessage("Відгук"),
-        "settingsCalculationsLabel":
-            MessageLookupByLibrary.simpleMessage("Розрахунки"),
         "settingsCustomMealsLabel":
             MessageLookupByLibrary.simpleMessage("Власні страви"),
         "settingsDisclaimerLabel": MessageLookupByLibrary.simpleMessage(
             "Відмова від відповідальності"),
+        "settingsFibreGoalDescription": MessageLookupByLibrary.simpleMessage(
+            "Денна ціль клітковини в грамах. Стандартне значення — 30 г."),
+        "settingsFibreGoalLabel":
+            MessageLookupByLibrary.simpleMessage("Ціль клітковини"),
+        "settingsNutrientGoalsHint": MessageLookupByLibrary.simpleMessage(
+            "Особисті цілі для кожної поживної речовини в щоденній панелі. Щоденник використовує їх замість стандартних добових норм щоразу, коли ти задаєш будь-яку з них."),
+        "settingsNutrientGoalsLabel":
+            MessageLookupByLibrary.simpleMessage("Цілі поживних речовин"),
+        "settingsSaturatedFatGoalDescription":
+            MessageLookupByLibrary.simpleMessage(
+                "Денний ліміт насичених жирів у грамах. Стандартне значення — 20 г."),
+        "settingsSaturatedFatGoalLabel":
+            MessageLookupByLibrary.simpleMessage("Ціль насичених жирів"),
+        "settingsSourcesLabel":
+            MessageLookupByLibrary.simpleMessage("Джерела та посилання"),
+        "settingsSugarsGoalDescription": MessageLookupByLibrary.simpleMessage(
+            "Денний ліміт цукрів у грамах. Стандартне значення — 50 г."),
+        "settingsSugarsGoalLabel":
+            MessageLookupByLibrary.simpleMessage("Ціль цукрів"),
+        "settingsSodiumGoalLabel":
+            MessageLookupByLibrary.simpleMessage("Ціль натрію"),
+        "settingsSodiumGoalDescription": MessageLookupByLibrary.simpleMessage(
+            "Денний ліміт натрію в міліграмах. Стандартне значення — 2300 мг."),
+        "settingsCalciumGoalLabel":
+            MessageLookupByLibrary.simpleMessage("Ціль кальцію"),
+        "settingsCalciumGoalDescription": MessageLookupByLibrary.simpleMessage(
+            "Денна ціль кальцію в міліграмах. Стандартне значення — 1000 мг."),
+        "settingsIronGoalLabel":
+            MessageLookupByLibrary.simpleMessage("Ціль заліза"),
+        "settingsIronGoalDescription": MessageLookupByLibrary.simpleMessage(
+            "Денна ціль заліза в міліграмах. Стандартне значення залежить від статі (8 мг чоловік, 18 мг жінка, інакше 14 мг)."),
+        "settingsPotassiumGoalLabel":
+            MessageLookupByLibrary.simpleMessage("Ціль калію"),
+        "settingsPotassiumGoalDescription": MessageLookupByLibrary.simpleMessage(
+            "Денна ціль калію в міліграмах. Стандартне значення — 3500 мг."),
+        "settingsMagnesiumGoalLabel":
+            MessageLookupByLibrary.simpleMessage("Ціль магнію"),
+        "settingsMagnesiumGoalDescription": MessageLookupByLibrary.simpleMessage(
+            "Денна ціль магнію в міліграмах. Стандартне значення залежить від статі (400 мг чоловік, 310 мг жінка, інакше 355 мг)."),
+        "settingsVitaminDGoalLabel":
+            MessageLookupByLibrary.simpleMessage("Ціль вітаміну D"),
+        "settingsVitaminDGoalDescription": MessageLookupByLibrary.simpleMessage(
+            "Денна ціль вітаміну D в мікрограмах. Стандартне значення — 15 мкг."),
+        "settingsVitaminB12GoalLabel":
+            MessageLookupByLibrary.simpleMessage("Ціль вітаміну B12"),
+        "settingsVitaminB12GoalDescription": MessageLookupByLibrary.simpleMessage(
+            "Денна ціль вітаміну B12 в мікрограмах. Стандартне значення — 2,4 мкг."),
+        "sourcesIconTooltip":
+            MessageLookupByLibrary.simpleMessage("Переглянути джерела"),
+        "sourcesScreenIntro": MessageLookupByLibrary.simpleMessage(
+            "OpenNutriTracker використовує для кожного розрахунку усталені, рецензовані методики. Наведені нижче посилання ведуть до оригінальних джерел, щоб ти могла самостійно перевірити будь-яке число."),
+        "sourcesEnergyTitle": MessageLookupByLibrary.simpleMessage(
+            "Енергетичні потреби (TDEE, BMR та рівень активності)"),
+        "sourcesEnergyDescription": MessageLookupByLibrary.simpleMessage(
+            "Денні цілі за калоріями, основний обмін та коефіцієнти фізичної активності базуються на рівняннях Institute of Medicine. Джерело: Institute of Medicine (2005). Dietary Reference Intakes for Energy, Carbohydrate, Fiber, Fat, Fatty Acids, Cholesterol, Protein, and Amino Acids, розділ 5 і таблиця 5-5."),
+        "sourcesBmiTitle":
+            MessageLookupByLibrary.simpleMessage("Індекс маси тіла (ІМТ)"),
+        "sourcesBmiDescription": MessageLookupByLibrary.simpleMessage(
+            "ІМТ обчислюється як маса (кг), поділена на квадрат зросту (м²). Категорії здоров\'я (недостатня вага, нормальна вага, передожиріння, ожиріння I–III ступеня) відповідають класифікації ІМТ для дорослих Всесвітньої організації охорони здоров\'я."),
+        "sourcesMacrosTitle":
+            MessageLookupByLibrary.simpleMessage("Розподіл макроелементів"),
+        "sourcesMacrosDescription": MessageLookupByLibrary.simpleMessage(
+            "Стандартний розподіл 60% вуглеводів, 25% жирів і 15% білків входить у діапазони споживання поживних речовин, рекомендовані ВООЗ. Ти можеш змінити його в Налаштування → Розрахунки. Джерело: WHO Technical Report Series 916 (2003), Diet, Nutrition and the Prevention of Chronic Diseases."),
+        "sourcesActivityTitle":
+            MessageLookupByLibrary.simpleMessage("Калорії від активності (значення MET)"),
+        "sourcesActivityDescription": MessageLookupByLibrary.simpleMessage(
+            "Калорії, спалені під час активності, оцінюються як MET × маса тіла (кг) × тривалість (години) на основі значень з Adult Compendium of Physical Activities."),
+        "sourcesNonBinaryTitle": MessageLookupByLibrary.simpleMessage(
+            "Розрахунок калорій для небінарних осіб"),
+        "sourcesNonBinaryDescription": MessageLookupByLibrary.simpleMessage(
+            "Дослідження енергетичних витрат історично використовували лише бінарні категорії статі, тому для небінарних осіб не існує єдиної підтвердженої формули TDEE. Тому OpenNutriTracker у Налаштування → Розрахунки пропонує вибір між усередненим орієнтиром, орієнтиром, типовим для естрогену, та орієнтиром, типовим для тестостерону. Якщо точне значення є дійсно важливим для тебе, будь ласка, поговори з лікарем, який знає твій гормональний стан."),
+        "sourcesOpenSourceLabel":
+            MessageLookupByLibrary.simpleMessage("Відкрити джерело"),
         "settingsDistanceLabel":
             MessageLookupByLibrary.simpleMessage("Відстань"),
         "settingsImperialLabel": MessageLookupByLibrary.simpleMessage(
             "Імперська (фунти, фут, унції)"),
+        "settingsKcalAdjustmentLabel":
+            MessageLookupByLibrary.simpleMessage(
+                "Щоденне коригування ккал"),
         "settingsLabel": MessageLookupByLibrary.simpleMessage("Налаштування"),
         "settingsLanguageLabel":
             MessageLookupByLibrary.simpleMessage("Мова"),
+        "settingsMacroSplitLabel":
+            MessageLookupByLibrary.simpleMessage("Розподіл макросів"),
         "settingsLicensesLabel":
             MessageLookupByLibrary.simpleMessage("Ліцензії"),
         "settingsMassLabel": MessageLookupByLibrary.simpleMessage("Маса"),
@@ -933,6 +1122,21 @@ class MessageLookup extends MessageLookupByLibrary {
         "settingsShowMealMacros":
             MessageLookupByLibrary.simpleMessage("Показати макроси страви"),
         "settingsShowMicronutrientsLabel": MessageLookupByLibrary.simpleMessage("Показувати мікроелементи"),
+        "settingsNutrientsLabel":
+            MessageLookupByLibrary.simpleMessage("Поживні речовини"),
+        "settingsNutrientsSubtitle": MessageLookupByLibrary.simpleMessage(
+            "Обери, які поживні речовини показувати на панелі щоденника"),
+        "settingsNutrientsHelp": MessageLookupByLibrary.simpleMessage(
+            "Обери, які поживні речовини видимі на щоденній панелі. Приховані можна знову увімкнути будь-коли."),
+        "settingsDayStartLabel":
+            MessageLookupByLibrary.simpleMessage("День починається о"),
+        "settingsDayStartDescription": MessageLookupByLibrary.simpleMessage(
+            "Обери годину, з якої починається твій день. Прийоми їжі та активності, записані до цієї години, зараховуються до попереднього дня — зручно, якщо ти працюєш у нічну зміну або пізно вечеряєш."),
+        "settingsDayStartHourLabel": m25,
+        "settingsDayStartHoursPickerLabel":
+            MessageLookupByLibrary.simpleMessage("Години"),
+        "settingsDayStartMinutesPickerLabel":
+            MessageLookupByLibrary.simpleMessage("Хвилини"),        "settingsDayStartTimeLabel": m26,
         "settingsSourceCodeLabel":
             MessageLookupByLibrary.simpleMessage("Вихідний код"),
         "settingsSystemLabel": MessageLookupByLibrary.simpleMessage("Система"),
@@ -975,5 +1179,100 @@ class MessageLookup extends MessageLookupByLibrary {
         "weightLabel": MessageLookupByLibrary.simpleMessage("Вага"),
         "yearsLabel": m3,
         "zincLabel": MessageLookupByLibrary.simpleMessage("цинк"),
+        "profileWeightHistoryTitle":
+            MessageLookupByLibrary.simpleMessage("Історія ваги"),
+        "weightHistoryAddEntry":
+            MessageLookupByLibrary.simpleMessage("Додати запис"),
+        "weightHistoryNoEntries": MessageLookupByLibrary.simpleMessage(
+            "Поки немає записів ваги. Додай перший, щоб бачити динаміку."),
+        "weightHistoryDateLabel":
+            MessageLookupByLibrary.simpleMessage("Дата"),
+        "weightHistoryWeightLabel":
+            MessageLookupByLibrary.simpleMessage("Вага"),
+        "weightHistoryNoteLabel":
+            MessageLookupByLibrary.simpleMessage("Нотатка (необов\'язково)"),
+        "weightHistoryChartEmptyState": MessageLookupByLibrary.simpleMessage(
+            "Запиши вагу принаймні за два дні, щоб побачити динаміку."),
+        "diarySortByCarbs":
+            MessageLookupByLibrary.simpleMessage("Вуглеводи (за спаданням)"),
+        "diarySortByFat":
+            MessageLookupByLibrary.simpleMessage("Жири (за спаданням)"),
+        "diarySortByKcal":
+            MessageLookupByLibrary.simpleMessage("Калорії (за спаданням)"),
+        "diarySortByLabel":
+            MessageLookupByLibrary.simpleMessage("Сортувати за"),
+        "diarySortByProtein":
+            MessageLookupByLibrary.simpleMessage("Білки (за спаданням)"),
+        "diarySortByTime":
+            MessageLookupByLibrary.simpleMessage("Часом додавання"),
+        "profileTargetWeightLabel":
+            MessageLookupByLibrary.simpleMessage("Цільова вага"),
+        "profileTargetWeightNotSetLabel":
+            MessageLookupByLibrary.simpleMessage("Не задано"),
+        "profileTargetWeightClearAction":
+            MessageLookupByLibrary.simpleMessage("Очистити"),
+        "profileTargetWeightReached":
+            MessageLookupByLibrary.simpleMessage("Ви досягли своєї цілі"),
+        "settingsCaloriesTaperDescription": MessageLookupByLibrary.simpleMessage(
+            "Поступово зменшує щоденний дефіцит, щоб останні кілограми не здавалися стіною."),
+        "settingsCaloriesTaperLabel": MessageLookupByLibrary.simpleMessage(
+            "Коригувати калорійну ціль у міру наближення до цілі"),
+        "profileTargetWeightToGo": m22,
+        "customActivityDescription": MessageLookupByLibrary.simpleMessage(
+            "Введіть спалені калорії безпосередньо — для тренувань, яких немає у списку, або показників із фітнес-трекера"),
+        "customActivityDescriptionKj":
+            MessageLookupByLibrary.simpleMessage("Введіть спалені кілоджоулі безпосередньо — для тренувань, яких немає у списку, або показників із фітнес-трекера"),
+        "customActivityKcalHint":
+            MessageLookupByLibrary.simpleMessage("напр. 250"),
+        "customActivityKcalLabel":
+            MessageLookupByLibrary.simpleMessage("Спалені калорії"),
+        "customActivityName":
+            MessageLookupByLibrary.simpleMessage("Власна активність"),
+        "customActivityNameFieldHint": MessageLookupByLibrary.simpleMessage(
+            "напр. Вечірня поїздка на велосипеді"),
+        "customActivityNameFieldLabel": MessageLookupByLibrary.simpleMessage(
+            "Назва (необов\'язково)"),
+        "customActivityPickFromTemplate": MessageLookupByLibrary.simpleMessage(
+            "Вибрати зі збережених шаблонів"),
+        "customActivitySaveAsTemplate": MessageLookupByLibrary.simpleMessage(
+            "Зберегти як шаблон на майбутнє"),
+        "customActivityTemplatesEmpty": MessageLookupByLibrary.simpleMessage(
+            "Ви ще не зберегли жодного шаблону. Поставте позначку «Зберегти як шаблон на майбутнє», щоб запам\'ятати власну активність для пізнішого використання."),
+        "customMealFormAdvanced":
+            MessageLookupByLibrary.simpleMessage("Розширений"),
+        "customMealFormAdvancedHelp": MessageLookupByLibrary.simpleMessage(
+            "Вкажіть базову кількість і значення на 100 г/мл для точного перерахунку."),
+        "customMealFormModeLabel":
+            MessageLookupByLibrary.simpleMessage("Вигляд форми"),
+        "customMealFormSimple":
+            MessageLookupByLibrary.simpleMessage("Простий"),
+        "customMealFormSimpleFieldHelper": m24,
+        "customMealFormSimpleHelp": MessageLookupByLibrary.simpleMessage(
+            "Введіть значення для однієї порції."),
+        "mealPatternFiveSmall":
+            MessageLookupByLibrary.simpleMessage("5 малих"),
+        "mealPatternMediterranean":
+            MessageLookupByLibrary.simpleMessage("Середземноморський"),
+        "mealPatternOmad":
+            MessageLookupByLibrary.simpleMessage("1 прийом"),
+        "mealPatternPresetsLabel":
+            MessageLookupByLibrary.simpleMessage("Швидкі шаблони"),
+        "mealPatternStandard":
+            MessageLookupByLibrary.simpleMessage("Стандарт"),
+        "mealPatternTwoMeal":
+            MessageLookupByLibrary.simpleMessage("2 прийоми"),
+        "settingsPerMealKcalShareBreakfast":
+            MessageLookupByLibrary.simpleMessage("Сніданок"),
+        "settingsPerMealKcalShareDescription": MessageLookupByLibrary.simpleMessage(
+            "Розподіліть денну ціль у ккал між сніданком, обідом, вечерею та перекусами. Частки мають у сумі давати 100 %."),
+        "settingsPerMealKcalShareDinner":
+            MessageLookupByLibrary.simpleMessage("Вечеря"),
+        "settingsPerMealKcalShareLabel":
+            MessageLookupByLibrary.simpleMessage("Частка ккал на прийом їжі"),
+        "settingsPerMealKcalShareLunch":
+            MessageLookupByLibrary.simpleMessage("Обід"),
+        "settingsPerMealKcalShareSnack":
+            MessageLookupByLibrary.simpleMessage("Перекус"),
+        "diaryMealKcalConsumedOfTarget": m23,
       };
 }

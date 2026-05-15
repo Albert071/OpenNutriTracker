@@ -30,10 +30,17 @@ class ConfigDBOAdapter extends TypeAdapter<ConfigDBO> {
         notificationMinute: (fields[12] as num?)?.toInt(),
         selectedLocale: fields[13] as String?,
         showMicronutrients: fields[15] as bool?,
-        offlineCatalogEnabled: fields[16] as bool?,
-        catalogConsecutiveCrashes: (fields[17] as num?)?.toInt(),
-        catalogAutoDisabled: fields[18] as bool?,
-        catalogAutoDisableNoticeAcknowledged: fields[19] as bool?,
+        usesKilojoules: fields[16] as bool?,
+        mealKcalSharesPct: (fields[17] as Map?)?.cast<String, int>(),
+        customMealFormMode: fields[18] as String?,
+        dayStartOffsetHours: (fields[19] as num?)?.toInt(),
+        diarySortPreferences: (fields[21] as Map?)?.cast<String, int>(),
+        nutrientPanelVisibility: (fields[22] as Map?)?.cast<String, bool>(),
+        dayStartOffsetMinutes: (fields[23] as num?)?.toInt(),
+        offlineCatalogEnabled: fields[20] as bool?,
+        catalogConsecutiveCrashes: (fields[24] as num?)?.toInt(),
+        catalogAutoDisabled: fields[25] as bool?,
+        catalogAutoDisableNoticeAcknowledged: fields[26] as bool?,
       )
       ..userCarbGoalPct = (fields[6] as num?)?.toDouble()
       ..userProteinGoalPct = (fields[7] as num?)?.toDouble()
@@ -43,7 +50,7 @@ class ConfigDBOAdapter extends TypeAdapter<ConfigDBO> {
   @override
   void write(BinaryWriter writer, ConfigDBO obj) {
     writer
-      ..writeByte(20)
+      ..writeByte(27)
       ..writeByte(0)
       ..write(obj.hasAcceptedDisclaimer)
       ..writeByte(1)
@@ -77,12 +84,26 @@ class ConfigDBOAdapter extends TypeAdapter<ConfigDBO> {
       ..writeByte(15)
       ..write(obj.showMicronutrients)
       ..writeByte(16)
-      ..write(obj.offlineCatalogEnabled)
+      ..write(obj.usesKilojoules)
       ..writeByte(17)
-      ..write(obj.catalogConsecutiveCrashes)
+      ..write(obj.mealKcalSharesPct)
       ..writeByte(18)
-      ..write(obj.catalogAutoDisabled)
+      ..write(obj.customMealFormMode)
       ..writeByte(19)
+      ..write(obj.dayStartOffsetHours)
+      ..writeByte(20)
+      ..write(obj.offlineCatalogEnabled)
+      ..writeByte(21)
+      ..write(obj.diarySortPreferences)
+      ..writeByte(22)
+      ..write(obj.nutrientPanelVisibility)
+      ..writeByte(23)
+      ..write(obj.dayStartOffsetMinutes)
+      ..writeByte(24)
+      ..write(obj.catalogConsecutiveCrashes)
+      ..writeByte(25)
+      ..write(obj.catalogAutoDisabled)
+      ..writeByte(26)
       ..write(obj.catalogAutoDisableNoticeAcknowledged);
   }
 
@@ -116,6 +137,20 @@ ConfigDBO _$ConfigDBOFromJson(Map<String, dynamic> json) =>
         notificationMinute: (json['notificationMinute'] as num?)?.toInt(),
         selectedLocale: json['selectedLocale'] as String?,
         showMicronutrients: json['showMicronutrients'] as bool?,
+        usesKilojoules: json['usesKilojoules'] as bool?,
+        mealKcalSharesPct: (json['mealKcalSharesPct'] as Map<String, dynamic>?)
+            ?.map((k, e) => MapEntry(k, (e as num).toInt())),
+        customMealFormMode: json['customMealFormMode'] as String?,
+        dayStartOffsetHours: (json['dayStartOffsetHours'] as num?)?.toInt(),
+        diarySortPreferences:
+            (json['diarySortPreferences'] as Map<String, dynamic>?)?.map(
+              (k, e) => MapEntry(k, (e as num).toInt()),
+            ),
+        nutrientPanelVisibility:
+            (json['nutrientPanelVisibility'] as Map<String, dynamic>?)?.map(
+              (k, e) => MapEntry(k, e as bool),
+            ),
+        dayStartOffsetMinutes: (json['dayStartOffsetMinutes'] as num?)?.toInt(),
         offlineCatalogEnabled: json['offlineCatalogEnabled'] as bool?,
         catalogConsecutiveCrashes: (json['catalogConsecutiveCrashes'] as num?)
             ?.toInt(),
@@ -144,6 +179,13 @@ Map<String, dynamic> _$ConfigDBOToJson(ConfigDBO instance) => <String, dynamic>{
   'selectedLocale': instance.selectedLocale,
   'showMealMacros': instance.showMealMacros,
   'showMicronutrients': instance.showMicronutrients,
+  'usesKilojoules': instance.usesKilojoules,
+  'mealKcalSharesPct': instance.mealKcalSharesPct,
+  'customMealFormMode': instance.customMealFormMode,
+  'dayStartOffsetHours': instance.dayStartOffsetHours,
+  'nutrientPanelVisibility': instance.nutrientPanelVisibility,
+  'diarySortPreferences': instance.diarySortPreferences,
+  'dayStartOffsetMinutes': instance.dayStartOffsetMinutes,
   'offlineCatalogEnabled': instance.offlineCatalogEnabled,
   'catalogConsecutiveCrashes': instance.catalogConsecutiveCrashes,
   'catalogAutoDisabled': instance.catalogAutoDisabled,

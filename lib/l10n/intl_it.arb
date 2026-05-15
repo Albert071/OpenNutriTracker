@@ -1,4 +1,104 @@
 {
+  "@clearOffCacheSubtitle": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "size": {
+        "type": "String"
+      }
+    }
+  },
+  "@csvImportPartialLabel": {
+    "placeholders": {
+      "imported": {
+        "type": "int"
+      },
+      "skipped": {
+        "type": "int"
+      }
+    }
+  },
+  "@csvImportSuccessLabel": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@deleteSelectedRecipesConfirmTitle": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@diaryMealKcalConsumedOfTarget": {
+    "placeholders": {
+      "consumed": {
+        "type": "String"
+      },
+      "target": {
+        "type": "String"
+      }
+    }
+  },
+  "@importActivityConfirmTitle": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@importMealConfirmContent": {
+    "placeholders": {
+      "mealType": {
+        "type": "String"
+      }
+    }
+  },
+  "@importMealConfirmTitle": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@importOffFetchFailedLabel": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@importRecipeConfirmContent": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@profileTargetWeightToGo": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "@recipeIngredientCountLabel": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@selectionCountLabel": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "activityExample": "es. corsa, bicicletta, yoga ...",
   "activityLabel": "Attività",
   "addItemLabel": "Aggiungi nuovo alimento:",
@@ -16,6 +116,7 @@
   "appLicenseLabel": "Licenza GPL-3.0",
   "appTitle": "OpenNutriTracker",
   "appVersionName": "Versione {versionNumber}",
+  "barcodeInvalidEan13CheckDigit": "Questo codice a barre a 13 cifre sembra digitato male, l'ultima cifra non corrisponde alle altre",
   "baseQuantityLabel": "Quantità base (g/ml)",
   "betaVersionName": "[Beta]",
   "bmiInfo": "L'Indice di Massa Corporea (BMI) è un indice per classificare sovrappeso e obesità negli adulti. È definito come peso in chilogrammi diviso per l'altezza in metri al quadrato (kg/m²).\n\nIl BMI non differenzia tra massa grassa e muscolare e può essere fuorviante per alcune persone.",
@@ -32,7 +133,7 @@
   "calculationsMacronutrientsDistributionLabel": "Distribuzione dei macronutrienti",
   "calculationsMacrosDistribution": "{pctCarbs}% carboidrati, {pctFats}% grassi, {pctProteins}% proteine",
   "calculationsRecommendedLabel": "(consigliato)",
-  "calculationsTDEEIOM2006Label": "Equazione dell'Istituto di Medicina",
+  "calculationsTDEEIOM2006Label": "Equazione dell'Istituto di Medicina (2005)",
   "calculationsTDEELabel": "Equazione TDEE",
   "caloriesProfileAveragedLabel": "Riferimento medio (predefinito)",
   "caloriesProfileEstrogenTypicalLabel": "Riferimento di tipo estrogenico",
@@ -49,16 +150,6 @@
   "clearOffCacheConfirmTitle": "Svuotare la cache?",
   "clearOffCacheLabel": "Svuota cache",
   "clearOffCacheSubtitle": "{count} elementi · {size}",
-  "@clearOffCacheSubtitle": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      },
-      "size": {
-        "type": "String"
-      }
-    }
-  },
   "cmLabel": "cm",
   "codeCopiedLabel": "Codice copiato",
   "copyCodeLabel": "Copia codice",
@@ -73,38 +164,55 @@
   "csvImportContributeOffPrefix": "Hai un codice a barre? Contribuisci il prodotto a Open Food Facts:",
   "csvImportErrorLabel": "Impossibile leggere il file CSV. Controlla il formato e riprova.",
   "csvImportPartialLabel": "Importati {imported} pasti; {skipped} righe ignorate per dati non validi.",
-  "@csvImportPartialLabel": {
-    "placeholders": {
-      "imported": {
-        "type": "int"
-      },
-      "skipped": {
-        "type": "int"
-      }
-    }
-  },
   "csvImportSuccessLabel": "Importati {count} pasti dal file CSV.",
-  "@csvImportSuccessLabel": {
+  "customActivityDescription": "Inserisci direttamente le calorie bruciate, per allenamenti non in elenco o letture da un fitness tracker",
+  "customActivityDescriptionKj": "Inserisci direttamente i kilojoule bruciati, per allenamenti non in elenco o letture da un fitness tracker",
+  "customActivityKcalHint": "es. 250",
+  "customActivityKcalLabel": "Calorie bruciate",
+  "customActivityName": "Attività personalizzata",
+  "customActivityNameFieldHint": "es. Tragitto serale in bici",
+  "customActivityNameFieldLabel": "Nome (facoltativo)",
+  "customActivityPickFromTemplate": "Scegli da modelli salvati",
+  "customActivitySaveAsTemplate": "Salva come modello per la prossima volta",
+  "customActivityTemplatesEmpty": "Non hai ancora salvato modelli. Spunta «Salva come modello per la prossima volta» per ricordare un'attività personalizzata da riutilizzare.",
+  "customMealBarcodeHint": "Scansiona o digita un codice a barre per richiamare questo pasto in seguito",
+  "customMealBarcodeInvalid": "Il codice a barre deve avere da 8 a 14 cifre",
+  "customMealBarcodeLabel": "Codice a barre",
+  "customMealBarcodeScanButton": "Scansiona codice a barre",
+  "customMealFormAdvanced": "Avanzato",
+  "customMealFormAdvancedHelp": "Imposta quantità di base e valori per 100 g/ml per un calcolo preciso.",
+  "customMealFormModeLabel": "Vista del modulo",
+  "customMealFormSimple": "Semplice",
+  "customMealFormSimpleHelp": "Inserisci i totali per una porzione.",
+  "customMealFormSimpleFieldHelper": "{unit} per porzione",
+  "@customMealFormSimpleFieldHelper": {
     "placeholders": {
-      "count": {
-        "type": "int"
-      }
+      "unit": { "type": "String" }
     }
   },
   "customMealsDeleteConfirmContent": "Tutte le voci del diario che utilizzano questo pasto verranno rimosse.",
   "customMealsDeleteConfirmTitle": "Eliminare il pasto personalizzato?",
   "customMealsEmptyLabel": "Nessun pasto personalizzato salvato.",
   "dailyKcalAdjustmentLabel": "Regolazione kcal giornaliere:",
-  "dataCollectionLabel": "Supporta lo sviluppo inviando dati di utilizzo anonimi",
+  "dailyKjAdjustmentLabel": "Regolazione kJ giornalieri:",
+  "dataCollectionLabel": "Invia segnalazioni di arresto anonime per aiutarci a correggere i bug. Non vengono inclusi diario alimentare, peso o dati personali.",
   "deleteAllLabel": "Elimina tutto",
-  "deleteSelectedRecipesConfirmTitle": "Eliminare {count} ricetta/e?",
-  "@deleteSelectedRecipesConfirmTitle": {
+  "settingsDeleteAllDataLabel": "Elimina tutti i miei dati",
+  "settingsDeleteAllDataSubtitle": "Profilo, pasti, attività e cronologia del peso",
+  "settingsDeleteAllDataConfirmTitle": "Eliminare tutti i tuoi dati?",
+  "settingsDeleteAllDataConfirmContent": "Questa operazione rimuove in modo permanente da questo dispositivo il tuo profilo, i pasti, le attività, la cronologia del peso e tutte le ricette personalizzate. I database di Open Food Facts e USDA Food Data Central non vengono modificati. L'operazione non può essere annullata.",
+  "settingsDeleteAllDataConfirmAction": "Elimina tutto",
+  "lowKcalWarningTitle": "Questo obiettivo giornaliero è piuttosto basso",
+  "lowKcalWarningBody": "Gli adulti non dovrebbero assumere meno di {threshold} kcal al giorno per periodi prolungati senza una guida medica. Valuta di parlare con un professionista sanitario prima di mantenere un obiettivo così basso.",
+  "@lowKcalWarningBody": {
     "placeholders": {
-      "count": {
+      "threshold": {
         "type": "int"
       }
     }
   },
+  "lowKcalWarningViewDisclaimer": "Mostra avviso",
+  "deleteSelectedRecipesConfirmTitle": "Eliminare {count} ricetta/e?",
   "deleteTimeDialogContent": "Vuoi eliminare l'alimento selezionato?",
   "deleteTimeDialogPluralContent": "Vuoi eliminare tutti gli elementi di questo pasto?",
   "deleteTimeDialogPluralTitle": "Eliminare gli elementi?",
@@ -115,14 +223,25 @@
   "dialogOKLabel": "OK",
   "diaryFutureDateWarning": "Stai modificando una data futura",
   "diaryLabel": "Diario",
+  "diaryMealKcalConsumedOfTarget": "{consumed} / {target} kcal",
+  "diaryNutrientPanelDataDisclaimer": "Vengono sommati solo i nutrienti registrati sui pasti che hai inserito. Un pasto senza un valore non contribuisce a quel nutriente — i totali potrebbero quindi essere sottostimati.",
+  "diaryNutrientPanelTitle": "Nutrienti di oggi",
+  "diarySortByCarbs": "Carboidrati (dal più alto al più basso)",
+  "diarySortByFat": "Grassi (dal più alto al più basso)",
+  "diarySortByKcal": "Calorie (dal più alto al più basso)",
+  "diarySortByLabel": "Ordina per",
+  "diarySortByProtein": "Proteine (dal più alto al più basso)",
+  "diarySortByTime": "Ora di aggiunta",
   "dinnerExample": "es. zuppa, pollo, vino ...",
   "dinnerLabel": "Cena",
   "discardChangesConfirmLabel": "Annulla",
   "discardChangesContent": "Le modifiche non salvate andranno perse.",
   "discardChangesTitle": "Annullare le modifiche?",
-  "disclaimerText": "OpenNutriTracker non è un'applicazione medica. Tutti i dati forniti non sono validati e dovrebbero essere utilizzati con cautela. Mantieni uno stile di vita sano e consulta un professionista se hai problemi. L'uso durante malattie, gravidanza o allattamento non è raccomandato.",
+  "disclaimerText": "OpenNutriTracker non è un'applicazione medica. Tutti i dati forniti non sono validati e dovrebbero essere utilizzati con cautela. Mantieni uno stile di vita sano e consulta un professionista se hai problemi. L'uso durante malattie, gravidanza o allattamento non è raccomandato. Per le fonti sottoposte a peer review di ogni calcolo, tocca l'icona informativa nella schermata Home o Profilo.",
   "downloadSampleCsvAction": "Pasti di esempio (csv)",
+  "downloadSampleJsonAction": "Pasti di esempio (json)",
   "downloadSampleRecipesCsvAction": "Ricette di esempio (csv)",
+  "downloadSampleRecipesJsonAction": "Ricette di esempio (json)",
   "duplicateMealDialogContent": "Questo alimento è già stato aggiunto a questo pasto oggi. Aggiungerlo di nuovo?",
   "duplicateRecipeLabel": "Duplica",
   "duplicateRecipeNameSuffix": "(copia)",
@@ -130,6 +249,10 @@
   "editMealLabel": "Modifica pasto",
   "editRecipeTitle": "Modifica ricetta",
   "energyLabel": "energia",
+  "energyLeftLabel": "rimanenti",
+  "energyTooMuchLabel": "in eccesso",
+  "energyUnitKcalLabel": "Kilocalorie (kcal)",
+  "energyUnitKjLabel": "Kilojoule (kJ)",
   "errorFetchingProductData": "Errore durante il recupero dei dati del prodotto",
   "errorLoadingActivities": "Errore durante il caricamento delle attività",
   "errorMealSave": "Errore durante il salvataggio del pasto. Hai inserito informazioni corrette?",
@@ -138,6 +261,7 @@
   "errorProductNotFound": "Prodotto non trovato",
   "exportAction": "Esporta",
   "exportImportAppDataLabel": "Esporta / Importa dati app",
+  "exportImportCsvRecipesNote": "Il CSV conserva attività, registro pasti e giorni tracciati. Le ricette e le foto allegate restano solo nel JSON — passa a JSON se vuoi includerle nel backup.",
   "exportImportDescription": "Puoi esportare i dati dell'app in un file zip e importarli successivamente. Utile per backup o trasferimento su un altro dispositivo.\n\nL'app non utilizza servizi cloud per memorizzare i tuoi dati.",
   "exportImportErrorLabel": "Errore di esportazione / importazione",
   "exportImportSuccessLabel": "Esportazione / Importazione riuscita",
@@ -161,63 +285,35 @@
   "importAction": "Importa",
   "importActivityConfirmContent": "Queste attività verranno aggiunte a oggi.",
   "importActivityConfirmTitle": "Importare {count} attività?",
-  "@importActivityConfirmTitle": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
   "importActivityLabel": "Importa allenamento condiviso",
   "importActivitySuccessLabel": "Allenamento importato",
-  "importCustomFoodDataDescription": "Importa i tuoi pasti da un file CSV. Scarica un esempio per vedere il formato delle colonne e i campi obbligatori.",
+  "importCustomFoodDataDescription": "Importa i tuoi pasti da un file CSV o incollando JSON. Scarica un esempio per vedere la forma attesa e i campi obbligatori.",
   "importCustomFoodDataLabel": "Importa dati alimentari personalizzati",
   "importMealConfirmContent": "Questi elementi verranno aggiunti a {mealType}.",
-  "@importMealConfirmContent": {
-    "placeholders": {
-      "mealType": {
-        "type": "String"
-      }
-    }
-  },
   "importMealConfirmTitle": "Importare {count} voci?",
-  "@importMealConfirmTitle": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
   "importMealErrorLabel": "Codice QR non valido",
   "importMealLabel": "Importa pasto condiviso",
   "importMealSuccessLabel": "Pasto importato",
   "importMealsCsvAction": "Importa pasti (csv)",
+  "importMealsJsonAction": "Importa pasti (json)",
   "importOffFetchFailedLabel": "{count} elemento/i non è stato possibile recuperare da OpenFoodFacts.",
-  "@importOffFetchFailedLabel": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
   "importRecipeConfirmContent": "Importare questa ricetta con {count} ingrediente(i)?",
-  "@importRecipeConfirmContent": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
   "importRecipeErrorLabel": "Impossibile leggere il codice della ricetta",
   "importRecipeLabel": "Importa ricetta",
   "importRecipeSuccessLabel": "Ricetta importata",
   "importRecipesCsvAction": "Importa ricette (csv)",
+  "importRecipesJsonAction": "Importa ricette (json)",
+  "inconsistentNutritionWarningBody": "Questi valori non sembrano tornare — le calorie inserite non corrispondono all'energia di carboidrati, grassi e proteine. Salvare comunque o controllare di nuovo?",
+  "inconsistentNutritionWarningEdit": "Controlla di nuovo",
+  "inconsistentNutritionWarningSaveAnyway": "Salva comunque",
+  "inconsistentNutritionWarningTitle": "I numeri non tornano",
   "infoAddedActivityLabel": "Nuova attività aggiunta",
   "infoAddedIntakeLabel": "Nuova assunzione aggiunta",
   "ironLabel": "ferro",
   "itemDeletedSnackbar": "alimento eliminato",
   "itemUpdatedSnackbar": "Alimento aggiornato",
   "kcalLabel": "kcal",
+  "kjLabel": "kJ",
   "kcalLeftLabel": "kcal rimanenti",
   "kcalTooMuchLabel": "kcal in eccesso",
   "kgLabel": "kg",
@@ -227,14 +323,26 @@
   "macroDistributionLabel": "Distribuzione dei macronutrienti:",
   "magnesiumLabel": "magnesio",
   "mealBrandsLabel": "Marche",
-  "mealCarbsLabel": "carboidrati per",
-  "mealFatLabel": "grassi per",
+  "mealCarbsLabel": "Carboidrati",
+  "mealEnergyLabel": "Energia",
+  "mealFatLabel": "Grassi",
+  "mealImageLabel": "Aggiungi una foto",
+  "mealImagePickFromGallery": "Scegli dalla galleria",
+  "mealImageRemove": "Rimuovi foto",
+  "mealImageReplace": "Sostituisci foto",
+  "mealImageTakePhoto": "Scatta una foto",
   "mealKcalLabel": "kcal per",
   "mealNameLabel": "Nome pasto",
   "mealNameValidationError": "Il nome del pasto deve contenere almeno una lettera",
   "mealNutrientsPerQtyLabel": "Per {qty} {unit}",
   "mealNutrientsTotalLabel": "Quantità totale",
-  "mealProteinLabel": "proteine per 100 g/ml",
+  "mealPatternFiveSmall": "Cinque piccoli",
+  "mealPatternMediterranean": "Mediterranea",
+  "mealPatternOmad": "Un pasto",
+  "mealPatternPresetsLabel": "Preset rapidi",
+  "mealPatternStandard": "Standard",
+  "mealPatternTwoMeal": "Due pasti",
+  "mealProteinLabel": "Proteine",
   "mealSizeLabel": "Dimensione pasto (g/ml)",
   "mealSizeLabelImperial": "Dimensione pasto (oz/fl oz)",
   "mealUnitLabel": "Unità pasto",
@@ -249,6 +357,12 @@
   "noResultsFound": "Nessun risultato trovato",
   "notAvailableLabel": "N/D",
   "nothingAddedLabel": "Niente aggiunto",
+  "notificationsDailyReminderBody": "Non dimenticare di registrare i tuoi pasti oggi!",
+  "notificationsDailyReminderTitle": "OpenNutriTracker",
+  "notificationsPermissionDeniedSnack": "Autorizzazione alle notifiche negata.",
+  "nutrientPanelAllHiddenLabel": "Tutti i nutrienti nascosti — attivane alcuni in Impostazioni → Nutrienti.",
+  "nutrientPanelDayLabel": "Giorno",
+  "nutrientPanelWeekLabel": "Settimana",
   "nutritionInfoLabel": "Informazioni nutrizionali",
   "nutritionalStatusNormalWeight": "Peso normale",
   "nutritionalStatusObeseClassI": "Obesità di classe I",
@@ -275,9 +389,12 @@
   "onboardingHeightQuestionSubtitle": "Qual è la tua altezza attuale?",
   "onboardingIntroDescription": "Per iniziare, l'app ha bisogno di alcune informazioni su di te per calcolare il tuo obiettivo calorico giornaliero.\nTutte le informazioni su di te sono memorizzate in modo sicuro sul tuo dispositivo.",
   "onboardingKcalPerDayLabel": "kcal al giorno",
+  "onboardingKjPerDayLabel": "kJ al giorno",
   "onboardingNonBinaryDisclaimer": "Non esiste una base calorica pubblicata per persone non binarie, quindi per impostazione predefinita usiamo una media delle formule maschili e femminili — un punto di partenza, non una stima precisa. Puoi regolare in qualsiasi momento da Impostazioni → Calcoli.",
   "onboardingOverviewLabel": "Panoramica",
   "onboardingSaveUserError": "Dati errati, riprova",
+  "onboardingTargetWeightHintOptional": "Facoltativo",
+  "onboardingTargetWeightSubtitle": "C'è un peso che vuoi raggiungere? Puoi lasciare vuoto o modificarlo più tardi dal Profilo.",
   "onboardingWeightExampleHintKg": "es. 60",
   "onboardingWeightExampleHintLbs": "es. 132",
   "onboardingWeightQuestionSubtitle": "Qual è il tuo peso attuale?",
@@ -521,6 +638,12 @@
   "potassiumLabel": "potassio",
   "privacyPolicyLabel": "Privacy policy",
   "profileLabel": "Profilo",
+  "profileTargetWeightClearAction": "Cancella",
+  "profileTargetWeightLabel": "Peso obiettivo",
+  "profileTargetWeightNotSetLabel": "Non impostato",
+  "profileTargetWeightReached": "Hai raggiunto il tuo obiettivo",
+  "profileTargetWeightToGo": "{value} al tuo obiettivo",
+  "profileWeightHistoryTitle": "Cronologia del peso",
   "proteinLabel": "proteine",
   "proteinLabelShort": "p",
   "quantityLabel": "Quantità",
@@ -530,15 +653,13 @@
   "recipeDeleteConfirmContent": "Le voci del diario registrate da questa ricetta saranno mantenute.",
   "recipeDeleteConfirmTitle": "Eliminare ricetta?",
   "recipeDescriptionLabel": "Descrizione (opzionale)",
+  "recipeImageLabel": "Aggiungi una foto",
+  "recipeImagePickFromGallery": "Scegli dalla galleria",
+  "recipeImageRemove": "Rimuovi foto",
+  "recipeImageReplace": "Sostituisci foto",
+  "recipeImageTakePhoto": "Scatta una foto",
   "recipeIngredientAmountLabel": "Quantità",
   "recipeIngredientCountLabel": "{count} ingrediente/i",
-  "@recipeIngredientCountLabel": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
   "recipeIngredientUnitLabel": "Unità",
   "recipeIngredientsLabel": "Ingredienti",
   "recipeInvalidTotalWeightLabel": "Il peso totale deve essere maggiore di zero",
@@ -550,6 +671,8 @@
   "recipeNutritionPer100Label": "Per 100 g",
   "recipeNutritionPreviewLabel": "Nutrizione (totale)",
   "recipeSaveErrorLabel": "Impossibile salvare la ricetta.",
+  "recipeSaveForLaterDescription": "Attiva questa opzione per mantenere il pasto nella tua lista salvata per la prossima volta. Lasciala disattivata per un pasto occasionale che non mangerai più.",
+  "recipeSaveForLaterLabel": "Salva per la prossima volta",
   "recipeSaveLabel": "Salva ricetta",
   "recipeServingsCountHelper": "Permette di registrare questa ricetta per porzioni invece che in grammi.",
   "recipeServingsCountLabel": "Porzioni (opzionale)",
@@ -576,46 +699,95 @@
   "selectPalCategoryLabel": "Seleziona livello di attività",
   "selectWeightDialogLabel": "Seleziona peso",
   "selectionCountLabel": "{count} selezionati",
-  "@selectionCountLabel": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
   "sendAnonymousUserData": "Invia dati di utilizzo anonimi",
   "servingLabel": "Porzione",
   "servingSizeLabelImperial": "Dimensione porzione (oz/fl oz)",
   "servingSizeLabelMetric": "Dimensione porzione (g/ml)",
   "settingAboutLabel": "Informazioni",
   "settingFeedbackLabel": "Feedback",
-  "settingsCalculationsLabel": "Calcoli",
+  "settingsCalciumGoalDescription": "Obiettivo giornaliero di calcio in milligrammi. Il valore di riferimento predefinito è 1000 mg.",
+  "settingsCalciumGoalLabel": "Obiettivo calcio",
+  "settingsCaloriesTaperDescription": "Riduce gradualmente il deficit giornaliero così gli ultimi chili non sembrano un muro.",
+  "settingsCaloriesTaperLabel": "Adatta l'obiettivo calorico mentre ti avvicini al tuo peso obiettivo",
   "settingsCustomMealsLabel": "Pasti personalizzati",
+  "settingsDayStartLabel": "Il giorno inizia alle",
+  "settingsDayStartDescription": "Scegli l'ora in cui inizia la tua giornata. I pasti e le attività registrati prima di questa ora verranno conteggiati nel giorno precedente — utile per chi lavora di notte o mangia tardi.",
+  "settingsDayStartHourLabel": "{hour}:00",
+  "@settingsDayStartHourLabel": {
+    "placeholders": {
+      "hour": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsDayStartHoursPickerLabel": "Ore",
+  "settingsDayStartMinutesPickerLabel": "Minuti",
+  "settingsDayStartTimeLabel": "{hour}:{minute}",
+  "@settingsDayStartTimeLabel": {
+    "placeholders": {
+      "hour": {
+        "type": "int"
+      },
+      "minute": {
+        "type": "String"
+      }
+    }
+  },
   "settingsDisclaimerLabel": "Disclaimer",
   "settingsDistanceLabel": "Distanza",
+  "settingsEnergyUnitLabel": "Unità di energia",
+  "settingsFibreGoalDescription": "Obiettivo giornaliero di fibre in grammi. Il valore di riferimento predefinito è 30 g.",
+  "settingsFibreGoalLabel": "Obiettivo fibre",
   "settingsImperialLabel": "Imperiale (lbs, ft, oz)",
+  "settingsKcalAdjustmentLabel": "Aggiustamento kcal giornaliero",
+  "settingsIronGoalDescription": "Obiettivo giornaliero di ferro in milligrammi. Il valore predefinito dipende dal genere (8 mg uomo, 18 mg donna, 14 mg altrimenti).",
+  "settingsIronGoalLabel": "Obiettivo ferro",
   "settingsLabel": "Impostazioni",
   "settingsLanguageLabel": "Lingua",
+  "settingsMacroSplitLabel": "Distribuzione macro",
   "settingsLicensesLabel": "Licenze",
+  "settingsMagnesiumGoalDescription": "Obiettivo giornaliero di magnesio in milligrammi. Il valore predefinito dipende dal genere (400 mg uomo, 310 mg donna, 355 mg altrimenti).",
+  "settingsMagnesiumGoalLabel": "Obiettivo magnesio",
   "settingsMassLabel": "Massa",
   "settingsMetricLabel": "Metrico (kg, cm, ml)",
   "settingsNotificationsLabel": "Promemoria giornaliero",
   "settingsNotificationsTimeLabel": "Orario promemoria: {time}",
-  "notificationsPermissionDeniedSnack": "Autorizzazione alle notifiche negata.",
-  "notificationsDailyReminderTitle": "OpenNutriTracker",
-  "notificationsDailyReminderBody": "Non dimenticare di registrare i tuoi pasti oggi!",
+  "settingsNutrientGoalsHint": "Obiettivi personali per ogni nutriente del pannello giornaliero. Il diario li utilizza al posto dei valori di riferimento predefiniti ogni volta che ne imposti uno.",
+  "settingsNutrientGoalsLabel": "Obiettivi nutrizionali",
+  "settingsNutrientsHelp": "Scegli quali nutrienti sono visibili nel pannello giornaliero. Quelli nascosti possono essere riattivati in qualsiasi momento.",
+  "settingsNutrientsLabel": "Nutrienti",
+  "settingsNutrientsSubtitle": "Scegli quali nutrienti compaiono nel pannello del diario",
+  "settingsPerMealKcalShareBreakfast": "Colazione",
+  "settingsPerMealKcalShareDescription": "Distribuisci il tuo obiettivo giornaliero di kcal tra colazione, pranzo, cena e spuntini. Le quote devono sommare al 100%.",
+  "settingsPerMealKcalShareDinner": "Cena",
+  "settingsPerMealKcalShareLabel": "Quota kcal per pasto",
+  "settingsPerMealKcalShareLunch": "Pranzo",
+  "settingsPerMealKcalShareSnack": "Spuntino",
+  "settingsPotassiumGoalDescription": "Obiettivo giornaliero di potassio in milligrammi. Il valore di riferimento predefinito è 3500 mg.",
+  "settingsPotassiumGoalLabel": "Obiettivo potassio",
   "settingsPrivacySettings": "Impostazioni privacy",
   "settingsReportErrorLabel": "Segnala errore",
+  "settingsSaturatedFatGoalDescription": "Limite giornaliero di grassi saturi in grammi. Il valore di riferimento predefinito è 20 g.",
+  "settingsSaturatedFatGoalLabel": "Obiettivo grassi saturi",
   "settingsShowActivityTracking": "Mostra tracciamento attività",
   "settingsShowMealMacros": "Mostra macro pasto",
   "settingsShowMicronutrientsLabel": "Mostra micronutrienti",
+  "settingsSodiumGoalDescription": "Limite giornaliero di sodio in milligrammi. Il valore di riferimento predefinito è 2300 mg.",
+  "settingsSodiumGoalLabel": "Obiettivo sodio",
   "settingsSourceCodeLabel": "Codice sorgente",
+  "settingsSourcesLabel": "Fonti e riferimenti",
+  "settingsSugarsGoalDescription": "Limite giornaliero di zuccheri in grammi. Il valore di riferimento predefinito è 50 g.",
+  "settingsSugarsGoalLabel": "Obiettivo zuccheri",
   "settingsSystemLabel": "Sistema",
   "settingsThemeDarkLabel": "Scuro",
   "settingsThemeLabel": "Tema",
   "settingsThemeLightLabel": "Chiaro",
   "settingsThemeSystemDefaultLabel": "Predefinito del sistema",
   "settingsUnitsLabel": "Unità",
+  "settingsVitaminB12GoalDescription": "Obiettivo giornaliero di vitamina B12 in microgrammi. Il valore di riferimento predefinito è 2,4 µg.",
+  "settingsVitaminB12GoalLabel": "Obiettivo vitamina B12",
+  "settingsVitaminDGoalDescription": "Obiettivo giornaliero di vitamina D in microgrammi. Il valore di riferimento predefinito è 15 µg.",
+  "settingsVitaminDGoalLabel": "Obiettivo vitamina D",
   "settingsVolumeLabel": "Volume",
   "shareActivityLabel": "Condividi allenamento",
   "shareCodeLabel": "Condividi codice",
@@ -624,6 +796,19 @@
   "snackExample": "es. mela, gelato, cioccolato ...",
   "snackLabel": "Spuntino",
   "sodiumLabel": "sodio",
+  "sourcesActivityDescription": "Le calorie bruciate durante un'attività si stimano come MET × peso corporeo (kg) × durata (ore), usando i valori dell'Adult Compendium of Physical Activities.",
+  "sourcesActivityTitle": "Calorie dall'attività (valori MET)",
+  "sourcesBmiDescription": "Il BMI si calcola come peso (kg) diviso il quadrato dell'altezza (m²). Le categorie di salute (sottopeso, normopeso, pre-obesità, obesità di classe I–III) seguono la classificazione del BMI per adulti dell'Organizzazione Mondiale della Sanità.",
+  "sourcesBmiTitle": "Indice di Massa Corporea (BMI)",
+  "sourcesEnergyDescription": "Gli obiettivi calorici giornalieri, il metabolismo basale e i coefficienti di attività fisica si basano sulle equazioni dell'Institute of Medicine. Fonte: Institute of Medicine (2005). Dietary Reference Intakes for Energy, Carbohydrate, Fiber, Fat, Fatty Acids, Cholesterol, Protein, and Amino Acids, capitolo 5 e tabella 5-5.",
+  "sourcesEnergyTitle": "Fabbisogno energetico (TDEE, BMR e livello di attività)",
+  "sourcesIconTooltip": "Vedi le fonti",
+  "sourcesMacrosDescription": "La distribuzione predefinita di 60% carboidrati, 25% grassi e 15% proteine rientra negli intervalli raccomandati dall'OMS. Puoi modificarla in Impostazioni → Calcoli. Fonte: WHO Technical Report Series 916 (2003), Diet, Nutrition and the Prevention of Chronic Diseases.",
+  "sourcesMacrosTitle": "Distribuzione dei macronutrienti",
+  "sourcesNonBinaryDescription": "La ricerca sul dispendio energetico ha storicamente usato solo categorie binarie di sesso, quindi non esiste una formula TDEE validata per le persone non binarie. OpenNutriTracker permette quindi di scegliere tra un riferimento medio, un riferimento di tipo estrogenico e uno di tipo testosteronico in Impostazioni → Calcoli. Se per te è davvero importante un valore accurato, ti consigliamo di parlarne con un medico che conosca il tuo profilo ormonale.",
+  "sourcesNonBinaryTitle": "Stima calorica per persone non binarie",
+  "sourcesOpenSourceLabel": "Apri la fonte",
+  "sourcesScreenIntro": "OpenNutriTracker utilizza per ogni calcolo metodologie consolidate e sottoposte a peer review. I riferimenti seguenti rimandano alle fonti originali, così puoi verificare ogni numero in autonomia.",
   "sugarLabel": "zuccheri",
   "suppliedLabel": "assunte",
   "transFatLabel": "grassi trans",
@@ -638,6 +823,12 @@
   "weeklyWeightGoalLabel": "Ritmo settimanale",
   "weeklyWeightGoalLbsPerWeek": "{rate} lbs/settimana",
   "weeklyWeightGoalNoneLabel": "Non impostato",
+  "weightHistoryAddEntry": "Aggiungi voce",
+  "weightHistoryChartEmptyState": "Registra almeno due giorni per vedere l'andamento.",
+  "weightHistoryDateLabel": "Data",
+  "weightHistoryNoEntries": "Nessuna registrazione del peso. Aggiungi la prima per iniziare a seguire l'andamento.",
+  "weightHistoryNoteLabel": "Nota (facoltativa)",
+  "weightHistoryWeightLabel": "Peso",
   "weightLabel": "Peso",
   "yearsLabel": "{age} anni",
   "zincLabel": "zinco",

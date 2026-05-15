@@ -147,6 +147,85 @@ class ConfigDataSource {
     await config?.save();
   }
 
+  Future<void> setConfigUsesKilojoules(bool usesKilojoules) async {
+    _log.fine('Updating config usesKilojoules to $usesKilojoules');
+    final config = _configBox.get(_configKey);
+    config?.usesKilojoules = usesKilojoules;
+    await config?.save();
+  }
+
+  Future<void> setConfigMealKcalSharesPct(Map<String, int> shares) async {
+    _log.fine('Updating config mealKcalSharesPct to $shares');
+    final config = _configBox.get(_configKey);
+    // Copy into a fresh map so Hive sees a distinct object reference on save.
+    config?.mealKcalSharesPct = Map<String, int>.from(shares);
+    await config?.save();
+  }
+
+  Future<String?> getCustomMealFormMode() async {
+    final config = _configBox.get(_configKey);
+    return config?.customMealFormMode;
+  }
+
+  Future<void> setCustomMealFormMode(String mode) async {
+    _log.fine('Updating config customMealFormMode to $mode');
+    final config = _configBox.get(_configKey);
+    config?.customMealFormMode = mode;
+    await config?.save();
+  }
+
+  Future<Map<String, int>?> getDiarySortPreferences() async {
+    final config = _configBox.get(_configKey);
+    final stored = config?.diarySortPreferences;
+    if (stored == null) return null;
+    // The Hive-generated adapter hands us a Map<dynamic, dynamic>.cast<String,
+    // int>() view; eagerly copy into a concrete map so callers see a real
+    // Map<String, int> rather than a lazy cast view that throws on access if
+    // anything unexpected ever lands in the box.
+    return Map<String, int>.from(stored);
+  }
+
+  Future<void> setDiarySortPreference(String mealKey, int sortIndex) async {
+    _log.fine('Updating config diarySortPreferences[$mealKey] = $sortIndex');
+    final config = _configBox.get(_configKey);
+    if (config == null) return;
+    final current = config.diarySortPreferences;
+    // Build a fresh Map<String, int> so the write doesn't share storage with
+    // whatever map type Hive handed back, and so the cast lands eagerly
+    // rather than lazily at read time.
+    final next = <String, int>{
+      if (current != null) ...Map<String, int>.from(current),
+      mealKey: sortIndex,
+    };
+    config.diarySortPreferences = next;
+    await config.save();
+  }
+
+  Future<void> setConfigNutrientPanelVisibility(
+    Map<String, bool> visibility,
+  ) async {
+    _log.fine('Updating nutrientPanelVisibility to $visibility');
+    final config = _configBox.get(_configKey);
+    // Persist a defensive copy — Hive serialises whatever we hand it, and a
+    // caller-owned map mutating later would silently change the saved value.
+    config?.nutrientPanelVisibility = Map<String, bool>.from(visibility);
+    await config?.save();
+  }
+
+  Future<void> setConfigDayStartOffsetHours(int hours) async {
+    _log.fine('Updating config dayStartOffsetHours to $hours');
+    final config = _configBox.get(_configKey);
+    config?.dayStartOffsetHours = hours;
+    await config?.save();
+  }
+
+  Future<void> setConfigDayStartOffsetMinutes(int minutes) async {
+    _log.fine('Updating config dayStartOffsetMinutes to $minutes');
+    final config = _configBox.get(_configKey);
+    config?.dayStartOffsetMinutes = minutes;
+    await config?.save();
+  }
+
   Future<void> setOfflineCatalogEnabled(bool enabled) async {
     _log.fine('Updating config offlineCatalogEnabled to $enabled');
     final config = _configBox.get(_configKey);

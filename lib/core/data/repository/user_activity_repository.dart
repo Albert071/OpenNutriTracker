@@ -22,12 +22,14 @@ class UserActivityRepository {
   Future<UserActivityEntity?> updateUserActivity(
     String id,
     double newDuration,
-    double newBurnedKcal,
-  ) async {
+    double newBurnedKcal, {
+    double? userKcal,
+  }) async {
     final dbo = await _userActivityDataSource.updateUserActivity(
       id,
       newDuration,
       newBurnedKcal,
+      userKcal: userKcal,
     );
     return dbo == null ? null : UserActivityEntity.fromUserActivityDBO(dbo);
   }
@@ -41,10 +43,16 @@ class UserActivityRepository {
   }
 
   Future<List<UserActivityEntity>> getAllUserActivityByDate(
-    DateTime dateTime,
-  ) async {
+    DateTime dateTime, {
+    int dayStartOffsetHours = 0,
+    int dayStartOffsetMinutes = 0,
+  }) async {
     final userActivityDBOList =
-        await _userActivityDataSource.getAllUserActivitiesByDate(dateTime);
+        await _userActivityDataSource.getAllUserActivitiesByDate(
+      dateTime,
+      dayStartOffsetHours: dayStartOffsetHours,
+      dayStartOffsetMinutes: dayStartOffsetMinutes,
+    );
 
     return userActivityDBOList
         .map(

@@ -1,12 +1,15 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:opennutritracker/core/domain/entity/config_entity.dart';
 import 'package:opennutritracker/core/domain/entity/intake_entity.dart';
 import 'package:opennutritracker/core/domain/entity/tracked_day_entity.dart';
 import 'package:opennutritracker/core/domain/entity/user_activity_entity.dart';
+import 'package:opennutritracker/core/domain/usecase/add_config_usecase.dart';
 import 'package:opennutritracker/core/domain/usecase/add_tracked_day_usecase.dart';
 import 'package:opennutritracker/core/domain/usecase/delete_intake_usecase.dart';
 import 'package:opennutritracker/core/domain/usecase/delete_user_activity_usecase.dart';
+import 'package:opennutritracker/core/domain/usecase/get_config_usecase.dart';
 import 'package:opennutritracker/core/domain/usecase/get_intake_usecase.dart';
 import 'package:opennutritracker/core/domain/usecase/get_tracked_day_usecase.dart';
 import 'package:opennutritracker/core/domain/usecase/get_user_activity_usecase.dart';
@@ -29,6 +32,8 @@ class CalendarDayBloc extends Bloc<CalendarDayEvent, CalendarDayState> {
   final AddTrackedDayUsecase _addTrackedDayUsecase;
   final UpdateIntakeUsecase _updateIntakeUsecase;
   final UpdateUserActivityUsecase _updateUserActivityUsecase;
+  final GetConfigUsecase _getConfigUsecase;
+  final AddConfigUsecase _addConfigUsecase;
 
   DateTime? _currentDay;
 
@@ -41,6 +46,8 @@ class CalendarDayBloc extends Bloc<CalendarDayEvent, CalendarDayState> {
     this._addTrackedDayUsecase,
     this._updateIntakeUsecase,
     this._updateUserActivityUsecase,
+    this._getConfigUsecase,
+    this._addConfigUsecase,
   ) : super(CalendarDayInitial()) {
     on<LoadCalendarDayEvent>((event, emit) async {
       emit(CalendarDayLoading());
@@ -60,19 +67,64 @@ class CalendarDayBloc extends Bloc<CalendarDayEvent, CalendarDayState> {
     DateTime day,
     Emitter<CalendarDayState> emit,
   ) async {
+    // #139: when the user has a configured day-start offset, the
+    // intake/activity queries need to know about it so entries logged
+    // before the boundary roll into the previous day's column. The
+    // follow-up to #139 adds a minutes companion that travels alongside
+    // the hours value through the same call chain.
+    final config = await _getConfigUsecase.getConfig();
+    final dayStartOffsetHours = config.dayStartOffsetHours;
+    final dayStartOffsetMinutes = config.dayStartOffsetMinutes;
+
     final userActivities = await _getUserActivityUsecase.getUserActivityByDay(
       day,
+      dayStartOffsetHours: dayStartOffsetHours,
+      dayStartOffsetMinutes: dayStartOffsetMinutes,
     );
 
     final breakfastIntakeList = await _getIntakeUsecase.getBreakfastIntakeByDay(
       day,
+      dayStartOffsetHours: dayStartOffsetHours,
+      dayStartOffsetMinutes: dayStartOffsetMinutes,
     );
 
-    final lunchIntakeList = await _getIntakeUsecase.getLunchIntakeByDay(day);
-    final dinnerIntakeList = await _getIntakeUsecase.getDinnerIntakeByDay(day);
-    final snackIntakeList = await _getIntakeUsecase.getSnackIntakeByDay(day);
+    final lunchIntakeList = await _getIntakeUsecase.getLunchIntakeByDay(
+      day,
+      dayStartOffsetHours: dayStartOffsetHours,
+      dayStartOffsetMinutes: dayStartOffsetMinutes,
+    );
+    final dinnerIntakeList = await _getIntakeUsecase.getDinnerIntakeByDay(
+      day,
+      dayStartOffsetHours: dayStartOffsetHours,
+      dayStartOffsetMinutes: dayStartOffsetMinutes,
+    );
+    final snackIntakeList = await _getIntakeUsecase.getSnackIntakeByDay(
+      day,
+      dayStartOffsetHours: dayStartOffsetHours,
+      dayStartOffsetMinutes: dayStartOffsetMinutes,
+    );
 
     final trackedDayEntity = await _getTrackedDayUsecase.getTrackedDay(day);
+    final configData = await _getConfigUsecase.getConfig();
+
+    // #150: only surface per-meal targets when this calendar day has a
+    // tracked daily kcal goal — otherwise the share has nothing to divide
+    // and "0 / 0 kcal" reads as broken rather than helpful.
+    final dailyKcalGoal = trackedDayEntity?.calorieGoal ?? 0;
+    final breakfastKcalTarget = dailyKcalGoal > 0
+        ? configData.targetKcalForMeal(
+            ConfigEntity.mealKeyBreakfast, dailyKcalGoal)
+        : 0.0;
+    final lunchKcalTarget = dailyKcalGoal > 0
+        ? configData.targetKcalForMeal(ConfigEntity.mealKeyLunch, dailyKcalGoal)
+        : 0.0;
+    final dinnerKcalTarget = dailyKcalGoal > 0
+        ? configData.targetKcalForMeal(
+            ConfigEntity.mealKeyDinner, dailyKcalGoal)
+        : 0.0;
+    final snackKcalTarget = dailyKcalGoal > 0
+        ? configData.targetKcalForMeal(ConfigEntity.mealKeySnack, dailyKcalGoal)
+        : 0.0;
 
     emit(
       CalendarDayLoaded(
@@ -82,8 +134,26 @@ class CalendarDayBloc extends Bloc<CalendarDayEvent, CalendarDayState> {
         lunchIntakeList,
         dinnerIntakeList,
         snackIntakeList,
+        breakfastKcalTarget,
+        lunchKcalTarget,
+        dinnerKcalTarget,
+        snackKcalTarget,
+        configData.mealKcalSharesPct[ConfigEntity.mealKeyBreakfast] ?? 0,
+        configData.mealKcalSharesPct[ConfigEntity.mealKeyLunch] ?? 0,
+        configData.mealKcalSharesPct[ConfigEntity.mealKeyDinner] ?? 0,
+        configData.mealKcalSharesPct[ConfigEntity.mealKeySnack] ?? 0,
+        diarySortPreferences: config.diarySortPreferences,
       ),
     );
+  }
+
+  /// Persist the user's sort choice for a single meal section. The diary
+  /// reads the updated map back on the next `LoadCalendarDayEvent` (which
+  /// fires after the user navigates away and returns), so we don't need to
+  /// re-emit here — the widget keeps its own optimistic copy in the
+  /// meantime.
+  Future<void> setDiarySortPreference(String mealKey, int sortIndex) async {
+    await _addConfigUsecase.setDiarySortPreference(mealKey, sortIndex);
   }
 
   Future<void> deleteIntakeItem(

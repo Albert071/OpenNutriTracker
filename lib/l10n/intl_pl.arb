@@ -1,4 +1,104 @@
 {
+  "@clearOffCacheSubtitle": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "size": {
+        "type": "String"
+      }
+    }
+  },
+  "@csvImportPartialLabel": {
+    "placeholders": {
+      "imported": {
+        "type": "int"
+      },
+      "skipped": {
+        "type": "int"
+      }
+    }
+  },
+  "@csvImportSuccessLabel": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@deleteSelectedRecipesConfirmTitle": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@diaryMealKcalConsumedOfTarget": {
+    "placeholders": {
+      "consumed": {
+        "type": "String"
+      },
+      "target": {
+        "type": "String"
+      }
+    }
+  },
+  "@importActivityConfirmTitle": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@importMealConfirmContent": {
+    "placeholders": {
+      "mealType": {
+        "type": "String"
+      }
+    }
+  },
+  "@importMealConfirmTitle": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@importOffFetchFailedLabel": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@importRecipeConfirmContent": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@profileTargetWeightToGo": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "@recipeIngredientCountLabel": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@selectionCountLabel": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "activityExample": "np. bieganie, rower, joga ...",
   "activityLabel": "Aktywność",
   "addItemLabel": "Dodaj nową pozycję:",
@@ -16,6 +116,7 @@
   "appLicenseLabel": "Licencja GPL-3.0",
   "appTitle": "OpenNutriTracker",
   "appVersionName": "Wersja {versionNumber}",
+  "barcodeInvalidEan13CheckDigit": "Ten 13-cyfrowy kod kreskowy wygląda na błędnie wpisany: ostatnia cyfra nie pasuje do pozostałych",
   "baseQuantityLabel": "Podstawowa ilość (g/ml)",
   "betaVersionName": "[Beta]",
   "bmiInfo": "Wskaźnik Masy Ciała (BMI) to wskaźnik służący do klasyfikacji nadwagi i otyłości u dorosłych. Jest definiowany jako waga w kilogramach podzielona przez kwadrat wzrostu w metrach (kg/m²).\n\nBMI nie rozróżnia między tkanką tłuszczową a mięśniową i może być mylący dla niektórych osób.",
@@ -32,7 +133,7 @@
   "calculationsMacronutrientsDistributionLabel": "Rozkład makroskładników",
   "calculationsMacrosDistribution": "{pctCarbs}% węglowodany, {pctFats}% tłuszcze, {pctProteins}% białko",
   "calculationsRecommendedLabel": "(zalecane)",
-  "calculationsTDEEIOM2006Label": "Równanie Institute of Medicine",
+  "calculationsTDEEIOM2006Label": "Równanie Institute of Medicine (2005)",
   "calculationsTDEELabel": "Równanie TDEE",
   "caloriesProfileAveragedLabel": "Uśrednione odniesienie (domyślne)",
   "caloriesProfileEstrogenTypicalLabel": "Odniesienie estrogenowe",
@@ -49,16 +150,6 @@
   "clearOffCacheConfirmTitle": "Wyczyścić pamięć podręczną?",
   "clearOffCacheLabel": "Wyczyść pamięć podręczną",
   "clearOffCacheSubtitle": "{count} pozycji · {size}",
-  "@clearOffCacheSubtitle": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      },
-      "size": {
-        "type": "String"
-      }
-    }
-  },
   "cmLabel": "cm",
   "codeCopiedLabel": "Kod skopiowany",
   "copyCodeLabel": "Kopiuj kod",
@@ -73,38 +164,55 @@
   "csvImportContributeOffPrefix": "Masz kod kreskowy? Dodaj produkt do Open Food Facts:",
   "csvImportErrorLabel": "Nie można odczytać pliku CSV. Sprawdź format i spróbuj ponownie.",
   "csvImportPartialLabel": "Zaimportowano {imported} posiłk(ów); pominięto {skipped} wiersz(y) z powodu nieprawidłowych danych.",
-  "@csvImportPartialLabel": {
-    "placeholders": {
-      "imported": {
-        "type": "int"
-      },
-      "skipped": {
-        "type": "int"
-      }
-    }
-  },
   "csvImportSuccessLabel": "Zaimportowano {count} posiłk(ów) z pliku CSV.",
-  "@csvImportSuccessLabel": {
+  "customActivityDescription": "Wprowadź spalone kalorie bezpośrednio – dla treningów spoza listy lub odczytów z opaski fitness",
+  "customActivityDescriptionKj": "Wprowadź spalone kilodżule bezpośrednio – dla treningów spoza listy lub odczytów z opaski fitness",
+  "customActivityKcalHint": "np. 250",
+  "customActivityKcalLabel": "Spalone kalorie",
+  "customActivityName": "Aktywność niestandardowa",
+  "customActivityNameFieldHint": "np. Wieczorny dojazd rowerem",
+  "customActivityNameFieldLabel": "Nazwa (opcjonalnie)",
+  "customActivityPickFromTemplate": "Wybierz z zapisanych szablonów",
+  "customActivitySaveAsTemplate": "Zapisz jako szablon na później",
+  "customActivityTemplatesEmpty": "Nie masz jeszcze zapisanych szablonów. Zaznacz „Zapisz jako szablon na później”, aby zapamiętać aktywność niestandardową na przyszłość.",
+  "customMealBarcodeHint": "Zeskanuj lub wpisz kod kreskowy, aby później przywołać ten posiłek",
+  "customMealBarcodeInvalid": "Kod kreskowy musi mieć od 8 do 14 cyfr",
+  "customMealBarcodeLabel": "Kod kreskowy",
+  "customMealBarcodeScanButton": "Skanuj kod kreskowy",
+  "customMealFormAdvanced": "Zaawansowany",
+  "customMealFormAdvancedHelp": "Ustaw ilość bazową i wartości na 100 g/ml dla dokładnego przeliczenia.",
+  "customMealFormModeLabel": "Widok formularza",
+  "customMealFormSimple": "Prosty",
+  "customMealFormSimpleHelp": "Wpisz wartości dla jednej porcji.",
+  "customMealFormSimpleFieldHelper": "{unit} w jednej porcji",
+  "@customMealFormSimpleFieldHelper": {
     "placeholders": {
-      "count": {
-        "type": "int"
-      }
+      "unit": { "type": "String" }
     }
   },
   "customMealsDeleteConfirmContent": "Wszystkie wpisy w dzienniku używające tego posiłku zostaną również usunięte.",
   "customMealsDeleteConfirmTitle": "Usunąć własny posiłek?",
   "customMealsEmptyLabel": "Brak zapisanych własnych posiłków.",
   "dailyKcalAdjustmentLabel": "Dzienna korekta Kcal:",
-  "dataCollectionLabel": "Wspieraj rozwój, dostarczając anonimowe dane użytkowania",
+  "dailyKjAdjustmentLabel": "Dzienna korekta kJ:",
+  "dataCollectionLabel": "Wysyłaj anonimowe raporty o awariach, aby pomóc w naprawianiu błędów. Nie są przesyłane dane o posiłkach, wadze ani dane osobowe.",
   "deleteAllLabel": "Usuń wszystko",
-  "deleteSelectedRecipesConfirmTitle": "Usunąć {count} przepis(ów)?",
-  "@deleteSelectedRecipesConfirmTitle": {
+  "settingsDeleteAllDataLabel": "Usuń wszystkie moje dane",
+  "settingsDeleteAllDataSubtitle": "Profil, posiłki, aktywność i historia wagi",
+  "settingsDeleteAllDataConfirmTitle": "Usunąć wszystkie Twoje dane?",
+  "settingsDeleteAllDataConfirmContent": "Spowoduje to trwałe usunięcie z tego urządzenia Twojego profilu, posiłków, aktywności, historii wagi oraz wszystkich własnych przepisów. Bazy danych Open Food Facts i USDA Food Data Central pozostają nienaruszone. Tej operacji nie można cofnąć.",
+  "settingsDeleteAllDataConfirmAction": "Usuń wszystko",
+  "lowKcalWarningTitle": "Ten dzienny cel jest dość niski",
+  "lowKcalWarningBody": "Osoby dorosłe nie powinny przez dłuższy czas spożywać mniej niż {threshold} kcal dziennie bez nadzoru lekarza. Zanim utrzymasz tak niski cel, rozważ konsultację ze specjalistą.",
+  "@lowKcalWarningBody": {
     "placeholders": {
-      "count": {
+      "threshold": {
         "type": "int"
       }
     }
   },
+  "lowKcalWarningViewDisclaimer": "Pokaż zastrzeżenie",
+  "deleteSelectedRecipesConfirmTitle": "Usunąć {count} przepis(ów)?",
   "deleteTimeDialogContent": "Czy chcesz usunąć wybraną pozycję?",
   "deleteTimeDialogPluralContent": "Czy chcesz usunąć wszystkie pozycje tego posiłku?",
   "deleteTimeDialogPluralTitle": "Usunąć pozycje?",
@@ -115,14 +223,25 @@
   "dialogOKLabel": "OK",
   "diaryFutureDateWarning": "Edytujesz przyszłą datę",
   "diaryLabel": "Dziennik",
+  "diaryMealKcalConsumedOfTarget": "{consumed} / {target} kcal",
+  "diaryNutrientPanelDataDisclaimer": "Sumowane są tylko składniki odżywcze zapisane na zalogowanych posiłkach. Posiłek bez wartości nie wnosi nic do danego składnika — sumy mogą być więc zaniżone.",
+  "diaryNutrientPanelTitle": "Dzisiejsze składniki odżywcze",
+  "diarySortByCarbs": "Węglowodany (malejąco)",
+  "diarySortByFat": "Tłuszcze (malejąco)",
+  "diarySortByKcal": "Kalorie (malejąco)",
+  "diarySortByLabel": "Sortuj według",
+  "diarySortByProtein": "Białko (malejąco)",
+  "diarySortByTime": "Czasu dodania",
   "dinnerExample": "np. zupa, kurczak, wino ...",
   "dinnerLabel": "Kolacja",
   "discardChangesConfirmLabel": "Odrzuć",
   "discardChangesContent": "Niezapisane zmiany zostaną utracone.",
   "discardChangesTitle": "Odrzucić zmiany?",
-  "disclaimerText": "OpenNutriTracker nie jest aplikacją medyczną. Wszystkie dostarczone dane nie są zweryfikowane i należy ich używać z ostrożnością. Prosimy o prowadzenie zdrowego stylu życia i skonsultowanie się z profesjonalistą w przypadku jakichkolwiek problemów. Używanie podczas choroby, ciąży lub karmienia piersią nie jest zalecane.",
+  "disclaimerText": "OpenNutriTracker nie jest aplikacją medyczną. Wszystkie dostarczone dane nie są zweryfikowane i należy ich używać z ostrożnością. Prosimy o prowadzenie zdrowego stylu życia i skonsultowanie się z profesjonalistą w przypadku jakichkolwiek problemów. Używanie podczas choroby, ciąży lub karmienia piersią nie jest zalecane. Recenzowane źródła dla każdego obliczenia znajdziesz po dotknięciu ikony informacji na ekranie głównym lub w Profilu.",
   "downloadSampleCsvAction": "Przykładowe posiłki (csv)",
+  "downloadSampleJsonAction": "Przykładowe posiłki (json)",
   "downloadSampleRecipesCsvAction": "Przykładowe przepisy (csv)",
+  "downloadSampleRecipesJsonAction": "Przykładowe przepisy (json)",
   "duplicateMealDialogContent": "Ten produkt został już dziś dodany do tego posiłku. Dodać ponownie?",
   "duplicateRecipeLabel": "Duplikuj",
   "duplicateRecipeNameSuffix": "(kopia)",
@@ -130,6 +249,10 @@
   "editMealLabel": "Edytuj posiłek",
   "editRecipeTitle": "Edytuj przepis",
   "energyLabel": "energia",
+  "energyLeftLabel": "pozostało",
+  "energyTooMuchLabel": "za dużo",
+  "energyUnitKcalLabel": "Kilokalorie (kcal)",
+  "energyUnitKjLabel": "Kilodżule (kJ)",
   "errorFetchingProductData": "Błąd podczas pobierania danych produktu",
   "errorLoadingActivities": "Błąd podczas ładowania aktywności",
   "errorMealSave": "Błąd podczas zapisywania posiłku. Czy wprowadziłeś poprawne informacje o posiłku?",
@@ -138,6 +261,7 @@
   "errorProductNotFound": "Nie znaleziono produktu",
   "exportAction": "Eksportuj",
   "exportImportAppDataLabel": "Eksportuj / Importuj dane aplikacji",
+  "exportImportCsvRecipesNote": "CSV przechowuje aktywność, dziennik posiłków i śledzone dni. Przepisy i dodane zdjęcia są zapisywane tylko w JSON — przełącz się na JSON, jeśli chcesz mieć je w kopii zapasowej.",
   "exportImportDescription": "Możesz wyeksportować dane aplikacji do pliku zip i zaimportować je później. Jest to przydatne, jeśli chcesz wykonać kopię zapasową danych lub przenieść je na inne urządzenie.\n\nAplikacja nie korzysta z żadnej usługi chmurowej do przechowywania danych.",
   "exportImportErrorLabel": "Błąd eksportu / importu",
   "exportImportSuccessLabel": "Eksport / Import zakończony sukcesem",
@@ -161,63 +285,35 @@
   "importAction": "Importuj",
   "importActivityConfirmContent": "Te aktywności zostaną dodane do dzisiaj.",
   "importActivityConfirmTitle": "Zaimportować {count} aktywności?",
-  "@importActivityConfirmTitle": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
   "importActivityLabel": "Importuj udostępniony trening",
   "importActivitySuccessLabel": "Trening zaimportowany",
-  "importCustomFoodDataDescription": "Importuj własne posiłki z pliku CSV. Pobierz przykład, aby zobaczyć oczekiwany format kolumn i wymagane pola.",
+  "importCustomFoodDataDescription": "Zaimportuj własne posiłki z pliku CSV lub wklejając JSON. Pobierz przykład, aby zobaczyć oczekiwany kształt i wymagane pola.",
   "importCustomFoodDataLabel": "Importuj własne dane żywności",
   "importMealConfirmContent": "Te elementy zostaną dodane do: {mealType}.",
-  "@importMealConfirmContent": {
-    "placeholders": {
-      "mealType": {
-        "type": "String"
-      }
-    }
-  },
   "importMealConfirmTitle": "Zaimportować {count} elementów?",
-  "@importMealConfirmTitle": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
   "importMealErrorLabel": "Nieprawidłowy kod QR",
   "importMealLabel": "Importuj udostępniony posiłek",
   "importMealSuccessLabel": "Posiłek zaimportowany",
   "importMealsCsvAction": "Importuj posiłki (csv)",
+  "importMealsJsonAction": "Importuj posiłki (json)",
   "importOffFetchFailedLabel": "Nie udało się pobrać {count} pozycji z OpenFoodFacts.",
-  "@importOffFetchFailedLabel": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
   "importRecipeConfirmContent": "Zaimportować ten przepis z {count} składnik(ami)?",
-  "@importRecipeConfirmContent": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
   "importRecipeErrorLabel": "Nie udało się odczytać kodu przepisu",
   "importRecipeLabel": "Importuj przepis",
   "importRecipeSuccessLabel": "Przepis zaimportowany",
   "importRecipesCsvAction": "Importuj przepisy (csv)",
+  "importRecipesJsonAction": "Importuj przepisy (json)",
+  "inconsistentNutritionWarningBody": "Te wartości nie do końca się zgadzają — wpisane kalorie nie odpowiadają energii z węglowodanów, tłuszczu i białka. Zapisać mimo to czy sprawdzić jeszcze raz?",
+  "inconsistentNutritionWarningEdit": "Sprawdź jeszcze raz",
+  "inconsistentNutritionWarningSaveAnyway": "Zapisz mimo to",
+  "inconsistentNutritionWarningTitle": "Liczby do siebie nie pasują",
   "infoAddedActivityLabel": "Dodano nową aktywność",
   "infoAddedIntakeLabel": "Dodano nowe spożycie",
   "ironLabel": "żelazo",
   "itemDeletedSnackbar": "Pozycja usunięta",
   "itemUpdatedSnackbar": "Pozycja zaktualizowana",
   "kcalLabel": "kcal",
+  "kjLabel": "kJ",
   "kcalLeftLabel": "kcal pozostało",
   "kcalTooMuchLabel": "kcal za dużo",
   "kgLabel": "kg",
@@ -227,14 +323,26 @@
   "macroDistributionLabel": "Rozkład makroskładników:",
   "magnesiumLabel": "magnez",
   "mealBrandsLabel": "Marki",
-  "mealCarbsLabel": "węglowodany na",
-  "mealFatLabel": "tłuszcze na",
+  "mealCarbsLabel": "Węglowodany",
+  "mealEnergyLabel": "Energia",
+  "mealFatLabel": "Tłuszcze",
+  "mealImageLabel": "Dodaj zdjęcie",
+  "mealImagePickFromGallery": "Wybierz z galerii",
+  "mealImageRemove": "Usuń zdjęcie",
+  "mealImageReplace": "Zmień zdjęcie",
+  "mealImageTakePhoto": "Zrób zdjęcie",
   "mealKcalLabel": "kcal na",
   "mealNameLabel": "Nazwa posiłku",
   "mealNameValidationError": "Nazwa posiłku musi zawierać co najmniej jedną literę",
   "mealNutrientsPerQtyLabel": "Na {qty} {unit}",
   "mealNutrientsTotalLabel": "Łączna ilość",
-  "mealProteinLabel": "białko na 100 g/ml",
+  "mealPatternFiveSmall": "5 małych",
+  "mealPatternMediterranean": "Śródziemnomorski",
+  "mealPatternOmad": "1 posiłek",
+  "mealPatternPresetsLabel": "Szybkie ustawienia",
+  "mealPatternStandard": "Standardowy",
+  "mealPatternTwoMeal": "2 posiłki",
+  "mealProteinLabel": "Białko",
   "mealSizeLabel": "Rozmiar posiłku (g/ml)",
   "mealSizeLabelImperial": "Rozmiar posiłku (oz/fl oz)",
   "mealUnitLabel": "Jednostka posiłku",
@@ -249,6 +357,12 @@
   "noResultsFound": "Nie znaleziono wyników",
   "notAvailableLabel": "N/D",
   "nothingAddedLabel": "Nic nie dodano",
+  "notificationsDailyReminderBody": "Nie zapomnij dziś zapisać swoich posiłków!",
+  "notificationsDailyReminderTitle": "OpenNutriTracker",
+  "notificationsPermissionDeniedSnack": "Odmówiono dostępu do powiadomień.",
+  "nutrientPanelAllHiddenLabel": "Wszystkie składniki ukryte — włącz wybrane w Ustawienia → Składniki odżywcze.",
+  "nutrientPanelDayLabel": "Dzień",
+  "nutrientPanelWeekLabel": "Tydzień",
   "nutritionInfoLabel": "Informacje odżywcze",
   "nutritionalStatusNormalWeight": "Prawidłowa waga",
   "nutritionalStatusObeseClassI": "Otyłość I stopnia",
@@ -275,9 +389,12 @@
   "onboardingHeightQuestionSubtitle": "Jaki jest Twój aktualny wzrost?",
   "onboardingIntroDescription": "Na początek aplikacja potrzebuje kilku informacji o Tobie, aby obliczyć Twój dzienny cel kaloryczny.\nWszystkie informacje o Tobie są bezpiecznie przechowywane na Twoim urządzeniu.",
   "onboardingKcalPerDayLabel": "kcal dziennie",
+  "onboardingKjPerDayLabel": "kJ dziennie",
   "onboardingNonBinaryDisclaimer": "Nie istnieje opublikowana kaloryczna wartość bazowa dla osób niebinarnych, więc domyślnie używamy średniej z formuł męskiej i żeńskiej — to punkt wyjścia, a nie precyzyjne oszacowanie. Możesz to skorygować w każdej chwili w Ustawieniach → Obliczenia.",
   "onboardingOverviewLabel": "Przegląd",
   "onboardingSaveUserError": "Nieprawidłowe dane, spróbuj ponownie",
+  "onboardingTargetWeightHintOptional": "Opcjonalnie",
+  "onboardingTargetWeightSubtitle": "Czy masz wagę, do której dążysz? Możesz zostawić to pole puste lub zmienić je później w Profilu.",
   "onboardingWeightExampleHintKg": "np. 60",
   "onboardingWeightExampleHintLbs": "np. 132",
   "onboardingWeightQuestionSubtitle": "Jaka jest Twoja aktualna waga?",
@@ -521,6 +638,12 @@
   "potassiumLabel": "potas",
   "privacyPolicyLabel": "Polityka prywatności",
   "profileLabel": "Profil",
+  "profileTargetWeightClearAction": "Wyczyść",
+  "profileTargetWeightLabel": "Docelowa waga",
+  "profileTargetWeightNotSetLabel": "Nieustawiony",
+  "profileTargetWeightReached": "Osiągnięto wagę docelową",
+  "profileTargetWeightToGo": "{value} do celu",
+  "profileWeightHistoryTitle": "Historia wagi",
   "proteinLabel": "białko",
   "proteinLabelShort": "b",
   "quantityLabel": "Ilość",
@@ -530,15 +653,13 @@
   "recipeDeleteConfirmContent": "Wcześniejsze wpisy w dzienniku z tego przepisu zostaną zachowane.",
   "recipeDeleteConfirmTitle": "Usunąć przepis?",
   "recipeDescriptionLabel": "Opis (opcjonalnie)",
+  "recipeImageLabel": "Dodaj zdjęcie",
+  "recipeImagePickFromGallery": "Wybierz z galerii",
+  "recipeImageRemove": "Usuń zdjęcie",
+  "recipeImageReplace": "Zmień zdjęcie",
+  "recipeImageTakePhoto": "Zrób zdjęcie",
   "recipeIngredientAmountLabel": "Ilość",
   "recipeIngredientCountLabel": "{count} składnik(ów)",
-  "@recipeIngredientCountLabel": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
   "recipeIngredientUnitLabel": "Jednostka",
   "recipeIngredientsLabel": "Składniki",
   "recipeInvalidTotalWeightLabel": "Waga całkowita musi być większa od zera",
@@ -550,6 +671,8 @@
   "recipeNutritionPer100Label": "Na 100 g",
   "recipeNutritionPreviewLabel": "Wartości odżywcze (suma)",
   "recipeSaveErrorLabel": "Nie udało się zapisać przepisu.",
+  "recipeSaveForLaterDescription": "Włącz, aby zachować ten posiłek na liście zapisanych na później. Pozostaw wyłączone dla jednorazowego posiłku, którego już nie zjesz.",
+  "recipeSaveForLaterLabel": "Zapisz na później",
   "recipeSaveLabel": "Zapisz przepis",
   "recipeServingsCountHelper": "Pozwala rejestrować ten przepis na porcje zamiast w gramach.",
   "recipeServingsCountLabel": "Porcje (opcjonalnie)",
@@ -576,46 +699,95 @@
   "selectPalCategoryLabel": "Wybierz poziom aktywności",
   "selectWeightDialogLabel": "Wybierz wagę",
   "selectionCountLabel": "Wybrano: {count}",
-  "@selectionCountLabel": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
   "sendAnonymousUserData": "Wyślij anonimowe dane użytkowania",
   "servingLabel": "Porcja",
   "servingSizeLabelImperial": "Rozmiar porcji (oz/fl oz)",
   "servingSizeLabelMetric": "Rozmiar porcji (g/ml)",
   "settingAboutLabel": "O aplikacji",
   "settingFeedbackLabel": "Opinia",
-  "settingsCalculationsLabel": "Obliczenia",
+  "settingsCalciumGoalDescription": "Dzienny cel wapnia w miligramach. Wartość referencyjna to 1000 mg.",
+  "settingsCalciumGoalLabel": "Cel wapnia",
+  "settingsCaloriesTaperDescription": "Stopniowo zmniejsza dzienny deficyt, aby ostatnie kilogramy nie wydawały się ścianą.",
+  "settingsCaloriesTaperLabel": "Dostosuj cel kaloryczny w miarę zbliżania się do celu",
   "settingsCustomMealsLabel": "Własne posiłki",
+  "settingsDayStartLabel": "Dzień zaczyna się o",
+  "settingsDayStartDescription": "Wybierz godzinę, o której zaczyna się Twój dzień. Posiłki i aktywności zarejestrowane przed tą godziną zaliczają się do poprzedniego dnia — przydatne przy pracy nocnej lub późnym jedzeniu.",
+  "settingsDayStartHourLabel": "{hour}:00",
+  "@settingsDayStartHourLabel": {
+    "placeholders": {
+      "hour": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsDayStartHoursPickerLabel": "Godziny",
+  "settingsDayStartMinutesPickerLabel": "Minuty",
+  "settingsDayStartTimeLabel": "{hour}:{minute}",
+  "@settingsDayStartTimeLabel": {
+    "placeholders": {
+      "hour": {
+        "type": "int"
+      },
+      "minute": {
+        "type": "String"
+      }
+    }
+  },
   "settingsDisclaimerLabel": "Zastrzeżenie",
   "settingsDistanceLabel": "Odległość",
+  "settingsEnergyUnitLabel": "Jednostka energii",
+  "settingsFibreGoalDescription": "Dzienny cel błonnika w gramach. Wartość referencyjna to 30 g.",
+  "settingsFibreGoalLabel": "Cel błonnika",
   "settingsImperialLabel": "Imperialny (lbs, ft, oz)",
+  "settingsKcalAdjustmentLabel": "Dzienna korekta kcal",
+  "settingsIronGoalDescription": "Dzienny cel żelaza w miligramach. Wartość domyślna zależy od płci (8 mg mężczyzna, 18 mg kobieta, 14 mg w pozostałych przypadkach).",
+  "settingsIronGoalLabel": "Cel żelaza",
   "settingsLabel": "Ustawienia",
   "settingsLanguageLabel": "Język",
+  "settingsMacroSplitLabel": "Podział makroskładników",
   "settingsLicensesLabel": "Licencje",
+  "settingsMagnesiumGoalDescription": "Dzienny cel magnezu w miligramach. Wartość domyślna zależy od płci (400 mg mężczyzna, 310 mg kobieta, 355 mg w pozostałych przypadkach).",
+  "settingsMagnesiumGoalLabel": "Cel magnezu",
   "settingsMassLabel": "Masa",
   "settingsMetricLabel": "Metryczny (kg, cm, ml)",
   "settingsNotificationsLabel": "Codzienne przypomnienie",
   "settingsNotificationsTimeLabel": "Czas przypomnienia: {time}",
-  "notificationsPermissionDeniedSnack": "Odmówiono dostępu do powiadomień.",
-  "notificationsDailyReminderTitle": "OpenNutriTracker",
-  "notificationsDailyReminderBody": "Nie zapomnij dziś zapisać swoich posiłków!",
+  "settingsNutrientGoalsHint": "Osobiste cele dla każdego składnika odżywczego w panelu dziennym. Dziennik używa ich zamiast domyślnych wartości referencyjnych za każdym razem, gdy któryś ustawisz.",
+  "settingsNutrientGoalsLabel": "Cele składników odżywczych",
+  "settingsNutrientsHelp": "Wybierz, które składniki są widoczne w panelu dziennym. Ukryte możesz w każdej chwili włączyć ponownie.",
+  "settingsNutrientsLabel": "Składniki odżywcze",
+  "settingsNutrientsSubtitle": "Wybierz, które składniki pojawiają się w panelu dziennika",
+  "settingsPerMealKcalShareBreakfast": "Śniadanie",
+  "settingsPerMealKcalShareDescription": "Rozłóż dzienny cel kcal na śniadanie, obiad, kolację i przekąski. Udziały muszą sumować się do 100%.",
+  "settingsPerMealKcalShareDinner": "Kolacja",
+  "settingsPerMealKcalShareLabel": "Udział kcal na posiłek",
+  "settingsPerMealKcalShareLunch": "Obiad",
+  "settingsPerMealKcalShareSnack": "Przekąska",
+  "settingsPotassiumGoalDescription": "Dzienny cel potasu w miligramach. Wartość referencyjna to 3500 mg.",
+  "settingsPotassiumGoalLabel": "Cel potasu",
   "settingsPrivacySettings": "Ustawienia prywatności",
   "settingsReportErrorLabel": "Zgłoś błąd",
+  "settingsSaturatedFatGoalDescription": "Dzienny limit tłuszczów nasyconych w gramach. Wartość referencyjna to 20 g.",
+  "settingsSaturatedFatGoalLabel": "Cel tłuszczów nasyconych",
   "settingsShowActivityTracking": "Pokaż śledzenie aktywności",
   "settingsShowMealMacros": "Pokaż makro posiłku",
   "settingsShowMicronutrientsLabel": "Pokaż mikroskładniki",
+  "settingsSodiumGoalDescription": "Dzienny limit sodu w miligramach. Wartość referencyjna to 2300 mg.",
+  "settingsSodiumGoalLabel": "Cel sodu",
   "settingsSourceCodeLabel": "Kod źródłowy",
+  "settingsSourcesLabel": "Źródła i odniesienia",
+  "settingsSugarsGoalDescription": "Dzienny limit cukrów w gramach. Wartość referencyjna to 50 g.",
+  "settingsSugarsGoalLabel": "Cel cukrów",
   "settingsSystemLabel": "System",
   "settingsThemeDarkLabel": "Ciemny",
   "settingsThemeLabel": "Motyw",
   "settingsThemeLightLabel": "Jasny",
   "settingsThemeSystemDefaultLabel": "Domyślny systemu",
   "settingsUnitsLabel": "Jednostki",
+  "settingsVitaminB12GoalDescription": "Dzienny cel witaminy B12 w mikrogramach. Wartość referencyjna to 2,4 µg.",
+  "settingsVitaminB12GoalLabel": "Cel witaminy B12",
+  "settingsVitaminDGoalDescription": "Dzienny cel witaminy D w mikrogramach. Wartość referencyjna to 15 µg.",
+  "settingsVitaminDGoalLabel": "Cel witaminy D",
   "settingsVolumeLabel": "Objętość",
   "shareActivityLabel": "Udostępnij trening",
   "shareCodeLabel": "Udostępnij kod",
@@ -624,6 +796,19 @@
   "snackExample": "np. jabłko, lody, czekolada ...",
   "snackLabel": "Przekąska",
   "sodiumLabel": "sód",
+  "sourcesActivityDescription": "Kalorie spalone podczas aktywności są szacowane jako MET × masa ciała (kg) × czas trwania (godziny), na podstawie wartości z Adult Compendium of Physical Activities.",
+  "sourcesActivityTitle": "Kalorie z aktywności (wartości MET)",
+  "sourcesBmiDescription": "BMI oblicza się jako masę ciała (kg) podzieloną przez kwadrat wzrostu (m²). Kategorie zdrowotne (niedowaga, waga prawidłowa, nadwaga, otyłość I–III stopnia) są zgodne z klasyfikacją BMI dla osób dorosłych Światowej Organizacji Zdrowia.",
+  "sourcesBmiTitle": "Wskaźnik masy ciała (BMI)",
+  "sourcesEnergyDescription": "Dzienne cele kaloryczne, podstawowa przemiana materii oraz współczynniki aktywności fizycznej opierają się na równaniach Institute of Medicine. Źródło: Institute of Medicine (2005). Dietary Reference Intakes for Energy, Carbohydrate, Fiber, Fat, Fatty Acids, Cholesterol, Protein, and Amino Acids, rozdział 5 i tabela 5-5.",
+  "sourcesEnergyTitle": "Zapotrzebowanie energetyczne (TDEE, BMR i poziom aktywności)",
+  "sourcesIconTooltip": "Zobacz źródła",
+  "sourcesMacrosDescription": "Domyślny podział 60% węglowodanów, 25% tłuszczu i 15% białka mieści się w zakresach spożycia rekomendowanych przez WHO. Możesz go zmienić w Ustawienia → Obliczenia. Źródło: WHO Technical Report Series 916 (2003), Diet, Nutrition and the Prevention of Chronic Diseases.",
+  "sourcesMacrosTitle": "Rozkład makroskładników",
+  "sourcesNonBinaryDescription": "Badania nad wydatkiem energetycznym historycznie korzystały wyłącznie z binarnych kategorii płci, dlatego nie istnieje jeden zwalidowany wzór TDEE dla osób niebinarnych. OpenNutriTracker oferuje więc w Ustawienia → Obliczenia wybór między uśrednioną referencją, referencją typową dla estrogenu oraz referencją typową dla testosteronu. Jeśli dokładna wartość jest dla ciebie naprawdę istotna, skonsultuj się z lekarzem znającym twój profil hormonalny.",
+  "sourcesNonBinaryTitle": "Obliczanie kalorii dla osób niebinarnych",
+  "sourcesOpenSourceLabel": "Otwórz źródło",
+  "sourcesScreenIntro": "OpenNutriTracker stosuje dla każdego obliczenia uznane, recenzowane metody. Poniższe odnośniki prowadzą do oryginalnych źródeł, dzięki czemu możesz samodzielnie zweryfikować dowolną wartość.",
   "sugarLabel": "cukier",
   "suppliedLabel": "dostarczone",
   "transFatLabel": "tłuszcze trans",
@@ -638,6 +823,12 @@
   "weeklyWeightGoalLabel": "Tygodniowe tempo",
   "weeklyWeightGoalLbsPerWeek": "{rate} lbs/tydzień",
   "weeklyWeightGoalNoneLabel": "Nie ustawiono",
+  "weightHistoryAddEntry": "Dodaj wpis",
+  "weightHistoryChartEmptyState": "Zapisz wagę z co najmniej dwóch dni, aby zobaczyć trend.",
+  "weightHistoryDateLabel": "Data",
+  "weightHistoryNoEntries": "Brak zapisów wagi. Dodaj pierwszy, aby śledzić zmiany.",
+  "weightHistoryNoteLabel": "Notatka (opcjonalna)",
+  "weightHistoryWeightLabel": "Waga",
   "weightLabel": "Waga",
   "yearsLabel": "{age} lat",
   "zincLabel": "cynk",

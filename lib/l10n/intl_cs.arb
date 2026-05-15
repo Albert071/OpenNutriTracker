@@ -1,4 +1,104 @@
 {
+  "@clearOffCacheSubtitle": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "size": {
+        "type": "String"
+      }
+    }
+  },
+  "@csvImportPartialLabel": {
+    "placeholders": {
+      "imported": {
+        "type": "int"
+      },
+      "skipped": {
+        "type": "int"
+      }
+    }
+  },
+  "@csvImportSuccessLabel": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@deleteSelectedRecipesConfirmTitle": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@diaryMealKcalConsumedOfTarget": {
+    "placeholders": {
+      "consumed": {
+        "type": "String"
+      },
+      "target": {
+        "type": "String"
+      }
+    }
+  },
+  "@importActivityConfirmTitle": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@importMealConfirmContent": {
+    "placeholders": {
+      "mealType": {
+        "type": "String"
+      }
+    }
+  },
+  "@importMealConfirmTitle": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@importOffFetchFailedLabel": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@importRecipeConfirmContent": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@profileTargetWeightToGo": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "@recipeIngredientCountLabel": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@selectionCountLabel": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "activityExample": "např. běh, cyklistika, jóga ...",
   "activityLabel": "Activita",
   "addItemLabel": "Přidat nový záznam:",
@@ -16,6 +116,7 @@
   "appLicenseLabel": "Licence GPL-3.0",
   "appTitle": "OpenNutriTracker",
   "appVersionName": "Verze {versionNumber}",
+  "barcodeInvalidEan13CheckDigit": "Tento 13místný čárový kód vypadá překlepnutě: poslední číslice nesouhlasí s ostatními",
   "baseQuantityLabel": "Základní množství (g/ml)",
   "betaVersionName": "[Beta]",
   "bmiInfo": "Body Mass Index (BMI) je výpočet pro klasifikaci nadváhy a obezity u dospělých. Je definován jako hmotnost v kilogramech vydělená druhou mocninou výšky v metrech (kg/m²).\n\nBMI nerozlišuje mezi tukovou tkání a svalovou hmotou a může být chybně interpretován u některých jedinců.",
@@ -32,7 +133,7 @@
   "calculationsMacronutrientsDistributionLabel": "Poměr nutričních složek",
   "calculationsMacrosDistribution": "{pctCarbs}% sacharidy, {pctFats}% tuky, {pctProteins}% bílkoviny",
   "calculationsRecommendedLabel": "(doporučeno)",
-  "calculationsTDEEIOM2006Label": "Výpočet Institute of Medicine",
+  "calculationsTDEEIOM2006Label": "Výpočet Institute of Medicine (2005)",
   "calculationsTDEELabel": "Výpočet TDEE",
   "caloriesProfileAveragedLabel": "Zprůměrovaná reference (výchozí)",
   "caloriesProfileEstrogenTypicalLabel": "Estrogenní reference",
@@ -49,16 +150,6 @@
   "clearOffCacheConfirmTitle": "Vymazat mezipaměť?",
   "clearOffCacheLabel": "Vymazat mezipaměť",
   "clearOffCacheSubtitle": "{count} položek · {size}",
-  "@clearOffCacheSubtitle": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      },
-      "size": {
-        "type": "String"
-      }
-    }
-  },
   "cmLabel": "cm",
   "codeCopiedLabel": "Kód zkopírován",
   "copyCodeLabel": "Kopírovat kód",
@@ -73,38 +164,55 @@
   "csvImportContributeOffPrefix": "Máte čárový kód? Přispějte produktem do Open Food Facts:",
   "csvImportErrorLabel": "Nelze přečíst CSV soubor. Zkontrolujte formát a zkuste znovu.",
   "csvImportPartialLabel": "Importováno {imported} jídel; {skipped} řádků přeskočeno kvůli neplatným datům.",
-  "@csvImportPartialLabel": {
-    "placeholders": {
-      "imported": {
-        "type": "int"
-      },
-      "skipped": {
-        "type": "int"
-      }
-    }
-  },
   "csvImportSuccessLabel": "Importováno {count} jídel z CSV souboru.",
-  "@csvImportSuccessLabel": {
+  "customActivityDescription": "Zadejte spálené kalorie přímo, pro tréninky, které nejsou na seznamu, nebo hodnoty z fitness náramku",
+  "customActivityDescriptionKj": "Zadejte spálené kilojouly přímo, pro tréninky, které nejsou na seznamu, nebo hodnoty z fitness náramku",
+  "customActivityKcalHint": "např. 250",
+  "customActivityKcalLabel": "Spálené kalorie",
+  "customActivityName": "Vlastní aktivita",
+  "customActivityNameFieldHint": "např. Večerní jízda do práce",
+  "customActivityNameFieldLabel": "Název (nepovinné)",
+  "customActivityPickFromTemplate": "Vybrat z uložených šablon",
+  "customActivitySaveAsTemplate": "Uložit jako šablonu pro příště",
+  "customActivityTemplatesEmpty": "Zatím nemáte uložené žádné šablony. Zaškrtněte „Uložit jako šablonu pro příště“, abyste si vlastní aktivitu zapamatovali na později.",
+  "customMealBarcodeHint": "Naskenuj nebo zadej čárový kód, aby ses k jídlu mohl/a později vrátit",
+  "customMealBarcodeInvalid": "Čárový kód musí mít 8 až 14 číslic",
+  "customMealBarcodeLabel": "Čárový kód",
+  "customMealBarcodeScanButton": "Naskenovat čárový kód",
+  "customMealFormAdvanced": "Pokročilý",
+  "customMealFormAdvancedHelp": "Zadejte základní množství a hodnoty na 100 g/ml pro přesné škálování.",
+  "customMealFormModeLabel": "Zobrazení formuláře",
+  "customMealFormSimple": "Jednoduchý",
+  "customMealFormSimpleHelp": "Zadejte hodnoty pro jednu porci.",
+  "customMealFormSimpleFieldHelper": "{unit} v jedné porci",
+  "@customMealFormSimpleFieldHelper": {
     "placeholders": {
-      "count": {
-        "type": "int"
-      }
+      "unit": { "type": "String" }
     }
   },
   "customMealsDeleteConfirmContent": "Všechny záznamy v deníku používající toto jídlo budou také odstraněny.",
   "customMealsDeleteConfirmTitle": "Smazat vlastní jídlo?",
   "customMealsEmptyLabel": "Zatím žádná vlastní jídla uložena.",
   "dailyKcalAdjustmentLabel": "Úprava denního kalorického příjmu:",
-  "dataCollectionLabel": "Poskytněte anonymní data týkající se používání aplikace pro pomoc s jejím vývojem",
+  "dailyKjAdjustmentLabel": "Úprava denního příjmu (kJ):",
+  "dataCollectionLabel": "Odesílat anonymní hlášení o pádech, abychom mohli opravovat chyby. Neodesílají se žádné záznamy o jídle, hmotnosti ani osobní údaje.",
   "deleteAllLabel": "Smazat vše",
-  "deleteSelectedRecipesConfirmTitle": "Smazat {count} recept(ů)?",
-  "@deleteSelectedRecipesConfirmTitle": {
+  "settingsDeleteAllDataLabel": "Smazat všechna moje data",
+  "settingsDeleteAllDataSubtitle": "Profil, jídla, aktivity a historii hmotnosti",
+  "settingsDeleteAllDataConfirmTitle": "Smazat všechna vaše data?",
+  "settingsDeleteAllDataConfirmContent": "Tato akce trvale odstraní z tohoto zařízení váš profil, jídla, aktivity, historii hmotnosti a všechny vlastní recepty. Databáze Open Food Facts a USDA Food Data Central tím nejsou dotčeny. Akci nelze vrátit zpět.",
+  "settingsDeleteAllDataConfirmAction": "Smazat vše",
+  "lowKcalWarningTitle": "Tento denní cíl je poměrně nízký",
+  "lowKcalWarningBody": "Dospělí by bez lékařského dohledu neměli dlouhodobě přijímat méně než {threshold} kcal denně. Zvažte, prosím, konzultaci se zdravotníkem, než u tak nízkého cíle zůstanete.",
+  "@lowKcalWarningBody": {
     "placeholders": {
-      "count": {
+      "threshold": {
         "type": "int"
       }
     }
   },
+  "lowKcalWarningViewDisclaimer": "Zobrazit upozornění",
+  "deleteSelectedRecipesConfirmTitle": "Smazat {count} recept(ů)?",
   "deleteTimeDialogContent": "Přejete si vymazat označený záznam?",
   "deleteTimeDialogPluralContent": "Přejete si vymazat všechny položky vybraného pokrmu?",
   "deleteTimeDialogPluralTitle": "Smazat položky?",
@@ -115,14 +223,25 @@
   "dialogOKLabel": "OK",
   "diaryFutureDateWarning": "Upravujete datum v budoucnosti",
   "diaryLabel": "Diář",
+  "diaryMealKcalConsumedOfTarget": "{consumed} / {target} kcal",
+  "diaryNutrientPanelDataDisclaimer": "Sčítají se zde pouze živiny, které jsou u zaznamenaných jídel zachyceny. Jídlo bez hodnoty k dané živině nepřispěje — součty proto mohou být podhodnocené.",
+  "diaryNutrientPanelTitle": "Dnešní živiny",
+  "diarySortByCarbs": "Sacharidy (sestupně)",
+  "diarySortByFat": "Tuky (sestupně)",
+  "diarySortByKcal": "Kalorie (sestupně)",
+  "diarySortByLabel": "Řadit podle",
+  "diarySortByProtein": "Bílkoviny (sestupně)",
+  "diarySortByTime": "Času přidání",
   "dinnerExample": "např. polévka, kuřecí maso, víno...",
   "dinnerLabel": "Večeře",
   "discardChangesConfirmLabel": "Zahodit",
   "discardChangesContent": "Vaše neuložené změny budou ztraceny.",
   "discardChangesTitle": "Zahodit změny?",
-  "disclaimerText": "OpenNutriTracker není aplikace pro lékařské účely. Doporučené hodnoty nejsou validovány a měly by být použity opatrně za použití selského rozumu. Dodržujte prosím obecné zásady zdravého životního stylu a kontaktujte lékaře v případě zdravotních problémů. Používání aplikace se nedoporučuje během nemoci, těhotenství či kojení.",
+  "disclaimerText": "OpenNutriTracker není aplikace pro lékařské účely. Doporučené hodnoty nejsou validovány a měly by být použity opatrně za použití selského rozumu. Dodržujte prosím obecné zásady zdravého životního stylu a kontaktujte lékaře v případě zdravotních problémů. Používání aplikace se nedoporučuje během nemoci, těhotenství či kojení. Recenzované zdroje ke každému výpočtu najdete přes ikonu informací na obrazovce Domů nebo Profil.",
   "downloadSampleCsvAction": "Vzorová jídla (csv)",
+  "downloadSampleJsonAction": "Vzorová jídla (json)",
   "downloadSampleRecipesCsvAction": "Vzorové recepty (csv)",
+  "downloadSampleRecipesJsonAction": "Vzorové recepty (json)",
   "duplicateMealDialogContent": "Tato potravina už byla dnes přidána k tomuto jídlu. Přidat ji znovu?",
   "duplicateRecipeLabel": "Duplikovat",
   "duplicateRecipeNameSuffix": "(kopie)",
@@ -130,6 +249,10 @@
   "editMealLabel": "Upravit jídlo",
   "editRecipeTitle": "Upravit recept",
   "energyLabel": "energie",
+  "energyLeftLabel": "zbývá",
+  "energyTooMuchLabel": "navíc",
+  "energyUnitKcalLabel": "Kilokalorie (kcal)",
+  "energyUnitKjLabel": "Kilojouly (kJ)",
   "errorFetchingProductData": "Chyba získání dat o produktu",
   "errorLoadingActivities": "Chyba načítání aktivit",
   "errorMealSave": "Chyba ukládání jídla. Zkontrolujte prosím správnost zadaných informací.",
@@ -138,6 +261,7 @@
   "errorProductNotFound": "Produkt nenalezen",
   "exportAction": "Export",
   "exportImportAppDataLabel": "Export / Import dat aplikace",
+  "exportImportCsvRecipesNote": "CSV obsahuje aktivitu, deník jídla a zaznamenané dny. Recepty a připojené fotky se ukládají jen do JSON — přepni na JSON, pokud je chceš mít v záloze.",
   "exportImportDescription": "Můžete uložit data z aplikace do .zip archívu a později je znovu importovat. To je užitečné, pokud potřebujete data zálohovat, nebo přenést na jiné zařízení.\n\nAplikace pro ukládání dat nepoužívá žádné cloudové služby.",
   "exportImportErrorLabel": "Export / Import selhal",
   "exportImportSuccessLabel": "Export / Import byl úspěšný",
@@ -161,63 +285,35 @@
   "importAction": "Import",
   "importActivityConfirmContent": "Tyto aktivity budou přidány do dneška.",
   "importActivityConfirmTitle": "Importovat {count} aktivit?",
-  "@importActivityConfirmTitle": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
   "importActivityLabel": "Importovat sdílený trénink",
   "importActivitySuccessLabel": "Trénink importován",
-  "importCustomFoodDataDescription": "Importujte vlastní jídla ze souboru CSV. Stáhněte si vzor, abyste viděli očekávaný formát sloupců a povinná pole.",
+  "importCustomFoodDataDescription": "Importujte vlastní jídla z CSV souboru nebo vložením JSON. Stáhněte si ukázku, abyste viděli očekávaný tvar a povinná pole.",
   "importCustomFoodDataLabel": "Importovat vlastní data potravin",
   "importMealConfirmContent": "Tyto položky budou přidány do {mealType}.",
-  "@importMealConfirmContent": {
-    "placeholders": {
-      "mealType": {
-        "type": "String"
-      }
-    }
-  },
   "importMealConfirmTitle": "Importovat {count} položek?",
-  "@importMealConfirmTitle": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
   "importMealErrorLabel": "Neplatný QR kód",
   "importMealLabel": "Importovat sdílené jídlo",
   "importMealSuccessLabel": "Jídlo importováno",
   "importMealsCsvAction": "Importovat jídla (csv)",
+  "importMealsJsonAction": "Importovat jídla (json)",
   "importOffFetchFailedLabel": "{count} položek nebylo možné načíst z OpenFoodFacts.",
-  "@importOffFetchFailedLabel": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
   "importRecipeConfirmContent": "Importovat tento recept s {count} ingrediencí(emi)?",
-  "@importRecipeConfirmContent": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
   "importRecipeErrorLabel": "Nepodařilo se zpracovat kód receptu",
   "importRecipeLabel": "Importovat recept",
   "importRecipeSuccessLabel": "Recept importován",
   "importRecipesCsvAction": "Importovat recepty (csv)",
+  "importRecipesJsonAction": "Importovat recepty (json)",
+  "inconsistentNutritionWarningBody": "Tyto hodnoty si úplně neodpovídají — zadané kalorie neodpovídají energii ze sacharidů, tuků a bílkovin. Uložit i tak, nebo se podívat ještě jednou?",
+  "inconsistentNutritionWarningEdit": "Podívat se ještě jednou",
+  "inconsistentNutritionWarningSaveAnyway": "Uložit i tak",
+  "inconsistentNutritionWarningTitle": "Čísla nesedí",
   "infoAddedActivityLabel": "Vložena nová aktivita",
   "infoAddedIntakeLabel": "Vložen nový příjem",
   "ironLabel": "železo",
   "itemDeletedSnackbar": "Záznam smazán",
   "itemUpdatedSnackbar": "Záznam upraven",
   "kcalLabel": "kcal",
+  "kjLabel": "kJ",
   "kcalLeftLabel": "kcal zbývá",
   "kcalTooMuchLabel": "kcal navíc",
   "kgLabel": "kg",
@@ -227,14 +323,26 @@
   "macroDistributionLabel": "Poměr nutričních složek:",
   "magnesiumLabel": "hořčík",
   "mealBrandsLabel": "Výrobce, značka",
-  "mealCarbsLabel": "sacharidů na",
-  "mealFatLabel": "tuků na",
+  "mealCarbsLabel": "Sacharidy",
+  "mealEnergyLabel": "Energie",
+  "mealFatLabel": "Tuky",
+  "mealImageLabel": "Přidat fotku",
+  "mealImagePickFromGallery": "Vybrat z galerie",
+  "mealImageRemove": "Odebrat fotku",
+  "mealImageReplace": "Nahradit fotku",
+  "mealImageTakePhoto": "Pořídit fotku",
   "mealKcalLabel": "kcal na",
   "mealNameLabel": "Název jídla",
   "mealNameValidationError": "Název jídla musí obsahovat alespoň jedno písmeno",
   "mealNutrientsPerQtyLabel": "Na {qty} {unit}",
   "mealNutrientsTotalLabel": "Celkové množství",
-  "mealProteinLabel": "bílkovin na 100 g/ml",
+  "mealPatternFiveSmall": "5 malých",
+  "mealPatternMediterranean": "Středomořský",
+  "mealPatternOmad": "1 jídlo",
+  "mealPatternPresetsLabel": "Rychlé předvolby",
+  "mealPatternStandard": "Standardní",
+  "mealPatternTwoMeal": "2 jídla",
+  "mealProteinLabel": "Bílkoviny",
   "mealSizeLabel": "Velikost jídla (g/ml)",
   "mealSizeLabelImperial": "Velikost jídla (oz/fl oz)",
   "mealUnitLabel": "Jednotka jídla",
@@ -249,6 +357,12 @@
   "noResultsFound": "Nenalezeny žádné výsledky",
   "notAvailableLabel": "neuvedeno",
   "nothingAddedLabel": "Nezadáno",
+  "notificationsDailyReminderBody": "Nezapomeňte si dnes zaznamenat svá jídla!",
+  "notificationsDailyReminderTitle": "OpenNutriTracker",
+  "notificationsPermissionDeniedSnack": "Oprávnění k upozorněním bylo odepřeno.",
+  "nutrientPanelAllHiddenLabel": "Všechny živiny skryté — zapni některé v Nastavení → Živiny.",
+  "nutrientPanelDayLabel": "Den",
+  "nutrientPanelWeekLabel": "Týden",
   "nutritionInfoLabel": "Nutriční hodnoty",
   "nutritionalStatusNormalWeight": "Normální hmotnost",
   "nutritionalStatusObeseClassI": "Obezita 1. stupně",
@@ -275,9 +389,12 @@
   "onboardingHeightQuestionSubtitle": "Jaká je Vaše výška?",
   "onboardingIntroDescription": "Než začnete, aplikace o Vás potřebuje zadat několik údajů, aby mohla spočítat Váš denní kalorický cíl.\nVeškeré osobní údaje jsou bezpečně uloženy pouze ve Vašem zařízení.",
   "onboardingKcalPerDayLabel": "kcal denně",
+  "onboardingKjPerDayLabel": "kJ denně",
   "onboardingNonBinaryDisclaimer": "Pro nebinární osoby neexistuje publikovaná kalorická základní hodnota, proto standardně používáme průměr mužských a ženských vzorců — výchozí bod, nikoli přesný odhad. Kdykoli to můžeš upravit v Nastavení → Výpočty.",
   "onboardingOverviewLabel": "Přehled",
   "onboardingSaveUserError": "Nesprávné zadání, vložte prosím hodnotu znovu",
+  "onboardingTargetWeightHintOptional": "Volitelné",
+  "onboardingTargetWeightSubtitle": "Máš hmotnost, ke které směřuješ? Pole můžeš nechat prázdné nebo ho později změnit v Profilu.",
   "onboardingWeightExampleHintKg": "např. 60",
   "onboardingWeightExampleHintLbs": "např. 132",
   "onboardingWeightQuestionSubtitle": "Jaká je Vaše hmotnost?",
@@ -521,6 +638,12 @@
   "potassiumLabel": "draslík",
   "privacyPolicyLabel": "Pravidla týkající se soukromí",
   "profileLabel": "Profil",
+  "profileTargetWeightClearAction": "Vymazat",
+  "profileTargetWeightLabel": "Cílová hmotnost",
+  "profileTargetWeightNotSetLabel": "Nenastaveno",
+  "profileTargetWeightReached": "Dosáhli jste svého cíle",
+  "profileTargetWeightToGo": "Zbývá {value} do cíle",
+  "profileWeightHistoryTitle": "Historie hmotnosti",
   "proteinLabel": "bílkoviny",
   "proteinLabelShort": "b",
   "quantityLabel": "Množství",
@@ -530,15 +653,13 @@
   "recipeDeleteConfirmContent": "Předchozí záznamy v deníku z tohoto receptu budou zachovány.",
   "recipeDeleteConfirmTitle": "Smazat recept?",
   "recipeDescriptionLabel": "Popis (volitelný)",
+  "recipeImageLabel": "Přidat fotku",
+  "recipeImagePickFromGallery": "Vybrat z galerie",
+  "recipeImageRemove": "Odebrat fotku",
+  "recipeImageReplace": "Nahradit fotku",
+  "recipeImageTakePhoto": "Pořídit fotku",
   "recipeIngredientAmountLabel": "Množství",
   "recipeIngredientCountLabel": "{count} ingredience(í)",
-  "@recipeIngredientCountLabel": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
   "recipeIngredientUnitLabel": "Jednotka",
   "recipeIngredientsLabel": "Ingredience",
   "recipeInvalidTotalWeightLabel": "Celková hmotnost musí být větší než nula",
@@ -550,6 +671,8 @@
   "recipeNutritionPer100Label": "Na 100 g",
   "recipeNutritionPreviewLabel": "Výživa (celkem)",
   "recipeSaveErrorLabel": "Recept se nepodařilo uložit.",
+  "recipeSaveForLaterDescription": "Zapněte, aby toto jídlo zůstalo v seznamu uložených pro příště. Nechte vypnuté u jednorázového jídla, které už nebudete jíst.",
+  "recipeSaveForLaterLabel": "Uložit pro příště",
   "recipeSaveLabel": "Uložit recept",
   "recipeServingsCountHelper": "Umožňuje zaznamenávat tento recept po porcích místo gramů.",
   "recipeServingsCountLabel": "Porce (volitelné)",
@@ -576,46 +699,95 @@
   "selectPalCategoryLabel": "Zvolte úroveň vašich aktivit",
   "selectWeightDialogLabel": "Zadejte hmotnost",
   "selectionCountLabel": "Vybráno: {count}",
-  "@selectionCountLabel": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
   "sendAnonymousUserData": "Odesílat anonymní data o používání aplikace",
   "servingLabel": "Porce",
   "servingSizeLabelImperial": "Velikost porce (oz/fl oz)",
   "servingSizeLabelMetric": "Velikost porce (g/ml)",
   "settingAboutLabel": "O aplikaci",
   "settingFeedbackLabel": "Zpětná vazba",
-  "settingsCalculationsLabel": "Vypočtené hodnoty",
+  "settingsCalciumGoalDescription": "Denní cíl vápníku v miligramech. Výchozí reference je 1000 mg.",
+  "settingsCalciumGoalLabel": "Cíl vápníku",
+  "settingsCaloriesTaperDescription": "Postupně zmenšuje denní deficit, aby posledních pár kilogramů nepůsobilo jako zeď.",
+  "settingsCaloriesTaperLabel": "Upravovat kalorický cíl, jak se blížíte k cílové váze",
   "settingsCustomMealsLabel": "Vlastní jídla",
+  "settingsDayStartLabel": "Den začíná v",
+  "settingsDayStartDescription": "Zvol hodinu, ve které začíná tvůj den. Jídla a aktivity zaznamenané před touto hodinou se počítají k předchozímu dni — hodí se při nočních směnách nebo pozdním jídle.",
+  "settingsDayStartHourLabel": "{hour}:00",
+  "@settingsDayStartHourLabel": {
+    "placeholders": {
+      "hour": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsDayStartHoursPickerLabel": "Hodiny",
+  "settingsDayStartMinutesPickerLabel": "Minuty",
+  "settingsDayStartTimeLabel": "{hour}:{minute}",
+  "@settingsDayStartTimeLabel": {
+    "placeholders": {
+      "hour": {
+        "type": "int"
+      },
+      "minute": {
+        "type": "String"
+      }
+    }
+  },
   "settingsDisclaimerLabel": "Vzdání se nároku",
   "settingsDistanceLabel": "Vzdálenost",
+  "settingsEnergyUnitLabel": "Jednotka energie",
+  "settingsFibreGoalDescription": "Denní cíl vlákniny v gramech. Výchozí reference je 30 g.",
+  "settingsFibreGoalLabel": "Cíl vlákniny",
   "settingsImperialLabel": "Imperiální (lbs, ft, oz)",
+  "settingsKcalAdjustmentLabel": "Denní úprava kcal",
+  "settingsIronGoalDescription": "Denní cíl železa v miligramech. Výchozí podle pohlaví (8 mg muž, 18 mg žena, 14 mg jinak).",
+  "settingsIronGoalLabel": "Cíl železa",
   "settingsLabel": "Nastavení",
   "settingsLanguageLabel": "Jazyk",
+  "settingsMacroSplitLabel": "Rozdělení makroživin",
   "settingsLicensesLabel": "Licence",
+  "settingsMagnesiumGoalDescription": "Denní cíl hořčíku v miligramech. Výchozí podle pohlaví (400 mg muž, 310 mg žena, 355 mg jinak).",
+  "settingsMagnesiumGoalLabel": "Cíl hořčíku",
   "settingsMassLabel": "Hmota",
   "settingsMetricLabel": "Metrické (kg, cm, ml)",
   "settingsNotificationsLabel": "Denní připomínka",
   "settingsNotificationsTimeLabel": "Čas připomínky: {time}",
-  "notificationsPermissionDeniedSnack": "Oprávnění k upozorněním bylo odepřeno.",
-  "notificationsDailyReminderTitle": "OpenNutriTracker",
-  "notificationsDailyReminderBody": "Nezapomeňte si dnes zaznamenat svá jídla!",
+  "settingsNutrientGoalsHint": "Osobní cíle pro každou živinu v denním panelu. Deník je použije místo výchozích denních referencí, kdykoli některý nastavíš.",
+  "settingsNutrientGoalsLabel": "Cíle živin",
+  "settingsNutrientsHelp": "Zvol, které živiny jsou v denním panelu vidět. Skryté lze kdykoli znovu zapnout.",
+  "settingsNutrientsLabel": "Živiny",
+  "settingsNutrientsSubtitle": "Vyber, které živiny se zobrazí v panelu deníku",
+  "settingsPerMealKcalShareBreakfast": "Snídaně",
+  "settingsPerMealKcalShareDescription": "Rozdělte denní cíl kcal mezi snídani, oběd, večeři a svačiny. Součet podílů musí být 100 %.",
+  "settingsPerMealKcalShareDinner": "Večeře",
+  "settingsPerMealKcalShareLabel": "Podíl kcal na jídlo",
+  "settingsPerMealKcalShareLunch": "Oběd",
+  "settingsPerMealKcalShareSnack": "Svačina",
+  "settingsPotassiumGoalDescription": "Denní cíl draslíku v miligramech. Výchozí reference je 3500 mg.",
+  "settingsPotassiumGoalLabel": "Cíl draslíku",
   "settingsPrivacySettings": "Nastavení soukromí",
   "settingsReportErrorLabel": "Nahlásit chybu",
+  "settingsSaturatedFatGoalDescription": "Denní limit nasycených tuků v gramech. Výchozí reference je 20 g.",
+  "settingsSaturatedFatGoalLabel": "Cíl nasycených tuků",
   "settingsShowActivityTracking": "Zobrazit sledování aktivity",
   "settingsShowMealMacros": "Zobrazit makra jídla",
   "settingsShowMicronutrientsLabel": "Zobrazit mikroživiny",
+  "settingsSodiumGoalDescription": "Denní limit sodíku v miligramech. Výchozí reference je 2300 mg.",
+  "settingsSodiumGoalLabel": "Cíl sodíku",
   "settingsSourceCodeLabel": "Zdrojový kód",
+  "settingsSourcesLabel": "Zdroje a reference",
+  "settingsSugarsGoalDescription": "Denní limit cukrů v gramech. Výchozí reference je 50 g.",
+  "settingsSugarsGoalLabel": "Cíl cukrů",
   "settingsSystemLabel": "Systém",
   "settingsThemeDarkLabel": "Tmavý",
   "settingsThemeLabel": "Vzhled",
   "settingsThemeLightLabel": "Světlý",
   "settingsThemeSystemDefaultLabel": "Dle systémového nastavení",
   "settingsUnitsLabel": "Jednotky",
+  "settingsVitaminB12GoalDescription": "Denní cíl vitaminu B12 v mikrogramech. Výchozí reference je 2,4 µg.",
+  "settingsVitaminB12GoalLabel": "Cíl vitaminu B12",
+  "settingsVitaminDGoalDescription": "Denní cíl vitaminu D v mikrogramech. Výchozí reference je 15 µg.",
+  "settingsVitaminDGoalLabel": "Cíl vitaminu D",
   "settingsVolumeLabel": "Objem",
   "shareActivityLabel": "Sdílet trénink",
   "shareCodeLabel": "Sdílet kód",
@@ -624,6 +796,19 @@
   "snackExample": "např. jablko, zmrzlina, čokoláda...",
   "snackLabel": "Svačina",
   "sodiumLabel": "sodík",
+  "sourcesActivityDescription": "Kalorie spálené při aktivitě se odhadují jako MET × tělesná hmotnost (kg) × doba (hodiny) podle hodnot z Adult Compendium of Physical Activities.",
+  "sourcesActivityTitle": "Kalorie z aktivity (hodnoty MET)",
+  "sourcesBmiDescription": "BMI se počítá jako hmotnost (kg) dělená druhou mocninou výšky (m²). Kategorie (podváha, normální váha, nadváha, obezita I.–III. stupně) odpovídají klasifikaci BMI pro dospělé podle Světové zdravotnické organizace.",
+  "sourcesBmiTitle": "Index tělesné hmotnosti (BMI)",
+  "sourcesEnergyDescription": "Denní kalorické cíle, bazální metabolismus a koeficienty fyzické aktivity vycházejí z rovnic Institute of Medicine. Zdroj: Institute of Medicine (2005). Dietary Reference Intakes for Energy, Carbohydrate, Fiber, Fat, Fatty Acids, Cholesterol, Protein, and Amino Acids, kapitola 5 a tabulka 5-5.",
+  "sourcesEnergyTitle": "Energetická potřeba (TDEE, BMR a úroveň aktivity)",
+  "sourcesIconTooltip": "Zobrazit zdroje",
+  "sourcesMacrosDescription": "Výchozí rozložení 60 % sacharidů, 25 % tuků a 15 % bílkovin spadá do doporučených rozsahů příjmu živin podle WHO. V Nastavení → Výpočty si je můžeš upravit. Zdroj: WHO Technical Report Series 916 (2003), Diet, Nutrition and the Prevention of Chronic Diseases.",
+  "sourcesMacrosTitle": "Rozložení makroživin",
+  "sourcesNonBinaryDescription": "Výzkum energetického výdeje historicky používal pouze binární pohlavní kategorie, takže pro non-binární osoby neexistuje jediný validovaný vzorec TDEE. OpenNutriTracker proto v Nastavení → Výpočty nabízí volbu mezi zprůměrovanou referencí, estrogen-typickou referencí a testosteron-typickou referencí. Pokud na přesné hodnotě skutečně záleží, prosím poraď se s lékařem, který zná tvůj hormonální stav.",
+  "sourcesNonBinaryTitle": "Výpočet kalorií pro non-binární osoby",
+  "sourcesOpenSourceLabel": "Otevřít zdroj",
+  "sourcesScreenIntro": "OpenNutriTracker používá pro každý zobrazený výpočet zavedené, recenzované metody. Následující odkazy vedou na původní zdroje, takže si můžeš každé číslo sám ověřit.",
   "sugarLabel": "cukry",
   "suppliedLabel": "přijato",
   "transFatLabel": "trans tuky",
@@ -638,6 +823,12 @@
   "weeklyWeightGoalLabel": "Týdenní tempo",
   "weeklyWeightGoalLbsPerWeek": "{rate} lbs/týden",
   "weeklyWeightGoalNoneLabel": "Nenastaveno",
+  "weightHistoryAddEntry": "Přidat záznam",
+  "weightHistoryChartEmptyState": "Zaznamenejte alespoň dva dny, abyste viděli vývoj.",
+  "weightHistoryDateLabel": "Datum",
+  "weightHistoryNoEntries": "Zatím žádné záznamy hmotnosti. Přidejte první, abyste mohli sledovat vývoj.",
+  "weightHistoryNoteLabel": "Poznámka (volitelná)",
+  "weightHistoryWeightLabel": "Hmotnost",
   "weightLabel": "Hmotnost",
   "yearsLabel": "{age} let",
   "zincLabel": "zinek",
