@@ -66,6 +66,8 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
           showMicronutrients: userConfig.showMicronutrients,
           usesKilojoules: userConfig.usesKilojoules,
           caloriesTaperEnabled: userConfig.caloriesTaperEnabled,
+          dayStartOffsetHours: userConfig.dayStartOffsetHours,
+          dayStartOffsetMinutes: userConfig.dayStartOffsetMinutes,
         ),
       );
     });
@@ -129,6 +131,27 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
 
   Future<void> setDiarySortPreference(String mealKey, int sortIndex) async {
     await _addConfigUsecase.setDiarySortPreference(mealKey, sortIndex);
+  }
+
+  // #139: persist the configurable diary day boundary (0-23).
+  Future<void> setDayStartOffsetHours(int hours) async {
+    await _addConfigUsecase.setConfigDayStartOffsetHours(hours);
+  }
+
+  Future<int> getDayStartOffsetHours() async {
+    final config = await _getConfigUsecase.getConfig();
+    return config.dayStartOffsetHours;
+  }
+
+  // #139 follow-up: persist the minute component (0-59) of the diary
+  // day boundary so shift workers on 04:30 (or 03:45) can be exact.
+  Future<void> setDayStartOffsetMinutes(int minutes) async {
+    await _addConfigUsecase.setConfigDayStartOffsetMinutes(minutes);
+  }
+
+  Future<int> getDayStartOffsetMinutes() async {
+    final config = await _getConfigUsecase.getConfig();
+    return config.dayStartOffsetMinutes;
   }
 
   Future<double> getKcalAdjustment() async {

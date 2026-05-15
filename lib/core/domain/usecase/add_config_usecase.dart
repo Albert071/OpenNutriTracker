@@ -93,4 +93,12 @@ class AddConfigUsecase {
   ) async {
     await _configRepository.setConfigNutrientPanelVisibility(visibility);
   }
+
+  Future<void> setConfigDayStartOffsetHours(int hours) async {
+    await _configRepository.setConfigDayStartOffsetHours(hours);
+  }
+
+  Future<void> setConfigDayStartOffsetMinutes(int minutes) async {
+    _configRepository.setConfigDayStartOffsetMinutes(minutes);
+  }
 }

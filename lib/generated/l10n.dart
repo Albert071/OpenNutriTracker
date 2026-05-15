@@ -1978,6 +1978,65 @@ class S {
     );
   }
 
+  /// `Day starts at`
+  String get settingsDayStartLabel {
+    return Intl.message(
+      'Day starts at',
+      name: 'settingsDayStartLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Choose the hour at which your day begins. Meals and activities logged before this hour count toward the previous day — useful if you work nights or eat late.`
+  String get settingsDayStartDescription {
+    return Intl.message(
+      'Choose the hour at which your day begins. Meals and activities logged before this hour count toward the previous day — useful if you work nights or eat late.',
+      name: 'settingsDayStartDescription',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `{hour}:00`
+  String settingsDayStartHourLabel(int hour) {
+    return Intl.message(
+      '$hour:00',
+      name: 'settingsDayStartHourLabel',
+      desc: '',
+      args: [hour],
+    );
+  }
+
+  /// `Hours`
+  String get settingsDayStartHoursPickerLabel {
+    return Intl.message(
+      'Hours',
+      name: 'settingsDayStartHoursPickerLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Minutes`
+  String get settingsDayStartMinutesPickerLabel {
+    return Intl.message(
+      'Minutes',
+      name: 'settingsDayStartMinutesPickerLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `{hour}:{minute}`
+  String settingsDayStartTimeLabel(int hour, String minute) {
+    return Intl.message(
+      '$hour:$minute',
+      name: 'settingsDayStartTimeLabel',
+      desc: '',
+      args: [hour, minute],
+    );
+  }
 
   /// `Distance`
   String get settingsDistanceLabel {

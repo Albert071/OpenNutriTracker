@@ -67,17 +67,42 @@ class CalendarDayBloc extends Bloc<CalendarDayEvent, CalendarDayState> {
     DateTime day,
     Emitter<CalendarDayState> emit,
   ) async {
+    // #139: when the user has a configured day-start offset, the
+    // intake/activity queries need to know about it so entries logged
+    // before the boundary roll into the previous day's column. The
+    // follow-up to #139 adds a minutes companion that travels alongside
+    // the hours value through the same call chain.
+    final config = await _getConfigUsecase.getConfig();
+    final dayStartOffsetHours = config.dayStartOffsetHours;
+    final dayStartOffsetMinutes = config.dayStartOffsetMinutes;
+
     final userActivities = await _getUserActivityUsecase.getUserActivityByDay(
       day,
+      dayStartOffsetHours: dayStartOffsetHours,
+      dayStartOffsetMinutes: dayStartOffsetMinutes,
     );
 
     final breakfastIntakeList = await _getIntakeUsecase.getBreakfastIntakeByDay(
       day,
+      dayStartOffsetHours: dayStartOffsetHours,
+      dayStartOffsetMinutes: dayStartOffsetMinutes,
     );
 
-    final lunchIntakeList = await _getIntakeUsecase.getLunchIntakeByDay(day);
-    final dinnerIntakeList = await _getIntakeUsecase.getDinnerIntakeByDay(day);
-    final snackIntakeList = await _getIntakeUsecase.getSnackIntakeByDay(day);
+    final lunchIntakeList = await _getIntakeUsecase.getLunchIntakeByDay(
+      day,
+      dayStartOffsetHours: dayStartOffsetHours,
+      dayStartOffsetMinutes: dayStartOffsetMinutes,
+    );
+    final dinnerIntakeList = await _getIntakeUsecase.getDinnerIntakeByDay(
+      day,
+      dayStartOffsetHours: dayStartOffsetHours,
+      dayStartOffsetMinutes: dayStartOffsetMinutes,
+    );
+    final snackIntakeList = await _getIntakeUsecase.getSnackIntakeByDay(
+      day,
+      dayStartOffsetHours: dayStartOffsetHours,
+      dayStartOffsetMinutes: dayStartOffsetMinutes,
+    );
 
     final trackedDayEntity = await _getTrackedDayUsecase.getTrackedDay(day);
     final configData = await _getConfigUsecase.getConfig();
@@ -100,8 +125,6 @@ class CalendarDayBloc extends Bloc<CalendarDayEvent, CalendarDayState> {
     final snackKcalTarget = dailyKcalGoal > 0
         ? configData.targetKcalForMeal(ConfigEntity.mealKeySnack, dailyKcalGoal)
         : 0.0;
-
-    final config = await _getConfigUsecase.getConfig();
 
     emit(
       CalendarDayLoaded(

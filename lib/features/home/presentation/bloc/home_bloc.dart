@@ -17,6 +17,7 @@ import 'package:opennutritracker/core/domain/usecase/get_user_usecase.dart';
 import 'package:opennutritracker/core/domain/usecase/update_intake_usecase.dart';
 import 'package:opennutritracker/core/domain/usecase/update_user_activity_usecase.dart';
 import 'package:opennutritracker/core/utils/calc/calorie_goal_calc.dart';
+import 'package:opennutritracker/core/utils/calc/day_boundary_calc.dart';
 import 'package:opennutritracker/core/utils/calc/macro_calc.dart';
 import 'package:opennutritracker/core/utils/locator.dart';
 import 'package:opennutritracker/features/diary/presentation/bloc/calendar_day_bloc.dart';
@@ -59,32 +60,52 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     on<LoadItemsEvent>((event, emit) async {
       emit(HomeLoadingState());
 
-      currentDay = DateTime.now();
       final configData = await _getConfigUsecase.getConfig();
+      final dayStartOffsetHours = configData.dayStartOffsetHours;
+      final dayStartOffsetMinutes = configData.dayStartOffsetMinutes;
+      // #139: the bloc's "current day" is the logical day, so day-change
+      // detection on app resume respects the user's configured boundary.
+      // The follow-up to #139 routes the boundary through total minutes
+      // so a 04:30 setting is honoured exactly.
+      currentDay = DayBoundaryCalc.currentLogicalDayMinutes(
+        configData.dayStartOffsetTotalMinutes,
+      );
       final usesImperialUnits = configData.usesImperialUnits;
       final showDisclaimerDialog = !configData.hasAcceptedDisclaimer;
       final showMealMacros = configData.showMealMacros;
 
       final breakfastIntakeList =
-          await _getIntakeUsecase.getTodayBreakfastIntake();
+          await _getIntakeUsecase.getTodayBreakfastIntake(
+        dayStartOffsetHours: dayStartOffsetHours,
+        dayStartOffsetMinutes: dayStartOffsetMinutes,
+      );
       final totalBreakfastKcal = getTotalKcal(breakfastIntakeList);
       final totalBreakfastCarbs = getTotalCarbs(breakfastIntakeList);
       final totalBreakfastFats = getTotalFats(breakfastIntakeList);
       final totalBreakfastProteins = getTotalProteins(breakfastIntakeList);
 
-      final lunchIntakeList = await _getIntakeUsecase.getTodayLunchIntake();
+      final lunchIntakeList = await _getIntakeUsecase.getTodayLunchIntake(
+        dayStartOffsetHours: dayStartOffsetHours,
+        dayStartOffsetMinutes: dayStartOffsetMinutes,
+      );
       final totalLunchKcal = getTotalKcal(lunchIntakeList);
       final totalLunchCarbs = getTotalCarbs(lunchIntakeList);
       final totalLunchFats = getTotalFats(lunchIntakeList);
       final totalLunchProteins = getTotalProteins(lunchIntakeList);
 
-      final dinnerIntakeList = await _getIntakeUsecase.getTodayDinnerIntake();
+      final dinnerIntakeList = await _getIntakeUsecase.getTodayDinnerIntake(
+        dayStartOffsetHours: dayStartOffsetHours,
+        dayStartOffsetMinutes: dayStartOffsetMinutes,
+      );
       final totalDinnerKcal = getTotalKcal(dinnerIntakeList);
       final totalDinnerCarbs = getTotalCarbs(dinnerIntakeList);
       final totalDinnerFats = getTotalFats(dinnerIntakeList);
       final totalDinnerProteins = getTotalProteins(dinnerIntakeList);
 
-      final snackIntakeList = await _getIntakeUsecase.getTodaySnackIntake();
+      final snackIntakeList = await _getIntakeUsecase.getTodaySnackIntake(
+        dayStartOffsetHours: dayStartOffsetHours,
+        dayStartOffsetMinutes: dayStartOffsetMinutes,
+      );
       final totalSnackKcal = getTotalKcal(snackIntakeList);
       final totalSnackCarbs = getTotalCarbs(snackIntakeList);
       final totalSnackFats = getTotalFats(snackIntakeList);
@@ -107,8 +128,10 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           totalDinnerProteins +
           totalSnackProteins;
 
-      final userActivities =
-          await _getUserActivityUsecase.getTodayUserActivity();
+      final userActivities = await _getUserActivityUsecase.getTodayUserActivity(
+        dayStartOffsetHours: dayStartOffsetHours,
+        dayStartOffsetMinutes: dayStartOffsetMinutes,
+      );
       final totalKcalActivities =
           userActivities.map((activity) => activity.burnedKcal).toList().sum;
 
@@ -206,7 +229,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     String intakeId,
     Map<String, dynamic> fields,
   ) async {
-    final dateTime = DateTime.now();
+    final dateTime = await _currentLogicalDay();
     // Get old intake values
     final oldIntakeObject = await _getIntakeUsecase.getIntakeById(intakeId);
     if (oldIntakeObject == null) return;
@@ -248,7 +271,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   }
 
   Future<void> deleteIntakeItem(IntakeEntity intakeEntity) async {
-    final dateTime = DateTime.now();
+    final dateTime = await _currentLogicalDay();
     await _deleteIntakeUsecase.deleteIntake(intakeEntity);
     await _addTrackedDayUseCase.removeDayCaloriesTracked(
       dateTime,
@@ -265,7 +288,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   }
 
   Future<void> deleteUserActivityItem(UserActivityEntity activityEntity) async {
-    final dateTime = DateTime.now();
+    final dateTime = await _currentLogicalDay();
     await _deleteUserActivityUsecase.deleteUserActivity(activityEntity);
     _addTrackedDayUseCase.reduceDayCalorieGoal(
       dateTime,
@@ -292,7 +315,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     UserActivityEntity activityEntity,
     double newDuration,
   ) async {
-    final dateTime = DateTime.now();
+    final dateTime = await _currentLogicalDay();
     final newActivity = await _updateUserActivityUsecase.updateUserActivity(
       activityEntity,
       newDuration,
@@ -322,5 +345,18 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   Future<void> _updateDiaryPage(DateTime day) async {
     locator<DiaryBloc>().add(const LoadDiaryYearEvent());
     locator<CalendarDayBloc>().add(RefreshCalendarDayEvent());
+  }
+
+  /// #139: tracked-day deltas (calories, macros) must land on the
+  /// user's logical "today" — for someone on a 04:30 boundary, a 02:00
+  /// edit still updates yesterday's totals. We resolve the offset on
+  /// each call so the most recent setting wins without needing the
+  /// bloc to cache it explicitly. The follow-up to #139 reads the
+  /// total-minutes value so the minute component (0-59) is honoured.
+  Future<DateTime> _currentLogicalDay() async {
+    final config = await _getConfigUsecase.getConfig();
+    return DayBoundaryCalc.currentLogicalDayMinutes(
+      config.dayStartOffsetTotalMinutes,
+    );
   }
 }

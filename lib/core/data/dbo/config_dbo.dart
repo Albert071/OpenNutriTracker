@@ -48,6 +48,8 @@ class ConfigDBO extends HiveObject {
   Map<String, int>? mealKcalSharesPct;
   @HiveField(18)
   String? customMealFormMode; // #232: 'simple' or 'advanced'; null means default (simple)
+  @HiveField(19)
+  int? dayStartOffsetHours; // #139: 0-23, null means default (0 = wall-clock midnight)
   @HiveField(20)
   bool caloriesTaperEnabled;
   // #160 follow-up: per-nutrient show/hide map for the daily nutrient panel.
@@ -65,6 +67,11 @@ class ConfigDBO extends HiveObject {
   /// (`DiarySortType.timeAdded`) until the user picks a sort.
   @HiveField(21)
   Map<String, int>? diarySortPreferences;
+  // #139 follow-up: 0-59 minute companion. Composes additively with
+  // dayStartOffsetHours so existing users with hours=4 and a null minutes
+  // value see a 4:00 boundary, unchanged.
+  @HiveField(23)
+  int? dayStartOffsetMinutes;
 
   ConfigDBO(
     this.hasAcceptedDisclaimer,
@@ -83,9 +90,11 @@ class ConfigDBO extends HiveObject {
     this.usesKilojoules,
     this.mealKcalSharesPct,
     this.customMealFormMode,
+    this.dayStartOffsetHours,
     this.caloriesTaperEnabled = false,
     this.diarySortPreferences,
     this.nutrientPanelVisibility,
+    this.dayStartOffsetMinutes,
   });
 
   factory ConfigDBO.empty() =>

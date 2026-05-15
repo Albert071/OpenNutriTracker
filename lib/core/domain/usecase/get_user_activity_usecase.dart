@@ -6,12 +6,31 @@ class GetUserActivityUsecase {
 
   GetUserActivityUsecase(this._userActivityRepository);
 
-  Future<List<UserActivityEntity>> getTodayUserActivity() {
-    return _userActivityRepository.getAllUserActivityByDate(DateTime.now());
+  // #139: callers pass [dayStartOffsetHours] (and, since the follow-up,
+  // [dayStartOffsetMinutes]) when they have the user's configured boundary.
+  // Both default to 0 so every existing caller keeps wall-clock-midnight
+  // behaviour exactly the same.
+  Future<List<UserActivityEntity>> getTodayUserActivity({
+    int dayStartOffsetHours = 0,
+    int dayStartOffsetMinutes = 0,
+  }) {
+    return _userActivityRepository.getAllUserActivityByDate(
+      DateTime.now(),
+      dayStartOffsetHours: dayStartOffsetHours,
+      dayStartOffsetMinutes: dayStartOffsetMinutes,
+    );
   }
 
-  Future<List<UserActivityEntity>> getUserActivityByDay(DateTime day) {
-    return _userActivityRepository.getAllUserActivityByDate(day);
+  Future<List<UserActivityEntity>> getUserActivityByDay(
+    DateTime day, {
+    int dayStartOffsetHours = 0,
+    int dayStartOffsetMinutes = 0,
+  }) {
+    return _userActivityRepository.getAllUserActivityByDate(
+      day,
+      dayStartOffsetHours: dayStartOffsetHours,
+      dayStartOffsetMinutes: dayStartOffsetMinutes,
+    );
   }
 
   Future<List<UserActivityEntity>> getRecentUserActivity() {

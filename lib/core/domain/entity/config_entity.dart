@@ -47,6 +47,8 @@ class ConfigEntity extends Equatable {
   // falls back to the default, which is currently "visible" for every
   // nutrient — see [isNutrientVisible].
   final Map<String, bool> nutrientPanelVisibility;
+  final int dayStartOffsetHours; // #139: 0-23, default 0 (wall-clock midnight)
+  final int dayStartOffsetMinutes; // #139 follow-up: 0-59, composes additively with hours
 
   const ConfigEntity(
     this.hasAcceptedDisclaimer,
@@ -70,12 +72,21 @@ class ConfigEntity extends Equatable {
     this.caloriesTaperEnabled = false,
     this.diarySortPreferences,
     this.nutrientPanelVisibility = const <String, bool>{},
+    this.dayStartOffsetHours = 0,
+    this.dayStartOffsetMinutes = 0,
   });
 
   /// Whether a particular nutrient on the daily panel should be rendered.
   /// All nutrients default to visible; the user can hide individual ones
   /// from Settings → Nutrients.
   bool isNutrientVisible(String key) => nutrientPanelVisibility[key] ?? true;
+
+  /// The combined day-start offset in minutes — what callers actually need
+  /// when comparing two `DateTime`s under the configured boundary. Hours and
+  /// minutes compose additively, so 4 h + 30 m and 0 h + 270 m both resolve
+  /// to the same 270-minute shift.
+  int get dayStartOffsetTotalMinutes =>
+      dayStartOffsetHours * 60 + dayStartOffsetMinutes;
 
   factory ConfigEntity.fromConfigDBO(ConfigDBO dbo) => ConfigEntity(
         dbo.hasAcceptedDisclaimer,
@@ -101,6 +112,9 @@ class ConfigEntity extends Equatable {
         diarySortPreferences: dbo.diarySortPreferences,
         nutrientPanelVisibility:
             dbo.nutrientPanelVisibility ?? const <String, bool>{},
+        dayStartOffsetHours: _normaliseOffsetHours(dbo.dayStartOffsetHours),
+        dayStartOffsetMinutes:
+            _normaliseOffsetMinutes(dbo.dayStartOffsetMinutes),
       );
 
   /// Returns the recommended kcal target for [mealKey] given a daily goal.
@@ -117,6 +131,21 @@ class ConfigEntity extends Equatable {
     final keys = [mealKeyBreakfast, mealKeyLunch, mealKeyDinner, mealKeySnack];
     if (!keys.every(raw.containsKey)) return null;
     return {for (final k in keys) k: raw[k] ?? 0};
+  }
+
+  static int _normaliseOffsetHours(int? raw) {
+    if (raw == null) return 0;
+    if (raw < 0 || raw > 23) return 0;
+    return raw;
+  }
+
+  // Defensive clamp so a corrupt or hand-edited Hive value can't push the
+  // total offset past the next wall-clock day. 0-59 is the supported range.
+  static int _normaliseOffsetMinutes(int? raw) {
+    if (raw == null) return 0;
+    if (raw < 0) return 0;
+    if (raw > 59) return 59;
+    return raw;
   }
 
   @override
@@ -141,5 +170,7 @@ class ConfigEntity extends Equatable {
         caloriesTaperEnabled,
         diarySortPreferences,
         nutrientPanelVisibility,
+        dayStartOffsetHours,
+        dayStartOffsetMinutes,
       ];
 }
