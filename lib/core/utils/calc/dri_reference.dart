@@ -12,9 +12,13 @@
 //   of scope for v1 — pregnant or lactating users currently fall back to
 //   the female 19 to 30 row, with this comment as the trail of breadcrumbs
 //   for whoever picks the work up.
-// * Non-binary users are handled by the caller via `CaloriesProfileEntity`,
-//   mirroring the existing BMR / iron / magnesium dispatch convention in
-//   `DailyNutrientPanel`. This file simply exposes the binary rows.
+// * Non-binary users are routed through `CaloriesProfileEntity`, mirroring
+//   the existing dispatch convention used by `ConfigEntity` for water goals.
+//   `estrogenTypical` resolves to the female row, `testosteroneTypical` to
+//   the male row, and `averaged` (or null, since the field is nullable)
+//   returns the midpoint of the two binary rows so iron, magnesium and
+//   friends sit at a neutral starting point that doesn't pretend to know
+//   more about the user's body than they've shared.
 // * The map is keyed by the panel's `NutrientPanelKeys` strings so a single
 //   call site at the top of the widget can fetch every value.
 //
@@ -23,6 +27,7 @@
 // PDF. Where a single age band is used the comment names the cohort the
 // figure was drawn from.
 
+import 'package:opennutritracker/core/domain/entity/calories_profile_entity.dart';
 import 'package:opennutritracker/core/domain/entity/user_entity.dart';
 import 'package:opennutritracker/core/domain/entity/user_gender_entity.dart';
 import 'package:opennutritracker/features/diary/presentation/widgets/daily_nutrient_panel.dart';
@@ -61,30 +66,38 @@ enum _LifeStage {
   f71plus,
 }
 
-_LifeStage _lifeStageFor(UserEntity user) {
-  // Pregnancy and lactation are out of scope for v1 — see the file header.
-  // Both gender pathways below assume non-pregnant adults.
-  final age = user.age;
-  // Map non-binary users onto the binary rows via their declared calories
-  // profile. Averaged (the default) routes to the female row so the lookup
-  // is conservative for iron and magnesium; the caller can still substitute
-  // a midpoint if it prefers, but the table itself has to pick a side.
-  final isFemale = switch (user.gender) {
-    UserGenderEntity.female => true,
-    UserGenderEntity.male => false,
-    UserGenderEntity.nonBinary => true,
+/// How the user's gender + calories profile should resolve against the
+/// binary DRI rows. `female` and `male` map directly to a single row;
+/// `averaged` means the caller should look up both rows and return the
+/// midpoint, which is how non-binary users with the default profile land.
+enum _DriRoute { female, male, averaged }
+
+_DriRoute _routeFor(UserEntity user) {
+  return switch (user.gender) {
+    UserGenderEntity.female => _DriRoute.female,
+    UserGenderEntity.male => _DriRoute.male,
+    UserGenderEntity.nonBinary => switch (user.caloriesProfile) {
+        CaloriesProfileEntity.estrogenTypical => _DriRoute.female,
+        CaloriesProfileEntity.testosteroneTypical => _DriRoute.male,
+        // averaged is the project's documented default and null falls back
+        // to the same place; see [CaloriesProfileEntity.averaged].
+        CaloriesProfileEntity.averaged || null => _DriRoute.averaged,
+      },
   };
-  if (isFemale) {
-    if (age <= 30) return _LifeStage.f19to30;
-    if (age <= 50) return _LifeStage.f31to50;
-    if (age <= 70) return _LifeStage.f51to70;
-    return _LifeStage.f71plus;
-  } else {
-    if (age <= 30) return _LifeStage.m19to30;
-    if (age <= 50) return _LifeStage.m31to50;
-    if (age <= 70) return _LifeStage.m51to70;
-    return _LifeStage.m71plus;
-  }
+}
+
+_LifeStage _femaleStage(int age) {
+  if (age <= 30) return _LifeStage.f19to30;
+  if (age <= 50) return _LifeStage.f31to50;
+  if (age <= 70) return _LifeStage.f51to70;
+  return _LifeStage.f71plus;
+}
+
+_LifeStage _maleStage(int age) {
+  if (age <= 30) return _LifeStage.m19to30;
+  if (age <= 50) return _LifeStage.m31to50;
+  if (age <= 70) return _LifeStage.m51to70;
+  return _LifeStage.m71plus;
 }
 
 // The lookup table itself. Outer key is the panel's nutrient identifier;
@@ -199,7 +212,26 @@ DriReference? getReferenceFor({
 }) {
   final rows = _driTable[nutrient];
   if (rows == null) return null;
-  return rows[_lifeStageFor(user)];
+  final route = _routeFor(user);
+  switch (route) {
+    case _DriRoute.female:
+      return rows[_femaleStage(user.age)];
+    case _DriRoute.male:
+      return rows[_maleStage(user.age)];
+    case _DriRoute.averaged:
+      final f = rows[_femaleStage(user.age)];
+      final m = rows[_maleStage(user.age)];
+      if (f == null || m == null) return f ?? m;
+      // Same unit on both rows by construction; the IOM doesn't change
+      // units within a single nutrient. Basis follows the female row's
+      // label so the dialog text stays accurate for whichever side it
+      // came from — for averaged figures both rows always agree on basis.
+      return DriReference(
+        amount: (f.amount + m.amount) / 2,
+        unit: f.unit,
+        basis: f.basis,
+      );
+  }
 }
 
 /// Canonical URL surfaced in the in-app "where do these come from" dialog.

@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:opennutritracker/core/domain/entity/calories_profile_entity.dart';
 import 'package:opennutritracker/core/domain/entity/user_entity.dart';
 import 'package:opennutritracker/core/domain/entity/user_gender_entity.dart';
 import 'package:opennutritracker/core/domain/entity/user_pal_entity.dart';
@@ -15,6 +16,7 @@ void main() {
   UserEntity user({
     required int age,
     required UserGenderEntity gender,
+    CaloriesProfileEntity? caloriesProfile,
   }) {
     final now = DateTime(2026, 5, 16);
     return UserEntity(
@@ -24,6 +26,7 @@ void main() {
       gender: gender,
       goal: UserWeightGoalEntity.maintainWeight,
       pal: UserPALEntity.sedentary,
+      caloriesProfile: caloriesProfile,
     );
   }
 
@@ -86,6 +89,52 @@ void main() {
         user: user(age: 25, gender: UserGenderEntity.female),
       );
       expect(ref, isNull);
+    });
+
+    test('non-binary estrogen-typical at 25 — iron uses the female row', () {
+      final ref = getReferenceFor(
+        nutrient: NutrientPanelKeys.iron,
+        user: user(
+          age: 25,
+          gender: UserGenderEntity.nonBinary,
+          caloriesProfile: CaloriesProfileEntity.estrogenTypical,
+        ),
+      );
+      expect(ref!.amount, 18);
+    });
+
+    test('non-binary testosterone-typical at 25 — iron uses the male row', () {
+      final ref = getReferenceFor(
+        nutrient: NutrientPanelKeys.iron,
+        user: user(
+          age: 25,
+          gender: UserGenderEntity.nonBinary,
+          caloriesProfile: CaloriesProfileEntity.testosteroneTypical,
+        ),
+      );
+      expect(ref!.amount, 8);
+    });
+
+    test('non-binary averaged at 25 — iron sits at the female / male midpoint', () {
+      final ref = getReferenceFor(
+        nutrient: NutrientPanelKeys.iron,
+        user: user(
+          age: 25,
+          gender: UserGenderEntity.nonBinary,
+          caloriesProfile: CaloriesProfileEntity.averaged,
+        ),
+      );
+      // female 18 mg + male 8 mg averaged = 13 mg.
+      expect(ref!.amount, 13);
+    });
+
+    test('non-binary with no profile picked defaults to averaged', () {
+      final ref = getReferenceFor(
+        nutrient: NutrientPanelKeys.magnesium,
+        user: user(age: 25, gender: UserGenderEntity.nonBinary),
+      );
+      // female 310 mg + male 400 mg averaged = 355 mg.
+      expect(ref!.amount, 355);
     });
   });
 }
