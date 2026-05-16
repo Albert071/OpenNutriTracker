@@ -1097,6 +1097,13 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Use system colours"),
         "settingsMaterialYouSubtitle": MessageLookupByLibrary.simpleMessage(
             "On Android 12 and newer, the app blends in with your wallpaper accent. On older Android and on iOS this setting has no visible effect."),
+        "settingsAccentColourTitle": MessageLookupByLibrary.simpleMessage("Accent colour"),
+        "settingsAccentSubtitleMaterialYou": MessageLookupByLibrary.simpleMessage("Material You"),
+        "settingsAccentSubtitleCustom": MessageLookupByLibrary.simpleMessage("Custom"),
+        "settingsAccentSubtitleDefault": MessageLookupByLibrary.simpleMessage("Default"),
+        "settingsAccentPresetsHeader": MessageLookupByLibrary.simpleMessage("Pick a colour"),
+        "settingsAccentCustomColour": MessageLookupByLibrary.simpleMessage("Custom colour…"),
+        "settingsAccentCustomSubtitle": MessageLookupByLibrary.simpleMessage("Open the hue picker for a precise choice"),
         "settingsAccentHueTitle": MessageLookupByLibrary.simpleMessage("Accent colour"),
         "settingsAccentHueDisabledHint": MessageLookupByLibrary.simpleMessage("Turn off system colours to choose a custom accent."),
         "settingsAccentHueReset": MessageLookupByLibrary.simpleMessage("Reset"),

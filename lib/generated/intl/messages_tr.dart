@@ -1093,6 +1093,13 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Sistem renklerini kullan"),
         "settingsMaterialYouSubtitle": MessageLookupByLibrary.simpleMessage(
             "Android 12 ve daha yeni sürümlerde uygulama duvar kâğıdınızın vurgu rengiyle uyumlanır. Daha eski Android sürümlerinde ve iOS'ta bu ayarın görünür bir etkisi olmaz."),
+        "settingsAccentColourTitle": MessageLookupByLibrary.simpleMessage("Vurgu rengi"),
+        "settingsAccentSubtitleMaterialYou": MessageLookupByLibrary.simpleMessage("Material You"),
+        "settingsAccentSubtitleCustom": MessageLookupByLibrary.simpleMessage("Özel"),
+        "settingsAccentSubtitleDefault": MessageLookupByLibrary.simpleMessage("Varsayılan"),
+        "settingsAccentPresetsHeader": MessageLookupByLibrary.simpleMessage("Bir renk seç"),
+        "settingsAccentCustomColour": MessageLookupByLibrary.simpleMessage("Özel renk…"),
+        "settingsAccentCustomSubtitle": MessageLookupByLibrary.simpleMessage("Hassas seçim için ton kaydırıcısını aç"),
         "settingsAccentHueTitle": MessageLookupByLibrary.simpleMessage("Vurgu rengi"),
         "settingsAccentHueDisabledHint": MessageLookupByLibrary.simpleMessage("Özel bir vurgu seçmek için sistem renklerini kapatın."),
         "settingsAccentHueReset": MessageLookupByLibrary.simpleMessage("Sıfırla"),

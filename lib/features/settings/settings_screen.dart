@@ -193,40 +193,26 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   title: Text(S.of(context).settingsThemeLabel),
                   onTap: () => _showThemeDialog(context, state.appTheme),
                 ),
-                if (Theme.of(context).platform == TargetPlatform.android)
-                  Semantics(
-                    identifier: 'settings-material-you-toggle',
-                    child: SwitchListTile(
-                      secondary: const Icon(Icons.palette_outlined),
-                      title: Text(S.of(context).settingsMaterialYouTitle),
-                      subtitle:
-                          Text(S.of(context).settingsMaterialYouSubtitle),
-                      value: state.useMaterialYou,
-                      onChanged: (bool value) {
-                        _settingsBloc.setUseMaterialYou(value);
-                        Provider.of<ThemeModeProvider>(
-                          context,
-                          listen: false,
-                        ).updateUseMaterialYou(value);
-                        _settingsBloc.add(LoadSettingsEvent());
-                      },
+                Semantics(
+                  identifier: 'settings-accent-colour',
+                  child: ListTile(
+                    leading: const Icon(Icons.palette_outlined),
+                    title: Text(S.of(context).settingsAccentColourTitle),
+                    subtitle: Text(
+                      _accentSubtitle(
+                        context,
+                        useMaterialYou: state.useMaterialYou,
+                        accentHue: state.accentHue,
+                      ),
+                    ),
+                    trailing: _AccentTrailingSwatch(
+                      useMaterialYou: state.useMaterialYou,
+                      accentHue: state.accentHue,
+                    ),
+                    onTap: () => Navigator.of(context).pushNamed(
+                      NavigationOptions.accentColourRoute,
                     ),
                   ),
-                _AccentHuePickerTile(
-                  hue: state.accentHue,
-                  // Material You wins on Android when the toggle is on, so the
-                  // picker is rendered but visually dimmed in that case.
-                  enabled:
-                      Theme.of(context).platform != TargetPlatform.android ||
-                          !state.useMaterialYou,
-                  onChanged: (double? value) {
-                    _settingsBloc.setAccentHue(value);
-                    Provider.of<ThemeModeProvider>(
-                      context,
-                      listen: false,
-                    ).updateAccentHue(value);
-                    _settingsBloc.add(LoadSettingsEvent());
-                  },
                 ),
                 ListTile(
                   leading: const Icon(Icons.language_outlined),
@@ -998,115 +984,58 @@ class _SettingsScreenState extends State<SettingsScreen> {
 }
 
 
-class _AccentHuePickerTile extends StatelessWidget {
-  final double? hue;
-  final bool enabled;
-  final ValueChanged<double?> onChanged;
+String _accentSubtitle(
+  BuildContext context, {
+  required bool useMaterialYou,
+  required double? accentHue,
+}) {
+  final isAndroid = Theme.of(context).platform == TargetPlatform.android;
+  if (isAndroid && useMaterialYou) {
+    return S.of(context).settingsAccentSubtitleMaterialYou;
+  }
+  if (accentHue != null) {
+    return S.of(context).settingsAccentSubtitleCustom;
+  }
+  return S.of(context).settingsAccentSubtitleDefault;
+}
 
-  const _AccentHuePickerTile({
-    required this.hue,
-    required this.enabled,
-    required this.onChanged,
+class _AccentTrailingSwatch extends StatelessWidget {
+  final bool useMaterialYou;
+  final double? accentHue;
+
+  const _AccentTrailingSwatch({
+    required this.useMaterialYou,
+    required this.accentHue,
   });
-
-  static const List<Color> _hueTrack = <Color>[
-    Color(0xFFFF0000),
-    Color(0xFFFFFF00),
-    Color(0xFF00FF00),
-    Color(0xFF00FFFF),
-    Color(0xFF0000FF),
-    Color(0xFFFF00FF),
-    Color(0xFFFF0000),
-  ];
 
   @override
   Widget build(BuildContext context) {
-    // Use the current hue as the swatch preview; if no hue picked, show a
-    // neutral primary colour so the swatch is never empty.
-    final previewHue = hue ?? 200.0;
-    final previewColor =
-        HSLColor.fromAHSL(1, previewHue, 0.7, 0.5).toColor();
-    final disabledHint = !enabled
-        ? Text(S.of(context).settingsAccentHueDisabledHint)
-        : null;
-    return Opacity(
-      opacity: enabled ? 1.0 : 0.5,
-      child: ListTile(
-        leading: const Icon(Icons.colorize_outlined),
-        title: Text(S.of(context).settingsAccentHueTitle),
-        subtitle: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            if (disabledHint != null) ...[
-              disabledHint,
-              const SizedBox(height: 8),
+    final isAndroid = Theme.of(context).platform == TargetPlatform.android;
+    if (isAndroid && useMaterialYou) {
+      return Container(
+        width: 24,
+        height: 24,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          gradient: const SweepGradient(
+            colors: <Color>[
+              Color(0xFFFF5252),
+              Color(0xFFFFD740),
+              Color(0xFF69F0AE),
+              Color(0xFF40C4FF),
+              Color(0xFFB388FF),
+              Color(0xFFFF5252),
             ],
-            Semantics(
-              identifier: 'settings-accent-hue-slider',
-              child: SliderTheme(
-                data: SliderTheme.of(context).copyWith(
-                  trackHeight: 16,
-                  thumbColor: previewColor,
-                  overlayColor: previewColor.withValues(alpha: 0.2),
-                  trackShape: const _HueGradientTrackShape(_hueTrack),
-                ),
-                child: Slider(
-                  value: previewHue,
-                  min: 0,
-                  max: 360,
-                  onChanged: enabled
-                      ? (value) => onChanged(value)
-                      : null,
-                ),
-              ),
-            ),
-          ],
+          ),
         ),
-        trailing: hue == null
-            ? null
-            : Semantics(
-                identifier: 'settings-accent-hue-reset',
-                child: TextButton(
-                  onPressed: enabled ? () => onChanged(null) : null,
-                  child: Text(S.of(context).settingsAccentHueReset),
-                ),
-              ),
-      ),
+      );
+    }
+    final hue = accentHue ?? 140.0;
+    final color = HSLColor.fromAHSL(1, hue, 0.7, 0.5).toColor();
+    return Container(
+      width: 24,
+      height: 24,
+      decoration: BoxDecoration(color: color, shape: BoxShape.circle),
     );
-  }
-}
-
-class _HueGradientTrackShape extends RoundedRectSliderTrackShape {
-  final List<Color> colors;
-  const _HueGradientTrackShape(this.colors);
-
-  @override
-  void paint(
-    PaintingContext context,
-    Offset offset, {
-    required RenderBox parentBox,
-    required SliderThemeData sliderTheme,
-    required Animation<double> enableAnimation,
-    required TextDirection textDirection,
-    required Offset thumbCenter,
-    Offset? secondaryOffset,
-    bool isDiscrete = false,
-    bool isEnabled = false,
-    double additionalActiveTrackHeight = 0,
-  }) {
-    final trackRect = getPreferredRect(
-      parentBox: parentBox,
-      offset: offset,
-      sliderTheme: sliderTheme,
-      isEnabled: isEnabled,
-      isDiscrete: isDiscrete,
-    );
-    final paint = Paint()
-      ..shader = LinearGradient(colors: colors).createShader(trackRect);
-    final rrect = RRect.fromRectAndRadius(
-      trackRect,
-      Radius.circular(trackRect.height / 2),
-    );
-    context.canvas.drawRRect(rrect, paint);
   }
 }

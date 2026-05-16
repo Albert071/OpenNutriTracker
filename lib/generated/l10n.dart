@@ -1522,6 +1522,76 @@ class S {
   }
 
   /// `Accent colour`
+  String get settingsAccentColourTitle {
+    return Intl.message(
+      'Accent colour',
+      name: 'settingsAccentColourTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Material You`
+  String get settingsAccentSubtitleMaterialYou {
+    return Intl.message(
+      'Material You',
+      name: 'settingsAccentSubtitleMaterialYou',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Custom`
+  String get settingsAccentSubtitleCustom {
+    return Intl.message(
+      'Custom',
+      name: 'settingsAccentSubtitleCustom',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Default`
+  String get settingsAccentSubtitleDefault {
+    return Intl.message(
+      'Default',
+      name: 'settingsAccentSubtitleDefault',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Pick a colour`
+  String get settingsAccentPresetsHeader {
+    return Intl.message(
+      'Pick a colour',
+      name: 'settingsAccentPresetsHeader',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Custom colour…`
+  String get settingsAccentCustomColour {
+    return Intl.message(
+      'Custom colour…',
+      name: 'settingsAccentCustomColour',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Open the hue picker for a precise choice`
+  String get settingsAccentCustomSubtitle {
+    return Intl.message(
+      'Open the hue picker for a precise choice',
+      name: 'settingsAccentCustomSubtitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Accent colour`
   String get settingsAccentHueTitle {
     return Intl.message(
       'Accent colour',
