@@ -1521,6 +1521,36 @@ class S {
     );
   }
 
+  /// `Accent colour`
+  String get settingsAccentHueTitle {
+    return Intl.message(
+      'Accent colour',
+      name: 'settingsAccentHueTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Turn off system colours to choose a custom accent.`
+  String get settingsAccentHueDisabledHint {
+    return Intl.message(
+      'Turn off system colours to choose a custom accent.',
+      name: 'settingsAccentHueDisabledHint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Reset`
+  String get settingsAccentHueReset {
+    return Intl.message(
+      'Reset',
+      name: 'settingsAccentHueReset',
+      desc: '',
+      args: [],
+    );
+  }
+
   String get settingsLicensesLabel {
     return Intl.message(
       'Licenses',

@@ -142,4 +142,8 @@ class ConfigRepository {
   Future<void> setConfigUseMaterialYou(bool useMaterialYou) async {
     await _configDataSource.setConfigUseMaterialYou(useMaterialYou);
   }
+
+  Future<void> setConfigAccentHue(double? hue) async {
+    await _configDataSource.setConfigAccentHue(hue);
+  }
 }

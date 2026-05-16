@@ -32,6 +32,7 @@ class SettingsLoadedState extends SettingsState {
   final int dayStartOffsetHours; // #139
   final int dayStartOffsetMinutes; // #139 follow-up
   final bool useMaterialYou; // #415
+  final double? accentHue; // #415 follow-up
 
   const SettingsLoadedState(
     this.versionNumber,
@@ -51,6 +52,7 @@ class SettingsLoadedState extends SettingsState {
     this.dayStartOffsetHours = 0,
     this.dayStartOffsetMinutes = 0,
     this.useMaterialYou = true,
+    this.accentHue,
   });
 
   @override
@@ -72,5 +74,6 @@ class SettingsLoadedState extends SettingsState {
         dayStartOffsetHours,
         dayStartOffsetMinutes,
         useMaterialYou,
+        accentHue,
       ];
 }

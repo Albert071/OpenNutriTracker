@@ -104,4 +104,8 @@ class AddConfigUsecase {
   Future<void> setConfigUseMaterialYou(bool useMaterialYou) async {
     await _configRepository.setConfigUseMaterialYou(useMaterialYou);
   }
+
+  Future<void> setConfigAccentHue(double? hue) async {
+    await _configRepository.setConfigAccentHue(hue);
+  }
 }

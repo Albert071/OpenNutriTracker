@@ -240,6 +240,13 @@ class ConfigDataSource {
     await config?.save();
   }
 
+  Future<void> setConfigAccentHue(double? hue) async {
+    _log.fine('Updating config accentHue to $hue');
+    final config = _configBox.get(_configKey);
+    config?.accentHue = hue;
+    await config?.save();
+  }
+
   Future<ConfigDBO> getConfig() async {
     return _configBox.get(_configKey) ?? ConfigDBO.empty();
   }
