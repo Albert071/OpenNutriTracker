@@ -981,6 +981,18 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("saturated fat"),
         "scanProductLabel":
             MessageLookupByLibrary.simpleMessage("Scan Product"),
+        "scannerManualEntryButton":
+            MessageLookupByLibrary.simpleMessage("Type code manually"),
+        "scannerManualEntryCancel":
+            MessageLookupByLibrary.simpleMessage("Cancel"),
+        "scannerManualEntryDialogTitle":
+            MessageLookupByLibrary.simpleMessage("Enter barcode"),
+        "scannerManualEntryFieldHint":
+            MessageLookupByLibrary.simpleMessage("8 to 14 digits"),
+        "scannerManualEntryInvalid": MessageLookupByLibrary.simpleMessage(
+            "That barcode doesn\'t look valid. Please check the digits and try again."),
+        "scannerManualEntrySubmit":
+            MessageLookupByLibrary.simpleMessage("Look up"),
         "searchDefaultLabel":
             MessageLookupByLibrary.simpleMessage("Please enter a search word"),
         "searchFoodPage": MessageLookupByLibrary.simpleMessage("Food"),
@@ -1090,6 +1102,21 @@ class MessageLookup extends MessageLookupByLibrary {
         "settingsLabel": MessageLookupByLibrary.simpleMessage("Settings"),
         "settingsLanguageLabel":
             MessageLookupByLibrary.simpleMessage("Language"),
+        "settingsMaterialYouTitle":
+            MessageLookupByLibrary.simpleMessage("Use system colours"),
+        "settingsMaterialYouSubtitle": MessageLookupByLibrary.simpleMessage("Match your wallpaper accent on Android 12 and newer."),
+        "settingsAccentColourTitle": MessageLookupByLibrary.simpleMessage("Accent colour"),
+        "settingsAccentSubtitleMaterialYou": MessageLookupByLibrary.simpleMessage("Material You"),
+        "settingsAccentSubtitleCustom": MessageLookupByLibrary.simpleMessage("Custom"),
+        "settingsAccentSubtitleDefault": MessageLookupByLibrary.simpleMessage("Default"),
+        "settingsAccentPresetsHeader": MessageLookupByLibrary.simpleMessage("Pick a colour"),
+        "settingsAccentCustomColour": MessageLookupByLibrary.simpleMessage("Custom colour…"),
+        "settingsAccentCustomSubtitle": MessageLookupByLibrary.simpleMessage("Open the hue picker for a precise choice"),
+        "settingsAccentHexLabel": MessageLookupByLibrary.simpleMessage("Hex code"),
+        "settingsAccentHexInvalid": MessageLookupByLibrary.simpleMessage("That hex code doesn’t look right — six digits, 0-9 and A-F."),
+        "settingsAccentHueTitle": MessageLookupByLibrary.simpleMessage("Accent colour"),
+        "settingsAccentHueDisabledHint": MessageLookupByLibrary.simpleMessage("Turn off system colours to choose a custom accent."),
+        "settingsAccentHueReset": MessageLookupByLibrary.simpleMessage("Reset"),
         "settingsMacroSplitLabel":
             MessageLookupByLibrary.simpleMessage("Macro split"),
         "settingsLicensesLabel":

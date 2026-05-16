@@ -951,6 +951,18 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("nasýtené tuky"),
         "scanProductLabel":
             MessageLookupByLibrary.simpleMessage("Naskenovať produkt"),
+        "scannerManualEntryButton":
+            MessageLookupByLibrary.simpleMessage("Zadať kód ručne"),
+        "scannerManualEntryCancel":
+            MessageLookupByLibrary.simpleMessage("Zrušiť"),
+        "scannerManualEntryDialogTitle":
+            MessageLookupByLibrary.simpleMessage("Zadajte čiarový kód"),
+        "scannerManualEntryFieldHint":
+            MessageLookupByLibrary.simpleMessage("8 až 14 číslic"),
+        "scannerManualEntryInvalid": MessageLookupByLibrary.simpleMessage(
+            "Tento čiarový kód nevyzerá platne. Skontrolujte číslice a skúste to znova."),
+        "scannerManualEntrySubmit":
+            MessageLookupByLibrary.simpleMessage("Vyhľadať"),
         "searchDefaultLabel": MessageLookupByLibrary.simpleMessage(
             "Zadajte prosím hľadané slovo"),
         "searchFoodPage": MessageLookupByLibrary.simpleMessage("Potraviny"),
@@ -1018,6 +1030,20 @@ class MessageLookup extends MessageLookupByLibrary {
         "settingsLabel": MessageLookupByLibrary.simpleMessage("Nastavenia"),
         "settingsLanguageLabel":
             MessageLookupByLibrary.simpleMessage("Jazyk"),
+        "settingsMaterialYouTitle": MessageLookupByLibrary.simpleMessage("Použiť systémové farby"),
+        "settingsMaterialYouSubtitle": MessageLookupByLibrary.simpleMessage("Zladí aplikáciu s farbou tapety v Androide 12 a novšom."),
+        "settingsAccentColourTitle": MessageLookupByLibrary.simpleMessage("Farba zvýraznenia"),
+        "settingsAccentSubtitleMaterialYou": MessageLookupByLibrary.simpleMessage("Material You"),
+        "settingsAccentSubtitleCustom": MessageLookupByLibrary.simpleMessage("Vlastné"),
+        "settingsAccentSubtitleDefault": MessageLookupByLibrary.simpleMessage("Predvolené"),
+        "settingsAccentPresetsHeader": MessageLookupByLibrary.simpleMessage("Vyberte farbu"),
+        "settingsAccentCustomColour": MessageLookupByLibrary.simpleMessage("Vlastná farba…"),
+        "settingsAccentCustomSubtitle": MessageLookupByLibrary.simpleMessage("Otvorte posuvník odtieňa pre presný výber"),
+        "settingsAccentHexLabel": MessageLookupByLibrary.simpleMessage("Hex kód"),
+        "settingsAccentHexInvalid": MessageLookupByLibrary.simpleMessage("Tento hex kód nevyzerá správne — šesť znakov, 0-9 a A-F."),
+        "settingsAccentHueTitle": MessageLookupByLibrary.simpleMessage("Farba zvýraznenia"),
+        "settingsAccentHueDisabledHint": MessageLookupByLibrary.simpleMessage("Vypnite systémové farby, aby ste mohli vybrať vlastný akcent."),
+        "settingsAccentHueReset": MessageLookupByLibrary.simpleMessage("Obnoviť"),
         "settingsMacroSplitLabel":
             MessageLookupByLibrary.simpleMessage("Rozdelenie makroživín"),
         "settingsLicensesLabel":

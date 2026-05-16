@@ -860,6 +860,16 @@ class MessageLookup extends MessageLookupByLibrary {
         "retryLabel": MessageLookupByLibrary.simpleMessage("重试"),
         "saturatedFatLabel": MessageLookupByLibrary.simpleMessage("饱和脂肪"),
         "scanProductLabel": MessageLookupByLibrary.simpleMessage("扫描产品"),
+        "scannerManualEntryButton":
+            MessageLookupByLibrary.simpleMessage("手动输入条码"),
+        "scannerManualEntryCancel": MessageLookupByLibrary.simpleMessage("取消"),
+        "scannerManualEntryDialogTitle":
+            MessageLookupByLibrary.simpleMessage("输入条码"),
+        "scannerManualEntryFieldHint":
+            MessageLookupByLibrary.simpleMessage("8 到 14 位数字"),
+        "scannerManualEntryInvalid":
+            MessageLookupByLibrary.simpleMessage("此条码似乎无效。请检查数字后重试。"),
+        "scannerManualEntrySubmit": MessageLookupByLibrary.simpleMessage("查找"),
         "searchDefaultLabel": MessageLookupByLibrary.simpleMessage("请输入搜索词"),
         "searchFoodPage": MessageLookupByLibrary.simpleMessage("食物"),
         "searchLabel": MessageLookupByLibrary.simpleMessage("搜索"),
@@ -963,6 +973,21 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("每日千卡调整"),
         "settingsLabel": MessageLookupByLibrary.simpleMessage("设置"),
         "settingsLanguageLabel": MessageLookupByLibrary.simpleMessage("语言"),
+        "settingsMaterialYouTitle":
+            MessageLookupByLibrary.simpleMessage("使用系统颜色"),
+        "settingsMaterialYouSubtitle": MessageLookupByLibrary.simpleMessage("在 Android 12 及更高版本上,使用你壁纸的强调色。"),
+        "settingsAccentColourTitle": MessageLookupByLibrary.simpleMessage("强调色"),
+        "settingsAccentSubtitleMaterialYou": MessageLookupByLibrary.simpleMessage("Material You"),
+        "settingsAccentSubtitleCustom": MessageLookupByLibrary.simpleMessage("自定义"),
+        "settingsAccentSubtitleDefault": MessageLookupByLibrary.simpleMessage("默认"),
+        "settingsAccentPresetsHeader": MessageLookupByLibrary.simpleMessage("选择颜色"),
+        "settingsAccentCustomColour": MessageLookupByLibrary.simpleMessage("自定义颜色…"),
+        "settingsAccentCustomSubtitle": MessageLookupByLibrary.simpleMessage("打开色相滑块进行精确选择"),
+        "settingsAccentHexLabel": MessageLookupByLibrary.simpleMessage("十六进制代码"),
+        "settingsAccentHexInvalid": MessageLookupByLibrary.simpleMessage("这个十六进制代码看起来不对 — 需要六个字符,0-9 和 A-F。"),
+        "settingsAccentHueTitle": MessageLookupByLibrary.simpleMessage("强调色"),
+        "settingsAccentHueDisabledHint": MessageLookupByLibrary.simpleMessage("关闭系统颜色以选择自定义强调色。"),
+        "settingsAccentHueReset": MessageLookupByLibrary.simpleMessage("重置"),
         "settingsMacroSplitLabel":
             MessageLookupByLibrary.simpleMessage("宏量营养素分配"),
         "settingsLicensesLabel": MessageLookupByLibrary.simpleMessage("许可证"),

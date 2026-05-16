@@ -1500,6 +1500,146 @@ class S {
     );
   }
 
+  /// `Use system colours`
+  String get settingsMaterialYouTitle {
+    return Intl.message(
+      'Use system colours',
+      name: 'settingsMaterialYouTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Match your wallpaper accent on Android 12 and newer.`
+  String get settingsMaterialYouSubtitle {
+    return Intl.message(
+      'Match your wallpaper accent on Android 12 and newer.',
+      name: 'settingsMaterialYouSubtitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Accent colour`
+  String get settingsAccentColourTitle {
+    return Intl.message(
+      'Accent colour',
+      name: 'settingsAccentColourTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Material You`
+  String get settingsAccentSubtitleMaterialYou {
+    return Intl.message(
+      'Material You',
+      name: 'settingsAccentSubtitleMaterialYou',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Custom`
+  String get settingsAccentSubtitleCustom {
+    return Intl.message(
+      'Custom',
+      name: 'settingsAccentSubtitleCustom',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Default`
+  String get settingsAccentSubtitleDefault {
+    return Intl.message(
+      'Default',
+      name: 'settingsAccentSubtitleDefault',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Pick a colour`
+  String get settingsAccentPresetsHeader {
+    return Intl.message(
+      'Pick a colour',
+      name: 'settingsAccentPresetsHeader',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Custom colour…`
+  String get settingsAccentCustomColour {
+    return Intl.message(
+      'Custom colour…',
+      name: 'settingsAccentCustomColour',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Open the hue picker for a precise choice`
+  String get settingsAccentCustomSubtitle {
+    return Intl.message(
+      'Open the hue picker for a precise choice',
+      name: 'settingsAccentCustomSubtitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Hex code`
+  String get settingsAccentHexLabel {
+    return Intl.message(
+      'Hex code',
+      name: 'settingsAccentHexLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `That hex code doesn’t look right — six digits, 0-9 and A-F.`
+  String get settingsAccentHexInvalid {
+    return Intl.message(
+      "That hex code doesn't look right — six digits, 0-9 and A-F.",
+      name: 'settingsAccentHexInvalid',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Accent colour`
+  String get settingsAccentHueTitle {
+    return Intl.message(
+      'Accent colour',
+      name: 'settingsAccentHueTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Turn off system colours to choose a custom accent.`
+  String get settingsAccentHueDisabledHint {
+    return Intl.message(
+      'Turn off system colours to choose a custom accent.',
+      name: 'settingsAccentHueDisabledHint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Reset`
+  String get settingsAccentHueReset {
+    return Intl.message(
+      'Reset',
+      name: 'settingsAccentHueReset',
+      desc: '',
+      args: [],
+    );
+  }
+
   String get settingsLicensesLabel {
     return Intl.message(
       'Licenses',
@@ -3676,6 +3816,66 @@ class S {
     return Intl.message(
       'Scan Product',
       name: 'scanProductLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Type code manually`
+  String get scannerManualEntryButton {
+    return Intl.message(
+      'Type code manually',
+      name: 'scannerManualEntryButton',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Cancel`
+  String get scannerManualEntryCancel {
+    return Intl.message(
+      'Cancel',
+      name: 'scannerManualEntryCancel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Enter barcode`
+  String get scannerManualEntryDialogTitle {
+    return Intl.message(
+      'Enter barcode',
+      name: 'scannerManualEntryDialogTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `8 to 14 digits`
+  String get scannerManualEntryFieldHint {
+    return Intl.message(
+      '8 to 14 digits',
+      name: 'scannerManualEntryFieldHint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `That barcode doesn't look valid. Please check the digits and try again.`
+  String get scannerManualEntryInvalid {
+    return Intl.message(
+      'That barcode doesn\'t look valid. Please check the digits and try again.',
+      name: 'scannerManualEntryInvalid',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Look up`
+  String get scannerManualEntrySubmit {
+    return Intl.message(
+      'Look up',
+      name: 'scannerManualEntrySubmit',
       desc: '',
       args: [],
     );

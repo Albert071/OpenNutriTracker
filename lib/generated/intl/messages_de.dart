@@ -1007,6 +1007,18 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("gesättigtes Fett"),
         "scanProductLabel":
             MessageLookupByLibrary.simpleMessage("Produkt scannen"),
+        "scannerManualEntryButton":
+            MessageLookupByLibrary.simpleMessage("Code manuell eingeben"),
+        "scannerManualEntryCancel":
+            MessageLookupByLibrary.simpleMessage("Abbrechen"),
+        "scannerManualEntryDialogTitle":
+            MessageLookupByLibrary.simpleMessage("Barcode eingeben"),
+        "scannerManualEntryFieldHint":
+            MessageLookupByLibrary.simpleMessage("8 bis 14 Ziffern"),
+        "scannerManualEntryInvalid": MessageLookupByLibrary.simpleMessage(
+            "Dieser Barcode sieht nicht gültig aus. Bitte überprüfe die Ziffern und versuche es erneut."),
+        "scannerManualEntrySubmit":
+            MessageLookupByLibrary.simpleMessage("Suchen"),
         "searchDefaultLabel": MessageLookupByLibrary.simpleMessage(
             "Bitte geben Sie ein Suchwort ein"),
         "searchFoodPage": MessageLookupByLibrary.simpleMessage("Lebensmittel"),
@@ -1119,6 +1131,21 @@ class MessageLookup extends MessageLookupByLibrary {
         "settingsLabel": MessageLookupByLibrary.simpleMessage("Einstellungen"),
         "settingsLanguageLabel":
             MessageLookupByLibrary.simpleMessage("Sprache"),
+        "settingsMaterialYouTitle":
+            MessageLookupByLibrary.simpleMessage("Systemfarben verwenden"),
+        "settingsMaterialYouSubtitle": MessageLookupByLibrary.simpleMessage("Übernimmt die Akzentfarbe deines Hintergrundbilds auf Android 12 und neuer."),
+        "settingsAccentColourTitle": MessageLookupByLibrary.simpleMessage("Akzentfarbe"),
+        "settingsAccentSubtitleMaterialYou": MessageLookupByLibrary.simpleMessage("Material You"),
+        "settingsAccentSubtitleCustom": MessageLookupByLibrary.simpleMessage("Eigene Farbe"),
+        "settingsAccentSubtitleDefault": MessageLookupByLibrary.simpleMessage("Standard"),
+        "settingsAccentPresetsHeader": MessageLookupByLibrary.simpleMessage("Farbe auswählen"),
+        "settingsAccentCustomColour": MessageLookupByLibrary.simpleMessage("Eigene Farbe…"),
+        "settingsAccentCustomSubtitle": MessageLookupByLibrary.simpleMessage("Öffne den Farbtonregler für eine genaue Auswahl"),
+        "settingsAccentHexLabel": MessageLookupByLibrary.simpleMessage("Hex-Code"),
+        "settingsAccentHexInvalid": MessageLookupByLibrary.simpleMessage("Dieser Hex-Code stimmt nicht — sechs Zeichen, 0-9 und A-F."),
+        "settingsAccentHueTitle": MessageLookupByLibrary.simpleMessage("Akzentfarbe"),
+        "settingsAccentHueDisabledHint": MessageLookupByLibrary.simpleMessage("Schalte die Systemfarben aus, um eine eigene Akzentfarbe zu wählen."),
+        "settingsAccentHueReset": MessageLookupByLibrary.simpleMessage("Zurücksetzen"),
         "settingsMacroSplitLabel":
             MessageLookupByLibrary.simpleMessage("Makro-Aufteilung"),
         "settingsLicensesLabel":

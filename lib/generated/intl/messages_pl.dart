@@ -993,6 +993,18 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("tłuszcze nasycone"),
         "scanProductLabel":
             MessageLookupByLibrary.simpleMessage("Skanuj produkt"),
+        "scannerManualEntryButton":
+            MessageLookupByLibrary.simpleMessage("Wpisz kod ręcznie"),
+        "scannerManualEntryCancel":
+            MessageLookupByLibrary.simpleMessage("Anuluj"),
+        "scannerManualEntryDialogTitle":
+            MessageLookupByLibrary.simpleMessage("Wprowadź kod kreskowy"),
+        "scannerManualEntryFieldHint":
+            MessageLookupByLibrary.simpleMessage("Od 8 do 14 cyfr"),
+        "scannerManualEntryInvalid": MessageLookupByLibrary.simpleMessage(
+            "Ten kod kreskowy wygląda na nieprawidłowy. Sprawdź cyfry i spróbuj ponownie."),
+        "scannerManualEntrySubmit":
+            MessageLookupByLibrary.simpleMessage("Wyszukaj"),
         "searchDefaultLabel": MessageLookupByLibrary.simpleMessage(
             "Wprowadź słowo do wyszukania"),
         "searchFoodPage": MessageLookupByLibrary.simpleMessage("Jedzenie"),
@@ -1105,6 +1117,21 @@ class MessageLookup extends MessageLookupByLibrary {
         "settingsLabel": MessageLookupByLibrary.simpleMessage("Ustawienia"),
         "settingsLanguageLabel":
             MessageLookupByLibrary.simpleMessage("Język"),
+        "settingsMaterialYouTitle":
+            MessageLookupByLibrary.simpleMessage("Użyj kolorów systemu"),
+        "settingsMaterialYouSubtitle": MessageLookupByLibrary.simpleMessage("Dopasowuje aplikację do akcentu tapety w systemie Android 12 i nowszym."),
+        "settingsAccentColourTitle": MessageLookupByLibrary.simpleMessage("Kolor akcentu"),
+        "settingsAccentSubtitleMaterialYou": MessageLookupByLibrary.simpleMessage("Material You"),
+        "settingsAccentSubtitleCustom": MessageLookupByLibrary.simpleMessage("Niestandardowy"),
+        "settingsAccentSubtitleDefault": MessageLookupByLibrary.simpleMessage("Domyślny"),
+        "settingsAccentPresetsHeader": MessageLookupByLibrary.simpleMessage("Wybierz kolor"),
+        "settingsAccentCustomColour": MessageLookupByLibrary.simpleMessage("Kolor niestandardowy…"),
+        "settingsAccentCustomSubtitle": MessageLookupByLibrary.simpleMessage("Otwórz suwak odcienia, aby wybrać precyzyjnie"),
+        "settingsAccentHexLabel": MessageLookupByLibrary.simpleMessage("Kod hex"),
+        "settingsAccentHexInvalid": MessageLookupByLibrary.simpleMessage("Ten kod hex nie wygląda dobrze — sześć znaków, 0-9 i A-F."),
+        "settingsAccentHueTitle": MessageLookupByLibrary.simpleMessage("Kolor akcentu"),
+        "settingsAccentHueDisabledHint": MessageLookupByLibrary.simpleMessage("Wyłącz kolory systemowe, aby wybrać własny akcent."),
+        "settingsAccentHueReset": MessageLookupByLibrary.simpleMessage("Zresetuj"),
         "settingsMacroSplitLabel":
             MessageLookupByLibrary.simpleMessage("Podział makroskładników"),
         "settingsLicensesLabel":

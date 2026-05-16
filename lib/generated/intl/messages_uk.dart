@@ -997,6 +997,18 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("насичені жири"),
         "scanProductLabel":
             MessageLookupByLibrary.simpleMessage("Сканувати продукт"),
+        "scannerManualEntryButton":
+            MessageLookupByLibrary.simpleMessage("Ввести код вручну"),
+        "scannerManualEntryCancel":
+            MessageLookupByLibrary.simpleMessage("Скасувати"),
+        "scannerManualEntryDialogTitle":
+            MessageLookupByLibrary.simpleMessage("Введіть штрихкод"),
+        "scannerManualEntryFieldHint":
+            MessageLookupByLibrary.simpleMessage("Від 8 до 14 цифр"),
+        "scannerManualEntryInvalid": MessageLookupByLibrary.simpleMessage(
+            "Цей штрихкод виглядає недійсним. Будь ласка, перевірте цифри та спробуйте знову."),
+        "scannerManualEntrySubmit":
+            MessageLookupByLibrary.simpleMessage("Знайти"),
         "searchDefaultLabel":
             MessageLookupByLibrary.simpleMessage("Введіть слово для пошуку"),
         "searchFoodPage": MessageLookupByLibrary.simpleMessage("Їжа"),
@@ -1110,6 +1122,21 @@ class MessageLookup extends MessageLookupByLibrary {
         "settingsLabel": MessageLookupByLibrary.simpleMessage("Налаштування"),
         "settingsLanguageLabel":
             MessageLookupByLibrary.simpleMessage("Мова"),
+        "settingsMaterialYouTitle": MessageLookupByLibrary.simpleMessage(
+            "Використовувати системні кольори"),
+        "settingsMaterialYouSubtitle": MessageLookupByLibrary.simpleMessage("Підхоплює акцентний колір ваших шпалер на Android 12 і новіших версіях."),
+        "settingsAccentColourTitle": MessageLookupByLibrary.simpleMessage("Акцентний колір"),
+        "settingsAccentSubtitleMaterialYou": MessageLookupByLibrary.simpleMessage("Material You"),
+        "settingsAccentSubtitleCustom": MessageLookupByLibrary.simpleMessage("Власний"),
+        "settingsAccentSubtitleDefault": MessageLookupByLibrary.simpleMessage("Стандартний"),
+        "settingsAccentPresetsHeader": MessageLookupByLibrary.simpleMessage("Виберіть колір"),
+        "settingsAccentCustomColour": MessageLookupByLibrary.simpleMessage("Власний колір…"),
+        "settingsAccentCustomSubtitle": MessageLookupByLibrary.simpleMessage("Відкрити повзунок відтінку для точного вибору"),
+        "settingsAccentHexLabel": MessageLookupByLibrary.simpleMessage("Hex код"),
+        "settingsAccentHexInvalid": MessageLookupByLibrary.simpleMessage("Цей hex код виглядає неправильно — шість символів, 0-9 і A-F."),
+        "settingsAccentHueTitle": MessageLookupByLibrary.simpleMessage("Акцентний колір"),
+        "settingsAccentHueDisabledHint": MessageLookupByLibrary.simpleMessage("Вимкніть системні кольори, щоб обрати власний акцент."),
+        "settingsAccentHueReset": MessageLookupByLibrary.simpleMessage("Скинути"),
         "settingsMacroSplitLabel":
             MessageLookupByLibrary.simpleMessage("Розподіл макросів"),
         "settingsLicensesLabel":
