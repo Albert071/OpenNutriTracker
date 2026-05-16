@@ -10,6 +10,7 @@ import 'package:opennutritracker/core/data/dbo/meal_dbo.dart';
 import 'package:opennutritracker/core/data/dbo/recipe_dbo.dart';
 import 'package:opennutritracker/core/data/dbo/tracked_day_dbo.dart';
 import 'package:opennutritracker/core/data/dbo/user_dbo.dart';
+import 'package:opennutritracker/core/data/dbo/water_intake_dbo.dart';
 import 'package:opennutritracker/core/data/dbo/weight_log_dbo.dart';
 import 'package:opennutritracker/hive_registrar.g.dart';
 
@@ -29,6 +30,10 @@ class HiveDBProvider extends ChangeNotifier {
   // #70 follow-up: saved Custom activity templates (name + typical kcal).
   static const customActivityTemplateBoxName = 'CustomActivityTemplateBox';
   static const weightLogBoxName = 'WeightLogBox';
+  // #32: per-entry water intake log keyed by uuid; one row per sip so the
+  // dialog's "undo last" can roll a single entry back without losing the
+  // rest of the day.
+  static const waterIntakeBoxName = 'WaterIntakeBox';
 
   late Box<ConfigDBO> configBox;
   late Box<IntakeDBO> intakeBox;
@@ -41,6 +46,7 @@ class HiveDBProvider extends ChangeNotifier {
   late Box<int> cachedOffMealTimestampsBox;
   late Box<CustomActivityTemplateDBO> customActivityTemplateBox;
   late Box<WeightLogDBO> weightLogBox;
+  late Box<WaterIntakeDBO> waterIntakeBox;
 
   Future<void> initHiveDB(Uint8List encryptionKey) async {
     final encryptionCypher = HiveAesCipher(encryptionKey);
@@ -95,6 +101,10 @@ class HiveDBProvider extends ChangeNotifier {
     );
     weightLogBox = await Hive.openBox(
       weightLogBoxName,
+      encryptionCipher: encryptionCypher,
+    );
+    waterIntakeBox = await Hive.openBox(
+      waterIntakeBoxName,
       encryptionCipher: encryptionCypher,
     );
   }

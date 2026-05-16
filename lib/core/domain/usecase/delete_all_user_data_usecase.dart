@@ -34,6 +34,7 @@ class DeleteAllUserDataUsecase {
       _hiveDBProvider.cachedOffMealTimestampsBox.clear(),
       _hiveDBProvider.customActivityTemplateBox.clear(),
       _hiveDBProvider.weightLogBox.clear(),
+      _hiveDBProvider.waterIntakeBox.clear(),
     ]);
   }
 }

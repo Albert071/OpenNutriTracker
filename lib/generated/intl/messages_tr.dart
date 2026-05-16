@@ -84,6 +84,10 @@ class MessageLookup extends MessageLookupByLibrary {
   static String mLowKcal(threshold) =>
       "Yetişkinler tıbbi gözetim olmadan uzun süreyle günde ${threshold} kcal\'nin altında beslenmemelidir. Bu kadar düşük bir hedefte kalmadan önce lütfen bir sağlık uzmanına danışmayı düşün.";
 
+  static String mWaterChip(current, goal) => "${current} / ${goal} ml";
+
+  static String mLogWaterAmount(amount) => "${amount} ml ekle";
+
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "activityExample": MessageLookupByLibrary.simpleMessage(
@@ -1247,5 +1251,19 @@ class MessageLookup extends MessageLookupByLibrary {
         "settingsPerMealKcalShareSnack":
             MessageLookupByLibrary.simpleMessage("Atıştırmalık"),
         "diaryMealKcalConsumedOfTarget": m23,
+        "logWaterAmountLabel": mLogWaterAmount,
+        "logWaterDialogTitle":
+            MessageLookupByLibrary.simpleMessage("Su alımını kaydet"),
+        "logWaterNothingToUndoLabel":
+            MessageLookupByLibrary.simpleMessage("Geri alınacak bir şey yok"),
+        "logWaterUndoLabel":
+            MessageLookupByLibrary.simpleMessage("Sonuncuyu geri al"),
+        "mlLabel": MessageLookupByLibrary.simpleMessage("ml"),
+        "settingsWaterGoalDescription":
+            MessageLookupByLibrary.simpleMessage(
+                "Ana ekrandaki su göstergesinin kullandığı hedef."),
+        "settingsWaterGoalLabel":
+            MessageLookupByLibrary.simpleMessage("Günlük su hedefi"),
+        "waterChipLabel": mWaterChip,
       };
 }

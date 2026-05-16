@@ -862,5 +862,13 @@
   "weightHistoryWeightLabel": "Kilo",
   "weightLabel": "Kilo",
   "yearsLabel": "{age} yıl",
+  "logWaterAmountLabel": "{amount} ml ekle",
+  "logWaterDialogTitle": "Su alımını kaydet",
+  "logWaterNothingToUndoLabel": "Geri alınacak bir şey yok",
+  "logWaterUndoLabel": "Sonuncuyu geri al",
+  "mlLabel": "ml",
+  "settingsWaterGoalDescription": "Ana ekrandaki su göstergesinin kullandığı hedef.",
+  "settingsWaterGoalLabel": "Günlük su hedefi",
+  "waterChipLabel": "{current} / {goal} ml",
   "zincLabel": "çinko"
 }

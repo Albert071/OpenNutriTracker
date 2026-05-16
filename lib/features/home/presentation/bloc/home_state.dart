@@ -51,6 +51,12 @@ class HomeLoadedState extends HomeState {
   final int snackSharePct;
   final UserGenderEntity userGender;
   final CaloriesProfileEntity? userCaloriesProfile;
+  // #32: hydration totals for the home chip. waterMlToday is summed across
+  // every entry that falls within the configured logical day; waterGoalMl
+  // is the user-configurable target (Settings → Calculations).
+  final int waterMlToday;
+  final int waterGoalMl;
+  final List<WaterIntakeEntity> waterIntakes;
 
   const HomeLoadedState({
     required this.showDisclaimerDialog,
@@ -81,18 +87,24 @@ class HomeLoadedState extends HomeState {
     required this.snackSharePct,
     required this.userGender,
     required this.userCaloriesProfile,
+    required this.waterMlToday,
+    required this.waterGoalMl,
+    required this.waterIntakes,
     this.showActivityTracking = true,
     this.showMealMacros = true,
   });
 
   @override
   List<Object?> get props => [
-        breakfastIntakeList,
-        lunchIntakeList,
-        dinnerIntakeList,
-        snackIntakeList,
-        usesImperialUnits,
-        userWeightKg,
-        totalKcalDaily,
-      ];
+    breakfastIntakeList,
+    lunchIntakeList,
+    dinnerIntakeList,
+    snackIntakeList,
+    usesImperialUnits,
+    userWeightKg,
+    totalKcalDaily,
+    waterMlToday,
+    waterGoalMl,
+    waterIntakes,
+  ];
 }

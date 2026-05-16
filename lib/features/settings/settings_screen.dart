@@ -89,9 +89,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   child: ListTile(
                     leading: const Icon(Icons.local_fire_department_outlined),
                     title: Text(S.of(context).settingsEnergyUnitLabel),
-                    subtitle: Text(state.usesKilojoules
-                        ? S.of(context).energyUnitKjLabel
-                        : S.of(context).energyUnitKcalLabel),
+                    subtitle: Text(
+                      state.usesKilojoules
+                          ? S.of(context).energyUnitKjLabel
+                          : S.of(context).energyUnitKcalLabel,
+                    ),
                     onTap: () =>
                         _showEnergyUnitDialog(context, state.usesKilojoules),
                   ),
@@ -121,8 +123,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   identifier: 'settings-per-meal-share',
                   child: ListTile(
                     leading: const Icon(Icons.restaurant_menu_outlined),
-                    title:
-                        Text(S.of(context).settingsPerMealKcalShareLabel),
+                    title: Text(S.of(context).settingsPerMealKcalShareLabel),
                     onTap: () => _showPerMealKcalShareDialog(context),
                   ),
                 ),
@@ -196,8 +197,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   leading: const Icon(Icons.language_outlined),
                   title: Text(S.of(context).settingsLanguageLabel),
                   subtitle: Text(
-                      _localeDisplayName(state.selectedLocale) ??
-                          S.of(context).settingsThemeSystemDefaultLabel),
+                    _localeDisplayName(state.selectedLocale) ??
+                        S.of(context).settingsThemeSystemDefaultLabel,
+                  ),
                   onTap: () =>
                       _showLanguageDialog(context, state.selectedLocale),
                 ),
@@ -205,9 +207,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   secondary: const Icon(Icons.notifications_outlined),
                   title: Text(S.of(context).settingsNotificationsLabel),
                   subtitle: state.notificationsEnabled
-                      ? Text(S.of(context).settingsNotificationsTimeLabel(
-                          _formatNotificationTime(
-                              state.notificationHour, state.notificationMinute)))
+                      ? Text(
+                          S
+                              .of(context)
+                              .settingsNotificationsTimeLabel(
+                                _formatNotificationTime(
+                                  state.notificationHour,
+                                  state.notificationMinute,
+                                ),
+                              ),
+                        )
                       : null,
                   value: state.notificationsEnabled,
                   onChanged: (bool value) =>
@@ -216,14 +225,23 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 if (state.notificationsEnabled)
                   ListTile(
                     leading: const Icon(Icons.access_time_outlined),
-                    title: Text(S.of(context).settingsNotificationsTimeLabel(
-                        _formatNotificationTime(state.notificationHour,
-                            state.notificationMinute))),
+                    title: Text(
+                      S
+                          .of(context)
+                          .settingsNotificationsTimeLabel(
+                            _formatNotificationTime(
+                              state.notificationHour,
+                              state.notificationMinute,
+                            ),
+                          ),
+                    ),
                     onTap: () => _pickNotificationTime(
-                        context,
-                        TimeOfDay(
-                            hour: state.notificationHour,
-                            minute: state.notificationMinute)),
+                      context,
+                      TimeOfDay(
+                        hour: state.notificationHour,
+                        minute: state.notificationMinute,
+                      ),
+                    ),
                   ),
                 const Divider(),
                 // Data
@@ -243,10 +261,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 ListTile(
                   leading: const Icon(Icons.cached_outlined),
                   title: Text(S.of(context).clearOffCacheLabel),
-                  subtitle: Text(S.of(context).clearOffCacheSubtitle(
-                    state.offCacheCount,
-                    _formatBytes(state.offCacheSizeBytes),
-                  )),
+                  subtitle: Text(
+                    S
+                        .of(context)
+                        .clearOffCacheSubtitle(
+                          state.offCacheCount,
+                          _formatBytes(state.offCacheSizeBytes),
+                        ),
+                  ),
                   enabled: state.offCacheCount > 0,
                   onTap: () => _confirmClearOffCache(context),
                 ),
@@ -263,8 +285,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         color: Theme.of(context).colorScheme.error,
                       ),
                     ),
-                    subtitle:
-                        Text(S.of(context).settingsDeleteAllDataSubtitle),
+                    subtitle: Text(S.of(context).settingsDeleteAllDataSubtitle),
                     onTap: () => _confirmDeleteAllData(context),
                   ),
                 ),
@@ -309,7 +330,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   Future<void> _onNotificationToggled(
-      BuildContext context, bool enabled, SettingsLoadedState state) async {
+    BuildContext context,
+    bool enabled,
+    SettingsLoadedState state,
+  ) async {
     final l10n = S.of(context);
     final notificationService = locator<NotificationService>();
     await notificationService.initialize();
@@ -337,12 +361,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   Future<void> _pickNotificationTime(
-      BuildContext context, TimeOfDay current) async {
+    BuildContext context,
+    TimeOfDay current,
+  ) async {
     final l10n = S.of(context);
-    final picked = await showTimePicker(
-      context: context,
-      initialTime: current,
-    );
+    final picked = await showTimePicker(context: context, initialTime: current);
     if (picked == null) return;
     _settingsBloc.setNotificationTime(picked.hour, picked.minute);
     final notificationService = locator<NotificationService>();
@@ -422,7 +445,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
   // energy display unit. Internal storage stays in kcal; this only
   // toggles how energy is rendered everywhere it appears.
   void _showEnergyUnitDialog(
-      BuildContext context, bool currentUsesKilojoules) async {
+    BuildContext context,
+    bool currentUsesKilojoules,
+  ) async {
     bool selectedUsesKilojoules = currentUsesKilojoules;
     final shouldUpdate = await showDialog<bool?>(
       context: context,
@@ -431,30 +456,33 @@ class _SettingsScreenState extends State<SettingsScreen> {
           contentPadding: EdgeInsets.zero,
           title: Text(S.of(context).settingsEnergyUnitLabel),
           content: StatefulBuilder(
-            builder: (BuildContext context,
-                void Function(void Function()) setState) {
-              return RadioGroup<bool>(
-                groupValue: selectedUsesKilojoules,
-                onChanged: (value) {
-                  setState(() {
-                    selectedUsesKilojoules = value ?? false;
-                  });
+            builder:
+                (
+                  BuildContext context,
+                  void Function(void Function()) setState,
+                ) {
+                  return RadioGroup<bool>(
+                    groupValue: selectedUsesKilojoules,
+                    onChanged: (value) {
+                      setState(() {
+                        selectedUsesKilojoules = value ?? false;
+                      });
+                    },
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        RadioListTile<bool>(
+                          title: Text(S.of(context).energyUnitKcalLabel),
+                          value: false,
+                        ),
+                        RadioListTile<bool>(
+                          title: Text(S.of(context).energyUnitKjLabel),
+                          value: true,
+                        ),
+                      ],
+                    ),
+                  );
                 },
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    RadioListTile<bool>(
-                      title: Text(S.of(context).energyUnitKcalLabel),
-                      value: false,
-                    ),
-                    RadioListTile<bool>(
-                      title: Text(S.of(context).energyUnitKjLabel),
-                      value: true,
-                    ),
-                  ],
-                ),
-              );
-            },
           ),
           actions: <Widget>[
             TextButton(
@@ -473,8 +501,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
       _settingsBloc.setUsesKilojoules(selectedUsesKilojoules);
       _settingsBloc.add(LoadSettingsEvent());
       if (context.mounted) {
-        Provider.of<EnergyUnitProvider>(context, listen: false)
-            .updateUsesKilojoules(selectedUsesKilojoules);
+        Provider.of<EnergyUnitProvider>(
+          context,
+          listen: false,
+        ).updateUsesKilojoules(selectedUsesKilojoules);
       }
     }
   }
@@ -493,10 +523,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
   void _showMacroSplitDialog(BuildContext context) {
     showDialog(
       context: context,
-      builder: (context) => MacroSplitDialog(
-        settingsBloc: _settingsBloc,
-        homeBloc: _homeBloc,
-      ),
+      builder: (context) =>
+          MacroSplitDialog(settingsBloc: _settingsBloc, homeBloc: _homeBloc),
     );
   }
 
@@ -549,9 +577,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   void _openNutrientVisibilityScreen(BuildContext context) {
     Navigator.of(context).push(
-      MaterialPageRoute<void>(
-        builder: (_) => const NutrientVisibilityScreen(),
-      ),
+      MaterialPageRoute<void>(builder: (_) => const NutrientVisibilityScreen()),
     );
   }
 
@@ -627,36 +653,39 @@ class _SettingsScreenState extends State<SettingsScreen> {
           contentPadding: EdgeInsets.zero,
           title: Text(S.of(context).settingsThemeLabel),
           content: StatefulBuilder(
-            builder: (
-              BuildContext context,
-              void Function(void Function()) setState,
-            ) {
-              return RadioGroup(
-                groupValue: selectedTheme,
-                onChanged: (value) {
-                  setState(() {
-                    selectedTheme = value as AppThemeEntity;
-                  });
+            builder:
+                (
+                  BuildContext context,
+                  void Function(void Function()) setState,
+                ) {
+                  return RadioGroup(
+                    groupValue: selectedTheme,
+                    onChanged: (value) {
+                      setState(() {
+                        selectedTheme = value as AppThemeEntity;
+                      });
+                    },
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        RadioListTile(
+                          title: Text(
+                            S.of(context).settingsThemeSystemDefaultLabel,
+                          ),
+                          value: AppThemeEntity.system,
+                        ),
+                        RadioListTile(
+                          title: Text(S.of(context).settingsThemeLightLabel),
+                          value: AppThemeEntity.light,
+                        ),
+                        RadioListTile(
+                          title: Text(S.of(context).settingsThemeDarkLabel),
+                          value: AppThemeEntity.dark,
+                        ),
+                      ],
+                    ),
+                  );
                 },
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    RadioListTile(
-                      title: Text(S.of(context).settingsThemeSystemDefaultLabel),
-                      value: AppThemeEntity.system,
-                    ),
-                    RadioListTile(
-                      title: Text(S.of(context).settingsThemeLightLabel),
-                      value: AppThemeEntity.light,
-                    ),
-                    RadioListTile(
-                      title: Text(S.of(context).settingsThemeDarkLabel),
-                      value: AppThemeEntity.dark,
-                    ),
-                  ],
-                ),
-              );
-            },
           ),
           actions: [
             TextButton(
@@ -712,29 +741,34 @@ class _SettingsScreenState extends State<SettingsScreen> {
           contentPadding: EdgeInsets.zero,
           title: Text(S.of(context).settingsLanguageLabel),
           content: StatefulBuilder(
-            builder: (BuildContext context,
-                void Function(void Function()) setState) {
-              return RadioGroup<String>(
-                groupValue: selectedCode,
-                onChanged: (v) => setState(() => selectedCode = v as String),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    RadioListTile<String>(
-                      title:
-                          Text(S.of(context).settingsThemeSystemDefaultLabel),
-                      value: _systemLocale,
+            builder:
+                (
+                  BuildContext context,
+                  void Function(void Function()) setState,
+                ) {
+                  return RadioGroup<String>(
+                    groupValue: selectedCode,
+                    onChanged: (v) =>
+                        setState(() => selectedCode = v as String),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        RadioListTile<String>(
+                          title: Text(
+                            S.of(context).settingsThemeSystemDefaultLabel,
+                          ),
+                          value: _systemLocale,
+                        ),
+                        ..._supportedLocales.entries.map(
+                          (e) => RadioListTile<String>(
+                            title: Text(e.value),
+                            value: e.key,
+                          ),
+                        ),
+                      ],
                     ),
-                    ..._supportedLocales.entries.map(
-                      (e) => RadioListTile<String>(
-                        title: Text(e.value),
-                        value: e.key,
-                      ),
-                    ),
-                  ],
-                ),
-              );
-            },
+                  );
+                },
           ),
           actions: [
             TextButton(
@@ -743,14 +777,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ),
             TextButton(
               onPressed: () {
-                final locale =
-                    selectedCode.isEmpty ? null : selectedCode;
+                final locale = selectedCode.isEmpty ? null : selectedCode;
                 _settingsBloc.setSelectedLocale(locale);
                 _settingsBloc.add(LoadSettingsEvent());
-                Provider.of<LocaleProvider>(context, listen: false)
-                    .updateLocale(
-                  locale != null ? Locale(locale) : null,
-                );
+                Provider.of<LocaleProvider>(
+                  context,
+                  listen: false,
+                ).updateLocale(locale != null ? Locale(locale) : null);
                 Navigator.of(context).pop();
               },
               child: Text(S.of(context).dialogOKLabel),
@@ -825,20 +858,21 @@ class _SettingsScreenState extends State<SettingsScreen> {
         return AlertDialog(
           title: Text(S.of(context).settingsPrivacySettings),
           content: StatefulBuilder(
-            builder: (
-              BuildContext context,
-              void Function(void Function()) setState,
-            ) {
-              return SwitchListTile(
-                title: Text(S.of(context).sendAnonymousUserData),
-                value: switchActive,
-                onChanged: (bool value) {
-                  setState(() {
-                    switchActive = value;
-                  });
+            builder:
+                (
+                  BuildContext context,
+                  void Function(void Function()) setState,
+                ) {
+                  return SwitchListTile(
+                    title: Text(S.of(context).sendAnonymousUserData),
+                    value: switchActive,
+                    onChanged: (bool value) {
+                      setState(() {
+                        switchActive = value;
+                      });
+                    },
+                  );
                 },
-              );
-            },
           ),
           actions: [
             TextButton(

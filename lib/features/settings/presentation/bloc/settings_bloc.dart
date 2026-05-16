@@ -46,8 +46,8 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
       final appVersion = await AppConst.getVersionNumber();
       final usesImperialUnits = userConfig.usesImperialUnits;
       final offCacheCount = _cachedOffMealDataSource.count;
-      final offCacheSizeBytes =
-          await _cachedOffMealDataSource.getStorageSizeBytes();
+      final offCacheSizeBytes = await _cachedOffMealDataSource
+          .getStorageSizeBytes();
 
       emit(
         SettingsLoadedState(
@@ -171,6 +171,15 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
 
   Future<void> setKcalAdjustment(double kcalAdjustment) async {
     await _addConfigUsecase.setConfigKcalAdjustment(kcalAdjustment);
+  }
+
+  Future<int?> getDailyWaterGoalMl() async {
+    final config = await _getConfigUsecase.getConfig();
+    return config.dailyWaterGoalMl;
+  }
+
+  Future<void> setDailyWaterGoalMl(int goalMl) async {
+    await _addConfigUsecase.setConfigDailyWaterGoalMl(goalMl);
   }
 
   Future<void> setMacroGoals(

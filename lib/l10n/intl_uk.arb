@@ -831,5 +831,13 @@
   "weightHistoryWeightLabel": "Вага",
   "weightLabel": "Вага",
   "yearsLabel": "{age} років",
+  "logWaterAmountLabel": "Додати {amount} мл",
+  "logWaterDialogTitle": "Записати спожиту воду",
+  "logWaterNothingToUndoLabel": "Немає що скасовувати",
+  "logWaterUndoLabel": "Скасувати останнє",
+  "mlLabel": "мл",
+  "settingsWaterGoalDescription": "Використовується індикатором води на головному екрані.",
+  "settingsWaterGoalLabel": "Денна ціль вживання води",
+  "waterChipLabel": "{current} / {goal} мл",
   "zincLabel": "цинк"
 }

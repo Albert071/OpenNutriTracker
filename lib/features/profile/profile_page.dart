@@ -19,6 +19,9 @@ import 'package:opennutritracker/features/profile/presentation/widgets/set_weekl
 import 'package:opennutritracker/features/profile/presentation/widgets/set_pal_category_dialog.dart';
 import 'package:opennutritracker/features/profile/presentation/widgets/set_target_weight_dialog.dart';
 import 'package:opennutritracker/features/profile/presentation/widgets/set_weight_dialog.dart';
+import 'package:opennutritracker/features/home/presentation/bloc/home_bloc.dart';
+import 'package:opennutritracker/features/settings/presentation/bloc/settings_bloc.dart';
+import 'package:opennutritracker/features/settings/presentation/widgets/water_goal_dialog.dart';
 import 'package:opennutritracker/generated/l10n.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -53,6 +56,7 @@ class _ProfilePageState extends State<ProfilePage> {
             state.userBMI,
             state.userEntity,
             state.usesImperialUnits,
+            state.effectiveWaterGoalMl,
           );
         } else {
           return _getLoadingContent();
@@ -70,6 +74,7 @@ class _ProfilePageState extends State<ProfilePage> {
     UserBMIEntity userBMIEntity,
     UserEntity user,
     bool usesImperialUnits,
+    int effectiveWaterGoalMl,
   ) {
     return ListView(
       children: [
@@ -131,7 +136,10 @@ class _ProfilePageState extends State<ProfilePage> {
               child: Icon(Icons.trending_down_outlined),
             ),
             onTap: () => _showSetWeeklyWeightGoalDialog(
-                context, user, usesImperialUnits),
+              context,
+              user,
+              usesImperialUnits,
+            ),
           ),
         ),
         Semantics(
@@ -180,7 +188,7 @@ class _ProfilePageState extends State<ProfilePage> {
               user.targetWeightKg == null
                   ? S.of(context).profileTargetWeightNotSetLabel
                   : '${_formatTargetWeightDisplay(user.targetWeightKg!, usesImperialUnits)} '
-                      '${usesImperialUnits ? S.of(context).lbsLabel : S.of(context).kgLabel}',
+                        '${usesImperialUnits ? S.of(context).lbsLabel : S.of(context).kgLabel}',
               style: Theme.of(context).textTheme.titleMedium,
             ),
             leading: const SizedBox(
@@ -189,6 +197,24 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
             onTap: () =>
                 _showSetTargetWeightDialog(context, user, usesImperialUnits),
+          ),
+        ),
+        Semantics(
+          identifier: 'profile-water-goal',
+          child: ListTile(
+            title: Text(
+              S.of(context).settingsWaterGoalLabel,
+              style: Theme.of(context).textTheme.titleLarge,
+            ),
+            subtitle: Text(
+              '$effectiveWaterGoalMl ${S.of(context).mlLabel}',
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
+            leading: const SizedBox(
+              height: double.infinity,
+              child: Icon(Icons.water_drop_outlined),
+            ),
+            onTap: () => _showWaterGoalDialog(context),
           ),
         ),
         // The opt-in linear taper scales the daily kcal deficit down
@@ -227,8 +253,9 @@ class _ProfilePageState extends State<ProfilePage> {
               child: Icon(Icons.show_chart_outlined),
             ),
             trailing: const Icon(Icons.chevron_right),
-            onTap: () => Navigator.of(context)
-                .pushNamed(NavigationOptions.weightHistoryRoute),
+            onTap: () => Navigator.of(
+              context,
+            ).pushNamed(NavigationOptions.weightHistoryRoute),
           ),
         ),
         Semantics(
@@ -332,12 +359,14 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   String _weeklyGoalSubtitle(
-      BuildContext context, UserEntity user, bool usesImperialUnits) {
+    BuildContext context,
+    UserEntity user,
+    bool usesImperialUnits,
+  ) {
     final goal = user.weeklyWeightGoalKg;
     if (goal == null) return S.of(context).weeklyWeightGoalNoneLabel;
     if (goal == 0.0) return S.of(context).goalMaintainWeight;
-    final displayValue =
-        usesImperialUnits ? goal * 2.20462 : goal;
+    final displayValue = usesImperialUnits ? goal * 2.20462 : goal;
     final sign = displayValue > 0 ? '+' : '';
     final formatted = '$sign${displayValue.toStringAsFixed(2)}';
     return usesImperialUnits
@@ -345,8 +374,11 @@ class _ProfilePageState extends State<ProfilePage> {
         : S.of(context).weeklyWeightGoalKgPerWeek(formatted);
   }
 
-  Future<void> _showSetWeeklyWeightGoalDialog(BuildContext context,
-      UserEntity userEntity, bool usesImperialUnits) async {
+  Future<void> _showSetWeeklyWeightGoalDialog(
+    BuildContext context,
+    UserEntity userEntity,
+    bool usesImperialUnits,
+  ) async {
     final result = await showDialog<WeeklyWeightGoalResult>(
       context: context,
       builder: (context) => SetWeeklyWeightGoalDialog(
@@ -442,8 +474,7 @@ class _ProfilePageState extends State<ProfilePage> {
     // we can distinguish "user cancelled" (null) from "user picked a value"
     // (set) and from "user explicitly cleared the target" (clear flag).
     final seedKg = userEntity.targetWeightKg ?? userEntity.weightKG;
-    final seedDisplay =
-        usesImperialSystem ? UnitCalc.kgToLbs(seedKg) : seedKg;
+    final seedDisplay = usesImperialSystem ? UnitCalc.kgToLbs(seedKg) : seedKg;
     final result = await showDialog<TargetWeightDialogResult>(
       context: context,
       builder: (context) => SetTargetWeightDialog(
@@ -529,6 +560,16 @@ class _ProfilePageState extends State<ProfilePage> {
     await _profileBloc.updateUser(userEntity);
   }
 
+  void _showWaterGoalDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => WaterGoalDialog(
+        settingsBloc: locator<SettingsBloc>(),
+        homeBloc: locator<HomeBloc>(),
+      ),
+    );
+  }
+
   Future<void> _showCaloriesProfileDialog(
     BuildContext context,
     UserEntity userEntity,
@@ -546,7 +587,10 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   String _targetWeightSubLabel(
-      BuildContext context, UserEntity user, bool usesImperialUnits) {
+    BuildContext context,
+    UserEntity user,
+    bool usesImperialUnits,
+  ) {
     final target = user.targetWeightKg;
     if (target == null) return '';
     final deltaKg = (target - user.weightKG).abs();
@@ -556,8 +600,7 @@ class _ProfilePageState extends State<ProfilePage> {
     if (deltaKg < 0.1) {
       return S.of(context).profileTargetWeightReached;
     }
-    final displayDelta =
-        usesImperialUnits ? deltaKg * 2.20462 : deltaKg;
+    final displayDelta = usesImperialUnits ? deltaKg * 2.20462 : deltaKg;
     final formatted =
         '${displayDelta.toStringAsFixed(1)} ${usesImperialUnits ? S.of(context).lbsLabel : S.of(context).kgLabel}';
     return S.of(context).profileTargetWeightToGo(formatted);

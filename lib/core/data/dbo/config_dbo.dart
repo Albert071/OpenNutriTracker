@@ -70,6 +70,11 @@ class ConfigDBO extends HiveObject {
   // value see a 4:00 boundary, unchanged.
   @HiveField(23)
   int? dayStartOffsetMinutes;
+  // #32: configurable daily water goal in millilitres. Null means use the
+  // default (2000 ml), so existing configs without a stored value keep
+  // working without a migration.
+  @HiveField(24)
+  int? dailyWaterGoalMl;
 
   ConfigDBO(
     this.hasAcceptedDisclaimer,
@@ -92,18 +97,19 @@ class ConfigDBO extends HiveObject {
     this.diarySortPreferences,
     this.nutrientPanelVisibility,
     this.dayStartOffsetMinutes,
+    this.dailyWaterGoalMl,
   });
 
   factory ConfigDBO.empty() =>
       ConfigDBO(false, false, false, AppThemeDBO.system);
 
   factory ConfigDBO.fromConfigEntity(ConfigEntity entity) => ConfigDBO(
-        entity.hasAcceptedDisclaimer,
-        entity.hasAcceptedPolicy,
-        entity.hasAcceptedSendAnonymousData,
-        AppThemeDBO.fromAppThemeEntity(entity.appTheme),
-        usesImperialUnits: entity.usesImperialUnits,
-      );
+    entity.hasAcceptedDisclaimer,
+    entity.hasAcceptedPolicy,
+    entity.hasAcceptedSendAnonymousData,
+    AppThemeDBO.fromAppThemeEntity(entity.appTheme),
+    usesImperialUnits: entity.usesImperialUnits,
+  );
 
   factory ConfigDBO.fromJson(Map<String, dynamic> json) =>
       _$ConfigDBOFromJson(json);

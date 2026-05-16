@@ -831,5 +831,13 @@
   "weightHistoryWeightLabel": "Peso",
   "weightLabel": "Peso",
   "yearsLabel": "{age} anni",
+  "logWaterAmountLabel": "Aggiungi {amount} ml",
+  "logWaterDialogTitle": "Registra acqua bevuta",
+  "logWaterNothingToUndoLabel": "Niente da annullare",
+  "logWaterUndoLabel": "Annulla ultimo",
+  "mlLabel": "ml",
+  "settingsWaterGoalDescription": "Usato dal contatore d'acqua nella schermata principale.",
+  "settingsWaterGoalLabel": "Obiettivo idrico giornaliero",
+  "waterChipLabel": "{current} / {goal} ml",
   "zincLabel": "zinco"
 }
