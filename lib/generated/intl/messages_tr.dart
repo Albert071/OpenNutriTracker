@@ -88,6 +88,8 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String mLogWaterAmount(amount) => "${amount} ml ekle";
 
+  static String mDriRef(value) => "ref. ${value}";
+
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "activityExample": MessageLookupByLibrary.simpleMessage(
@@ -253,6 +255,13 @@ class MessageLookup extends MessageLookupByLibrary {
         "diaryLabel": MessageLookupByLibrary.simpleMessage("Günlük"),
         "diaryNutrientPanelTitle":
             MessageLookupByLibrary.simpleMessage("Bugünün besinleri"),
+        "driPanelInfoBody": MessageLookupByLibrary.simpleMessage(
+            "Bu referans değerler, yetişkinler için IOM Diyet Referans Alımları\'ndan gelir ve yaşa ile cinsiyete göre değişir. Bir hedef değil, bir referans noktasıdır — kendi ihtiyaçların farklı olabilir."),
+        "driPanelInfoLinkLabel":
+            MessageLookupByLibrary.simpleMessage("Kaynak: IOM Dietary Reference Intakes"),
+        "driPanelInfoTitle":
+            MessageLookupByLibrary.simpleMessage("Referans alım"),
+        "driPanelReferenceLabel": mDriRef,
         "dinnerExample":
             MessageLookupByLibrary.simpleMessage("ör. çorba, tavuk, şarap ..."),
         "dinnerLabel": MessageLookupByLibrary.simpleMessage("Akşam Yemeği"),
@@ -1076,6 +1085,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Aktivite kalorileri (MET değerleri)"),
         "sourcesActivityDescription": MessageLookupByLibrary.simpleMessage(
             "Bir aktivite sırasında yakılan kaloriler, Adult Compendium of Physical Activities\'teki değerler kullanılarak MET × vücut ağırlığı (kg) × süre (saat) olarak tahmin edilir."),
+        "sourcesNutrientReferenceTitle": MessageLookupByLibrary.simpleMessage("Besin referans alımları"),
+        "sourcesNutrientReferenceDescription": MessageLookupByLibrary.simpleMessage("Günlük besin panelinde gösterilen referans değerleri, yetişkinler için besin başına hedefleri kapsayan Institute of Medicine'ın Dietary Reference Intakes özetinden alınmıştır."),
         "sourcesNonBinaryTitle": MessageLookupByLibrary.simpleMessage(
             "Non-binary kişiler için kalori tahmini"),
         "sourcesNonBinaryDescription": MessageLookupByLibrary.simpleMessage(

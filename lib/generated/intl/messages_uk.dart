@@ -86,6 +86,8 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String mLogWaterAmount(amount) => "Додати ${amount} мл";
 
+  static String mDriRef(value) => "орієнт. ${value}";
+
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "activityExample": MessageLookupByLibrary.simpleMessage(
@@ -251,6 +253,13 @@ class MessageLookup extends MessageLookupByLibrary {
         "diaryLabel": MessageLookupByLibrary.simpleMessage("Щоденник"),
         "diaryNutrientPanelTitle": MessageLookupByLibrary.simpleMessage(
             "Поживні речовини за сьогодні"),
+        "driPanelInfoBody": MessageLookupByLibrary.simpleMessage(
+            "Ці орієнтовні значення взято з рекомендованих норм споживання IOM для дорослих і вони залежать від віку та статі. Це точка відліку, а не мета — твої власні потреби можуть бути іншими."),
+        "driPanelInfoLinkLabel":
+            MessageLookupByLibrary.simpleMessage("Джерело: IOM Dietary Reference Intakes"),
+        "driPanelInfoTitle":
+            MessageLookupByLibrary.simpleMessage("Орієнтовне споживання"),
+        "driPanelReferenceLabel": mDriRef,
         "dinnerExample": MessageLookupByLibrary.simpleMessage(
             "наприклад, суп, курка, вино ..."),
         "dinnerLabel": MessageLookupByLibrary.simpleMessage("Вечеря"),
@@ -1097,6 +1106,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Калорії від активності (значення MET)"),
         "sourcesActivityDescription": MessageLookupByLibrary.simpleMessage(
             "Калорії, спалені під час активності, оцінюються як MET × маса тіла (кг) × тривалість (години) на основі значень з Adult Compendium of Physical Activities."),
+        "sourcesNutrientReferenceTitle": MessageLookupByLibrary.simpleMessage("Референсні норми споживання поживних речовин"),
+        "sourcesNutrientReferenceDescription": MessageLookupByLibrary.simpleMessage("Щоденні референсні значення, показані в панелі поживних речовин щоденника, взяті зі зведеного звіту Dietary Reference Intakes Institute of Medicine, який охоплює цільові показники для кожної поживної речовини у дорослих."),
         "sourcesNonBinaryTitle": MessageLookupByLibrary.simpleMessage(
             "Розрахунок калорій для небінарних осіб"),
         "sourcesNonBinaryDescription": MessageLookupByLibrary.simpleMessage(

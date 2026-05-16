@@ -1789,6 +1789,26 @@ class S {
     );
   }
 
+  /// `Nutrient reference intakes`
+  String get sourcesNutrientReferenceTitle {
+    return Intl.message(
+      'Nutrient reference intakes',
+      name: 'sourcesNutrientReferenceTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Daily reference amounts shown on the diary nutrient panel come from the Institute of Medicine's Dietary Reference Intakes summary, which covers per-nutrient targets for adults.`
+  String get sourcesNutrientReferenceDescription {
+    return Intl.message(
+      "Daily reference amounts shown on the diary nutrient panel come from the Institute of Medicine's Dietary Reference Intakes summary, which covers per-nutrient targets for adults.",
+      name: 'sourcesNutrientReferenceDescription',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `View source`
   String get sourcesOpenSourceLabel {
     return Intl.message(
@@ -7349,6 +7369,46 @@ class S {
       name: 'settingsWaterGoalDescription',
       desc: '',
       args: [],
+    );
+  }
+
+  /// `Reference intake`
+  String get driPanelInfoTitle {
+    return Intl.message(
+      'Reference intake',
+      name: 'driPanelInfoTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `These reference amounts come from the IOM Dietary Reference Intakes for adults and vary by age and gender. They're a point of reference, not a target — your own needs may differ.`
+  String get driPanelInfoBody {
+    return Intl.message(
+      "These reference amounts come from the IOM Dietary Reference Intakes for adults and vary by age and gender. They're a point of reference, not a target — your own needs may differ.",
+      name: 'driPanelInfoBody',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Source: IOM Dietary Reference Intakes`
+  String get driPanelInfoLinkLabel {
+    return Intl.message(
+      'Source: IOM Dietary Reference Intakes',
+      name: 'driPanelInfoLinkLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `ref {value}`
+  String driPanelReferenceLabel(String value) {
+    return Intl.message(
+      'ref $value',
+      name: 'driPanelReferenceLabel',
+      desc: '',
+      args: [value],
     );
   }
 }

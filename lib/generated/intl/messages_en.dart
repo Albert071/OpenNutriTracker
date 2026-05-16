@@ -85,6 +85,8 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String mLogWaterAmount(amount) => "Add ${amount} ml";
 
+  static String mDriRef(value) => "ref ${value}";
+
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "activityExample": MessageLookupByLibrary.simpleMessage(
@@ -212,6 +214,13 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("You are editing a future date"),
         "diaryNutrientPanelTitle":
             MessageLookupByLibrary.simpleMessage("Today\'s nutrients"),
+        "driPanelInfoBody": MessageLookupByLibrary.simpleMessage(
+            "These reference amounts come from the IOM Dietary Reference Intakes for adults and vary by age and gender. They\'re a point of reference, not a target — your own needs may differ."),
+        "driPanelInfoLinkLabel":
+            MessageLookupByLibrary.simpleMessage("Source: IOM Dietary Reference Intakes"),
+        "driPanelInfoTitle":
+            MessageLookupByLibrary.simpleMessage("Reference intake"),
+        "driPanelReferenceLabel": mDriRef,
         "dinnerExample": MessageLookupByLibrary.simpleMessage(
             "e.g. soup, chicken, wine ..."),
         "dinnerLabel": MessageLookupByLibrary.simpleMessage("Dinner"),
@@ -1078,6 +1087,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Activity calories (MET values)"),
         "sourcesActivityDescription": MessageLookupByLibrary.simpleMessage(
             "Calories burned during an activity are estimated as MET × body weight (kg) × duration (hours), using values from the Adult Compendium of Physical Activities."),
+        "sourcesNutrientReferenceTitle": MessageLookupByLibrary.simpleMessage("Nutrient reference intakes"),
+        "sourcesNutrientReferenceDescription": MessageLookupByLibrary.simpleMessage("Daily reference amounts shown on the diary nutrient panel come from the Institute of Medicine's Dietary Reference Intakes summary, which covers per-nutrient targets for adults."),
         "sourcesNonBinaryTitle":
             MessageLookupByLibrary.simpleMessage("Non-binary calorie estimation"),
         "sourcesNonBinaryDescription": MessageLookupByLibrary.simpleMessage(

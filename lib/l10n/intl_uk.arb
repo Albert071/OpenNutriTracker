@@ -33,6 +33,13 @@
       }
     }
   },
+  "@driPanelReferenceLabel": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
   "@diaryMealKcalConsumedOfTarget": {
     "placeholders": {
       "consumed": {
@@ -226,6 +233,10 @@
   "diaryMealKcalConsumedOfTarget": "{consumed} / {target} kcal",
   "diaryNutrientPanelDataDisclaimer": "Тут підсумовуються лише ті поживні речовини, які записані для зареєстрованих страв. Страва без значення не додає нічого до відповідного показника — тож суми можуть бути занижені.",
   "diaryNutrientPanelTitle": "Поживні речовини за сьогодні",
+  "driPanelInfoTitle": "Орієнтовне споживання",
+  "driPanelInfoBody": "Ці орієнтовні значення взято з рекомендованих норм споживання IOM для дорослих і вони залежать від віку та статі. Це точка відліку, а не мета — твої власні потреби можуть бути іншими.",
+  "driPanelInfoLinkLabel": "Джерело: IOM Dietary Reference Intakes",
+  "driPanelReferenceLabel": "орієнт. {value}",
   "diarySortByCarbs": "Вуглеводи (за спаданням)",
   "diarySortByFat": "Жири (за спаданням)",
   "diarySortByKcal": "Калорії (за спаданням)",
@@ -826,6 +837,8 @@
   "sourcesMacrosDescription": "Стандартний розподіл 60% вуглеводів, 25% жирів і 15% білків входить у діапазони споживання поживних речовин, рекомендовані ВООЗ. Ти можеш змінити його в Налаштування → Розрахунки. Джерело: WHO Technical Report Series 916 (2003), Diet, Nutrition and the Prevention of Chronic Diseases.",
   "sourcesMacrosTitle": "Розподіл макроелементів",
   "sourcesNonBinaryDescription": "Дослідження енергетичних витрат історично використовували лише бінарні категорії статі, тому для небінарних осіб не існує єдиної підтвердженої формули TDEE. Тому OpenNutriTracker у Налаштування → Розрахунки пропонує вибір між усередненим орієнтиром, орієнтиром, типовим для естрогену, та орієнтиром, типовим для тестостерону. Якщо точне значення є дійсно важливим для тебе, будь ласка, поговори з лікарем, який знає твій гормональний стан.",
+  "sourcesNutrientReferenceTitle": "Референсні норми споживання поживних речовин",
+  "sourcesNutrientReferenceDescription": "Щоденні референсні значення, показані в панелі поживних речовин щоденника, взяті зі зведеного звіту Dietary Reference Intakes Institute of Medicine, який охоплює цільові показники для кожної поживної речовини у дорослих.",
   "sourcesNonBinaryTitle": "Розрахунок калорій для небінарних осіб",
   "sourcesOpenSourceLabel": "Відкрити джерело",
   "sourcesScreenIntro": "OpenNutriTracker використовує для кожного розрахунку усталені, рецензовані методики. Наведені нижче посилання ведуть до оригінальних джерел, щоб ти могла самостійно перевірити будь-яке число.",

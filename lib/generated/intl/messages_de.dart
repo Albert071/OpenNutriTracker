@@ -88,6 +88,8 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String mLogWaterAmount(amount) => "${amount} ml hinzufügen";
 
+  static String mDriRef(value) => "Ref. ${value}";
+
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "activityExample": MessageLookupByLibrary.simpleMessage(
@@ -255,6 +257,13 @@ class MessageLookup extends MessageLookupByLibrary {
         "diaryLabel": MessageLookupByLibrary.simpleMessage("Tagebuch"),
         "diaryNutrientPanelTitle":
             MessageLookupByLibrary.simpleMessage("Heutige Nährstoffe"),
+        "driPanelInfoBody": MessageLookupByLibrary.simpleMessage(
+            "Diese Referenzwerte stammen aus den IOM-Empfehlungen zur Nährstoffzufuhr für Erwachsene und hängen von Alter und Geschlecht ab. Sie dienen als Orientierung, nicht als Vorgabe — dein eigener Bedarf kann abweichen."),
+        "driPanelInfoLinkLabel":
+            MessageLookupByLibrary.simpleMessage("Quelle: IOM Dietary Reference Intakes"),
+        "driPanelInfoTitle":
+            MessageLookupByLibrary.simpleMessage("Referenzzufuhr"),
+        "driPanelReferenceLabel": mDriRef,
         "dinnerExample": MessageLookupByLibrary.simpleMessage(
             "z. B. Suppe, Hähnchen, Wein ..."),
         "dinnerLabel": MessageLookupByLibrary.simpleMessage("Abendessen"),
@@ -1107,6 +1116,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Aktivitätskalorien (MET-Werte)"),
         "sourcesActivityDescription": MessageLookupByLibrary.simpleMessage(
             "Der Kalorienverbrauch bei einer Aktivität wird als MET × Körpergewicht (kg) × Dauer (Stunden) geschätzt, basierend auf den Werten des Adult Compendium of Physical Activities."),
+        "sourcesNutrientReferenceTitle": MessageLookupByLibrary.simpleMessage("Nährstoff-Referenzwerte"),
+        "sourcesNutrientReferenceDescription": MessageLookupByLibrary.simpleMessage("Die täglichen Referenzwerte im Nährstoff-Panel des Tagebuchs stammen aus der Zusammenfassung der Dietary Reference Intakes des Institute of Medicine — pro Nährstoff für Erwachsene."),
         "sourcesNonBinaryTitle": MessageLookupByLibrary.simpleMessage(
             "Kalorienberechnung für non-binäre Personen"),
         "sourcesNonBinaryDescription": MessageLookupByLibrary.simpleMessage(

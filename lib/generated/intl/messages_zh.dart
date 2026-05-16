@@ -83,6 +83,8 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String mLogWaterAmount(amount) => "添加 ${amount} 毫升";
 
+  static String mDriRef(value) => "参考 ${value}";
+
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "activityExample":
@@ -238,6 +240,13 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("您正在编辑未来的日期"),
         "diaryLabel": MessageLookupByLibrary.simpleMessage("日记"),
         "diaryNutrientPanelTitle": MessageLookupByLibrary.simpleMessage("今日营养素"),
+        "driPanelInfoBody": MessageLookupByLibrary.simpleMessage(
+            "这些参考量取自 IOM 成人膳食营养素参考摄入量,会因年龄和性别而异。它们只是参考,并非目标——你自身的需要可能有所不同。"),
+        "driPanelInfoLinkLabel":
+            MessageLookupByLibrary.simpleMessage("来源：IOM Dietary Reference Intakes"),
+        "driPanelInfoTitle":
+            MessageLookupByLibrary.simpleMessage("参考摄入量"),
+        "driPanelReferenceLabel": mDriRef,
         "dinnerExample": MessageLookupByLibrary.simpleMessage("例如：汤、鸡肉、葡萄酒..."),
         "dinnerLabel": MessageLookupByLibrary.simpleMessage("晚餐"),
         "discardChangesConfirmLabel":
@@ -951,6 +960,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("活动消耗的卡路里 (MET 数值)"),
         "sourcesActivityDescription": MessageLookupByLibrary.simpleMessage(
             "活动中消耗的卡路里按 MET × 体重（千克）× 时长（小时）估算，所用数值来自 Adult Compendium of Physical Activities。"),
+        "sourcesNutrientReferenceTitle": MessageLookupByLibrary.simpleMessage("营养参考摄入量"),
+        "sourcesNutrientReferenceDescription": MessageLookupByLibrary.simpleMessage("日记营养面板中显示的每日参考量来自美国医学研究所(Institute of Medicine)的膳食参考摄入量(DRI)汇总报告,涵盖成人各项营养素目标。"),
         "sourcesNonBinaryTitle":
             MessageLookupByLibrary.simpleMessage("非二元性别人士的卡路里估算"),
         "sourcesNonBinaryDescription": MessageLookupByLibrary.simpleMessage(

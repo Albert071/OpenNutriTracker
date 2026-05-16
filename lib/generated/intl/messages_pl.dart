@@ -85,6 +85,8 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String mLogWaterAmount(amount) => "Dodaj ${amount} ml";
 
+  static String mDriRef(value) => "ref. ${value}";
+
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "activityExample": MessageLookupByLibrary.simpleMessage(
@@ -250,6 +252,13 @@ class MessageLookup extends MessageLookupByLibrary {
         "diaryLabel": MessageLookupByLibrary.simpleMessage("Dziennik"),
         "diaryNutrientPanelTitle": MessageLookupByLibrary.simpleMessage(
             "Dzisiejsze składniki odżywcze"),
+        "driPanelInfoBody": MessageLookupByLibrary.simpleMessage(
+            "Te wartości referencyjne pochodzą z zaleceń IOM dotyczących spożycia dla dorosłych i zależą od wieku oraz płci. Są punktem odniesienia, nie celem — twoje własne potrzeby mogą się różnić."),
+        "driPanelInfoLinkLabel":
+            MessageLookupByLibrary.simpleMessage("Źródło: IOM Dietary Reference Intakes"),
+        "driPanelInfoTitle":
+            MessageLookupByLibrary.simpleMessage("Spożycie referencyjne"),
+        "driPanelReferenceLabel": mDriRef,
         "dinnerExample":
             MessageLookupByLibrary.simpleMessage("np. zupa, kurczak, wino ..."),
         "dinnerLabel": MessageLookupByLibrary.simpleMessage("Kolacja"),
@@ -1093,6 +1102,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Kalorie z aktywności (wartości MET)"),
         "sourcesActivityDescription": MessageLookupByLibrary.simpleMessage(
             "Kalorie spalone podczas aktywności są szacowane jako MET × masa ciała (kg) × czas trwania (godziny), na podstawie wartości z Adult Compendium of Physical Activities."),
+        "sourcesNutrientReferenceTitle": MessageLookupByLibrary.simpleMessage("Wartości referencyjne składników odżywczych"),
+        "sourcesNutrientReferenceDescription": MessageLookupByLibrary.simpleMessage("Dzienne wartości referencyjne pokazywane w panelu składników odżywczych w dzienniku pochodzą z podsumowania Dietary Reference Intakes Institute of Medicine, obejmującego cele dla poszczególnych składników u osób dorosłych."),
         "sourcesNonBinaryTitle": MessageLookupByLibrary.simpleMessage(
             "Obliczanie kalorii dla osób niebinarnych"),
         "sourcesNonBinaryDescription": MessageLookupByLibrary.simpleMessage(

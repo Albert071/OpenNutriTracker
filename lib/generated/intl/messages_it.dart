@@ -86,6 +86,8 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String mLogWaterAmount(amount) => "Aggiungi ${amount} ml";
 
+  static String mDriRef(value) => "rif. ${value}";
+
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "activityExample": MessageLookupByLibrary.simpleMessage(
@@ -252,6 +254,13 @@ class MessageLookup extends MessageLookupByLibrary {
         "diaryLabel": MessageLookupByLibrary.simpleMessage("Diario"),
         "diaryNutrientPanelTitle":
             MessageLookupByLibrary.simpleMessage("Nutrienti di oggi"),
+        "driPanelInfoBody": MessageLookupByLibrary.simpleMessage(
+            "Questi valori di riferimento provengono dai Dietary Reference Intakes dell\'IOM per adulti e variano in base a età e genere. Sono un riferimento, non un obiettivo — le tue esigenze possono essere diverse."),
+        "driPanelInfoLinkLabel":
+            MessageLookupByLibrary.simpleMessage("Fonte: IOM Dietary Reference Intakes"),
+        "driPanelInfoTitle":
+            MessageLookupByLibrary.simpleMessage("Apporto di riferimento"),
+        "driPanelReferenceLabel": mDriRef,
         "dinnerExample":
             MessageLookupByLibrary.simpleMessage("es. zuppa, pollo, vino ..."),
         "dinnerLabel": MessageLookupByLibrary.simpleMessage("Cena"),
@@ -1097,6 +1106,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Calorie dall\'attività (valori MET)"),
         "sourcesActivityDescription": MessageLookupByLibrary.simpleMessage(
             "Le calorie bruciate durante un\'attività si stimano come MET × peso corporeo (kg) × durata (ore), usando i valori dell\'Adult Compendium of Physical Activities."),
+        "sourcesNutrientReferenceTitle": MessageLookupByLibrary.simpleMessage("Apporti nutrizionali di riferimento"),
+        "sourcesNutrientReferenceDescription": MessageLookupByLibrary.simpleMessage("Gli apporti giornalieri mostrati nel pannello nutrienti del diario provengono dal rapporto di sintesi delle Dietary Reference Intakes dell'Institute of Medicine, che copre gli obiettivi per ciascun nutriente negli adulti."),
         "sourcesNonBinaryTitle":
             MessageLookupByLibrary.simpleMessage("Stima calorica per persone non binarie"),
         "sourcesNonBinaryDescription": MessageLookupByLibrary.simpleMessage(
