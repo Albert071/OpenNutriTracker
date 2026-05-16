@@ -1100,6 +1100,10 @@ class MessageLookup extends MessageLookupByLibrary {
         "settingsLabel": MessageLookupByLibrary.simpleMessage("Impostazioni"),
         "settingsLanguageLabel":
             MessageLookupByLibrary.simpleMessage("Lingua"),
+        "settingsMaterialYouTitle":
+            MessageLookupByLibrary.simpleMessage("Usa i colori di sistema"),
+        "settingsMaterialYouSubtitle": MessageLookupByLibrary.simpleMessage(
+            "Su Android 12 e versioni successive l'app si abbina al colore dello sfondo. Su versioni precedenti di Android e su iOS questa impostazione non ha effetti visibili."),
         "settingsMacroSplitLabel":
             MessageLookupByLibrary.simpleMessage("Distribuzione macro"),
         "settingsLicensesLabel":

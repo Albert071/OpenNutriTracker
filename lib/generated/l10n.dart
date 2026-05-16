@@ -1500,6 +1500,27 @@ class S {
     );
   }
 
+  /// `Use system colours`
+  String get settingsMaterialYouTitle {
+    return Intl.message(
+      'Use system colours',
+      name: 'settingsMaterialYouTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `On Android 12 and newer, the app blends in with your wallpaper accent. On older Android and on iOS this setting has no visible effect.`
+  String get settingsMaterialYouSubtitle {
+    return Intl.message(
+      'On Android 12 and newer, the app blends in with your wallpaper accent. On older Android and on iOS '
+      'this setting has no visible effect.',
+      name: 'settingsMaterialYouSubtitle',
+      desc: '',
+      args: [],
+    );
+  }
+
   String get settingsLicensesLabel {
     return Intl.message(
       'Licenses',

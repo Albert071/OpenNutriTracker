@@ -1101,6 +1101,10 @@ class MessageLookup extends MessageLookupByLibrary {
         "settingsLabel": MessageLookupByLibrary.simpleMessage("Налаштування"),
         "settingsLanguageLabel":
             MessageLookupByLibrary.simpleMessage("Мова"),
+        "settingsMaterialYouTitle": MessageLookupByLibrary.simpleMessage(
+            "Використовувати системні кольори"),
+        "settingsMaterialYouSubtitle": MessageLookupByLibrary.simpleMessage(
+            "На Android 12 і новіших версіях додаток адаптується до акцентного кольору ваших шпалер. На старіших Android та на iOS це налаштування не має видимого ефекту."),
         "settingsMacroSplitLabel":
             MessageLookupByLibrary.simpleMessage("Розподіл макросів"),
         "settingsLicensesLabel":

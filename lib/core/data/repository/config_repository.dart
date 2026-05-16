@@ -138,4 +138,8 @@ class ConfigRepository {
   Future<void> setConfigDailyWaterGoalMl(int goalMl) async {
     await _configDataSource.setConfigDailyWaterGoalMl(goalMl);
   }
+
+  Future<void> setConfigUseMaterialYou(bool useMaterialYou) async {
+    await _configDataSource.setConfigUseMaterialYou(useMaterialYou);
+  }
 }

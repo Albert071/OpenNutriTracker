@@ -75,6 +75,12 @@ class ConfigDBO extends HiveObject {
   // working without a migration.
   @HiveField(24)
   int? dailyWaterGoalMl;
+  // #415: opt-in Material You dynamic colour scheme. Null means the user
+  // has not made a deliberate choice yet, which the UI treats as "on" — the
+  // wallpaper-derived palette only actually appears on Android 12+, and on
+  // every other platform the static palette is what shows up regardless.
+  @HiveField(20)
+  bool? useMaterialYou;
 
   ConfigDBO(
     this.hasAcceptedDisclaimer,
@@ -98,6 +104,7 @@ class ConfigDBO extends HiveObject {
     this.nutrientPanelVisibility,
     this.dayStartOffsetMinutes,
     this.dailyWaterGoalMl,
+    this.useMaterialYou,
   });
 
   factory ConfigDBO.empty() =>

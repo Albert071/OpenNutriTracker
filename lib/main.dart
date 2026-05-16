@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -72,18 +73,19 @@ Future<void> main() async {
   final savedLocale =
       savedLocaleCode != null ? Locale(savedLocaleCode) : null;
   final savedUsesKilojoules = config.usesKilojoules;
+  final savedUseMaterialYou = config.useMaterialYou;
   final log = Logger('main');
 
   // If the user has accepted anonymous data collection, run the app with
   // sentry enabled, else run without it
   if (kReleaseMode && hasAcceptedAnonymousData) {
     log.info('Starting App with Sentry enabled ...');
-    _runAppWithSentryReporting(
-        isUserInitialized, savedAppTheme, savedLocale, savedUsesKilojoules);
+    _runAppWithSentryReporting(isUserInitialized, savedAppTheme, savedLocale,
+        savedUsesKilojoules, savedUseMaterialYou);
   } else {
     log.info('Starting App ...');
-    runAppWithChangeNotifiers(
-        isUserInitialized, savedAppTheme, savedLocale, savedUsesKilojoules);
+    runAppWithChangeNotifiers(isUserInitialized, savedAppTheme, savedLocale,
+        savedUsesKilojoules, savedUseMaterialYou);
   }
 }
 
@@ -92,14 +94,15 @@ void _runAppWithSentryReporting(
   AppThemeEntity savedAppTheme,
   Locale? savedLocale,
   bool savedUsesKilojoules,
+  bool savedUseMaterialYou,
 ) async {
   await SentryFlutter.init(
     (options) {
       options.dsn = Env.sentryDns;
       options.tracesSampleRate = 1.0;
     },
-    appRunner: () => runAppWithChangeNotifiers(
-        isUserInitialized, savedAppTheme, savedLocale, savedUsesKilojoules),
+    appRunner: () => runAppWithChangeNotifiers(isUserInitialized, savedAppTheme,
+        savedLocale, savedUsesKilojoules, savedUseMaterialYou),
   );
 }
 
@@ -108,12 +111,16 @@ void runAppWithChangeNotifiers(
   AppThemeEntity savedAppTheme,
   Locale? savedLocale,
   bool savedUsesKilojoules,
+  bool savedUseMaterialYou,
 ) =>
     runApp(
       MultiProvider(
         providers: [
           ChangeNotifierProvider(
-            create: (_) => ThemeModeProvider(appTheme: savedAppTheme),
+            create: (_) => ThemeModeProvider(
+              appTheme: savedAppTheme,
+              useMaterialYou: savedUseMaterialYou,
+            ),
           ),
           ChangeNotifierProvider(
             create: (_) => LocaleProvider(locale: savedLocale),
@@ -134,17 +141,40 @@ class OpenNutriTrackerApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // #415: DynamicColorBuilder hands back null on platforms that don't
+    // support wallpaper-derived colours (iOS, older Android, desktop test
+    // builds), so the static palette always remains as a graceful fallback.
+    final useMaterialYou =
+        Provider.of<ThemeModeProvider>(context).useMaterialYou;
+    return DynamicColorBuilder(
+      builder: (lightDynamic, darkDynamic) {
+        final lightScheme = (useMaterialYou && lightDynamic != null)
+            ? lightDynamic.harmonized()
+            : lightColorScheme;
+        final darkScheme = (useMaterialYou && darkDynamic != null)
+            ? darkDynamic.harmonized()
+            : darkColorScheme;
+        return _buildMaterialApp(context, lightScheme, darkScheme);
+      },
+    );
+  }
+
+  Widget _buildMaterialApp(
+    BuildContext context,
+    ColorScheme lightScheme,
+    ColorScheme darkScheme,
+  ) {
     return MaterialApp(
       onGenerateTitle: (context) => S.of(context).appTitle,
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         useMaterial3: true,
-        colorScheme: lightColorScheme,
+        colorScheme: lightScheme,
         textTheme: appTextTheme,
       ),
       darkTheme: ThemeData(
         useMaterial3: true,
-        colorScheme: darkColorScheme,
+        colorScheme: darkScheme,
         textTheme: appTextTheme,
       ),
       themeMode: Provider.of<ThemeModeProvider>(context).themeMode,

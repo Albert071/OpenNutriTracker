@@ -55,6 +55,10 @@ class ConfigEntity extends Equatable {
   // gendered default at read time. Once the user has touched the
   // setting, their override is persisted and survives a profile edit.
   final int? dailyWaterGoalMl;
+  // #415: whether to harmonise the app palette with the user's system
+  // wallpaper colours. Effective only on Android 12+ — every other
+  // platform falls back to the static palette regardless of this value.
+  final bool useMaterialYou;
 
   /// Default daily water goal in millilitres for the home chip when the
   /// user has not picked one yet.
@@ -119,6 +123,7 @@ class ConfigEntity extends Equatable {
     this.dayStartOffsetHours = 0,
     this.dayStartOffsetMinutes = 0,
     this.dailyWaterGoalMl,
+    this.useMaterialYou = true,
   });
 
   /// Resolves the daily water goal for the home chip. Returns the user's
@@ -198,6 +203,7 @@ class ConfigEntity extends Equatable {
     dayStartOffsetHours: _normaliseOffsetHours(dbo.dayStartOffsetHours),
     dayStartOffsetMinutes: _normaliseOffsetMinutes(dbo.dayStartOffsetMinutes),
     dailyWaterGoalMl: _normaliseWaterGoal(dbo.dailyWaterGoalMl),
+    useMaterialYou: dbo.useMaterialYou ?? true,
   );
 
   /// Returns the recommended kcal target for [mealKey] given a daily goal.
@@ -265,5 +271,6 @@ class ConfigEntity extends Equatable {
     dayStartOffsetHours,
     dayStartOffsetMinutes,
     dailyWaterGoalMl,
+    useMaterialYou,
   ];
 }

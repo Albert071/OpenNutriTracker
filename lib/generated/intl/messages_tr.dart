@@ -1078,6 +1078,10 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Günlük kcal ayarı"),
         "settingsLabel": MessageLookupByLibrary.simpleMessage("Ayarlar"),
         "settingsLanguageLabel": MessageLookupByLibrary.simpleMessage("Dil"),
+        "settingsMaterialYouTitle":
+            MessageLookupByLibrary.simpleMessage("Sistem renklerini kullan"),
+        "settingsMaterialYouSubtitle": MessageLookupByLibrary.simpleMessage(
+            "Android 12 ve daha yeni sürümlerde uygulama duvar kâğıdınızın vurgu rengiyle uyumlanır. Daha eski Android sürümlerinde ve iOS'ta bu ayarın görünür bir etkisi olmaz."),
         "settingsMacroSplitLabel":
             MessageLookupByLibrary.simpleMessage("Makro dağılımı"),
         "settingsLicensesLabel":

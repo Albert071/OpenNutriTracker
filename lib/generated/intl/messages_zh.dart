@@ -954,6 +954,10 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("每日千卡调整"),
         "settingsLabel": MessageLookupByLibrary.simpleMessage("设置"),
         "settingsLanguageLabel": MessageLookupByLibrary.simpleMessage("语言"),
+        "settingsMaterialYouTitle":
+            MessageLookupByLibrary.simpleMessage("使用系统颜色"),
+        "settingsMaterialYouSubtitle": MessageLookupByLibrary.simpleMessage(
+            "在 Android 12 及更高版本上,应用会与你壁纸的强调色相协调。在较旧的 Android 系统和 iOS 上,此设置没有可见效果。"),
         "settingsMacroSplitLabel":
             MessageLookupByLibrary.simpleMessage("宏量营养素分配"),
         "settingsLicensesLabel": MessageLookupByLibrary.simpleMessage("许可证"),

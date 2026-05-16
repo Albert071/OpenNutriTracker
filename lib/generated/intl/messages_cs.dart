@@ -1090,6 +1090,10 @@ class MessageLookup extends MessageLookupByLibrary {
         "settingsLabel": MessageLookupByLibrary.simpleMessage("Nastavení"),
         "settingsLanguageLabel":
             MessageLookupByLibrary.simpleMessage("Jazyk"),
+        "settingsMaterialYouTitle":
+            MessageLookupByLibrary.simpleMessage("Použít systémové barvy"),
+        "settingsMaterialYouSubtitle": MessageLookupByLibrary.simpleMessage(
+            "V systému Android 12 a novějším se aplikace přizpůsobí barevnému akcentu vaší tapety. Na starších verzích Androidu a v iOS toto nastavení nemá viditelný účinek."),
         "settingsMacroSplitLabel":
             MessageLookupByLibrary.simpleMessage("Rozdělení makroživin"),
         "settingsLicensesLabel":

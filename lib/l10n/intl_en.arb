@@ -792,6 +792,8 @@
   "settingsIronGoalLabel": "Iron goal",
   "settingsLabel": "Settings",
   "settingsLanguageLabel": "Language",
+  "settingsMaterialYouTitle": "Use system colours",
+  "settingsMaterialYouSubtitle": "On Android 12 and newer, the app blends in with your wallpaper accent. On older Android and on iOS this setting has no visible effect.",
   "settingsMacroSplitLabel": "Macro split",
   "settingsLicensesLabel": "Licenses",
   "settingsMagnesiumGoalDescription": "Daily magnesium target in milligrams. Default varies by gender (400mg male, 310mg female, 355mg otherwise).",

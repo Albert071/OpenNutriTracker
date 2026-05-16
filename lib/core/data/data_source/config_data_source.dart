@@ -233,6 +233,13 @@ class ConfigDataSource {
     await config?.save();
   }
 
+  Future<void> setConfigUseMaterialYou(bool useMaterialYou) async {
+    _log.fine('Updating config useMaterialYou to $useMaterialYou');
+    final config = _configBox.get(_configKey);
+    config?.useMaterialYou = useMaterialYou;
+    await config?.save();
+  }
+
   Future<ConfigDBO> getConfig() async {
     return _configBox.get(_configKey) ?? ConfigDBO.empty();
   }

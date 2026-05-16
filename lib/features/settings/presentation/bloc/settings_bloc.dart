@@ -67,6 +67,7 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
           usesKilojoules: userConfig.usesKilojoules,
           dayStartOffsetHours: userConfig.dayStartOffsetHours,
           dayStartOffsetMinutes: userConfig.dayStartOffsetMinutes,
+          useMaterialYou: userConfig.useMaterialYou,
         ),
       );
     });
@@ -117,6 +118,10 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
 
   void setUsesKilojoules(bool usesKilojoules) {
     _addConfigUsecase.setConfigUsesKilojoules(usesKilojoules);
+  }
+
+  void setUseMaterialYou(bool useMaterialYou) {
+    _addConfigUsecase.setConfigUseMaterialYou(useMaterialYou);
   }
 
   Future<Map<String, int>?> getDiarySortPreferences() async {

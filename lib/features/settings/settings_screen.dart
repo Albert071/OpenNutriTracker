@@ -193,6 +193,24 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   title: Text(S.of(context).settingsThemeLabel),
                   onTap: () => _showThemeDialog(context, state.appTheme),
                 ),
+                Semantics(
+                  identifier: 'settings-material-you-toggle',
+                  child: SwitchListTile(
+                    secondary: const Icon(Icons.palette_outlined),
+                    title: Text(S.of(context).settingsMaterialYouTitle),
+                    subtitle:
+                        Text(S.of(context).settingsMaterialYouSubtitle),
+                    value: state.useMaterialYou,
+                    onChanged: (bool value) {
+                      _settingsBloc.setUseMaterialYou(value);
+                      Provider.of<ThemeModeProvider>(
+                        context,
+                        listen: false,
+                      ).updateUseMaterialYou(value);
+                      _settingsBloc.add(LoadSettingsEvent());
+                    },
+                  ),
+                ),
                 ListTile(
                   leading: const Icon(Icons.language_outlined),
                   title: Text(S.of(context).settingsLanguageLabel),

@@ -775,6 +775,8 @@
   "settingsIronGoalLabel": "Eisenziel",
   "settingsLabel": "Einstellungen",
   "settingsLanguageLabel": "Sprache",
+  "settingsMaterialYouTitle": "Systemfarben verwenden",
+  "settingsMaterialYouSubtitle": "Unter Android 12 und neuer passt sich die App an die Akzentfarbe deines Hintergrundbilds an. Auf älteren Android-Versionen und auf iOS hat diese Einstellung keine sichtbare Wirkung.",
   "settingsMacroSplitLabel": "Makro-Aufteilung",
   "settingsLicensesLabel": "Lizenzen",
   "settingsMagnesiumGoalDescription": "Tägliches Magnesiumziel in Milligramm. Standard nach Geschlecht (400 mg männlich, 310 mg weiblich, 355 mg sonst).",

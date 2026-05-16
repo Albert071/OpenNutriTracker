@@ -1110,6 +1110,10 @@ class MessageLookup extends MessageLookupByLibrary {
         "settingsLabel": MessageLookupByLibrary.simpleMessage("Einstellungen"),
         "settingsLanguageLabel":
             MessageLookupByLibrary.simpleMessage("Sprache"),
+        "settingsMaterialYouTitle":
+            MessageLookupByLibrary.simpleMessage("Systemfarben verwenden"),
+        "settingsMaterialYouSubtitle": MessageLookupByLibrary.simpleMessage(
+            "Unter Android 12 und neuer passt sich die App an die Akzentfarbe deines Hintergrundbilds an. Auf älteren Android-Versionen und auf iOS hat diese Einstellung keine sichtbare Wirkung."),
         "settingsMacroSplitLabel":
             MessageLookupByLibrary.simpleMessage("Makro-Aufteilung"),
         "settingsLicensesLabel":
