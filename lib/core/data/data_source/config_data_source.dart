@@ -226,6 +226,13 @@ class ConfigDataSource {
     await config?.save();
   }
 
+  Future<void> setConfigDailyWaterGoalMl(int goalMl) async {
+    _log.fine('Updating config dailyWaterGoalMl to $goalMl');
+    final config = _configBox.get(_configKey);
+    config?.dailyWaterGoalMl = goalMl;
+    await config?.save();
+  }
+
   Future<ConfigDBO> getConfig() async {
     return _configBox.get(_configKey) ?? ConfigDBO.empty();
   }

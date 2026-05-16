@@ -82,6 +82,10 @@ class MessageLookup extends MessageLookupByLibrary {
   static String mLowKcal(threshold) =>
       "Gli adulti non dovrebbero assumere meno di ${threshold} kcal al giorno per periodi prolungati senza una guida medica. Valuta di parlare con un professionista sanitario prima di mantenere un obiettivo così basso.";
 
+  static String mWaterChip(current, goal) => "${current} / ${goal} ml";
+
+  static String mLogWaterAmount(amount) => "Aggiungi ${amount} ml";
+
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "activityExample": MessageLookupByLibrary.simpleMessage(
@@ -1272,5 +1276,20 @@ class MessageLookup extends MessageLookupByLibrary {
         "settingsPerMealKcalShareSnack":
             MessageLookupByLibrary.simpleMessage("Spuntino"),
         "diaryMealKcalConsumedOfTarget": m23,
+        "logWaterAmountLabel": mLogWaterAmount,
+        "logWaterDialogTitle":
+            MessageLookupByLibrary.simpleMessage("Registra acqua bevuta"),
+        "logWaterNothingToUndoLabel":
+            MessageLookupByLibrary.simpleMessage("Niente da annullare"),
+        "logWaterUndoLabel":
+            MessageLookupByLibrary.simpleMessage("Annulla ultimo"),
+        "mlLabel": MessageLookupByLibrary.simpleMessage("ml"),
+        "settingsWaterGoalDescription":
+            MessageLookupByLibrary.simpleMessage(
+                "Usato dal contatore d\'acqua nella schermata principale."),
+        "settingsWaterGoalLabel":
+            MessageLookupByLibrary.simpleMessage(
+                "Obiettivo idrico giornaliero"),
+        "waterChipLabel": mWaterChip,
       };
 }

@@ -37,6 +37,7 @@ class ConfigDBOAdapter extends TypeAdapter<ConfigDBO> {
         diarySortPreferences: (fields[21] as Map?)?.cast<String, int>(),
         nutrientPanelVisibility: (fields[22] as Map?)?.cast<String, bool>(),
         dayStartOffsetMinutes: (fields[23] as num?)?.toInt(),
+        dailyWaterGoalMl: (fields[24] as num?)?.toInt(),
       )
       ..userCarbGoalPct = (fields[6] as num?)?.toDouble()
       ..userProteinGoalPct = (fields[7] as num?)?.toDouble()
@@ -46,7 +47,7 @@ class ConfigDBOAdapter extends TypeAdapter<ConfigDBO> {
   @override
   void write(BinaryWriter writer, ConfigDBO obj) {
     writer
-      ..writeByte(23)
+      ..writeByte(24)
       ..writeByte(0)
       ..write(obj.hasAcceptedDisclaimer)
       ..writeByte(1)
@@ -92,7 +93,9 @@ class ConfigDBOAdapter extends TypeAdapter<ConfigDBO> {
       ..writeByte(22)
       ..write(obj.nutrientPanelVisibility)
       ..writeByte(23)
-      ..write(obj.dayStartOffsetMinutes);
+      ..write(obj.dayStartOffsetMinutes)
+      ..writeByte(24)
+      ..write(obj.dailyWaterGoalMl);
   }
 
   @override
@@ -139,6 +142,7 @@ ConfigDBO _$ConfigDBOFromJson(Map<String, dynamic> json) =>
               (k, e) => MapEntry(k, e as bool),
             ),
         dayStartOffsetMinutes: (json['dayStartOffsetMinutes'] as num?)?.toInt(),
+        dailyWaterGoalMl: (json['dailyWaterGoalMl'] as num?)?.toInt(),
       )
       ..userCarbGoalPct = (json['userCarbGoalPct'] as num?)?.toDouble()
       ..userProteinGoalPct = (json['userProteinGoalPct'] as num?)?.toDouble()
@@ -168,6 +172,7 @@ Map<String, dynamic> _$ConfigDBOToJson(ConfigDBO instance) => <String, dynamic>{
   'nutrientPanelVisibility': instance.nutrientPanelVisibility,
   'diarySortPreferences': instance.diarySortPreferences,
   'dayStartOffsetMinutes': instance.dayStartOffsetMinutes,
+  'dailyWaterGoalMl': instance.dailyWaterGoalMl,
 };
 
 const _$AppThemeDBOEnumMap = {

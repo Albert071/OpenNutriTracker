@@ -134,4 +134,8 @@ class ConfigRepository {
   Future<void> setConfigDayStartOffsetMinutes(int minutes) async {
     await _configDataSource.setConfigDayStartOffsetMinutes(minutes);
   }
+
+  Future<void> setConfigDailyWaterGoalMl(int goalMl) async {
+    await _configDataSource.setConfigDailyWaterGoalMl(goalMl);
+  }
 }

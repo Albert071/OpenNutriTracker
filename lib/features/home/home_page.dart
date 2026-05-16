@@ -19,6 +19,7 @@ import 'package:opennutritracker/features/add_meal/presentation/add_meal_type.da
 import 'package:opennutritracker/features/home/presentation/bloc/home_bloc.dart';
 import 'package:opennutritracker/features/home/presentation/widgets/dashboard_widget.dart';
 import 'package:opennutritracker/features/home/presentation/widgets/intake_vertical_list.dart';
+import 'package:opennutritracker/features/home/presentation/widgets/quick_water_widget.dart';
 import 'package:opennutritracker/features/home/presentation/widgets/quick_weight_widget.dart';
 import 'package:opennutritracker/generated/l10n.dart';
 
@@ -92,6 +93,8 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
             state.lunchSharePct,
             state.dinnerSharePct,
             state.snackSharePct,
+            state.waterMlToday,
+            state.waterGoalMl,
           );
         } else {
           return _getLoadingContent();
@@ -144,6 +147,8 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     int lunchSharePct,
     int dinnerSharePct,
     int snackSharePct,
+    int waterMlToday,
+    int waterGoalMl,
   ) {
     if (showDisclaimerDialog) {
       _showDisclaimerDialog(context);
@@ -152,9 +157,21 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
       children: [
         ListView(
           children: [
-            QuickWeightWidget(
-              weightKg: userWeightKg,
-              usesImperialUnits: usesImperialUnits,
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: Row(
+                children: [
+                  QuickWeightWidget(
+                    weightKg: userWeightKg,
+                    usesImperialUnits: usesImperialUnits,
+                  ),
+                  const Spacer(),
+                  QuickWaterWidget(
+                    waterMlToday: waterMlToday,
+                    waterGoalMl: waterGoalMl,
+                  ),
+                ],
+              ),
             ),
             const SizedBox(height: 8.0),
             DashboardWidget(
@@ -365,8 +382,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   ) async {
     final newDuration = await showDialog<double>(
       context: context,
-      builder: (context) =>
-          EditActivityDialog(activityEntity: activityEntity),
+      builder: (context) => EditActivityDialog(activityEntity: activityEntity),
     );
     if (newDuration != null) {
       await _homeBloc.updateUserActivityItem(activityEntity, newDuration);

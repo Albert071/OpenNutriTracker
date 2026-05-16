@@ -862,5 +862,13 @@
   "weightHistoryWeightLabel": "Gewicht",
   "weightLabel": "Gewicht",
   "yearsLabel": "{age} Jahre",
+  "logWaterAmountLabel": "{amount} ml hinzufügen",
+  "logWaterDialogTitle": "Wasseraufnahme erfassen",
+  "logWaterNothingToUndoLabel": "Nichts zurückzunehmen",
+  "logWaterUndoLabel": "Letzten zurücknehmen",
+  "mlLabel": "ml",
+  "settingsWaterGoalDescription": "Wird vom Wasser-Chip auf dem Startbildschirm verwendet.",
+  "settingsWaterGoalLabel": "Tägliches Wasserziel",
+  "waterChipLabel": "{current} / {goal} ml",
   "zincLabel": "Zink"
 }

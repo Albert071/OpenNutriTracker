@@ -47,7 +47,6 @@ class AddConfigUsecase {
     );
   }
 
-
   Future<void> setConfigShowActivityTracking(bool show) async {
     _configRepository.setConfigShowActivityTracking(show);
   }
@@ -96,5 +95,9 @@ class AddConfigUsecase {
 
   Future<void> setConfigDayStartOffsetMinutes(int minutes) async {
     _configRepository.setConfigDayStartOffsetMinutes(minutes);
+  }
+
+  Future<void> setConfigDailyWaterGoalMl(int goalMl) async {
+    await _configRepository.setConfigDailyWaterGoalMl(goalMl);
   }
 }

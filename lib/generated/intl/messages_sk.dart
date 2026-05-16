@@ -82,6 +82,10 @@ class MessageLookup extends MessageLookupByLibrary {
   static String mLowKcal(threshold) =>
       "Dospelí by bez lekárskeho dohľadu nemali dlhodobo prijímať menej než ${threshold} kcal denne. Zvážte konzultáciu so zdravotníckym odborníkom skôr, než zostanete pri takomto nízkom cieli.";
 
+  static String mWaterChip(current, goal) => "${current} / ${goal} ml";
+
+  static String mLogWaterAmount(amount) => "Pridať ${amount} ml";
+
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "activityExample": MessageLookupByLibrary.simpleMessage(
@@ -1264,5 +1268,19 @@ class MessageLookup extends MessageLookupByLibrary {
         "settingsPerMealKcalShareSnack":
             MessageLookupByLibrary.simpleMessage("Snack"),
         "diaryMealKcalConsumedOfTarget": m23,
+        "logWaterAmountLabel": mLogWaterAmount,
+        "logWaterDialogTitle":
+            MessageLookupByLibrary.simpleMessage("Zaznamenať príjem vody"),
+        "logWaterNothingToUndoLabel":
+            MessageLookupByLibrary.simpleMessage("Nie je čo vrátiť"),
+        "logWaterUndoLabel":
+            MessageLookupByLibrary.simpleMessage("Vrátiť posledný"),
+        "mlLabel": MessageLookupByLibrary.simpleMessage("ml"),
+        "settingsWaterGoalDescription":
+            MessageLookupByLibrary.simpleMessage(
+                "Používa sa ukazovateľom vody na hlavnej obrazovke."),
+        "settingsWaterGoalLabel":
+            MessageLookupByLibrary.simpleMessage("Denný cieľ pitia vody"),
+        "waterChipLabel": mWaterChip,
       };
 }

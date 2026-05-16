@@ -7071,6 +7071,86 @@ class S {
       args: [],
     );
   }
+
+  /// `{current} / {goal} ml`
+  String waterChipLabel(int current, int goal) {
+    return Intl.message(
+      '$current / $goal ml',
+      name: 'waterChipLabel',
+      desc: '',
+      args: [current, goal],
+    );
+  }
+
+  /// `Log water intake`
+  String get logWaterDialogTitle {
+    return Intl.message(
+      'Log water intake',
+      name: 'logWaterDialogTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Add {amount} ml`
+  String logWaterAmountLabel(int amount) {
+    return Intl.message(
+      'Add $amount ml',
+      name: 'logWaterAmountLabel',
+      desc: '',
+      args: [amount],
+    );
+  }
+
+  /// `Undo last`
+  String get logWaterUndoLabel {
+    return Intl.message(
+      'Undo last',
+      name: 'logWaterUndoLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Nothing to undo`
+  String get logWaterNothingToUndoLabel {
+    return Intl.message(
+      'Nothing to undo',
+      name: 'logWaterNothingToUndoLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `ml`
+  String get mlLabel {
+    return Intl.message(
+      'ml',
+      name: 'mlLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Daily water goal`
+  String get settingsWaterGoalLabel {
+    return Intl.message(
+      'Daily water goal',
+      name: 'settingsWaterGoalLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Used by the water chip on the home screen.`
+  String get settingsWaterGoalDescription {
+    return Intl.message(
+      'Used by the water chip on the home screen.',
+      name: 'settingsWaterGoalDescription',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

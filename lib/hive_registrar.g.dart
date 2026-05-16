@@ -20,6 +20,7 @@ import 'package:opennutritracker/core/data/dbo/user_dbo.dart';
 import 'package:opennutritracker/core/data/dbo/user_gender_dbo.dart';
 import 'package:opennutritracker/core/data/dbo/user_pal_dbo.dart';
 import 'package:opennutritracker/core/data/dbo/user_weight_goal_dbo.dart';
+import 'package:opennutritracker/core/data/dbo/water_intake_dbo.dart';
 import 'package:opennutritracker/core/data/dbo/weight_log_dbo.dart';
 
 extension HiveRegistrar on HiveInterface {
@@ -43,6 +44,7 @@ extension HiveRegistrar on HiveInterface {
     registerAdapter(UserGenderDBOAdapter());
     registerAdapter(UserPALDBOAdapter());
     registerAdapter(UserWeightGoalDBOAdapter());
+    registerAdapter(WaterIntakeDBOAdapter());
     registerAdapter(WeightLogDBOAdapter());
   }
 }
@@ -68,6 +70,7 @@ extension IsolatedHiveRegistrar on IsolatedHiveInterface {
     registerAdapter(UserGenderDBOAdapter());
     registerAdapter(UserPALDBOAdapter());
     registerAdapter(UserWeightGoalDBOAdapter());
+    registerAdapter(WaterIntakeDBOAdapter());
     registerAdapter(WeightLogDBOAdapter());
   }
 }

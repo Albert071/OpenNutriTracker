@@ -79,6 +79,10 @@ class MessageLookup extends MessageLookupByLibrary {
   static String mLowKcal(threshold) =>
       "在没有医疗指导的情况下，成年人不宜长期每天摄入低于 ${threshold} 千卡的热量。在维持这么低的目标之前，请考虑咨询医疗专业人员。";
 
+  static String mWaterChip(current, goal) => "${current} / ${goal} 毫升";
+
+  static String mLogWaterAmount(amount) => "添加 ${amount} 毫升";
+
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "activityExample":
@@ -1113,5 +1117,19 @@ class MessageLookup extends MessageLookupByLibrary {
         "settingsPerMealKcalShareSnack":
             MessageLookupByLibrary.simpleMessage("零食"),
         "diaryMealKcalConsumedOfTarget": m23,
+        "logWaterAmountLabel": mLogWaterAmount,
+        "logWaterDialogTitle":
+            MessageLookupByLibrary.simpleMessage("记录饮水量"),
+        "logWaterNothingToUndoLabel":
+            MessageLookupByLibrary.simpleMessage("没有可撤销的记录"),
+        "logWaterUndoLabel":
+            MessageLookupByLibrary.simpleMessage("撤销最后一次"),
+        "mlLabel": MessageLookupByLibrary.simpleMessage("毫升"),
+        "settingsWaterGoalDescription":
+            MessageLookupByLibrary.simpleMessage(
+                "主屏幕上的饮水提示使用此目标。"),
+        "settingsWaterGoalLabel":
+            MessageLookupByLibrary.simpleMessage("每日饮水目标"),
+        "waterChipLabel": mWaterChip,
       };
 }

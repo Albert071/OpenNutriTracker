@@ -861,5 +861,13 @@
   "weightHistoryWeightLabel": "Hmotnosť",
   "weightLabel": "Hmotnosť",
   "yearsLabel": "{age} rokov",
+  "logWaterAmountLabel": "Pridať {amount} ml",
+  "logWaterDialogTitle": "Zaznamenať príjem vody",
+  "logWaterNothingToUndoLabel": "Nie je čo vrátiť",
+  "logWaterUndoLabel": "Vrátiť posledný",
+  "mlLabel": "ml",
+  "settingsWaterGoalDescription": "Používa sa ukazovateľom vody na hlavnej obrazovke.",
+  "settingsWaterGoalLabel": "Denný cieľ pitia vody",
+  "waterChipLabel": "{current} / {goal} ml",
   "zincLabel": "zinok"
 }

@@ -832,5 +832,13 @@
   "weightHistoryWeightLabel": "体重",
   "weightLabel": "体重",
   "yearsLabel": "{age} 岁",
+  "logWaterAmountLabel": "添加 {amount} 毫升",
+  "logWaterDialogTitle": "记录饮水量",
+  "logWaterNothingToUndoLabel": "没有可撤销的记录",
+  "logWaterUndoLabel": "撤销最后一次",
+  "mlLabel": "毫升",
+  "settingsWaterGoalDescription": "主屏幕上的饮水提示使用此目标。",
+  "settingsWaterGoalLabel": "每日饮水目标",
+  "waterChipLabel": "{current} / {goal} 毫升",
   "zincLabel": "锌"
 }
