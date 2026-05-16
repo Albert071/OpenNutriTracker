@@ -1116,6 +1116,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Aktivitätskalorien (MET-Werte)"),
         "sourcesActivityDescription": MessageLookupByLibrary.simpleMessage(
             "Der Kalorienverbrauch bei einer Aktivität wird als MET × Körpergewicht (kg) × Dauer (Stunden) geschätzt, basierend auf den Werten des Adult Compendium of Physical Activities."),
+        "sourcesNutrientReferenceTitle": MessageLookupByLibrary.simpleMessage("Nährstoff-Referenzwerte"),
+        "sourcesNutrientReferenceDescription": MessageLookupByLibrary.simpleMessage("Die täglichen Referenzwerte im Nährstoff-Panel des Tagebuchs stammen aus der Zusammenfassung der Dietary Reference Intakes des Institute of Medicine — pro Nährstoff für Erwachsene."),
         "sourcesNonBinaryTitle": MessageLookupByLibrary.simpleMessage(
             "Kalorienberechnung für non-binäre Personen"),
         "sourcesNonBinaryDescription": MessageLookupByLibrary.simpleMessage(

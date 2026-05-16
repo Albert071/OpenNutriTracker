@@ -1015,6 +1015,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Kalórie z aktivity (hodnoty MET)"),
         "sourcesActivityDescription": MessageLookupByLibrary.simpleMessage(
             "Kalórie spálené počas aktivity sa odhadujú ako MET × telesná hmotnosť (kg) × trvanie (hodiny) podľa hodnôt z Adult Compendium of Physical Activities."),
+        "sourcesNutrientReferenceTitle": MessageLookupByLibrary.simpleMessage("Referenčné príjmy živín"),
+        "sourcesNutrientReferenceDescription": MessageLookupByLibrary.simpleMessage("Denné referenčné hodnoty zobrazené v paneli živín v denníku pochádzajú zo súhrnu Dietary Reference Intakes Institute of Medicine, ktorý pokrýva ciele pre jednotlivé živiny u dospelých."),
         "sourcesNonBinaryTitle": MessageLookupByLibrary.simpleMessage(
             "Odhad kalórií pre nebinárne osoby"),
         "sourcesNonBinaryDescription": MessageLookupByLibrary.simpleMessage(

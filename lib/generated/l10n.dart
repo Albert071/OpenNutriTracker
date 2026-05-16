@@ -1789,6 +1789,26 @@ class S {
     );
   }
 
+  /// `Nutrient reference intakes`
+  String get sourcesNutrientReferenceTitle {
+    return Intl.message(
+      'Nutrient reference intakes',
+      name: 'sourcesNutrientReferenceTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Daily reference amounts shown on the diary nutrient panel come from the Institute of Medicine's Dietary Reference Intakes summary, which covers per-nutrient targets for adults.`
+  String get sourcesNutrientReferenceDescription {
+    return Intl.message(
+      "Daily reference amounts shown on the diary nutrient panel come from the Institute of Medicine's Dietary Reference Intakes summary, which covers per-nutrient targets for adults.",
+      name: 'sourcesNutrientReferenceDescription',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `View source`
   String get sourcesOpenSourceLabel {
     return Intl.message(

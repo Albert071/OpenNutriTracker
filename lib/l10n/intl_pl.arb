@@ -837,6 +837,8 @@
   "sourcesMacrosDescription": "Domyślny podział 60% węglowodanów, 25% tłuszczu i 15% białka mieści się w zakresach spożycia rekomendowanych przez WHO. Możesz go zmienić w Ustawienia → Obliczenia. Źródło: WHO Technical Report Series 916 (2003), Diet, Nutrition and the Prevention of Chronic Diseases.",
   "sourcesMacrosTitle": "Rozkład makroskładników",
   "sourcesNonBinaryDescription": "Badania nad wydatkiem energetycznym historycznie korzystały wyłącznie z binarnych kategorii płci, dlatego nie istnieje jeden zwalidowany wzór TDEE dla osób niebinarnych. OpenNutriTracker oferuje więc w Ustawienia → Obliczenia wybór między uśrednioną referencją, referencją typową dla estrogenu oraz referencją typową dla testosteronu. Jeśli dokładna wartość jest dla ciebie naprawdę istotna, skonsultuj się z lekarzem znającym twój profil hormonalny.",
+  "sourcesNutrientReferenceTitle": "Wartości referencyjne składników odżywczych",
+  "sourcesNutrientReferenceDescription": "Dzienne wartości referencyjne pokazywane w panelu składników odżywczych w dzienniku pochodzą z podsumowania Dietary Reference Intakes Institute of Medicine, obejmującego cele dla poszczególnych składników u osób dorosłych.",
   "sourcesNonBinaryTitle": "Obliczanie kalorii dla osób niebinarnych",
   "sourcesOpenSourceLabel": "Otwórz źródło",
   "sourcesScreenIntro": "OpenNutriTracker stosuje dla każdego obliczenia uznane, recenzowane metody. Poniższe odnośniki prowadzą do oryginalnych źródeł, dzięki czemu możesz samodzielnie zweryfikować dowolną wartość.",

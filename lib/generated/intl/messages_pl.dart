@@ -1102,6 +1102,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Kalorie z aktywności (wartości MET)"),
         "sourcesActivityDescription": MessageLookupByLibrary.simpleMessage(
             "Kalorie spalone podczas aktywności są szacowane jako MET × masa ciała (kg) × czas trwania (godziny), na podstawie wartości z Adult Compendium of Physical Activities."),
+        "sourcesNutrientReferenceTitle": MessageLookupByLibrary.simpleMessage("Wartości referencyjne składników odżywczych"),
+        "sourcesNutrientReferenceDescription": MessageLookupByLibrary.simpleMessage("Dzienne wartości referencyjne pokazywane w panelu składników odżywczych w dzienniku pochodzą z podsumowania Dietary Reference Intakes Institute of Medicine, obejmującego cele dla poszczególnych składników u osób dorosłych."),
         "sourcesNonBinaryTitle": MessageLookupByLibrary.simpleMessage(
             "Obliczanie kalorii dla osób niebinarnych"),
         "sourcesNonBinaryDescription": MessageLookupByLibrary.simpleMessage(

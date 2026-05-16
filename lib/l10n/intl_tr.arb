@@ -868,6 +868,8 @@
   "sourcesMacrosDescription": "%60 karbonhidrat, %25 yağ ve %15 protein şeklindeki varsayılan dağılım, DSÖ'nün önerdiği nüfus besin alımı aralıkları içinde kalır. Ayarlar → Hesaplamalar bölümünden değiştirebilirsin. Kaynak: WHO Technical Report Series 916 (2003), Diet, Nutrition and the Prevention of Chronic Diseases.",
   "sourcesMacrosTitle": "Makro besin dağılımı",
   "sourcesNonBinaryDescription": "Enerji harcaması üzerine yapılan araştırmalar tarihsel olarak yalnızca ikili cinsiyet kategorilerini kullanmıştır; bu nedenle non-binary kişiler için doğrulanmış tek bir TDEE formülü yoktur. Bu yüzden OpenNutriTracker, Ayarlar → Hesaplamalar bölümünde ortalanmış bir referans, östrojen-tipik bir referans ve testosteron-tipik bir referans arasında seçim yapmanı sağlar. Bakımın için kesin bir değer gerçekten önemliyse lütfen hormon durumunu bilen bir klinisyenle görüş.",
+  "sourcesNutrientReferenceTitle": "Besin referans alımları",
+  "sourcesNutrientReferenceDescription": "Günlük besin panelinde gösterilen referans değerleri, yetişkinler için besin başına hedefleri kapsayan Institute of Medicine'ın Dietary Reference Intakes özetinden alınmıştır.",
   "sourcesNonBinaryTitle": "Non-binary kişiler için kalori tahmini",
   "sourcesOpenSourceLabel": "Kaynağı aç",
   "sourcesScreenIntro": "OpenNutriTracker, gösterdiği her hesaplama için yerleşik ve hakemli yöntemler kullanır. Aşağıdaki kaynaklar orijinal yayınlara bağlanır, böylece her değeri kendin doğrulayabilirsin.",

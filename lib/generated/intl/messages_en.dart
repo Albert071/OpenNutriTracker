@@ -1087,6 +1087,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Activity calories (MET values)"),
         "sourcesActivityDescription": MessageLookupByLibrary.simpleMessage(
             "Calories burned during an activity are estimated as MET × body weight (kg) × duration (hours), using values from the Adult Compendium of Physical Activities."),
+        "sourcesNutrientReferenceTitle": MessageLookupByLibrary.simpleMessage("Nutrient reference intakes"),
+        "sourcesNutrientReferenceDescription": MessageLookupByLibrary.simpleMessage("Daily reference amounts shown on the diary nutrient panel come from the Institute of Medicine's Dietary Reference Intakes summary, which covers per-nutrient targets for adults."),
         "sourcesNonBinaryTitle":
             MessageLookupByLibrary.simpleMessage("Non-binary calorie estimation"),
         "sourcesNonBinaryDescription": MessageLookupByLibrary.simpleMessage(

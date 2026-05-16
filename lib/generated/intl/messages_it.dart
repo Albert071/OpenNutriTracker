@@ -1106,6 +1106,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Calorie dall\'attività (valori MET)"),
         "sourcesActivityDescription": MessageLookupByLibrary.simpleMessage(
             "Le calorie bruciate durante un\'attività si stimano come MET × peso corporeo (kg) × durata (ore), usando i valori dell\'Adult Compendium of Physical Activities."),
+        "sourcesNutrientReferenceTitle": MessageLookupByLibrary.simpleMessage("Apporti nutrizionali di riferimento"),
+        "sourcesNutrientReferenceDescription": MessageLookupByLibrary.simpleMessage("Gli apporti giornalieri mostrati nel pannello nutrienti del diario provengono dal rapporto di sintesi delle Dietary Reference Intakes dell'Institute of Medicine, che copre gli obiettivi per ciascun nutriente negli adulti."),
         "sourcesNonBinaryTitle":
             MessageLookupByLibrary.simpleMessage("Stima calorica per persone non binarie"),
         "sourcesNonBinaryDescription": MessageLookupByLibrary.simpleMessage(

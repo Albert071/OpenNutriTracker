@@ -1106,6 +1106,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Калорії від активності (значення MET)"),
         "sourcesActivityDescription": MessageLookupByLibrary.simpleMessage(
             "Калорії, спалені під час активності, оцінюються як MET × маса тіла (кг) × тривалість (години) на основі значень з Adult Compendium of Physical Activities."),
+        "sourcesNutrientReferenceTitle": MessageLookupByLibrary.simpleMessage("Референсні норми споживання поживних речовин"),
+        "sourcesNutrientReferenceDescription": MessageLookupByLibrary.simpleMessage("Щоденні референсні значення, показані в панелі поживних речовин щоденника, взяті зі зведеного звіту Dietary Reference Intakes Institute of Medicine, який охоплює цільові показники для кожної поживної речовини у дорослих."),
         "sourcesNonBinaryTitle": MessageLookupByLibrary.simpleMessage(
             "Розрахунок калорій для небінарних осіб"),
         "sourcesNonBinaryDescription": MessageLookupByLibrary.simpleMessage(

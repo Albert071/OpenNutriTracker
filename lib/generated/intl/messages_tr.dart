@@ -1085,6 +1085,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Aktivite kalorileri (MET değerleri)"),
         "sourcesActivityDescription": MessageLookupByLibrary.simpleMessage(
             "Bir aktivite sırasında yakılan kaloriler, Adult Compendium of Physical Activities\'teki değerler kullanılarak MET × vücut ağırlığı (kg) × süre (saat) olarak tahmin edilir."),
+        "sourcesNutrientReferenceTitle": MessageLookupByLibrary.simpleMessage("Besin referans alımları"),
+        "sourcesNutrientReferenceDescription": MessageLookupByLibrary.simpleMessage("Günlük besin panelinde gösterilen referans değerleri, yetişkinler için besin başına hedefleri kapsayan Institute of Medicine'ın Dietary Reference Intakes özetinden alınmıştır."),
         "sourcesNonBinaryTitle": MessageLookupByLibrary.simpleMessage(
             "Non-binary kişiler için kalori tahmini"),
         "sourcesNonBinaryDescription": MessageLookupByLibrary.simpleMessage(

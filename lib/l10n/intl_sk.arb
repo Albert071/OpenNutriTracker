@@ -867,6 +867,8 @@
   "sourcesMacrosDescription": "Predvolené rozdelenie 60 % sacharidov, 25 % tukov a 15 % bielkovín spadá do odporúčaných rozsahov príjmu živín podľa WHO. V Nastavenia → Výpočty si ho môžete upraviť. Zdroj: WHO Technical Report Series 916 (2003), Diet, Nutrition and the Prevention of Chronic Diseases.",
   "sourcesMacrosTitle": "Rozdelenie makroživín",
   "sourcesNonBinaryDescription": "Výskum energetického výdaja historicky používal binárne pohlavné kategórie, takže pre nebinárne osoby neexistuje jediný validovaný vzorec TDEE. OpenNutriTracker vám preto v Nastavenia → Výpočty ponúka voľbu medzi spriemerovanou referenciou, estrogénovo-typickou referenciou a testosterónovo-typickou referenciou. Ak na presnom čísle pre vašu starostlivosť skutočne záleží, prosím poraďte sa s klinikom, ktorý pozná váš hormonálny stav.",
+  "sourcesNutrientReferenceTitle": "Referenčné príjmy živín",
+  "sourcesNutrientReferenceDescription": "Denné referenčné hodnoty zobrazené v paneli živín v denníku pochádzajú zo súhrnu Dietary Reference Intakes Institute of Medicine, ktorý pokrýva ciele pre jednotlivé živiny u dospelých.",
   "sourcesNonBinaryTitle": "Odhad kalórií pre nebinárne osoby",
   "sourcesOpenSourceLabel": "Zobraziť zdroj",
   "sourcesScreenIntro": "OpenNutriTracker používa pre každý zobrazený výpočet zavedené, recenzované metódy. Nasledujúce odkazy vedú na pôvodné zdroje, takže si každé číslo môžete sami overiť.",

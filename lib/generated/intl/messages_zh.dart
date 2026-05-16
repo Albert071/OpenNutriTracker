@@ -960,6 +960,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("活动消耗的卡路里 (MET 数值)"),
         "sourcesActivityDescription": MessageLookupByLibrary.simpleMessage(
             "活动中消耗的卡路里按 MET × 体重（千克）× 时长（小时）估算，所用数值来自 Adult Compendium of Physical Activities。"),
+        "sourcesNutrientReferenceTitle": MessageLookupByLibrary.simpleMessage("营养参考摄入量"),
+        "sourcesNutrientReferenceDescription": MessageLookupByLibrary.simpleMessage("日记营养面板中显示的每日参考量来自美国医学研究所(Institute of Medicine)的膳食参考摄入量(DRI)汇总报告,涵盖成人各项营养素目标。"),
         "sourcesNonBinaryTitle":
             MessageLookupByLibrary.simpleMessage("非二元性别人士的卡路里估算"),
         "sourcesNonBinaryDescription": MessageLookupByLibrary.simpleMessage(
