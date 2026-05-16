@@ -85,6 +85,9 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String mLogWaterAmount(amount) => "Dodaj ${amount} ml";
 
+  static String mHcImported(count) =>
+      "Zaimportowano ${count} wpisów z Health Connect.";
+
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "activityExample": MessageLookupByLibrary.simpleMessage(
@@ -1287,6 +1290,19 @@ class MessageLookup extends MessageLookupByLibrary {
                 "Używane przez wskaźnik wody na ekranie głównym."),
         "settingsWaterGoalLabel":
             MessageLookupByLibrary.simpleMessage("Dzienny cel wody"),
+        "settingsHealthConnectTitle":
+            MessageLookupByLibrary.simpleMessage("Health Connect"),
+        "settingsHealthConnectImport": MessageLookupByLibrary.simpleMessage(
+            "Importuj dane żywieniowe z Health Connect"),
+        "settingsHealthConnectIosFollowup":
+            MessageLookupByLibrary.simpleMessage(
+                "Obsługa Apple Health pojawi się w jednej z kolejnych aktualizacji."),
+        "settingsHealthConnectPermissionDenied":
+            MessageLookupByLibrary.simpleMessage(
+                "Odmówiono uprawnień do Health Connect. Możesz przyznać je później w ustawieniach telefonu."),
+        "settingsHealthConnectImportResult": mHcImported,
+        "settingsHealthConnectError": MessageLookupByLibrary.simpleMessage(
+            "Nie udało się połączyć z Health Connect. Sprawdź, czy jest zainstalowany, i spróbuj ponownie."),
         "waterChipLabel": mWaterChip,
       };
 }

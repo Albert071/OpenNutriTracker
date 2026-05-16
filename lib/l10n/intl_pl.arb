@@ -839,5 +839,18 @@
   "settingsWaterGoalDescription": "Używane przez wskaźnik wody na ekranie głównym.",
   "settingsWaterGoalLabel": "Dzienny cel wody",
   "waterChipLabel": "{current} / {goal} ml",
-  "zincLabel": "cynk"
+  "zincLabel": "cynk",
+  "settingsHealthConnectTitle": "Health Connect",
+  "settingsHealthConnectImport": "Importuj dane żywieniowe z Health Connect",
+  "settingsHealthConnectIosFollowup": "Obsługa Apple Health pojawi się w jednej z kolejnych aktualizacji.",
+  "settingsHealthConnectPermissionDenied": "Odmówiono uprawnień do Health Connect. Możesz przyznać je później w ustawieniach telefonu.",
+  "settingsHealthConnectImportResult": "Zaimportowano {count} wpisów z Health Connect.",
+  "@settingsHealthConnectImportResult": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsHealthConnectError": "Nie udało się połączyć z Health Connect. Sprawdź, czy jest zainstalowany, i spróbuj ponownie."
 }

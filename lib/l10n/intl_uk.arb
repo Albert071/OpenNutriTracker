@@ -839,5 +839,18 @@
   "settingsWaterGoalDescription": "Використовується індикатором води на головному екрані.",
   "settingsWaterGoalLabel": "Денна ціль вживання води",
   "waterChipLabel": "{current} / {goal} мл",
-  "zincLabel": "цинк"
+  "zincLabel": "цинк",
+  "settingsHealthConnectTitle": "Health Connect",
+  "settingsHealthConnectImport": "Імпортувати дані про харчування з Health Connect",
+  "settingsHealthConnectIosFollowup": "Підтримка Apple Health з’явиться в одному з наступних оновлень.",
+  "settingsHealthConnectPermissionDenied": "У дозволі Health Connect відмовлено. Ви можете надати його пізніше в налаштуваннях телефону.",
+  "settingsHealthConnectImportResult": "Імпортовано {count} записів з Health Connect.",
+  "@settingsHealthConnectImportResult": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsHealthConnectError": "Не вдалося звʼязатися з Health Connect. Переконайтеся, що він встановлений, і повторіть спробу."
 }

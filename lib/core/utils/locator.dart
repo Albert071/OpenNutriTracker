@@ -1,6 +1,7 @@
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:get_it/get_it.dart';
 import 'package:opennutritracker/core/data/data_source/config_data_source.dart';
+import 'package:opennutritracker/core/data/data_source/health_connect_service.dart';
 import 'package:opennutritracker/core/data/data_source/custom_activity_template_data_source.dart';
 import 'package:opennutritracker/core/data/data_source/remote_search_cache_data_source.dart';
 import 'package:opennutritracker/core/data/data_source/custom_meal_data_source.dart';
@@ -51,6 +52,7 @@ import 'package:opennutritracker/core/domain/usecase/get_user_activity_usecase.d
 import 'package:opennutritracker/core/domain/usecase/get_user_usecase.dart';
 import 'package:opennutritracker/core/domain/usecase/get_water_intake_usecase.dart';
 import 'package:opennutritracker/core/domain/usecase/get_weight_log_usecase.dart';
+import 'package:opennutritracker/core/domain/usecase/import_from_health_connect_usecase.dart';
 import 'package:opennutritracker/core/domain/usecase/save_recipe_usecase.dart';
 import 'package:opennutritracker/core/domain/usecase/update_intake_usecase.dart';
 import 'package:opennutritracker/core/domain/usecase/update_user_activity_usecase.dart';
@@ -366,6 +368,14 @@ Future<void> initLocator() async {
     ),
   );
   locator.registerLazySingleton(() => ImportRecipesJsonUsecase(locator()));
+
+  // #295: Read-only nutrition import from Health Connect (Android).
+  locator.registerLazySingleton<HealthConnectService>(
+    () => HealthConnectServiceImpl(),
+  );
+  locator.registerLazySingleton<ImportFromHealthConnectUseCase>(
+    () => ImportFromHealthConnectUseCase(locator(), locator(), locator()),
+  );
 
   // Recipe use cases
   locator.registerLazySingleton(() => ComputeRecipeNutritionUseCase());

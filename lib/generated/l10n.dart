@@ -7151,6 +7151,66 @@ class S {
       args: [],
     );
   }
+
+  /// `Health Connect`
+  String get settingsHealthConnectTitle {
+    return Intl.message(
+      'Health Connect',
+      name: 'settingsHealthConnectTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Import nutrition from Health Connect`
+  String get settingsHealthConnectImport {
+    return Intl.message(
+      'Import nutrition from Health Connect',
+      name: 'settingsHealthConnectImport',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Apple Health support is coming in a future update.`
+  String get settingsHealthConnectIosFollowup {
+    return Intl.message(
+      'Apple Health support is coming in a future update.',
+      name: 'settingsHealthConnectIosFollowup',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Health Connect permission was denied. You can grant it later in your phone's settings.`
+  String get settingsHealthConnectPermissionDenied {
+    return Intl.message(
+      'Health Connect permission was denied. You can grant it later in your phone\'s settings.',
+      name: 'settingsHealthConnectPermissionDenied',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Imported {count} entries from Health Connect.`
+  String settingsHealthConnectImportResult(Object count) {
+    return Intl.message(
+      'Imported $count entries from Health Connect.',
+      name: 'settingsHealthConnectImportResult',
+      desc: '',
+      args: [count],
+    );
+  }
+
+  /// `Couldn't reach Health Connect. Please check it's installed and try again.`
+  String get settingsHealthConnectError {
+    return Intl.message(
+      'Couldn\'t reach Health Connect. Please check it\'s installed and try again.',
+      name: 'settingsHealthConnectError',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

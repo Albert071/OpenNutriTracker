@@ -887,5 +887,18 @@
   "settingsWaterGoalDescription": "Used by the water chip on the home screen.",
   "settingsWaterGoalLabel": "Daily water goal",
   "waterChipLabel": "{current} / {goal} ml",
-  "zincLabel": "zinc"
+  "zincLabel": "zinc",
+  "settingsHealthConnectTitle": "Health Connect",
+  "settingsHealthConnectImport": "Import nutrition from Health Connect",
+  "settingsHealthConnectIosFollowup": "Apple Health support is coming in a future update.",
+  "settingsHealthConnectPermissionDenied": "Health Connect permission was denied. You can grant it later in your phone's settings.",
+  "settingsHealthConnectImportResult": "Imported {count} entries from Health Connect.",
+  "@settingsHealthConnectImportResult": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsHealthConnectError": "Couldn't reach Health Connect. Please check it's installed and try again."
 }

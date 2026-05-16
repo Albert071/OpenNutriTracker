@@ -41,13 +41,14 @@ class ConfigDBOAdapter extends TypeAdapter<ConfigDBO> {
       )
       ..userCarbGoalPct = (fields[6] as num?)?.toDouble()
       ..userProteinGoalPct = (fields[7] as num?)?.toDouble()
-      ..userFatGoalPct = (fields[8] as num?)?.toDouble();
+      ..userFatGoalPct = (fields[8] as num?)?.toDouble()
+      ..lastHealthConnectImportAt = fields[25] as DateTime?;
   }
 
   @override
   void write(BinaryWriter writer, ConfigDBO obj) {
     writer
-      ..writeByte(24)
+      ..writeByte(25)
       ..writeByte(0)
       ..write(obj.hasAcceptedDisclaimer)
       ..writeByte(1)
@@ -95,7 +96,9 @@ class ConfigDBOAdapter extends TypeAdapter<ConfigDBO> {
       ..writeByte(23)
       ..write(obj.dayStartOffsetMinutes)
       ..writeByte(24)
-      ..write(obj.dailyWaterGoalMl);
+      ..write(obj.dailyWaterGoalMl)
+      ..writeByte(25)
+      ..write(obj.lastHealthConnectImportAt);
   }
 
   @override
@@ -146,7 +149,10 @@ ConfigDBO _$ConfigDBOFromJson(Map<String, dynamic> json) =>
       )
       ..userCarbGoalPct = (json['userCarbGoalPct'] as num?)?.toDouble()
       ..userProteinGoalPct = (json['userProteinGoalPct'] as num?)?.toDouble()
-      ..userFatGoalPct = (json['userFatGoalPct'] as num?)?.toDouble();
+      ..userFatGoalPct = (json['userFatGoalPct'] as num?)?.toDouble()
+      ..lastHealthConnectImportAt = json['lastHealthConnectImportAt'] == null
+          ? null
+          : DateTime.parse(json['lastHealthConnectImportAt'] as String);
 
 Map<String, dynamic> _$ConfigDBOToJson(ConfigDBO instance) => <String, dynamic>{
   'hasAcceptedDisclaimer': instance.hasAcceptedDisclaimer,
@@ -173,6 +179,8 @@ Map<String, dynamic> _$ConfigDBOToJson(ConfigDBO instance) => <String, dynamic>{
   'diarySortPreferences': instance.diarySortPreferences,
   'dayStartOffsetMinutes': instance.dayStartOffsetMinutes,
   'dailyWaterGoalMl': instance.dailyWaterGoalMl,
+  'lastHealthConnectImportAt': instance.lastHealthConnectImportAt
+      ?.toIso8601String(),
 };
 
 const _$AppThemeDBOEnumMap = {

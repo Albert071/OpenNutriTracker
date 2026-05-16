@@ -839,5 +839,18 @@
   "settingsWaterGoalDescription": "Používá se pro ukazatel vody na hlavní obrazovce.",
   "settingsWaterGoalLabel": "Denní cíl pití vody",
   "waterChipLabel": "{current} / {goal} ml",
-  "zincLabel": "zinek"
+  "zincLabel": "zinek",
+  "settingsHealthConnectTitle": "Health Connect",
+  "settingsHealthConnectImport": "Importovat údaje o výživě z Health Connect",
+  "settingsHealthConnectIosFollowup": "Podpora Apple Health přijde v některé z dalších aktualizací.",
+  "settingsHealthConnectPermissionDenied": "Oprávnění Health Connect bylo zamítnuto. Můžete jej udělit později v nastavení telefonu.",
+  "settingsHealthConnectImportResult": "Importováno {count} záznamů z Health Connect.",
+  "@settingsHealthConnectImportResult": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsHealthConnectError": "Health Connect není dostupný. Zkontrolujte, zda je nainstalován, a zkuste to znovu."
 }

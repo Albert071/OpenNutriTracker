@@ -840,5 +840,18 @@
   "settingsWaterGoalDescription": "主屏幕上的饮水提示使用此目标。",
   "settingsWaterGoalLabel": "每日饮水目标",
   "waterChipLabel": "{current} / {goal} 毫升",
-  "zincLabel": "锌"
+  "zincLabel": "锌",
+  "settingsHealthConnectTitle": "Health Connect",
+  "settingsHealthConnectImport": "从 Health Connect 导入营养数据",
+  "settingsHealthConnectIosFollowup": "对 Apple 健康的支持将在未来的更新中加入。",
+  "settingsHealthConnectPermissionDenied": "Health Connect 权限被拒绝。您可以稍后在手机设置中授予该权限。",
+  "settingsHealthConnectImportResult": "已从 Health Connect 导入 {count} 条记录。",
+  "@settingsHealthConnectImportResult": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsHealthConnectError": "无法连接到 Health Connect。请检查是否已安装，然后重试。"
 }

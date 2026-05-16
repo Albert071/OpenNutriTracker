@@ -233,6 +233,20 @@ class ConfigDataSource {
     await config?.save();
   }
 
+  /// #295: high-water mark for the manual Health Connect import. Null
+  /// means we have never run an import on this device.
+  Future<DateTime?> getLastHealthConnectImportAt() async {
+    final config = _configBox.get(_configKey);
+    return config?.lastHealthConnectImportAt;
+  }
+
+  Future<void> setLastHealthConnectImportAt(DateTime when) async {
+    _log.fine('Updating config lastHealthConnectImportAt to $when');
+    final config = _configBox.get(_configKey);
+    config?.lastHealthConnectImportAt = when;
+    await config?.save();
+  }
+
   Future<ConfigDBO> getConfig() async {
     return _configBox.get(_configKey) ?? ConfigDBO.empty();
   }

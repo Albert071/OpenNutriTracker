@@ -839,5 +839,18 @@
   "settingsWaterGoalDescription": "Usato dal contatore d'acqua nella schermata principale.",
   "settingsWaterGoalLabel": "Obiettivo idrico giornaliero",
   "waterChipLabel": "{current} / {goal} ml",
-  "zincLabel": "zinco"
+  "zincLabel": "zinco",
+  "settingsHealthConnectTitle": "Health Connect",
+  "settingsHealthConnectImport": "Importa dati nutrizionali da Health Connect",
+  "settingsHealthConnectIosFollowup": "Il supporto per Apple Health arriverà in un futuro aggiornamento.",
+  "settingsHealthConnectPermissionDenied": "L'autorizzazione di Health Connect è stata negata. Puoi concederla più tardi nelle impostazioni del telefono.",
+  "settingsHealthConnectImportResult": "Importate {count} voci da Health Connect.",
+  "@settingsHealthConnectImportResult": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsHealthConnectError": "Impossibile raggiungere Health Connect. Verifica che sia installato e riprova."
 }

@@ -80,6 +80,10 @@ dependencies:
   timezone: ^0.10.1
   flutter_timezone: ^3.0.0
 
+  # #295: Read-only nutrition import from Android Health Connect.
+  # iOS Apple Health support is gated off in the UI for v1.
+  health: ^13.1.4
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

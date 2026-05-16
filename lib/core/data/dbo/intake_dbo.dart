@@ -24,6 +24,14 @@ class IntakeDBO extends HiveObject {
   @HiveField(5)
   DateTime dateTime;
 
+  /// #295: Tag for intakes that were imported from an external source so
+  /// we can deduplicate on re-import and let the UI surface the origin
+  /// later. Null means "logged inside OpenNutriTracker" — every existing
+  /// entry on disk is implicitly null until the user touches an import
+  /// flow, so no migration is needed. Current known values: `health_connect`.
+  @HiveField(6)
+  String? importSource;
+
   IntakeDBO({
     required this.id,
     required this.unit,
@@ -31,6 +39,7 @@ class IntakeDBO extends HiveObject {
     required this.type,
     required this.meal,
     required this.dateTime,
+    this.importSource,
   });
 
   factory IntakeDBO.fromIntakeEntity(IntakeEntity entity) {
@@ -41,6 +50,7 @@ class IntakeDBO extends HiveObject {
       type: IntakeTypeDBO.fromIntakeTypeEntity(entity.type),
       meal: MealDBO.fromMealEntity(entity.meal),
       dateTime: entity.dateTime,
+      importSource: entity.importSource,
     );
   }
 

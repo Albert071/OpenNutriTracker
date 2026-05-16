@@ -86,6 +86,9 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String mLogWaterAmount(amount) => "Pridať ${amount} ml";
 
+  static String mHcImported(count) =>
+      "Importovaných ${count} záznamov z Health Connect.";
+
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "activityExample": MessageLookupByLibrary.simpleMessage(
@@ -1281,6 +1284,19 @@ class MessageLookup extends MessageLookupByLibrary {
                 "Používa sa ukazovateľom vody na hlavnej obrazovke."),
         "settingsWaterGoalLabel":
             MessageLookupByLibrary.simpleMessage("Denný cieľ pitia vody"),
+        "settingsHealthConnectTitle":
+            MessageLookupByLibrary.simpleMessage("Health Connect"),
+        "settingsHealthConnectImport": MessageLookupByLibrary.simpleMessage(
+            "Importovať údaje o výžive z Health Connect"),
+        "settingsHealthConnectIosFollowup":
+            MessageLookupByLibrary.simpleMessage(
+                "Podpora Apple Health príde v jednej z budúcich aktualizácií."),
+        "settingsHealthConnectPermissionDenied":
+            MessageLookupByLibrary.simpleMessage(
+                "Povolenie pre Health Connect bolo zamietnuté. Môžete ho udeliť neskôr v nastaveniach telefónu."),
+        "settingsHealthConnectImportResult": mHcImported,
+        "settingsHealthConnectError": MessageLookupByLibrary.simpleMessage(
+            "Health Connect nie je dostupný. Skontrolujte, či je nainštalovaný, a skúste to znova."),
         "waterChipLabel": mWaterChip,
       };
 }

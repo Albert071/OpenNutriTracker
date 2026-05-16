@@ -11,6 +11,11 @@
          CAMERA permission is needed here. -->
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES"/>
 
+    <!-- #295: Read-only nutrition import from Health Connect. Only the
+         READ_NUTRITION permission is requested; OpenNutriTracker does not
+         write back to Health Connect in v1. -->
+    <uses-permission android:name="android.permission.health.READ_NUTRITION" />
+
     <!-- Provide required visibility configuration for API level 30 and above -->
     <queries>
         <intent>
@@ -21,6 +26,13 @@
             <action android:name="android.intent.action.SEND" />
             <data android:mimeType="*/*" />
         </intent>
+        <!-- #295: Health Connect permissions rationale intent and package
+             visibility — required so the system can resolve Health Connect
+             when our app is targeting API 30+. -->
+        <intent>
+            <action android:name="androidx.health.ACTION_SHOW_PERMISSIONS_RATIONALE" />
+        </intent>
+        <package android:name="com.google.android.apps.healthdata" />
     </queries>
 
    <application
@@ -48,6 +60,22 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+        <!-- #295: Health Connect permission rationale handler. Surfaces
+             our privacy explanation when the user taps "Privacy policy"
+             from the Health Connect permission sheet. The intent filter
+             must be present even though OpenNutriTracker has no in-app
+             rationale screen yet — we rely on the platform's own privacy
+             entry point for now. -->
+        <activity-alias
+            android:name="ViewPermissionUsageActivity"
+            android:exported="true"
+            android:targetActivity=".MainActivity"
+            android:permission="android.permission.START_VIEW_PERMISSION_USAGE">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW_PERMISSION_USAGE" />
+                <category android:name="android.intent.category.HEALTH_PERMISSIONS" />
+            </intent-filter>
+        </activity-alias>
         <!-- #312: Notification scheduling receivers -->
         <receiver android:exported="false" android:name="com.dexterous.flutterlocalnotifications.ScheduledNotificationReceiver"/>
         <receiver android:exported="false" android:name="com.dexterous.flutterlocalnotifications.ScheduledNotificationBootReceiver">

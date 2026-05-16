@@ -12,6 +12,11 @@ class IntakeEntity extends Equatable {
 
   final MealEntity meal;
 
+  /// #295: Where this intake came from. Null for entries logged inside
+  /// OpenNutriTracker (the default). Currently the only non-null value
+  /// produced anywhere in the app is `health_connect`.
+  final String? importSource;
+
   const IntakeEntity({
     required this.id,
     required this.unit,
@@ -19,6 +24,7 @@ class IntakeEntity extends Equatable {
     required this.type,
     required this.meal,
     required this.dateTime,
+    this.importSource,
   });
 
   factory IntakeEntity.fromIntakeDBO(IntakeDBO intakeDBO) {
@@ -29,6 +35,7 @@ class IntakeEntity extends Equatable {
       type: IntakeTypeEntity.fromIntakeTypeDBO(intakeDBO.type),
       meal: MealEntity.fromMealDBO(intakeDBO.meal),
       dateTime: intakeDBO.dateTime,
+      importSource: intakeDBO.importSource,
     );
   }
 
@@ -43,5 +50,5 @@ class IntakeEntity extends Equatable {
       amount * (meal.nutriments.proteinsPerUnit ?? 0);
 
   @override
-  List<Object?> get props => [id, unit, amount, type, dateTime];
+  List<Object?> get props => [id, unit, amount, type, dateTime, importSource];
 }

@@ -88,6 +88,9 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String mLogWaterAmount(amount) => "${amount} ml ekle";
 
+  static String mHcImported(count) =>
+      "Health Connect\'ten ${count} kayıt içe aktarıldı.";
+
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "activityExample": MessageLookupByLibrary.simpleMessage(
@@ -1264,6 +1267,19 @@ class MessageLookup extends MessageLookupByLibrary {
                 "Ana ekrandaki su göstergesinin kullandığı hedef."),
         "settingsWaterGoalLabel":
             MessageLookupByLibrary.simpleMessage("Günlük su hedefi"),
+        "settingsHealthConnectTitle":
+            MessageLookupByLibrary.simpleMessage("Health Connect"),
+        "settingsHealthConnectImport": MessageLookupByLibrary.simpleMessage(
+            "Health Connect\'ten beslenme verilerini içe aktar"),
+        "settingsHealthConnectIosFollowup":
+            MessageLookupByLibrary.simpleMessage(
+                "Apple Health desteği gelecekteki bir güncellemede gelecek."),
+        "settingsHealthConnectPermissionDenied":
+            MessageLookupByLibrary.simpleMessage(
+                "Health Connect izni reddedildi. Daha sonra telefon ayarlarından verebilirsiniz."),
+        "settingsHealthConnectImportResult": mHcImported,
+        "settingsHealthConnectError": MessageLookupByLibrary.simpleMessage(
+            "Health Connect\'e ulaşılamadı. Yüklü olduğundan emin olun ve tekrar deneyin."),
         "waterChipLabel": mWaterChip,
       };
 }

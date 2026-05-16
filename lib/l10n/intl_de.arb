@@ -870,5 +870,18 @@
   "settingsWaterGoalDescription": "Wird vom Wasser-Chip auf dem Startbildschirm verwendet.",
   "settingsWaterGoalLabel": "Tägliches Wasserziel",
   "waterChipLabel": "{current} / {goal} ml",
-  "zincLabel": "Zink"
+  "zincLabel": "Zink",
+  "settingsHealthConnectTitle": "Health Connect",
+  "settingsHealthConnectImport": "Ernährungsdaten aus Health Connect importieren",
+  "settingsHealthConnectIosFollowup": "Apple Health-Unterstützung folgt in einem späteren Update.",
+  "settingsHealthConnectPermissionDenied": "Die Berechtigung für Health Connect wurde abgelehnt. Du kannst sie später in den Telefoneinstellungen erteilen.",
+  "settingsHealthConnectImportResult": "{count} Einträge aus Health Connect importiert.",
+  "@settingsHealthConnectImportResult": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsHealthConnectError": "Health Connect ist nicht erreichbar. Bitte prüfe, ob es installiert ist, und versuche es erneut."
 }

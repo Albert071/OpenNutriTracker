@@ -870,5 +870,18 @@
   "settingsWaterGoalDescription": "Ana ekrandaki su göstergesinin kullandığı hedef.",
   "settingsWaterGoalLabel": "Günlük su hedefi",
   "waterChipLabel": "{current} / {goal} ml",
-  "zincLabel": "çinko"
+  "zincLabel": "çinko",
+  "settingsHealthConnectTitle": "Health Connect",
+  "settingsHealthConnectImport": "Health Connect'ten beslenme verilerini içe aktar",
+  "settingsHealthConnectIosFollowup": "Apple Health desteği gelecekteki bir güncellemede gelecek.",
+  "settingsHealthConnectPermissionDenied": "Health Connect izni reddedildi. Daha sonra telefon ayarlarından verebilirsiniz.",
+  "settingsHealthConnectImportResult": "Health Connect'ten {count} kayıt içe aktarıldı.",
+  "@settingsHealthConnectImportResult": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsHealthConnectError": "Health Connect'e ulaşılamadı. Yüklü olduğundan emin olun ve tekrar deneyin."
 }

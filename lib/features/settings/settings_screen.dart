@@ -4,6 +4,7 @@ import 'package:opennutritracker/core/domain/entity/app_theme_entity.dart';
 import 'package:opennutritracker/core/presentation/widgets/app_banner_version.dart';
 import 'package:opennutritracker/core/presentation/widgets/disclaimer_dialog.dart';
 import 'package:opennutritracker/core/domain/usecase/delete_all_user_data_usecase.dart';
+import 'package:opennutritracker/core/domain/usecase/import_from_health_connect_usecase.dart';
 import 'package:opennutritracker/core/utils/app_const.dart';
 import 'package:opennutritracker/core/utils/navigation_options.dart';
 import 'package:opennutritracker/core/utils/energy_unit_provider.dart';
@@ -258,6 +259,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   title: Text(S.of(context).exportImportAppDataLabel),
                   onTap: () => _showExportImportDialog(context),
                 ),
+                _buildHealthConnectTile(context),
                 ListTile(
                   leading: const Icon(Icons.cached_outlined),
                   title: Text(S.of(context).clearOffCacheLabel),
@@ -634,6 +636,57 @@ class _SettingsScreenState extends State<SettingsScreen> {
       NavigationOptions.onboardingRoute,
       (_) => false,
     );
+  }
+
+  /// #295: Read-only nutrition import from Health Connect (Android only
+  /// in v1). On iOS we surface a localised "coming in a future update"
+  /// subtitle and disable the tile rather than hide it altogether — the
+  /// affordance still tells the iOS reader the feature exists and is
+  /// being worked on.
+  Widget _buildHealthConnectTile(BuildContext context) {
+    final isIOS = Theme.of(context).platform == TargetPlatform.iOS;
+    final l10n = S.of(context);
+    return Semantics(
+      identifier: 'settings-health-connect-import',
+      child: ListTile(
+        leading: const Icon(Icons.monitor_heart_outlined),
+        title: Text(l10n.settingsHealthConnectTitle),
+        subtitle: Text(
+          isIOS
+              ? l10n.settingsHealthConnectIosFollowup
+              : l10n.settingsHealthConnectImport,
+        ),
+        enabled: !isIOS,
+        onTap: isIOS ? null : () => _runHealthConnectImport(context),
+      ),
+    );
+  }
+
+  Future<void> _runHealthConnectImport(BuildContext context) async {
+    final l10n = S.of(context);
+    final messenger = ScaffoldMessenger.of(context);
+    try {
+      final result = await locator<ImportFromHealthConnectUseCase>().run();
+      if (!mounted) return;
+      if (result.permissionDenied) {
+        messenger.showSnackBar(
+          SnackBar(content: Text(l10n.settingsHealthConnectPermissionDenied)),
+        );
+        return;
+      }
+      messenger.showSnackBar(
+        SnackBar(
+          content: Text(
+            l10n.settingsHealthConnectImportResult(result.imported),
+          ),
+        ),
+      );
+    } catch (_) {
+      if (!mounted) return;
+      messenger.showSnackBar(
+        SnackBar(content: Text(l10n.settingsHealthConnectError)),
+      );
+    }
   }
 
   /// Format a byte count for display in the cache-clear tile subtitle.

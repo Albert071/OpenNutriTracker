@@ -76,6 +76,13 @@ class ConfigDBO extends HiveObject {
   @HiveField(24)
   int? dailyWaterGoalMl;
 
+  // #295: timestamp of the most recent successful Health Connect import.
+  // Null means "we have never imported" — the next import will reach back
+  // 30 days. Updated even when zero records came back, so a person who
+  // catches up daily doesn't repeatedly re-scan the same fortnight.
+  @HiveField(25)
+  DateTime? lastHealthConnectImportAt;
+
   ConfigDBO(
     this.hasAcceptedDisclaimer,
     this.hasAcceptedPolicy,
