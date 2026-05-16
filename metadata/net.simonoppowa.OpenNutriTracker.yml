@@ -1,0 +1,38 @@
+Categories:
+  - Health & Fitness
+License: GPL-3.0-or-later
+AuthorName: Simon Oppowa
+# TODO: confirm a public contact address with Simon before submitting upstream.
+AuthorEmail: ""
+WebSite: https://opennutritracker.com
+SourceCode: https://github.com/simonoppowa/OpenNutriTracker
+IssueTracker: https://github.com/simonoppowa/OpenNutriTracker/issues
+# TODO: add a translation platform link if one is set up (Weblate, Crowdin, etc.).
+Translation: ""
+# TODO: confirm whether Simon wants a donation link surfaced in F-Droid.
+Donate: ""
+
+AutoName: OpenNutriTracker
+
+RepoType: git
+Repo: https://github.com/simonoppowa/OpenNutriTracker.git
+
+Builds:
+  - versionName: 1.3.1
+    versionCode: 49
+    commit: v1.3.1
+    subdir: android/app
+    sudo:
+      - apt-get update
+      - apt-get install -y openjdk-17-jdk-headless
+    init: ""
+    prebuild: cd ../.. && cp .env.fdroid .env && flutter pub get && dart run build_runner build --delete-conflicting-outputs
+    gradle:
+      - yes
+    scandelete:
+      - .dart_tool
+
+AutoUpdateMode: Version
+UpdateCheckMode: Tags
+CurrentVersion: 1.3.1
+CurrentVersionCode: 49

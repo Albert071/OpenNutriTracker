@@ -33,6 +33,8 @@ OpenNutriTracker is an open-source mobile application designed to simplify nutri
 ## Install
 [<img src="fastlane/metadata/android/en-US/images/appstore_banner.png" width="30%">](https://apps.apple.com/us/app/opennutritracker/id6451490901)
 [<img src="fastlane/metadata/android/en-US/images/playstore_banner.png" width="30%">](https://play.google.com/store/apps/details?id=com.opennutritracker.ont.opennutritracker)
+<!-- TODO: live once fdroiddata MR lands -->
+[<img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png" alt="Get it on F-Droid" width="30%">](https://f-droid.org/packages/net.simonoppowa.OpenNutriTracker/)
 
 ## Key Features
 - **🍎 Nutritional Tracking:** Easily log your meals and snacks, and access a vast database of food items and ingredients to get detailed nutritional information.
