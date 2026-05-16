@@ -807,6 +807,8 @@
   "settingsAccentPresetsHeader": "Pick a colour",
   "settingsAccentCustomColour": "Custom colour…",
   "settingsAccentCustomSubtitle": "Open the hue picker for a precise choice",
+  "settingsAccentHexLabel": "Hex code",
+  "settingsAccentHexInvalid": "That hex code doesn’t look right — six digits, 0-9 and A-F.",
   "settingsAccentHueTitle": "Accent colour",
   "settingsAccentHueDisabledHint": "Turn off system colours to choose a custom accent.",
   "settingsAccentHueReset": "Reset",

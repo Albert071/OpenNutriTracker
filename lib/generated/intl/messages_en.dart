@@ -1103,6 +1103,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "settingsAccentPresetsHeader": MessageLookupByLibrary.simpleMessage("Pick a colour"),
         "settingsAccentCustomColour": MessageLookupByLibrary.simpleMessage("Custom colour…"),
         "settingsAccentCustomSubtitle": MessageLookupByLibrary.simpleMessage("Open the hue picker for a precise choice"),
+        "settingsAccentHexLabel": MessageLookupByLibrary.simpleMessage("Hex code"),
+        "settingsAccentHexInvalid": MessageLookupByLibrary.simpleMessage("That hex code doesn’t look right — six digits, 0-9 and A-F."),
         "settingsAccentHueTitle": MessageLookupByLibrary.simpleMessage("Accent colour"),
         "settingsAccentHueDisabledHint": MessageLookupByLibrary.simpleMessage("Turn off system colours to choose a custom accent."),
         "settingsAccentHueReset": MessageLookupByLibrary.simpleMessage("Reset"),

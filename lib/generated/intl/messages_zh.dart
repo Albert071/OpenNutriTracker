@@ -974,6 +974,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "settingsAccentPresetsHeader": MessageLookupByLibrary.simpleMessage("选择颜色"),
         "settingsAccentCustomColour": MessageLookupByLibrary.simpleMessage("自定义颜色…"),
         "settingsAccentCustomSubtitle": MessageLookupByLibrary.simpleMessage("打开色相滑块进行精确选择"),
+        "settingsAccentHexLabel": MessageLookupByLibrary.simpleMessage("十六进制代码"),
+        "settingsAccentHexInvalid": MessageLookupByLibrary.simpleMessage("这个十六进制代码看起来不对 — 需要六个字符,0-9 和 A-F。"),
         "settingsAccentHueTitle": MessageLookupByLibrary.simpleMessage("强调色"),
         "settingsAccentHueDisabledHint": MessageLookupByLibrary.simpleMessage("关闭系统颜色以选择自定义强调色。"),
         "settingsAccentHueReset": MessageLookupByLibrary.simpleMessage("重置"),

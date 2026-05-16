@@ -1590,6 +1590,26 @@ class S {
     );
   }
 
+  /// `Hex code`
+  String get settingsAccentHexLabel {
+    return Intl.message(
+      'Hex code',
+      name: 'settingsAccentHexLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `That hex code doesn’t look right — six digits, 0-9 and A-F.`
+  String get settingsAccentHexInvalid {
+    return Intl.message(
+      "That hex code doesn't look right — six digits, 0-9 and A-F.",
+      name: 'settingsAccentHexInvalid',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Accent colour`
   String get settingsAccentHueTitle {
     return Intl.message(

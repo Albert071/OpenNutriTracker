@@ -81,13 +81,13 @@ class ConfigDBO extends HiveObject {
   // every other platform the static palette is what shows up regardless.
   @HiveField(20)
   bool? useMaterialYou;
-  // #415 follow-up: custom accent hue (0-360 degrees on the HSL wheel) that
-  // overrides Material You when set. Null means "use the platform default" —
-  // Material You on Android 12+, the static palette on iOS and elsewhere.
-  // iOS users always reach this picker; Android users only reach it after
-  // turning Material You off.
+  // #415 follow-up: custom accent colour packed as a 32-bit ARGB value
+  // (e.g. 0xFFFF5733). Stores the full colour rather than just a hue so
+  // hex entry can round-trip without losing saturation or lightness.
+  // Null means "use the platform default" — Material You on Android 12+,
+  // the static palette elsewhere.
   @HiveField(26)
-  double? accentHue;
+  int? accentColor;
 
   ConfigDBO(
     this.hasAcceptedDisclaimer,
@@ -112,7 +112,7 @@ class ConfigDBO extends HiveObject {
     this.dayStartOffsetMinutes,
     this.dailyWaterGoalMl,
     this.useMaterialYou,
-    this.accentHue,
+    this.accentColor,
   });
 
   factory ConfigDBO.empty() =>

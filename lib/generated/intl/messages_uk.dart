@@ -1123,6 +1123,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "settingsAccentPresetsHeader": MessageLookupByLibrary.simpleMessage("Виберіть колір"),
         "settingsAccentCustomColour": MessageLookupByLibrary.simpleMessage("Власний колір…"),
         "settingsAccentCustomSubtitle": MessageLookupByLibrary.simpleMessage("Відкрити повзунок відтінку для точного вибору"),
+        "settingsAccentHexLabel": MessageLookupByLibrary.simpleMessage("Hex код"),
+        "settingsAccentHexInvalid": MessageLookupByLibrary.simpleMessage("Цей hex код виглядає неправильно — шість символів, 0-9 і A-F."),
         "settingsAccentHueTitle": MessageLookupByLibrary.simpleMessage("Акцентний колір"),
         "settingsAccentHueDisabledHint": MessageLookupByLibrary.simpleMessage("Вимкніть системні кольори, щоб обрати власний акцент."),
         "settingsAccentHueReset": MessageLookupByLibrary.simpleMessage("Скинути"),

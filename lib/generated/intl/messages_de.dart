@@ -1132,6 +1132,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "settingsAccentPresetsHeader": MessageLookupByLibrary.simpleMessage("Farbe auswählen"),
         "settingsAccentCustomColour": MessageLookupByLibrary.simpleMessage("Eigene Farbe…"),
         "settingsAccentCustomSubtitle": MessageLookupByLibrary.simpleMessage("Öffne den Farbtonregler für eine genaue Auswahl"),
+        "settingsAccentHexLabel": MessageLookupByLibrary.simpleMessage("Hex-Code"),
+        "settingsAccentHexInvalid": MessageLookupByLibrary.simpleMessage("Dieser Hex-Code stimmt nicht — sechs Zeichen, 0-9 und A-F."),
         "settingsAccentHueTitle": MessageLookupByLibrary.simpleMessage("Akzentfarbe"),
         "settingsAccentHueDisabledHint": MessageLookupByLibrary.simpleMessage("Schalte die Systemfarben aus, um eine eigene Akzentfarbe zu wählen."),
         "settingsAccentHueReset": MessageLookupByLibrary.simpleMessage("Zurücksetzen"),

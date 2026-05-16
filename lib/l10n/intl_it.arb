@@ -759,6 +759,8 @@
   "settingsAccentPresetsHeader": "Scegli un colore",
   "settingsAccentCustomColour": "Colore personalizzato…",
   "settingsAccentCustomSubtitle": "Apri il selettore di tonalità per una scelta precisa",
+  "settingsAccentHexLabel": "Codice esadecimale",
+  "settingsAccentHexInvalid": "Quel codice esadecimale non sembra giusto — sei caratteri, 0-9 e A-F.",
   "settingsAccentHueTitle": "Colore d'accento",
   "settingsAccentHueDisabledHint": "Disattiva i colori di sistema per scegliere un accento personalizzato.",
   "settingsAccentHueReset": "Reimposta",

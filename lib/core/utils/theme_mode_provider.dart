@@ -7,14 +7,14 @@ class ThemeModeProvider extends ChangeNotifier {
   // when one is available (Android 12+). On other platforms the static
   // palette is used regardless, so the toggle has no visible effect.
   bool useMaterialYou;
-  // #415 follow-up: custom accent hue (0-360) that overrides Material You
-  // when set. Null means "use the platform default".
-  double? accentHue;
+  // #415 follow-up: custom accent colour packed as 32-bit ARGB; overrides
+  // Material You when set. Null means "use the platform default".
+  int? accentColor;
 
   ThemeModeProvider({
     required this.appTheme,
     this.useMaterialYou = true,
-    this.accentHue,
+    this.accentColor,
   });
 
   ThemeMode get themeMode => appTheme.toThemeMode();
@@ -30,9 +30,9 @@ class ThemeModeProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void updateAccentHue(double? value) {
-    if (accentHue == value) return;
-    accentHue = value;
+  void updateAccentColor(int? value) {
+    if (accentColor == value) return;
+    accentColor = value;
     notifyListeners();
   }
 }

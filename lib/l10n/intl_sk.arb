@@ -789,6 +789,8 @@
   "settingsAccentPresetsHeader": "Vyberte farbu",
   "settingsAccentCustomColour": "Vlastná farba…",
   "settingsAccentCustomSubtitle": "Otvorte posuvník odtieňa pre presný výber",
+  "settingsAccentHexLabel": "Hex kód",
+  "settingsAccentHexInvalid": "Tento hex kód nevyzerá správne — šesť znakov, 0-9 a A-F.",
   "settingsAccentHueTitle": "Farba zvýraznenia",
   "settingsAccentHueDisabledHint": "Vypnite systémové farby, aby ste mohli vybrať vlastný akcent.",
   "settingsAccentHueReset": "Obnoviť",

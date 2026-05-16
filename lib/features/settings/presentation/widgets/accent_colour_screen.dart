@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 
@@ -7,26 +8,26 @@ import 'package:opennutritracker/core/utils/theme_mode_provider.dart';
 import 'package:opennutritracker/features/settings/presentation/bloc/settings_bloc.dart';
 import 'package:opennutritracker/generated/l10n.dart';
 
-/// Named, hand-picked preset hues that span the wheel and give a coherent
-/// Material 3 palette via [ColorScheme.fromSeed]. Sixteen entries arranged
-/// 4×4 — enough variety to feel personal, few enough to read at a glance.
-const List<double> _presetHues = <double>[
-  0,   // red
-  18,  // coral
-  30,  // orange
-  42,  // amber
-  60,  // yellow
-  84,  // chartreuse
-  108, // lime
-  140, // green
-  165, // teal
-  185, // cyan
-  205, // sky
-  225, // blue
-  250, // indigo
-  280, // violet
-  305, // magenta
-  335, // pink
+/// Sixteen hand-picked accent colours that span the wheel and read well as
+/// circular swatches in a 4×4 grid. Each one drives `ColorScheme.fromSeed`
+/// to produce a coherent Material 3 palette.
+const List<Color> _presetColors = <Color>[
+  Color(0xFFE53935), // red
+  Color(0xFFFF6F61), // coral
+  Color(0xFFFB8C00), // orange
+  Color(0xFFFFB300), // amber
+  Color(0xFFFDD835), // yellow
+  Color(0xFFC0CA33), // chartreuse
+  Color(0xFF7CB342), // lime
+  Color(0xFF43A047), // green
+  Color(0xFF00897B), // teal
+  Color(0xFF00ACC1), // cyan
+  Color(0xFF039BE5), // sky
+  Color(0xFF1E88E5), // blue
+  Color(0xFF3949AB), // indigo
+  Color(0xFF8E24AA), // violet
+  Color(0xFFD81B60), // magenta
+  Color(0xFFEC407A), // pink
 ];
 
 class AccentColourScreen extends StatefulWidget {
@@ -48,20 +49,21 @@ class _AccentColourScreenState extends State<AccentColourScreen> {
 
   void _selectMaterialYou() {
     _settingsBloc.setUseMaterialYou(true);
-    _settingsBloc.setAccentHue(null);
+    _settingsBloc.setAccentColor(null);
     final theme = Provider.of<ThemeModeProvider>(context, listen: false);
     theme.updateUseMaterialYou(true);
-    theme.updateAccentHue(null);
+    theme.updateAccentColor(null);
     _settingsBloc.add(LoadSettingsEvent());
   }
 
-  void _selectHue(double hue) {
-    _settingsBloc.setAccentHue(hue);
-    // Picking a custom hue should win over Material You — otherwise the
-    // chosen colour silently does nothing on Android 12+.
+  void _selectColor(Color color) {
+    final argb = color.toARGB32();
+    _settingsBloc.setAccentColor(argb);
+    // A custom colour should win over Material You; otherwise the picked
+    // shade silently does nothing on Android 12+.
     _settingsBloc.setUseMaterialYou(false);
     final theme = Provider.of<ThemeModeProvider>(context, listen: false);
-    theme.updateAccentHue(hue);
+    theme.updateAccentColor(argb);
     theme.updateUseMaterialYou(false);
     _settingsBloc.add(LoadSettingsEvent());
   }
@@ -78,7 +80,7 @@ class _AccentColourScreenState extends State<AccentColourScreen> {
             return const Center(child: CircularProgressIndicator());
           }
           final materialYouActive = isAndroid && state.useMaterialYou;
-          final currentHue = state.accentHue;
+          final currentArgb = state.accentColor;
           return ListView(
             children: [
               if (isAndroid)
@@ -108,7 +110,7 @@ class _AccentColourScreenState extends State<AccentColourScreen> {
                 child: GridView.builder(
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
-                  itemCount: _presetHues.length,
+                  itemCount: _presetColors.length,
                   gridDelegate:
                       const SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 4,
@@ -117,17 +119,14 @@ class _AccentColourScreenState extends State<AccentColourScreen> {
                     crossAxisSpacing: 8,
                   ),
                   itemBuilder: (context, index) {
-                    final hue = _presetHues[index];
-                    final color =
-                        HSLColor.fromAHSL(1, hue, 0.7, 0.5).toColor();
-                    final selected = !materialYouActive &&
-                        currentHue != null &&
-                        (currentHue - hue).abs() < 0.5;
+                    final color = _presetColors[index];
+                    final selected =
+                        !materialYouActive && currentArgb == color.toARGB32();
                     return Semantics(
                       identifier:
-                          'accent-preset-${hue.round().toString().padLeft(3, '0')}',
+                          'accent-preset-${index.toString().padLeft(2, '0')}',
                       child: InkWell(
-                        onTap: () => _selectHue(hue),
+                        onTap: () => _selectColor(color),
                         customBorder: const CircleBorder(),
                         child: Container(
                           decoration: BoxDecoration(
@@ -163,7 +162,7 @@ class _AccentColourScreenState extends State<AccentColourScreen> {
                   title: Text(S.of(context).settingsAccentCustomColour),
                   subtitle: Text(S.of(context).settingsAccentCustomSubtitle),
                   trailing: const Icon(Icons.chevron_right),
-                  onTap: () => _openCustomColourDialog(currentHue),
+                  onTap: () => _openCustomColourDialog(currentArgb),
                 ),
               ),
             ],
@@ -173,21 +172,25 @@ class _AccentColourScreenState extends State<AccentColourScreen> {
     );
   }
 
-  Future<void> _openCustomColourDialog(double? initialHue) async {
-    final picked = await showDialog<double?>(
+  Future<void> _openCustomColourDialog(int? initialArgb) async {
+    final picked = await showDialog<Color?>(
       context: context,
-      builder: (_) => _CustomColourDialog(initialHue: initialHue ?? 200),
+      builder: (_) => _CustomColourDialog(
+        initialColor: initialArgb != null
+            ? Color(initialArgb)
+            : _presetColors.first,
+      ),
     );
     if (picked != null) {
-      _selectHue(picked);
+      _selectColor(picked);
     }
   }
 }
 
 class _CustomColourDialog extends StatefulWidget {
-  final double initialHue;
+  final Color initialColor;
 
-  const _CustomColourDialog({required this.initialHue});
+  const _CustomColourDialog({required this.initialColor});
 
   @override
   State<_CustomColourDialog> createState() => _CustomColourDialogState();
@@ -195,16 +198,62 @@ class _CustomColourDialog extends StatefulWidget {
 
 class _CustomColourDialogState extends State<_CustomColourDialog> {
   late double _hue;
+  late TextEditingController _hexController;
+  String? _hexError;
 
   @override
   void initState() {
-    _hue = widget.initialHue;
+    final hsl = HSLColor.fromColor(widget.initialColor);
+    _hue = hsl.hue;
+    _hexController = TextEditingController(text: _toHex(widget.initialColor));
     super.initState();
   }
 
   @override
+  void dispose() {
+    _hexController.dispose();
+    super.dispose();
+  }
+
+  String _toHex(Color color) {
+    // Render as RRGGBB (no alpha) — that's what people type and recognise.
+    final argb = color.toARGB32();
+    final rgb = argb & 0xFFFFFF;
+    return rgb.toRadixString(16).padLeft(6, '0').toUpperCase();
+  }
+
+  Color get _currentColor =>
+      HSLColor.fromAHSL(1, _hue, 0.7, 0.5).toColor();
+
+  void _onHueChanged(double value) {
+    setState(() {
+      _hue = value;
+      _hexError = null;
+      _hexController.text = _toHex(_currentColor);
+    });
+  }
+
+  void _onHexSubmitted(String raw) {
+    final cleaned = raw.trim().replaceAll('#', '').toUpperCase();
+    if (!RegExp(r'^[0-9A-F]{6}$').hasMatch(cleaned)) {
+      setState(() => _hexError = S.of(context).settingsAccentHexInvalid);
+      return;
+    }
+    final value = int.parse(cleaned, radix: 16) | 0xFF000000;
+    final color = Color(value);
+    setState(() {
+      _hue = HSLColor.fromColor(color).hue;
+      _hexError = null;
+      _hexController.text = cleaned;
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final color = HSLColor.fromAHSL(1, _hue, 0.7, 0.5).toColor();
+    // Show whatever the hex field would resolve to: typed hex (if valid)
+    // wins over the slider, so the preview always matches what would be
+    // saved on confirm.
+    final previewColor = _previewColor();
     return AlertDialog(
       title: Text(S.of(context).settingsAccentCustomColour),
       content: Column(
@@ -214,7 +263,7 @@ class _CustomColourDialogState extends State<_CustomColourDialog> {
             width: 96,
             height: 96,
             decoration: BoxDecoration(
-              color: color,
+              color: previewColor,
               shape: BoxShape.circle,
             ),
           ),
@@ -224,16 +273,37 @@ class _CustomColourDialogState extends State<_CustomColourDialog> {
             child: SliderTheme(
               data: SliderTheme.of(context).copyWith(
                 trackHeight: 16,
-                thumbColor: color,
-                overlayColor: color.withValues(alpha: 0.2),
+                thumbColor: previewColor,
+                overlayColor: previewColor.withValues(alpha: 0.2),
                 trackShape: const _HueGradientTrackShape(_hueTrackColors),
               ),
               child: Slider(
                 value: _hue,
                 min: 0,
                 max: 360,
-                onChanged: (value) => setState(() => _hue = value),
+                onChanged: _onHueChanged,
               ),
+            ),
+          ),
+          const SizedBox(height: 8),
+          Semantics(
+            identifier: 'accent-custom-hex-field',
+            child: TextField(
+              controller: _hexController,
+              maxLength: 7,
+              textCapitalization: TextCapitalization.characters,
+              inputFormatters: [
+                FilteringTextInputFormatter.allow(RegExp(r'[#0-9A-Fa-f]')),
+              ],
+              decoration: InputDecoration(
+                prefixText: '#',
+                labelText: S.of(context).settingsAccentHexLabel,
+                hintText: 'FF5733',
+                errorText: _hexError,
+                counterText: '',
+              ),
+              onSubmitted: _onHexSubmitted,
+              onChanged: (_) => setState(() => _hexError = null),
             ),
           ),
         ],
@@ -244,11 +314,29 @@ class _CustomColourDialogState extends State<_CustomColourDialog> {
           child: Text(S.of(context).dialogCancelLabel),
         ),
         FilledButton(
-          onPressed: () => Navigator.of(context).pop(_hue),
+          onPressed: _onConfirm,
           child: Text(S.of(context).dialogOKLabel),
         ),
       ],
     );
+  }
+
+  Color _previewColor() {
+    final raw = _hexController.text.trim().replaceAll('#', '').toUpperCase();
+    if (RegExp(r'^[0-9A-F]{6}$').hasMatch(raw)) {
+      return Color(int.parse(raw, radix: 16) | 0xFF000000);
+    }
+    return HSLColor.fromAHSL(1, _hue, 0.7, 0.5).toColor();
+  }
+
+  void _onConfirm() {
+    final raw = _hexController.text.trim().replaceAll('#', '').toUpperCase();
+    if (raw.isNotEmpty && !RegExp(r'^[0-9A-F]{6}$').hasMatch(raw)) {
+      setState(() => _hexError = S.of(context).settingsAccentHexInvalid);
+      return;
+    }
+    final color = _previewColor();
+    Navigator.of(context).pop(color);
   }
 }
 

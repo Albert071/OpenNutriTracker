@@ -760,6 +760,8 @@
   "settingsAccentPresetsHeader": "选择颜色",
   "settingsAccentCustomColour": "自定义颜色…",
   "settingsAccentCustomSubtitle": "打开色相滑块进行精确选择",
+  "settingsAccentHexLabel": "十六进制代码",
+  "settingsAccentHexInvalid": "这个十六进制代码看起来不对 — 需要六个字符,0-9 和 A-F。",
   "settingsAccentHueTitle": "强调色",
   "settingsAccentHueDisabledHint": "关闭系统颜色以选择自定义强调色。",
   "settingsAccentHueReset": "重置",

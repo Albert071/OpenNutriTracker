@@ -75,7 +75,7 @@ Future<void> main() async {
       savedLocaleCode != null ? Locale(savedLocaleCode) : null;
   final savedUsesKilojoules = config.usesKilojoules;
   final savedUseMaterialYou = config.useMaterialYou;
-  final savedAccentHue = config.accentHue;
+  final savedAccentColor = config.accentColor;
   final log = Logger('main');
 
   // If the user has accepted anonymous data collection, run the app with
@@ -83,11 +83,11 @@ Future<void> main() async {
   if (kReleaseMode && hasAcceptedAnonymousData) {
     log.info('Starting App with Sentry enabled ...');
     _runAppWithSentryReporting(isUserInitialized, savedAppTheme, savedLocale,
-        savedUsesKilojoules, savedUseMaterialYou, savedAccentHue);
+        savedUsesKilojoules, savedUseMaterialYou, savedAccentColor);
   } else {
     log.info('Starting App ...');
     runAppWithChangeNotifiers(isUserInitialized, savedAppTheme, savedLocale,
-        savedUsesKilojoules, savedUseMaterialYou, savedAccentHue);
+        savedUsesKilojoules, savedUseMaterialYou, savedAccentColor);
   }
 }
 
@@ -97,7 +97,7 @@ void _runAppWithSentryReporting(
   Locale? savedLocale,
   bool savedUsesKilojoules,
   bool savedUseMaterialYou,
-  double? savedAccentHue,
+  int? savedAccentColor,
 ) async {
   await SentryFlutter.init(
     (options) {
@@ -105,7 +105,7 @@ void _runAppWithSentryReporting(
       options.tracesSampleRate = 1.0;
     },
     appRunner: () => runAppWithChangeNotifiers(isUserInitialized, savedAppTheme,
-        savedLocale, savedUsesKilojoules, savedUseMaterialYou, savedAccentHue),
+        savedLocale, savedUsesKilojoules, savedUseMaterialYou, savedAccentColor),
   );
 }
 
@@ -115,7 +115,7 @@ void runAppWithChangeNotifiers(
   Locale? savedLocale,
   bool savedUsesKilojoules,
   bool savedUseMaterialYou,
-  double? savedAccentHue,
+  int? savedAccentColor,
 ) =>
     runApp(
       MultiProvider(
@@ -124,7 +124,7 @@ void runAppWithChangeNotifiers(
             create: (_) => ThemeModeProvider(
               appTheme: savedAppTheme,
               useMaterialYou: savedUseMaterialYou,
-              accentHue: savedAccentHue,
+              accentColor: savedAccentColor,
             ),
           ),
           ChangeNotifierProvider(
@@ -151,7 +151,7 @@ class OpenNutriTrackerApp extends StatelessWidget {
     // builds), so the static palette always remains as a graceful fallback.
     final themeProvider = Provider.of<ThemeModeProvider>(context);
     final useMaterialYou = themeProvider.useMaterialYou;
-    final accentHue = themeProvider.accentHue;
+    final accentColor = themeProvider.accentColor;
     return DynamicColorBuilder(
       builder: (lightDynamic, darkDynamic) {
         final ColorScheme lightScheme;
@@ -159,8 +159,8 @@ class OpenNutriTrackerApp extends StatelessWidget {
         if (useMaterialYou && lightDynamic != null && darkDynamic != null) {
           lightScheme = lightDynamic.harmonized();
           darkScheme = darkDynamic.harmonized();
-        } else if (accentHue != null) {
-          final seed = HSLColor.fromAHSL(1, accentHue, 0.7, 0.5).toColor();
+        } else if (accentColor != null) {
+          final seed = Color(accentColor);
           lightScheme = ColorScheme.fromSeed(seedColor: seed);
           darkScheme = ColorScheme.fromSeed(
             seedColor: seed,

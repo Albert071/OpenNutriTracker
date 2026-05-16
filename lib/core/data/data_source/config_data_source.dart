@@ -240,10 +240,10 @@ class ConfigDataSource {
     await config?.save();
   }
 
-  Future<void> setConfigAccentHue(double? hue) async {
-    _log.fine('Updating config accentHue to $hue');
+  Future<void> setConfigAccentColor(int? value) async {
+    _log.fine('Updating config accentColor to $value');
     final config = _configBox.get(_configKey);
-    config?.accentHue = hue;
+    config?.accentColor = value;
     await config?.save();
   }
 

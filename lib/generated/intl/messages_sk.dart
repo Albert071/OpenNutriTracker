@@ -1037,6 +1037,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "settingsAccentPresetsHeader": MessageLookupByLibrary.simpleMessage("Vyberte farbu"),
         "settingsAccentCustomColour": MessageLookupByLibrary.simpleMessage("Vlastná farba…"),
         "settingsAccentCustomSubtitle": MessageLookupByLibrary.simpleMessage("Otvorte posuvník odtieňa pre presný výber"),
+        "settingsAccentHexLabel": MessageLookupByLibrary.simpleMessage("Hex kód"),
+        "settingsAccentHexInvalid": MessageLookupByLibrary.simpleMessage("Tento hex kód nevyzerá správne — šesť znakov, 0-9 a A-F."),
         "settingsAccentHueTitle": MessageLookupByLibrary.simpleMessage("Farba zvýraznenia"),
         "settingsAccentHueDisabledHint": MessageLookupByLibrary.simpleMessage("Vypnite systémové farby, aby ste mohli vybrať vlastný akcent."),
         "settingsAccentHueReset": MessageLookupByLibrary.simpleMessage("Obnoviť"),

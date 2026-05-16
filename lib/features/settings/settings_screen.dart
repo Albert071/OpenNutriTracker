@@ -202,12 +202,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       _accentSubtitle(
                         context,
                         useMaterialYou: state.useMaterialYou,
-                        accentHue: state.accentHue,
+                        accentColor: state.accentColor,
                       ),
                     ),
                     trailing: _AccentTrailingSwatch(
                       useMaterialYou: state.useMaterialYou,
-                      accentHue: state.accentHue,
+                      accentColor: state.accentColor,
                     ),
                     onTap: () => Navigator.of(context).pushNamed(
                       NavigationOptions.accentColourRoute,
@@ -987,13 +987,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
 String _accentSubtitle(
   BuildContext context, {
   required bool useMaterialYou,
-  required double? accentHue,
+  required int? accentColor,
 }) {
   final isAndroid = Theme.of(context).platform == TargetPlatform.android;
   if (isAndroid && useMaterialYou) {
     return S.of(context).settingsAccentSubtitleMaterialYou;
   }
-  if (accentHue != null) {
+  if (accentColor != null) {
     return S.of(context).settingsAccentSubtitleCustom;
   }
   return S.of(context).settingsAccentSubtitleDefault;
@@ -1001,11 +1001,11 @@ String _accentSubtitle(
 
 class _AccentTrailingSwatch extends StatelessWidget {
   final bool useMaterialYou;
-  final double? accentHue;
+  final int? accentColor;
 
   const _AccentTrailingSwatch({
     required this.useMaterialYou,
-    required this.accentHue,
+    required this.accentColor,
   });
 
   @override
@@ -1030,8 +1030,9 @@ class _AccentTrailingSwatch extends StatelessWidget {
         ),
       );
     }
-    final hue = accentHue ?? 140.0;
-    final color = HSLColor.fromAHSL(1, hue, 0.7, 0.5).toColor();
+    final color = accentColor != null
+        ? Color(accentColor!)
+        : const Color(0xFF43A047); // default green disc preview
     return Container(
       width: 24,
       height: 24,

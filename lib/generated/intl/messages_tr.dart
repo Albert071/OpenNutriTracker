@@ -1099,6 +1099,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "settingsAccentPresetsHeader": MessageLookupByLibrary.simpleMessage("Bir renk seç"),
         "settingsAccentCustomColour": MessageLookupByLibrary.simpleMessage("Özel renk…"),
         "settingsAccentCustomSubtitle": MessageLookupByLibrary.simpleMessage("Hassas seçim için ton kaydırıcısını aç"),
+        "settingsAccentHexLabel": MessageLookupByLibrary.simpleMessage("Hex kod"),
+        "settingsAccentHexInvalid": MessageLookupByLibrary.simpleMessage("Bu hex kod doğru görünmüyor — altı karakter, 0-9 ve A-F."),
         "settingsAccentHueTitle": MessageLookupByLibrary.simpleMessage("Vurgu rengi"),
         "settingsAccentHueDisabledHint": MessageLookupByLibrary.simpleMessage("Özel bir vurgu seçmek için sistem renklerini kapatın."),
         "settingsAccentHueReset": MessageLookupByLibrary.simpleMessage("Sıfırla"),

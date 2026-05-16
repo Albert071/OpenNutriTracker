@@ -790,6 +790,8 @@
   "settingsAccentPresetsHeader": "Bir renk seç",
   "settingsAccentCustomColour": "Özel renk…",
   "settingsAccentCustomSubtitle": "Hassas seçim için ton kaydırıcısını aç",
+  "settingsAccentHexLabel": "Hex kod",
+  "settingsAccentHexInvalid": "Bu hex kod doğru görünmüyor — altı karakter, 0-9 ve A-F.",
   "settingsAccentHueTitle": "Vurgu rengi",
   "settingsAccentHueDisabledHint": "Özel bir vurgu seçmek için sistem renklerini kapatın.",
   "settingsAccentHueReset": "Sıfırla",

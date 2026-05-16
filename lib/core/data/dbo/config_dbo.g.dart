@@ -39,7 +39,7 @@ class ConfigDBOAdapter extends TypeAdapter<ConfigDBO> {
         dayStartOffsetMinutes: (fields[23] as num?)?.toInt(),
         dailyWaterGoalMl: (fields[24] as num?)?.toInt(),
         useMaterialYou: fields[20] as bool?,
-        accentHue: (fields[26] as num?)?.toDouble(),
+        accentColor: (fields[26] as num?)?.toInt(),
       )
       ..userCarbGoalPct = (fields[6] as num?)?.toDouble()
       ..userProteinGoalPct = (fields[7] as num?)?.toDouble()
@@ -101,7 +101,7 @@ class ConfigDBOAdapter extends TypeAdapter<ConfigDBO> {
       ..writeByte(24)
       ..write(obj.dailyWaterGoalMl)
       ..writeByte(26)
-      ..write(obj.accentHue);
+      ..write(obj.accentColor);
   }
 
   @override
@@ -150,7 +150,7 @@ ConfigDBO _$ConfigDBOFromJson(Map<String, dynamic> json) =>
         dayStartOffsetMinutes: (json['dayStartOffsetMinutes'] as num?)?.toInt(),
         dailyWaterGoalMl: (json['dailyWaterGoalMl'] as num?)?.toInt(),
         useMaterialYou: json['useMaterialYou'] as bool?,
-        accentHue: (json['accentHue'] as num?)?.toDouble(),
+        accentColor: (json['accentColor'] as num?)?.toInt(),
       )
       ..userCarbGoalPct = (json['userCarbGoalPct'] as num?)?.toDouble()
       ..userProteinGoalPct = (json['userProteinGoalPct'] as num?)?.toDouble()
@@ -182,7 +182,7 @@ Map<String, dynamic> _$ConfigDBOToJson(ConfigDBO instance) => <String, dynamic>{
   'dayStartOffsetMinutes': instance.dayStartOffsetMinutes,
   'dailyWaterGoalMl': instance.dailyWaterGoalMl,
   'useMaterialYou': instance.useMaterialYou,
-  'accentHue': instance.accentHue,
+  'accentColor': instance.accentColor,
 };
 
 const _$AppThemeDBOEnumMap = {

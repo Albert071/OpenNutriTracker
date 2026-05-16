@@ -790,6 +790,8 @@
   "settingsAccentPresetsHeader": "Farbe auswählen",
   "settingsAccentCustomColour": "Eigene Farbe…",
   "settingsAccentCustomSubtitle": "Öffne den Farbtonregler für eine genaue Auswahl",
+  "settingsAccentHexLabel": "Hex-Code",
+  "settingsAccentHexInvalid": "Dieser Hex-Code stimmt nicht — sechs Zeichen, 0-9 und A-F.",
   "settingsAccentHueTitle": "Akzentfarbe",
   "settingsAccentHueDisabledHint": "Schalte die Systemfarben aus, um eine eigene Akzentfarbe zu wählen.",
   "settingsAccentHueReset": "Zurücksetzen",

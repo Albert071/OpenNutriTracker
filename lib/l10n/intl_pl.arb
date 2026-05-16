@@ -759,6 +759,8 @@
   "settingsAccentPresetsHeader": "Wybierz kolor",
   "settingsAccentCustomColour": "Kolor niestandardowy…",
   "settingsAccentCustomSubtitle": "Otwórz suwak odcienia, aby wybrać precyzyjnie",
+  "settingsAccentHexLabel": "Kod hex",
+  "settingsAccentHexInvalid": "Ten kod hex nie wygląda dobrze — sześć znaków, 0-9 i A-F.",
   "settingsAccentHueTitle": "Kolor akcentu",
   "settingsAccentHueDisabledHint": "Wyłącz kolory systemowe, aby wybrać własny akcent.",
   "settingsAccentHueReset": "Zresetuj",

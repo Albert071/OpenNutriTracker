@@ -759,6 +759,8 @@
   "settingsAccentPresetsHeader": "Виберіть колір",
   "settingsAccentCustomColour": "Власний колір…",
   "settingsAccentCustomSubtitle": "Відкрити повзунок відтінку для точного вибору",
+  "settingsAccentHexLabel": "Hex код",
+  "settingsAccentHexInvalid": "Цей hex код виглядає неправильно — шість символів, 0-9 і A-F.",
   "settingsAccentHueTitle": "Акцентний колір",
   "settingsAccentHueDisabledHint": "Вимкніть системні кольори, щоб обрати власний акцент.",
   "settingsAccentHueReset": "Скинути",
