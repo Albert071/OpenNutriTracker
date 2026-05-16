@@ -1115,8 +1115,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Мова"),
         "settingsMaterialYouTitle": MessageLookupByLibrary.simpleMessage(
             "Використовувати системні кольори"),
-        "settingsMaterialYouSubtitle": MessageLookupByLibrary.simpleMessage(
-            "На Android 12 і новіших версіях додаток адаптується до акцентного кольору ваших шпалер. На старіших Android та на iOS це налаштування не має видимого ефекту."),
+        "settingsMaterialYouSubtitle": MessageLookupByLibrary.simpleMessage("Підхоплює акцентний колір ваших шпалер на Android 12 і новіших версіях."),
         "settingsAccentColourTitle": MessageLookupByLibrary.simpleMessage("Акцентний колір"),
         "settingsAccentSubtitleMaterialYou": MessageLookupByLibrary.simpleMessage("Material You"),
         "settingsAccentSubtitleCustom": MessageLookupByLibrary.simpleMessage("Власний"),

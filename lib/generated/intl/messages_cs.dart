@@ -1104,8 +1104,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Jazyk"),
         "settingsMaterialYouTitle":
             MessageLookupByLibrary.simpleMessage("Použít systémové barvy"),
-        "settingsMaterialYouSubtitle": MessageLookupByLibrary.simpleMessage(
-            "V systému Android 12 a novějším se aplikace přizpůsobí barevnému akcentu vaší tapety. Na starších verzích Androidu a v iOS toto nastavení nemá viditelný účinek."),
+        "settingsMaterialYouSubtitle": MessageLookupByLibrary.simpleMessage("Sladí aplikaci s akcentem vaší tapety v Androidu 12 a novějším."),
         "settingsAccentColourTitle": MessageLookupByLibrary.simpleMessage("Akcentová barva"),
         "settingsAccentSubtitleMaterialYou": MessageLookupByLibrary.simpleMessage("Material You"),
         "settingsAccentSubtitleCustom": MessageLookupByLibrary.simpleMessage("Vlastní"),

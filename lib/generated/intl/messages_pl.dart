@@ -1110,8 +1110,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Język"),
         "settingsMaterialYouTitle":
             MessageLookupByLibrary.simpleMessage("Użyj kolorów systemu"),
-        "settingsMaterialYouSubtitle": MessageLookupByLibrary.simpleMessage(
-            "W systemie Android 12 i nowszym aplikacja dopasowuje się do koloru akcentu z twojej tapety. W starszych wersjach Androida i w iOS to ustawienie nie ma widocznego wpływu."),
+        "settingsMaterialYouSubtitle": MessageLookupByLibrary.simpleMessage("Dopasowuje aplikację do akcentu tapety w systemie Android 12 i nowszym."),
         "settingsAccentColourTitle": MessageLookupByLibrary.simpleMessage("Kolor akcentu"),
         "settingsAccentSubtitleMaterialYou": MessageLookupByLibrary.simpleMessage("Material You"),
         "settingsAccentSubtitleCustom": MessageLookupByLibrary.simpleMessage("Niestandardowy"),

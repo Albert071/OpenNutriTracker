@@ -1091,8 +1091,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "settingsLanguageLabel": MessageLookupByLibrary.simpleMessage("Dil"),
         "settingsMaterialYouTitle":
             MessageLookupByLibrary.simpleMessage("Sistem renklerini kullan"),
-        "settingsMaterialYouSubtitle": MessageLookupByLibrary.simpleMessage(
-            "Android 12 ve daha yeni sürümlerde uygulama duvar kâğıdınızın vurgu rengiyle uyumlanır. Daha eski Android sürümlerinde ve iOS'ta bu ayarın görünür bir etkisi olmaz."),
+        "settingsMaterialYouSubtitle": MessageLookupByLibrary.simpleMessage("Android 12 ve daha yeni sürümlerde duvar kâğıdınızın vurgu rengiyle uyumlanır."),
         "settingsAccentColourTitle": MessageLookupByLibrary.simpleMessage("Vurgu rengi"),
         "settingsAccentSubtitleMaterialYou": MessageLookupByLibrary.simpleMessage("Material You"),
         "settingsAccentSubtitleCustom": MessageLookupByLibrary.simpleMessage("Özel"),

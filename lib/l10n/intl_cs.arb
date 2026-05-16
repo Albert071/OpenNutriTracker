@@ -751,7 +751,7 @@
   "settingsLabel": "Nastavení",
   "settingsLanguageLabel": "Jazyk",
   "settingsMaterialYouTitle": "Použít systémové barvy",
-  "settingsMaterialYouSubtitle": "V systému Android 12 a novějším se aplikace přizpůsobí barevnému akcentu vaší tapety. Na starších verzích Androidu a v iOS toto nastavení nemá viditelný účinek.",
+  "settingsMaterialYouSubtitle": "Sladí aplikaci s akcentem vaší tapety v Androidu 12 a novějším.",
   "settingsAccentColourTitle": "Akcentová barva",
   "settingsAccentSubtitleMaterialYou": "Material You",
   "settingsAccentSubtitleCustom": "Vlastní",

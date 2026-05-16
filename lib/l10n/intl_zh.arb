@@ -752,7 +752,7 @@
   "settingsLabel": "设置",
   "settingsLanguageLabel": "语言",
   "settingsMaterialYouTitle": "使用系统颜色",
-  "settingsMaterialYouSubtitle": "在 Android 12 及更高版本上,应用会与你壁纸的强调色相协调。在较旧的 Android 系统和 iOS 上,此设置没有可见效果。",
+  "settingsMaterialYouSubtitle": "在 Android 12 及更高版本上,使用你壁纸的强调色。",
   "settingsAccentColourTitle": "强调色",
   "settingsAccentSubtitleMaterialYou": "Material You",
   "settingsAccentSubtitleCustom": "自定义",

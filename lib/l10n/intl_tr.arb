@@ -782,7 +782,7 @@
   "settingsLabel": "Ayarlar",
   "settingsLanguageLabel": "Dil",
   "settingsMaterialYouTitle": "Sistem renklerini kullan",
-  "settingsMaterialYouSubtitle": "Android 12 ve daha yeni sürümlerde uygulama duvar kâğıdınızın vurgu rengiyle uyumlanır. Daha eski Android sürümlerinde ve iOS'ta bu ayarın görünür bir etkisi olmaz.",
+  "settingsMaterialYouSubtitle": "Android 12 ve daha yeni sürümlerde duvar kâğıdınızın vurgu rengiyle uyumlanır.",
   "settingsAccentColourTitle": "Vurgu rengi",
   "settingsAccentSubtitleMaterialYou": "Material You",
   "settingsAccentSubtitleCustom": "Özel",

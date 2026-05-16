@@ -799,7 +799,7 @@
   "settingsLabel": "Settings",
   "settingsLanguageLabel": "Language",
   "settingsMaterialYouTitle": "Use system colours",
-  "settingsMaterialYouSubtitle": "On Android 12 and newer, the app blends in with your wallpaper accent. On older Android and on iOS this setting has no visible effect.",
+  "settingsMaterialYouSubtitle": "Match your wallpaper accent on Android 12 and newer.",
   "settingsAccentColourTitle": "Accent colour",
   "settingsAccentSubtitleMaterialYou": "Material You",
   "settingsAccentSubtitleCustom": "Custom",

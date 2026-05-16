@@ -782,7 +782,7 @@
   "settingsLabel": "Einstellungen",
   "settingsLanguageLabel": "Sprache",
   "settingsMaterialYouTitle": "Systemfarben verwenden",
-  "settingsMaterialYouSubtitle": "Unter Android 12 und neuer passt sich die App an die Akzentfarbe deines Hintergrundbilds an. Auf älteren Android-Versionen und auf iOS hat diese Einstellung keine sichtbare Wirkung.",
+  "settingsMaterialYouSubtitle": "Übernimmt die Akzentfarbe deines Hintergrundbilds auf Android 12 und neuer.",
   "settingsAccentColourTitle": "Akzentfarbe",
   "settingsAccentSubtitleMaterialYou": "Material You",
   "settingsAccentSubtitleCustom": "Eigene Farbe",

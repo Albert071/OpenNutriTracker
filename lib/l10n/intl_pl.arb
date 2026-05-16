@@ -751,7 +751,7 @@
   "settingsLabel": "Ustawienia",
   "settingsLanguageLabel": "Język",
   "settingsMaterialYouTitle": "Użyj kolorów systemu",
-  "settingsMaterialYouSubtitle": "W systemie Android 12 i nowszym aplikacja dopasowuje się do koloru akcentu z twojej tapety. W starszych wersjach Androida i w iOS to ustawienie nie ma widocznego wpływu.",
+  "settingsMaterialYouSubtitle": "Dopasowuje aplikację do akcentu tapety w systemie Android 12 i nowszym.",
   "settingsAccentColourTitle": "Kolor akcentu",
   "settingsAccentSubtitleMaterialYou": "Material You",
   "settingsAccentSubtitleCustom": "Niestandardowy",

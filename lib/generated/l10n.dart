@@ -1510,11 +1510,10 @@ class S {
     );
   }
 
-  /// `On Android 12 and newer, the app blends in with your wallpaper accent. On older Android and on iOS this setting has no visible effect.`
+  /// `Match your wallpaper accent on Android 12 and newer.`
   String get settingsMaterialYouSubtitle {
     return Intl.message(
-      'On Android 12 and newer, the app blends in with your wallpaper accent. On older Android and on iOS '
-      'this setting has no visible effect.',
+      'Match your wallpaper accent on Android 12 and newer.',
       name: 'settingsMaterialYouSubtitle',
       desc: '',
       args: [],

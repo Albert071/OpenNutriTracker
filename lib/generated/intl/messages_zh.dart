@@ -966,8 +966,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "settingsLanguageLabel": MessageLookupByLibrary.simpleMessage("语言"),
         "settingsMaterialYouTitle":
             MessageLookupByLibrary.simpleMessage("使用系统颜色"),
-        "settingsMaterialYouSubtitle": MessageLookupByLibrary.simpleMessage(
-            "在 Android 12 及更高版本上,应用会与你壁纸的强调色相协调。在较旧的 Android 系统和 iOS 上,此设置没有可见效果。"),
+        "settingsMaterialYouSubtitle": MessageLookupByLibrary.simpleMessage("在 Android 12 及更高版本上,使用你壁纸的强调色。"),
         "settingsAccentColourTitle": MessageLookupByLibrary.simpleMessage("强调色"),
         "settingsAccentSubtitleMaterialYou": MessageLookupByLibrary.simpleMessage("Material You"),
         "settingsAccentSubtitleCustom": MessageLookupByLibrary.simpleMessage("自定义"),
