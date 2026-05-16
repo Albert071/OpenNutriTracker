@@ -33,6 +33,13 @@
       }
     }
   },
+  "@driPanelReferenceLabel": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
   "@diaryMealKcalConsumedOfTarget": {
     "placeholders": {
       "consumed": {
@@ -257,6 +264,10 @@
   "diaryMealKcalConsumedOfTarget": "{consumed} / {target} kcal",
   "diaryNutrientPanelDataDisclaimer": "Hier werden nur Nährstoffe summiert, die auf deinen protokollierten Mahlzeiten erfasst sind. Eine Mahlzeit ohne einen Wert trägt nichts zu diesem Nährstoff bei — die Summen können also zu niedrig sein.",
   "diaryNutrientPanelTitle": "Heutige Nährstoffe",
+  "driPanelInfoTitle": "Referenzzufuhr",
+  "driPanelInfoBody": "Diese Referenzwerte stammen aus den IOM-Empfehlungen zur Nährstoffzufuhr für Erwachsene und hängen von Alter und Geschlecht ab. Sie dienen als Orientierung, nicht als Vorgabe — dein eigener Bedarf kann abweichen.",
+  "driPanelInfoLinkLabel": "Quelle: IOM Dietary Reference Intakes",
+  "driPanelReferenceLabel": "Ref. {value}",
   "diarySortByCarbs": "Kohlenhydrate (absteigend)",
   "diarySortByFat": "Fett (absteigend)",
   "diarySortByKcal": "Kalorien (absteigend)",

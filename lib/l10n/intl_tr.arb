@@ -33,6 +33,13 @@
       }
     }
   },
+  "@driPanelReferenceLabel": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
   "@diaryMealKcalConsumedOfTarget": {
     "placeholders": {
       "consumed": {
@@ -257,6 +264,10 @@
   "diaryMealKcalConsumedOfTarget": "{consumed} / {target} kcal",
   "diaryNutrientPanelDataDisclaimer": "Yalnızca kaydettiğin öğünlerde takip edilen besinler burada toplanır. Bir değeri eksik olan öğün o besine katkıda bulunmaz — bu nedenle toplamlar olduğundan az görünebilir.",
   "diaryNutrientPanelTitle": "Bugünün besinleri",
+  "driPanelInfoTitle": "Referans alım",
+  "driPanelInfoBody": "Bu referans değerler, yetişkinler için IOM Diyet Referans Alımları'ndan gelir ve yaşa ile cinsiyete göre değişir. Bir hedef değil, bir referans noktasıdır — kendi ihtiyaçların farklı olabilir.",
+  "driPanelInfoLinkLabel": "Kaynak: IOM Dietary Reference Intakes",
+  "driPanelReferenceLabel": "ref. {value}",
   "diarySortByCarbs": "Karbonhidrat (çoktan aza)",
   "diarySortByFat": "Yağ (çoktan aza)",
   "diarySortByKcal": "Kalori (çoktan aza)",

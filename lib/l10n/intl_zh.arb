@@ -34,6 +34,13 @@
       }
     }
   },
+  "@driPanelReferenceLabel": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
   "@diaryMealKcalConsumedOfTarget": {
     "placeholders": {
       "consumed": {
@@ -227,6 +234,10 @@
   "diaryMealKcalConsumedOfTarget": "{consumed} / {target} 千卡",
   "diaryNutrientPanelDataDisclaimer": "此处仅汇总你已记录餐食中已追踪的营养素。如果某餐缺少某项数值,它就不会计入该营养素的总和,因此总量可能偏低。",
   "diaryNutrientPanelTitle": "今日营养素",
+  "driPanelInfoTitle": "参考摄入量",
+  "driPanelInfoBody": "这些参考量取自 IOM 成人膳食营养素参考摄入量,会因年龄和性别而异。它们只是参考,并非目标——你自身的需要可能有所不同。",
+  "driPanelInfoLinkLabel": "来源：IOM Dietary Reference Intakes",
+  "driPanelReferenceLabel": "参考 {value}",
   "diarySortByCarbs": "碳水化合物（从高到低）",
   "diarySortByFat": "脂肪（从高到低）",
   "diarySortByKcal": "卡路里（从高到低）",

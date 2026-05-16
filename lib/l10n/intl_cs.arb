@@ -33,6 +33,13 @@
       }
     }
   },
+  "@driPanelReferenceLabel": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
   "@diaryMealKcalConsumedOfTarget": {
     "placeholders": {
       "consumed": {
@@ -226,6 +233,10 @@
   "diaryMealKcalConsumedOfTarget": "{consumed} / {target} kcal",
   "diaryNutrientPanelDataDisclaimer": "Sčítají se zde pouze živiny, které jsou u zaznamenaných jídel zachyceny. Jídlo bez hodnoty k dané živině nepřispěje — součty proto mohou být podhodnocené.",
   "diaryNutrientPanelTitle": "Dnešní živiny",
+  "driPanelInfoTitle": "Referenční příjem",
+  "driPanelInfoBody": "Tyto referenční hodnoty pocházejí z doporučených dietních příjmů IOM pro dospělé a liší se podle věku a pohlaví. Jde o orientační údaj, nikoli o cíl — tvoje vlastní potřeby se mohou lišit.",
+  "driPanelInfoLinkLabel": "Zdroj: IOM Dietary Reference Intakes",
+  "driPanelReferenceLabel": "ref. {value}",
   "diarySortByCarbs": "Sacharidy (sestupně)",
   "diarySortByFat": "Tuky (sestupně)",
   "diarySortByKcal": "Kalorie (sestupně)",

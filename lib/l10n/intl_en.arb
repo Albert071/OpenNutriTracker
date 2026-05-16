@@ -34,6 +34,13 @@
       }
     }
   },
+  "@driPanelReferenceLabel": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
   "@diaryMealKcalConsumedOfTarget": {
     "placeholders": {
       "consumed": {
@@ -291,6 +298,10 @@
   "diaryMealKcalConsumedOfTarget": "{consumed} / {target} kcal",
   "diaryNutrientPanelDataDisclaimer": "Only nutrients tracked on the meals you logged are summed here. A meal missing a value contributes nothing to that nutrient — so these totals may underreport.",
   "diaryNutrientPanelTitle": "Today's nutrients",
+  "driPanelInfoTitle": "Reference intake",
+  "driPanelInfoBody": "These reference amounts come from the IOM Dietary Reference Intakes for adults and vary by age and gender. They're a point of reference, not a target — your own needs may differ.",
+  "driPanelInfoLinkLabel": "Source: IOM Dietary Reference Intakes",
+  "driPanelReferenceLabel": "ref {value}",
   "diarySortByCarbs": "Carbs (high to low)",
   "diarySortByFat": "Fat (high to low)",
   "diarySortByKcal": "Calories (high to low)",

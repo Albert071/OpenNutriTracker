@@ -7151,6 +7151,46 @@ class S {
       args: [],
     );
   }
+
+  /// `Reference intake`
+  String get driPanelInfoTitle {
+    return Intl.message(
+      'Reference intake',
+      name: 'driPanelInfoTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `These reference amounts come from the IOM Dietary Reference Intakes for adults and vary by age and gender. They're a point of reference, not a target — your own needs may differ.`
+  String get driPanelInfoBody {
+    return Intl.message(
+      "These reference amounts come from the IOM Dietary Reference Intakes for adults and vary by age and gender. They're a point of reference, not a target — your own needs may differ.",
+      name: 'driPanelInfoBody',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Source: IOM Dietary Reference Intakes`
+  String get driPanelInfoLinkLabel {
+    return Intl.message(
+      'Source: IOM Dietary Reference Intakes',
+      name: 'driPanelInfoLinkLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `ref {value}`
+  String driPanelReferenceLabel(String value) {
+    return Intl.message(
+      'ref $value',
+      name: 'driPanelReferenceLabel',
+      desc: '',
+      args: [value],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

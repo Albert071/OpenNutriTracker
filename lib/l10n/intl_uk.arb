@@ -33,6 +33,13 @@
       }
     }
   },
+  "@driPanelReferenceLabel": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
   "@diaryMealKcalConsumedOfTarget": {
     "placeholders": {
       "consumed": {
@@ -226,6 +233,10 @@
   "diaryMealKcalConsumedOfTarget": "{consumed} / {target} kcal",
   "diaryNutrientPanelDataDisclaimer": "Тут підсумовуються лише ті поживні речовини, які записані для зареєстрованих страв. Страва без значення не додає нічого до відповідного показника — тож суми можуть бути занижені.",
   "diaryNutrientPanelTitle": "Поживні речовини за сьогодні",
+  "driPanelInfoTitle": "Орієнтовне споживання",
+  "driPanelInfoBody": "Ці орієнтовні значення взято з рекомендованих норм споживання IOM для дорослих і вони залежать від віку та статі. Це точка відліку, а не мета — твої власні потреби можуть бути іншими.",
+  "driPanelInfoLinkLabel": "Джерело: IOM Dietary Reference Intakes",
+  "driPanelReferenceLabel": "орієнт. {value}",
   "diarySortByCarbs": "Вуглеводи (за спаданням)",
   "diarySortByFat": "Жири (за спаданням)",
   "diarySortByKcal": "Калорії (за спаданням)",

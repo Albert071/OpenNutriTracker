@@ -33,6 +33,13 @@
       }
     }
   },
+  "@driPanelReferenceLabel": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
   "@diaryMealKcalConsumedOfTarget": {
     "placeholders": {
       "consumed": {
@@ -226,6 +233,10 @@
   "diaryMealKcalConsumedOfTarget": "{consumed} / {target} kcal",
   "diaryNutrientPanelDataDisclaimer": "Vengono sommati solo i nutrienti registrati sui pasti che hai inserito. Un pasto senza un valore non contribuisce a quel nutriente — i totali potrebbero quindi essere sottostimati.",
   "diaryNutrientPanelTitle": "Nutrienti di oggi",
+  "driPanelInfoTitle": "Apporto di riferimento",
+  "driPanelInfoBody": "Questi valori di riferimento provengono dai Dietary Reference Intakes dell'IOM per adulti e variano in base a età e genere. Sono un riferimento, non un obiettivo — le tue esigenze possono essere diverse.",
+  "driPanelInfoLinkLabel": "Fonte: IOM Dietary Reference Intakes",
+  "driPanelReferenceLabel": "rif. {value}",
   "diarySortByCarbs": "Carboidrati (dal più alto al più basso)",
   "diarySortByFat": "Grassi (dal più alto al più basso)",
   "diarySortByKcal": "Calorie (dal più alto al più basso)",

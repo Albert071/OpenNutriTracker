@@ -86,6 +86,8 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String mLogWaterAmount(amount) => "Pridať ${amount} ml";
 
+  static String mDriRef(value) => "ref. ${value}";
+
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "activityExample": MessageLookupByLibrary.simpleMessage(
@@ -1105,6 +1107,13 @@ class MessageLookup extends MessageLookupByLibrary {
         "zincLabel": MessageLookupByLibrary.simpleMessage("zinok"),
         "diaryNutrientPanelTitle":
             MessageLookupByLibrary.simpleMessage("Dnešné živiny"),
+        "driPanelInfoBody": MessageLookupByLibrary.simpleMessage(
+            "Tieto referenčné hodnoty pochádzajú z odporúčaných dietetických príjmov IOM pre dospelých a líšia sa podľa veku a pohlavia. Sú orientačné, nie cieľové — tvoje vlastné potreby sa môžu líšiť."),
+        "driPanelInfoLinkLabel":
+            MessageLookupByLibrary.simpleMessage("Zdroj: IOM Dietary Reference Intakes"),
+        "driPanelInfoTitle":
+            MessageLookupByLibrary.simpleMessage("Referenčný príjem"),
+        "driPanelReferenceLabel": mDriRef,
         "nutrientPanelAllHiddenLabel":
             MessageLookupByLibrary.simpleMessage("Všetky živiny sú skryté — zapnite niektoré v Nastavenia → Živiny."),
         "nutrientPanelDayLabel":
