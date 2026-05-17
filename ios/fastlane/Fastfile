@@ -8,7 +8,9 @@ platform :ios do
 
   desc 'Build a signed App Store IPA using Flutter'
   lane :build do
+    setup_ci if ENV['CI']
     sync_signing
+    enforce_app_store_signing
     sh('cd .. && fvm flutter pub get')
     sh('cd .. && fvm flutter build ipa --release --export-method app-store')
   end
@@ -41,6 +43,19 @@ platform :ios do
       type: 'appstore',
       readonly: ENV.fetch('MATCH_READONLY', 'true') == 'true',
       api_key: app_store_connect_api_key_from_env
+    )
+  end
+
+  private_lane :enforce_app_store_signing do
+    update_code_signing_settings(
+      use_automatic_signing: false,
+      path: 'Runner.xcodeproj',
+      team_id: '79AJPC6DP3',
+      bundle_identifier: 'com.opennutritracker.ont.opennutritracker',
+      targets: ['Runner'],
+      build_configurations: ['Release', 'Profile'],
+      code_sign_identity: 'Apple Distribution',
+      profile_name: 'match AppStore com.opennutritracker.ont.opennutritracker'
     )
   end
 

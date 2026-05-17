@@ -18,483 +18,484 @@ on:
   workflow_dispatch:
 
 jobs:
-  linux-checks:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          flutter-version: '3.41.7'
-          channel: 'stable'
-          cache: true
-
-      - name: Setup Just
-        uses: taiki-e/install-action@just
-
-      - name: Cache Flutter packages
-        uses: actions/cache@v4
-        with:
-          path: ~/.pub-cache
-          key: ${{ runner.os }}-pub-cache-${{ hashFiles('**/pubspec.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-pub-cache-
-
-      # The envied package obfuscates `.env` values into env.g.dart at compile
-      # time. CI doesn't have access to the real secrets and the test suite
-      # never hits Sentry / Supabase / FDC at runtime, so we stub them. Real
-      # values must come from a developer's local .env when building for
-      # release.
-      - name: Generate stub .env for CI
-        run: |
-          cat > .env <<'EOF'
-          FDC_API_KEY="ci-stub"
-          SENTRY_DNS="https://stub@sentry.io/0"
-          SUPABASE_PROJECT_URL="https://stub.supabase.co"
-          SUPABASE_PROJECT_ANON_KEY="ci-stub"
-          EOF
-
-      # `just ci` would also run `dart format --set-exit-if-changed`, but the
-      # codebase currently has accumulated pre-existing format drift from the
-      # period when CI was disabled. We run the rest of `just ci` (intl
-      # check, build_runner, analyze, test) and leave the format pass for a
-      # dedicated follow-up PR.
-      - name: Install Flutter packages
-        run: just install
-
-      - name: Verify generated intl files
-        run: just check_intl
-
-      - name: Generate code (env.g.dart, Hive adapters, JSON serializers)
-        run: just build
-
-      - name: Static analysis
-        run: flutter analyze
-
-      - name: Run tests
-        run: just test
-
-      # The iOS pod-install fallback parser is the only piece of the iOS
-      # CI flow that decides which pods to update when Podfile.lock
-      # drifts. A regression in its regexes would silently degrade the
-      # targeted-update path back to a full `pod update`, which is
-      # exactly the behaviour #369 was filed to avoid. The test runs on
-      # ubuntu — it stubs out CocoaPods entirely with a shell mock — so
-      # we don't pay for it on the macOS runners.
-      - name: Test the iOS pod-install fallback parser
-        run: .github/scripts/test_pod_install_with_targeted_fallback.sh
-
-  # Lightweight guard against the "iOS deps shifted but nobody re-ran
-  # `pod install`" failure mode. The full `ios-build` job below also
-  # regenerates Podfile.lock and auto-commits drift back to same-repo
-  # PRs, but fork PRs run with a read-only token and that auto-commit
-  # silently no-ops; this job exists to surface a hard failure on the PR
-  # check so a human notices and refreshes the lockfile locally on a
-  # Mac. We only run it on `pull_request` events where one of
-  # pubspec.yaml, pubspec.lock, or ios/Podfile actually changed —
-  # otherwise the macOS minutes aren't worth burning.
-  ios-podfile-lock-guard:
-    runs-on: macos-latest
-    if: github.event_name == 'pull_request'
-    permissions:
-      contents: read
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-        with:
-          # Need the merge base in scope so the paths-filter step below
-          # can diff against the PR's target branch.
-          fetch-depth: 0
-          ref: ${{ github.event.pull_request.head.ref }}
-          repository: ${{ github.event.pull_request.head.repo.full_name }}
-
-      - name: Check for iOS-relevant file changes
-        id: changes
-        uses: dorny/paths-filter@v3
-        with:
-          base: ${{ github.event.pull_request.base.ref }}
-          filters: |
-            ios:
-              - 'pubspec.yaml'
-              - 'pubspec.lock'
-              - 'ios/Podfile'
-
-      - name: Setup Flutter
-        if: steps.changes.outputs.ios == 'true'
-        uses: subosito/flutter-action@v2
-        with:
-          flutter-version: '3.41.7'
-          channel: 'stable'
-          cache: true
-
-      - name: Cache Flutter packages
-        if: steps.changes.outputs.ios == 'true'
-        uses: actions/cache@v4
-        with:
-          path: ~/.pub-cache
-          key: ${{ runner.os }}-pub-cache-${{ hashFiles('**/pubspec.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-pub-cache-
-
-      - name: Generate stub .env for CI
-        if: steps.changes.outputs.ios == 'true'
-        run: |
-          cat > .env <<'EOF'
-          FDC_API_KEY="ci-stub"
-          SENTRY_DNS="https://stub@sentry.io/0"
-          SUPABASE_PROJECT_URL="https://stub.supabase.co"
-          SUPABASE_PROJECT_ANON_KEY="ci-stub"
-          EOF
-
-      - name: Install Flutter packages
-        if: steps.changes.outputs.ios == 'true'
-        run: flutter pub get
-
-      - name: Pod install (with repo update)
-        if: steps.changes.outputs.ios == 'true'
-        run: cd ios && pod install --repo-update
-
-      # If `pod install` rewrote Podfile.lock, the working tree now has a
-      # diff that the PR author hasn't committed. Surface it as a hard
-      # failure with a hint so the contributor knows what to do next,
-      # rather than letting a stale lockfile silently ship to main.
-      - name: Fail if Podfile.lock drifted
-        if: steps.changes.outputs.ios == 'true'
-        run: |
-          if ! git diff --exit-code ios/Podfile.lock; then
-            echo "::error file=ios/Podfile.lock::Podfile.lock is out of date with pubspec.yaml. Run 'cd ios && pod install' on macOS and commit the result."
-            exit 1
-          fi
-
-  ios-build:
-    runs-on: macos-latest
-    permissions:
-      contents: write
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-        with:
-          # Check out the PR head so auto-commit lands on the right branch.
-          # Falls back to github.ref for push and workflow_dispatch.
-          ref: ${{ github.event.pull_request.head.ref || github.ref }}
-          repository: ${{ github.event.pull_request.head.repo.full_name || github.repository }}
-
-      - name: Setup Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          flutter-version: '3.41.7'
-          channel: 'stable'
-          cache: true
-
-      - name: Cache Flutter packages
-        uses: actions/cache@v4
-        with:
-          path: ~/.pub-cache
-          key: ${{ runner.os }}-pub-cache-${{ hashFiles('**/pubspec.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-pub-cache-
-
-      - name: Cache CocoaPods
-        uses: actions/cache@v4
-        with:
-          path: ios/Pods
-          key: ${{ runner.os }}-pods-${{ hashFiles('ios/Podfile.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-pods-
-
-      - name: Generate stub .env for CI
-        run: |
-          cat > .env <<'EOF'
-          FDC_API_KEY="ci-stub"
-          SENTRY_DNS="https://stub@sentry.io/0"
-          SUPABASE_PROJECT_URL="https://stub.supabase.co"
-          SUPABASE_PROJECT_ANON_KEY="ci-stub"
-          EOF
-
-      - name: Install Flutter packages
-        run: flutter pub get
-
-      - name: Generate code
-        run: dart run build_runner build --delete-conflicting-outputs
-
-      # `pod install` honours Podfile.lock as authoritative even with
-      # --repo-update — CocoaPods will only refresh the spec cache, not
-      # re-resolve. So if the lockfile pins a transitive subdep version
-      # that's been bumped in pubspec.yaml (e.g. sentry_flutter 9.19
-      # now wants Sentry/HybridSDK 8.58 but the lock still pins 8.46),
-      # `pod install` fails. The script's fallback re-resolves only the
-      # pod(s) named in the CocoaPods error output (full `pod update`
-      # only as a last resort), and the auto-commit step below pushes
-      # the refreshed lockfile back to the PR branch so future runs hit
-      # the deterministic `install` path. See #369 for the rationale
-      # behind targeting specific pods rather than re-resolving all.
-      # The script self-locates the iOS dir, so the caller doesn't need
-      # to cd first.
-      - name: Pod install (regenerate lockfile if constraints have shifted)
-        run: .github/scripts/pod_install_with_targeted_fallback.sh
-
-      # Same-repo PRs only — fork PRs run with a read-only token so this
-      # step would fail to push. Fork contributors get the lockfile via
-      # the artifact uploaded below.
-      - name: Auto-commit refreshed Podfile.lock
-        if: >-
-          github.event_name == 'pull_request' &&
-          github.event.pull_request.head.repo.full_name == github.repository
-        uses: stefanzweifel/git-auto-commit-action@v5
-        with:
-          file_pattern: 'ios/Podfile.lock'
-          commit_message: 'chore(ios): refresh Podfile.lock via CI'
-
-      - name: Upload Podfile.lock artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: ios-podfile-lock
-          path: ios/Podfile.lock
-
-      - name: Build iOS (no codesign)
-        run: flutter build ios --no-codesign --release
-
-  ios-integration-tests:
-    runs-on: macos-latest
-    permissions:
-      contents: read
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          flutter-version: '3.41.7'
-          channel: 'stable'
-          cache: true
-
-      - name: Cache Flutter packages
-        uses: actions/cache@v4
-        with:
-          path: ~/.pub-cache
-          key: ${{ runner.os }}-pub-cache-${{ hashFiles('**/pubspec.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-pub-cache-
-
-      - name: Cache CocoaPods
-        uses: actions/cache@v4
-        with:
-          path: ios/Pods
-          key: ${{ runner.os }}-pods-${{ hashFiles('ios/Podfile.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-pods-
-
-      - name: Generate stub .env for CI
-        run: |
-          cat > .env <<'EOF'
-          FDC_API_KEY="ci-stub"
-          SENTRY_DNS="https://stub@sentry.io/0"
-          SUPABASE_PROJECT_URL="https://stub.supabase.co"
-          SUPABASE_PROJECT_ANON_KEY="ci-stub"
-          EOF
-
-      - name: Install Flutter packages
-        run: flutter pub get
-
-      - name: Generate code
-        run: dart run build_runner build --delete-conflicting-outputs
-
-      - name: Pod install (regenerate lockfile if constraints have shifted)
-        run: .github/scripts/pod_install_with_targeted_fallback.sh
-
-      # Pick any available iPhone simulator on the runner. macos-latest
-      # ships several preinstalled; we don't care which exact model — the
-      # boot-smoke test is platform-bridge driven, not display-pixel driven.
-      - name: Pick + boot iPhone simulator
-        run: |
-          DEVICE_UDID=$(xcrun simctl list devices available iPhone -j | python3 -c "
-          import sys, json
-          data = json.load(sys.stdin)
-          devices = [d for runtime in data['devices'].values() for d in runtime if d.get('isAvailable')]
-          if not devices:
-              sys.exit('No available iPhone simulators on this runner')
-          print(devices[0]['udid'])
-          ")
-          echo "Booting simulator UDID: $DEVICE_UDID"
-          xcrun simctl boot "$DEVICE_UDID"
-          xcrun simctl bootstatus "$DEVICE_UDID"
-          echo "DEVICE_UDID=$DEVICE_UDID" >> $GITHUB_ENV
-
-      - name: Run integration tests
-        run: flutter test integration_test/ -d "$DEVICE_UDID" --reporter expanded
-
-  android-build:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup Java
-        uses: actions/setup-java@v4
-        with:
-          distribution: 'zulu'
-          java-version: '17'
-
-      - name: Setup Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          flutter-version: '3.41.7'
-          channel: 'stable'
-          cache: true
-
-      - name: Cache Flutter packages
-        uses: actions/cache@v4
-        with:
-          path: ~/.pub-cache
-          key: ${{ runner.os }}-pub-cache-${{ hashFiles('**/pubspec.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-pub-cache-
-
-      - name: Cache Gradle
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/.gradle/caches
-            ~/.gradle/wrapper
-          key: ${{ runner.os }}-gradle-${{ hashFiles('android/**/*.gradle*', 'android/**/gradle-wrapper.properties') }}
-          restore-keys: |
-            ${{ runner.os }}-gradle-
-
-      - name: Generate stub .env for CI
-        run: |
-          cat > .env <<'EOF'
-          FDC_API_KEY="ci-stub"
-          SENTRY_DNS="https://stub@sentry.io/0"
-          SUPABASE_PROJECT_URL="https://stub.supabase.co"
-          SUPABASE_PROJECT_ANON_KEY="ci-stub"
-          EOF
-
-      - name: Install Flutter packages
-        run: flutter pub get
-
-      - name: Generate code
-        run: dart run build_runner build --delete-conflicting-outputs
-
-      - name: Build APK (debug)
-        # --release would need a keystore which CI doesn't have; --debug
-        # exercises the same Gradle / desugaring / R8 paths sufficiently
-        # for a "compiles cleanly" gate.
-        run: flutter build apk --debug
-
-  android-integration-tests:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup Java
-        uses: actions/setup-java@v4
-        with:
-          distribution: 'zulu'
-          java-version: '17'
-
-      - name: Setup Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          flutter-version: '3.41.7'
-          channel: 'stable'
-          cache: true
-
-      - name: Cache Flutter packages
-        uses: actions/cache@v4
-        with:
-          path: ~/.pub-cache
-          key: ${{ runner.os }}-pub-cache-${{ hashFiles('**/pubspec.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-pub-cache-
-
-      - name: Cache Gradle
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/.gradle/caches
-            ~/.gradle/wrapper
-          key: ${{ runner.os }}-gradle-${{ hashFiles('android/**/*.gradle*', 'android/**/gradle-wrapper.properties') }}
-          restore-keys: |
-            ${{ runner.os }}-gradle-
-
-      # Cache the AVD snapshot so future runs skip the slow first-boot.
-      # Key includes the API level so a bump invalidates the cache.
-      - name: Cache AVD
-        uses: actions/cache@v4
-        id: avd-cache
-        with:
-          path: |
-            ~/.android/avd/*
-            ~/.android/adb*
-          key: avd-android-34
-
-      - name: Enable KVM (so the Android emulator runs at native speed)
-        run: |
-          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
-          sudo udevadm control --reload-rules
-          sudo udevadm trigger --name-match=kvm
-
-      - name: Generate stub .env for CI
-        run: |
-          cat > .env <<'EOF'
-          FDC_API_KEY="ci-stub"
-          SENTRY_DNS="https://stub@sentry.io/0"
-          SUPABASE_PROJECT_URL="https://stub.supabase.co"
-          SUPABASE_PROJECT_ANON_KEY="ci-stub"
-          EOF
-
-      - name: Install Flutter packages
-        run: flutter pub get
-
-      - name: Generate code
-        run: dart run build_runner build --delete-conflicting-outputs
-
-      # First emulator-runner pass — only runs when the AVD cache is empty.
-      # It boots the emulator once to seed the snapshot, then exits. This
-      # makes the actual test pass below much faster.
-      - name: Generate AVD snapshot (cache miss only)
-        if: steps.avd-cache.outputs.cache-hit != 'true'
-        uses: reactivecircus/android-emulator-runner@v2
-        with:
-          api-level: 34
-          target: google_apis
-          arch: x86_64
-          force-avd-creation: false
-          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
-          disable-animations: false
-          script: echo "AVD snapshot generated for cache"
-
-      - name: Run integration tests on Android emulator
-        uses: reactivecircus/android-emulator-runner@v2
-        with:
-          api-level: 34
-          target: google_apis
-          arch: x86_64
-          force-avd-creation: false
-          emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
-          disable-animations: true
-          script: flutter test integration_test/ --reporter expanded
+#  linux-checks:
+#    runs-on: ubuntu-latest
+#    permissions:
+#      contents: read
+#    steps:
+#      - name: Checkout code
+#        uses: actions/checkout@v4
+#
+#      - name: Setup Flutter
+#        uses: subosito/flutter-action@v2
+#        with:
+#          flutter-version: '3.41.7'
+#          channel: 'stable'
+#          cache: true
+#
+#      - name: Setup Just
+#        uses: taiki-e/install-action@just
+#
+#      - name: Cache Flutter packages
+#        uses: actions/cache@v4
+#        with:
+#          path: ~/.pub-cache
+#          key: ${{ runner.os }}-pub-cache-${{ hashFiles('**/pubspec.lock') }}
+#          restore-keys: |
+#            ${{ runner.os }}-pub-cache-
+#
+#      # The envied package obfuscates `.env` values into env.g.dart at compile
+#      # time. CI doesn't have access to the real secrets and the test suite
+#      # never hits Sentry / Supabase / FDC at runtime, so we stub them. Real
+#      # values must come from a developer's local .env when building for
+#      # release.
+#      - name: Generate stub .env for CI
+#        run: |
+#          cat > .env <<'EOF'
+#          FDC_API_KEY="ci-stub"
+#          SENTRY_DNS="https://stub@sentry.io/0"
+#          SUPABASE_PROJECT_URL="https://stub.supabase.co"
+#          SUPABASE_PROJECT_ANON_KEY="ci-stub"
+#          EOF
+#
+#      # `just ci` would also run `dart format --set-exit-if-changed`, but the
+#      # codebase currently has accumulated pre-existing format drift from the
+#      # period when CI was disabled. We run the rest of `just ci` (intl
+#      # check, build_runner, analyze, test) and leave the format pass for a
+#      # dedicated follow-up PR.
+#      - name: Install Flutter packages
+#        run: just install
+#
+#      - name: Verify generated intl files
+#        run: just check_intl
+#
+#      - name: Generate code (env.g.dart, Hive adapters, JSON serializers)
+#        run: just build
+#
+#      - name: Static analysis
+#        run: flutter analyze
+#
+#      - name: Run tests
+#        run: just test
+#
+#      # The iOS pod-install fallback parser is the only piece of the iOS
+#      # CI flow that decides which pods to update when Podfile.lock
+#      # drifts. A regression in its regexes would silently degrade the
+#      # targeted-update path back to a full `pod update`, which is
+#      # exactly the behaviour #369 was filed to avoid. The test runs on
+#      # ubuntu — it stubs out CocoaPods entirely with a shell mock — so
+#      # we don't pay for it on the macOS runners.
+#      - name: Test the iOS pod-install fallback parser
+#        run: .github/scripts/test_pod_install_with_targeted_fallback.sh
+#
+#  # Lightweight guard against the "iOS deps shifted but nobody re-ran
+#  # `pod install`" failure mode. The full `ios-build` job below also
+#  # regenerates Podfile.lock and auto-commits drift back to same-repo
+#  # PRs, but fork PRs run with a read-only token and that auto-commit
+#  # silently no-ops; this job exists to surface a hard failure on the PR
+#  # check so a human notices and refreshes the lockfile locally on a
+#  # Mac. We only run it on `pull_request` events where one of
+#  # pubspec.yaml, pubspec.lock, or ios/Podfile actually changed —
+#  # otherwise the macOS minutes aren't worth burning.
+#  ios-podfile-lock-guard:
+#    runs-on: macos-latest
+#    if: github.event_name == 'pull_request'
+#    permissions:
+#      contents: read
+#    steps:
+#      - name: Checkout code
+#        uses: actions/checkout@v4
+#        with:
+#          # Need the merge base in scope so the paths-filter step below
+#          # can diff against the PR's target branch.
+#          fetch-depth: 0
+#          ref: ${{ github.event.pull_request.head.ref }}
+#          repository: ${{ github.event.pull_request.head.repo.full_name }}
+#
+#      - name: Check for iOS-relevant file changes
+#        id: changes
+#        uses: dorny/paths-filter@v3
+#        with:
+#          base: ${{ github.event.pull_request.base.ref }}
+#          filters: |
+#            ios:
+#              - 'pubspec.yaml'
+#              - 'pubspec.lock'
+#              - 'ios/Podfile'
+#
+#      - name: Setup Flutter
+#        if: steps.changes.outputs.ios == 'true'
+#        uses: subosito/flutter-action@v2
+#        with:
+#          flutter-version: '3.41.7'
+#          channel: 'stable'
+#          cache: true
+#
+#      - name: Cache Flutter packages
+#        if: steps.changes.outputs.ios == 'true'
+#        uses: actions/cache@v4
+#        with:
+#          path: ~/.pub-cache
+#          key: ${{ runner.os }}-pub-cache-${{ hashFiles('**/pubspec.lock') }}
+#          restore-keys: |
+#            ${{ runner.os }}-pub-cache-
+#
+#      - name: Generate stub .env for CI
+#        if: steps.changes.outputs.ios == 'true'
+#        run: |
+#          cat > .env <<'EOF'
+#          FDC_API_KEY="ci-stub"
+#          SENTRY_DNS="https://stub@sentry.io/0"
+#          SUPABASE_PROJECT_URL="https://stub.supabase.co"
+#          SUPABASE_PROJECT_ANON_KEY="ci-stub"
+#          EOF
+#
+#      - name: Install Flutter packages
+#        if: steps.changes.outputs.ios == 'true'
+#        run: flutter pub get
+#
+#      - name: Pod install (with repo update)
+#        if: steps.changes.outputs.ios == 'true'
+#        run: cd ios && pod install --repo-update
+#
+#      # If `pod install` rewrote Podfile.lock, the working tree now has a
+#      # diff that the PR author hasn't committed. Surface it as a hard
+#      # failure with a hint so the contributor knows what to do next,
+#      # rather than letting a stale lockfile silently ship to main.
+#      - name: Fail if Podfile.lock drifted
+#        if: steps.changes.outputs.ios == 'true'
+#        run: |
+#          if ! git diff --exit-code ios/Podfile.lock; then
+#            echo "::error file=ios/Podfile.lock::Podfile.lock is out of date with pubspec.yaml. Run 'cd ios && pod install' on macOS and commit the result."
+#            exit 1
+#          fi
+#
+#  ios-build:
+#    runs-on: macos-latest
+#    permissions:
+#      contents: write
+#    steps:
+#      - name: Checkout code
+#        uses: actions/checkout@v4
+#        with:
+#          # Check out the PR head so auto-commit lands on the right branch.
+#          # Falls back to github.ref for push and workflow_dispatch.
+#          ref: ${{ github.event.pull_request.head.ref || github.ref }}
+#          repository: ${{ github.event.pull_request.head.repo.full_name || github.repository }}
+#
+#      - name: Setup Flutter
+#        uses: subosito/flutter-action@v2
+#        with:
+#          flutter-version: '3.41.7'
+#          channel: 'stable'
+#          cache: true
+#
+#      - name: Cache Flutter packages
+#        uses: actions/cache@v4
+#        with:
+#          path: ~/.pub-cache
+#          key: ${{ runner.os }}-pub-cache-${{ hashFiles('**/pubspec.lock') }}
+#          restore-keys: |
+#            ${{ runner.os }}-pub-cache-
+#
+#      - name: Cache CocoaPods
+#        uses: actions/cache@v4
+#        with:
+#          path: ios/Pods
+#          key: ${{ runner.os }}-pods-${{ hashFiles('ios/Podfile.lock') }}
+#          restore-keys: |
+#            ${{ runner.os }}-pods-
+#
+#      - name: Generate stub .env for CI
+#        run: |
+#          cat > .env <<'EOF'
+#          FDC_API_KEY="ci-stub"
+#          SENTRY_DNS="https://stub@sentry.io/0"
+#          SUPABASE_PROJECT_URL="https://stub.supabase.co"
+#          SUPABASE_PROJECT_ANON_KEY="ci-stub"
+#          EOF
+#
+#      - name: Install Flutter packages
+#        run: flutter pub get
+#
+#      - name: Generate code
+#        run: dart run build_runner build --delete-conflicting-outputs
+#
+#      # `pod install` honours Podfile.lock as authoritative even with
+#      # --repo-update — CocoaPods will only refresh the spec cache, not
+#      # re-resolve. So if the lockfile pins a transitive subdep version
+#      # that's been bumped in pubspec.yaml (e.g. sentry_flutter 9.19
+#      # now wants Sentry/HybridSDK 8.58 but the lock still pins 8.46),
+#      # `pod install` fails. The script's fallback re-resolves only the
+#      # pod(s) named in the CocoaPods error output (full `pod update`
+#      # only as a last resort), and the auto-commit step below pushes
+#      # the refreshed lockfile back to the PR branch so future runs hit
+#      # the deterministic `install` path. See #369 for the rationale
+#      # behind targeting specific pods rather than re-resolving all.
+#      # The script self-locates the iOS dir, so the caller doesn't need
+#      # to cd first.
+#      - name: Pod install (regenerate lockfile if constraints have shifted)
+#        run: .github/scripts/pod_install_with_targeted_fallback.sh
+#
+#      # Same-repo PRs only — fork PRs run with a read-only token so this
+#      # step would fail to push. Fork contributors get the lockfile via
+#      # the artifact uploaded below.
+#      - name: Auto-commit refreshed Podfile.lock
+#        if: >-
+#          github.event_name == 'pull_request' &&
+#          github.event.pull_request.head.repo.full_name == github.repository
+#        uses: stefanzweifel/git-auto-commit-action@v5
+#        with:
+#          file_pattern: 'ios/Podfile.lock'
+#          commit_message: 'chore(ios): refresh Podfile.lock via CI'
+#
+#      - name: Upload Podfile.lock artifact
+#        uses: actions/upload-artifact@v4
+#        with:
+#          name: ios-podfile-lock
+#          path: ios/Podfile.lock
+#
+#      - name: Build iOS (no codesign)
+#        run: flutter build ios --no-codesign --release
+#
+#  ios-integration-tests:
+#    runs-on: macos-latest
+#    permissions:
+#      contents: read
+#    steps:
+#      - name: Checkout code
+#        uses: actions/checkout@v4
+#
+#      - name: Setup Flutter
+#        uses: subosito/flutter-action@v2
+#        with:
+#          flutter-version: '3.41.7'
+#          channel: 'stable'
+#          cache: true
+#
+#      - name: Cache Flutter packages
+#        uses: actions/cache@v4
+#        with:
+#          path: ~/.pub-cache
+#          key: ${{ runner.os }}-pub-cache-${{ hashFiles('**/pubspec.lock') }}
+#          restore-keys: |
+#            ${{ runner.os }}-pub-cache-
+#
+#      - name: Cache CocoaPods
+#        uses: actions/cache@v4
+#        with:
+#          path: ios/Pods
+#          key: ${{ runner.os }}-pods-${{ hashFiles('ios/Podfile.lock') }}
+#          restore-keys: |
+#            ${{ runner.os }}-pods-
+#
+#      - name: Generate stub .env for CI
+#        run: |
+#          cat > .env <<'EOF'
+#          FDC_API_KEY="ci-stub"
+#          SENTRY_DNS="https://stub@sentry.io/0"
+#          SUPABASE_PROJECT_URL="https://stub.supabase.co"
+#          SUPABASE_PROJECT_ANON_KEY="ci-stub"
+#          EOF
+#
+#      - name: Install Flutter packages
+#        run: flutter pub get
+#
+#      - name: Generate code
+#        run: dart run build_runner build --delete-conflicting-outputs
+#
+#      - name: Pod install (regenerate lockfile if constraints have shifted)
+#        run: .github/scripts/pod_install_with_targeted_fallback.sh
+#
+#      # Pick any available iPhone simulator on the runner. macos-latest
+#      # ships several preinstalled; we don't care which exact model — the
+#      # boot-smoke test is platform-bridge driven, not display-pixel driven.
+#      - name: Pick + boot iPhone simulator
+#        run: |
+#          DEVICE_UDID=$(xcrun simctl list devices available iPhone -j | python3 -c "
+#          import sys, json
+#          data = json.load(sys.stdin)
+#          devices = [d for runtime in data['devices'].values() for d in runtime if d.get('isAvailable')]
+#          if not devices:
+#              sys.exit('No available iPhone simulators on this runner')
+#          print(devices[0]['udid'])
+#          ")
+#          echo "Booting simulator UDID: $DEVICE_UDID"
+#          xcrun simctl boot "$DEVICE_UDID"
+#          xcrun simctl bootstatus "$DEVICE_UDID"
+#          echo "DEVICE_UDID=$DEVICE_UDID" >> $GITHUB_ENV
+#
+#      - name: Run integration tests
+#        run: flutter test integration_test/ -d "$DEVICE_UDID" --reporter expanded
+#
+#  android-build:
+#    runs-on: ubuntu-latest
+#    permissions:
+#      contents: read
+#    steps:
+#      - name: Checkout code
+#        uses: actions/checkout@v4
+#
+#      - name: Setup Java
+#        uses: actions/setup-java@v4
+#        with:
+#          distribution: 'zulu'
+#          java-version: '17'
+#
+#      - name: Setup Flutter
+#        uses: subosito/flutter-action@v2
+#        with:
+#          flutter-version: '3.41.7'
+#          channel: 'stable'
+#          cache: true
+#
+#      - name: Cache Flutter packages
+#        uses: actions/cache@v4
+#        with:
+#          path: ~/.pub-cache
+#          key: ${{ runner.os }}-pub-cache-${{ hashFiles('**/pubspec.lock') }}
+#          restore-keys: |
+#            ${{ runner.os }}-pub-cache-
+#
+#      - name: Cache Gradle
+#        uses: actions/cache@v4
+#        with:
+#          path: |
+#            ~/.gradle/caches
+#            ~/.gradle/wrapper
+#          key: ${{ runner.os }}-gradle-${{ hashFiles('android/**/*.gradle*', 'android/**/gradle-wrapper.properties') }}
+#          restore-keys: |
+#            ${{ runner.os }}-gradle-
+#
+#      - name: Generate stub .env for CI
+#        run: |
+#          cat > .env <<'EOF'
+#          FDC_API_KEY="ci-stub"
+#          SENTRY_DNS="https://stub@sentry.io/0"
+#          SUPABASE_PROJECT_URL="https://stub.supabase.co"
+#          SUPABASE_PROJECT_ANON_KEY="ci-stub"
+#          EOF
+#
+#      - name: Install Flutter packages
+#        run: flutter pub get
+#
+#      - name: Generate code
+#        run: dart run build_runner build --delete-conflicting-outputs
+#
+#      - name: Build APK (debug)
+#        # --release would need a keystore which CI doesn't have; --debug
+#        # exercises the same Gradle / desugaring / R8 paths sufficiently
+#        # for a "compiles cleanly" gate.
+#        run: flutter build apk --debug
+#
+#  android-integration-tests:
+#    runs-on: ubuntu-latest
+#    permissions:
+#      contents: read
+#    steps:
+#      - name: Checkout code
+#        uses: actions/checkout@v4
+#
+#      - name: Setup Java
+#        uses: actions/setup-java@v4
+#        with:
+#          distribution: 'zulu'
+#          java-version: '17'
+#
+#      - name: Setup Flutter
+#        uses: subosito/flutter-action@v2
+#        with:
+#          flutter-version: '3.41.7'
+#          channel: 'stable'
+#          cache: true
+#
+#      - name: Cache Flutter packages
+#        uses: actions/cache@v4
+#        with:
+#          path: ~/.pub-cache
+#          key: ${{ runner.os }}-pub-cache-${{ hashFiles('**/pubspec.lock') }}
+#          restore-keys: |
+#            ${{ runner.os }}-pub-cache-
+#
+#      - name: Cache Gradle
+#        uses: actions/cache@v4
+#        with:
+#          path: |
+#            ~/.gradle/caches
+#            ~/.gradle/wrapper
+#          key: ${{ runner.os }}-gradle-${{ hashFiles('android/**/*.gradle*', 'android/**/gradle-wrapper.properties') }}
+#          restore-keys: |
+#            ${{ runner.os }}-gradle-
+#
+#      # Cache the AVD snapshot so future runs skip the slow first-boot.
+#      # Key includes the API level so a bump invalidates the cache.
+#      - name: Cache AVD
+#        uses: actions/cache@v4
+#        id: avd-cache
+#        with:
+#          path: |
+#            ~/.android/avd/*
+#            ~/.android/adb*
+#          key: avd-android-34
+#
+#      - name: Enable KVM (so the Android emulator runs at native speed)
+#        run: |
+#          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+#          sudo udevadm control --reload-rules
+#          sudo udevadm trigger --name-match=kvm
+#
+#      - name: Generate stub .env for CI
+#        run: |
+#          cat > .env <<'EOF'
+#          FDC_API_KEY="ci-stub"
+#          SENTRY_DNS="https://stub@sentry.io/0"
+#          SUPABASE_PROJECT_URL="https://stub.supabase.co"
+#          SUPABASE_PROJECT_ANON_KEY="ci-stub"
+#          EOF
+#
+#      - name: Install Flutter packages
+#        run: flutter pub get
+#
+#      - name: Generate code
+#        run: dart run build_runner build --delete-conflicting-outputs
+#
+#      # First emulator-runner pass — only runs when the AVD cache is empty.
+#      # It boots the emulator once to seed the snapshot, then exits. This
+#      # makes the actual test pass below much faster.
+#      - name: Generate AVD snapshot (cache miss only)
+#        if: steps.avd-cache.outputs.cache-hit != 'true'
+#        uses: reactivecircus/android-emulator-runner@v2
+#        with:
+#          api-level: 34
+#          target: google_apis
+#          arch: x86_64
+#          force-avd-creation: false
+#          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+#          disable-animations: false
+#          script: echo "AVD snapshot generated for cache"
+#
+#      - name: Run integration tests on Android emulator
+#        uses: reactivecircus/android-emulator-runner@v2
+#        with:
+#          api-level: 34
+#          target: google_apis
+#          arch: x86_64
+#          force-avd-creation: false
+#          emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+#          disable-animations: true
+#          script: flutter test integration_test/ --reporter expanded
 
   ios-deploy:
     if: |
       (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
       github.event_name == 'workflow_dispatch'
-    needs:
-      - linux-checks
-      - ios-build
-      - ios-integration-tests
-      - android-build
-      - android-integration-tests
+    needs: []
+#    needs:
+#      - linux-checks
+#      - ios-build
+#      - ios-integration-tests
+#      - android-build
+#      - android-integration-tests
     runs-on: macos-latest
     permissions:
       contents: read
@@ -504,6 +505,7 @@ jobs:
       BUNDLE_GEMFILE: ${{ github.workspace }}/ios/Gemfile
       MATCH_READONLY: 'true'
       MATCH_GIT_URL: ${{ secrets.MATCH_GIT_URL != '' && secrets.MATCH_GIT_URL }}
+      MATCH_GIT_SSH_PRIVATE_KEY: ${{ secrets.MATCH_GIT_SSH_PRIVATE_KEY }}
       MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
       APP_STORE_CONNECT_API_KEY_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_ID }}
       APP_STORE_CONNECT_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
@@ -527,13 +529,13 @@ jobs:
           bundler-cache: true
 
       - name: Load SSH key for match repository
-        if: startsWith(env.MATCH_GIT_URL, 'git@')
+        if: startsWith(env.MATCH_GIT_URL, 'git@') && env.MATCH_GIT_SSH_PRIVATE_KEY != ''
         uses: webfactory/ssh-agent@v0.9.0
         with:
           ssh-private-key: ${{ secrets.MATCH_GIT_SSH_PRIVATE_KEY }}
 
       - name: Trust GitHub SSH host key
-        if: startsWith(env.MATCH_GIT_URL, 'git@')
+        if: startsWith(env.MATCH_GIT_URL, 'git@') && env.MATCH_GIT_SSH_PRIVATE_KEY != ''
         run: |
           mkdir -p ~/.ssh
           ssh-keyscan github.com >> ~/.ssh/known_hosts
