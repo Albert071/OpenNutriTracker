@@ -89,13 +89,22 @@ jobs:
           EOF
 
       - name: Patch bundle identifier for free-team signing
+        # The `||` here covers the case where the workflow fires from a
+        # trigger that doesn't carry inputs (push, schedule) — without
+        # the fallback, NEW_BUNDLE_ID would be empty and sed would
+        # wipe the bundle id out of the pbxproj, breaking pod install
+        # later with a cryptic xcodeproj parse error.
         env:
-          NEW_BUNDLE_ID: ${{ inputs.bundle_id }}
+          NEW_BUNDLE_ID: ${{ inputs.bundle_id || 'com.opennutritracker.ont.opennutritracker.sideload' }}
         run: |
           set -euo pipefail
           PBXPROJ=ios/Runner.xcodeproj/project.pbxproj
           if [[ ! -f "$PBXPROJ" ]]; then
             echo "::error::$PBXPROJ not found"
+            exit 1
+          fi
+          if [[ -z "${NEW_BUNDLE_ID:-}" ]]; then
+            echo "::error::NEW_BUNDLE_ID is empty"
             exit 1
           fi
           # Match the production id wherever it appears in the project
@@ -105,9 +114,17 @@ jobs:
           sed -i '' \
             "s|PRODUCT_BUNDLE_IDENTIFIER = com\\.opennutritracker\\.ont\\.opennutritracker;|PRODUCT_BUNDLE_IDENTIFIER = ${NEW_BUNDLE_ID};|g" \
             "$PBXPROJ"
+          # Verify the patch actually landed. If the production id
+          # string ever changes upstream and our sed pattern stops
+          # matching, this catches it before pod install fails with a
+          # confusing xcodeproj parse stack trace.
+          count=$(grep -c "PRODUCT_BUNDLE_IDENTIFIER = ${NEW_BUNDLE_ID};" "$PBXPROJ" || true)
+          echo "Occurrences of new bundle id in pbxproj: $count"
+          if [[ "$count" -lt 1 ]]; then
+            echo "::error::sed did not patch any PRODUCT_BUNDLE_IDENTIFIER lines"
+            exit 1
+          fi
           echo "Patched bundle id to: $NEW_BUNDLE_ID"
-          grep -c "PRODUCT_BUNDLE_IDENTIFIER = ${NEW_BUNDLE_ID};" "$PBXPROJ" \
-            | xargs -I {} echo "Occurrences in pbxproj: {}"
 
       - name: Install Flutter packages
         run: flutter pub get
