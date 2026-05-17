@@ -194,7 +194,9 @@
   "customMealFormSimpleFieldHelper": "{unit} в одній порції",
   "@customMealFormSimpleFieldHelper": {
     "placeholders": {
-      "unit": { "type": "String" }
+      "unit": {
+        "type": "String"
+      }
     }
   },
   "customMealsDeleteConfirmContent": "Усі записи в щоденнику, що використовують цю страву, також буде видалено.",
@@ -873,6 +875,40 @@
   "settingsWaterGoalLabel": "Денна ціль вживання води",
   "waterChipLabel": "{current} / {goal} мл",
   "zincLabel": "цинк",
+  "profileFastingEntry": "Таймер посту",
+  "fastingTitle": "Таймер посту",
+  "fastingSubtitle": "Простий таймер для часу між прийомами їжі. Без серій, без цілей, лише годинник.",
+  "fastingWarningTitle": "Перш ніж почати",
+  "fastingWarningBody": "Відстеження часу посту комусь допомагає, а декому може шкодити, особливо людям із досвідом розладів харчової поведінки. Якщо це про вас, будь ласка, спершу подбайте про себе. Підтримку надають BEAT (UK) і NEDA (US).",
+  "fastingWarningDecline": "Це не для мене",
+  "fastingWarningAccept": "Розумію, увімкнути таймер",
+  "fastingPresetCustom": "Власний",
+  "fastingStart": "Запустити таймер",
+  "fastingCancel": "Завершити піст",
+  "fastingCancelConfirmTitle": "Завершити піст зараз?",
+  "fastingCancelConfirmBody": "Поточну сесію буде закрито.",
+  "fastingComplete": "Сесію завершено",
+  "fastingLinkBeat": "BEAT (UK)",
+  "fastingLinkNeda": "NEDA (US)",
+  "fastingElapsedLabel": "Минуло",
+  "fastingRemainingValue": "Залишилося {value}",
+  "@fastingRemainingValue": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "fastingTargetValue": "Ціль: {value}",
+  "@fastingTargetValue": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "hoursLabel": "години",
+  "dialogCloseLabel": "Закрити",
   "customMealsRowMoreTooltip": "Більше дій",
   "customMealsMergeAction": "Об’єднати з іншою власною стравою",
   "customMealsMergePickerTitle": "Виберіть власну страву для об’єднання",
@@ -897,5 +933,13 @@
       "count": { "type": "int" },
       "winner": { "type": "String" }
     }
-  }
+  },
+  "fastingHomeChipBody": "Голодування · залишилось {remaining}",
+  "@fastingHomeChipBody": {
+    "placeholders": {
+      "remaining": { "type": "String" }
+    }
+  },
+  "fastingNotificationCompleteTitle": "Сесія голодування завершена",
+  "fastingNotificationCompleteBody": "Цільовий час досягнуто."
 }

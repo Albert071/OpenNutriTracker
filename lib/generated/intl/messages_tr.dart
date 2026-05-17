@@ -88,6 +88,9 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String mLogWaterAmount(amount) => "${amount} ml ekle";
 
+  static String mFastingRemaining(value) => "${value} kaldı";
+
+  static String mFastingTarget(value) => "Hedef: ${value}";
   static String mMergeConfirm(loser, winner) =>
       "Bu işlem, ${loser} ile kaydedilen tüm girdileri değiştirip ${winner} olarak gösterir ve ${loser} özel yiyeceklerinden kaldırılır. Bu işlem geri alınamaz.";
 
@@ -95,6 +98,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Birleştirildi — ${winner} artık ${count} kayıtlı girdiye sahip.";
   static String mDriRef(value) => "ref. ${value}";
   static String mMergeOneTr(winner) => "Birleştirildi — ${winner} artık 1 kayda sahip.";
+  static String mFastingChipTr(remaining) => 'Oruç · ${remaining} kaldı';
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -1325,5 +1329,28 @@ class MessageLookup extends MessageLookupByLibrary {
         "settingsWaterGoalLabel":
             MessageLookupByLibrary.simpleMessage("Günlük su hedefi"),
         "waterChipLabel": mWaterChip,
+        "profileFastingEntry": MessageLookupByLibrary.simpleMessage('Oruç zamanlayıcısı'),
+        "fastingTitle": MessageLookupByLibrary.simpleMessage('Oruç zamanlayıcısı'),
+        "fastingSubtitle": MessageLookupByLibrary.simpleMessage('Öğünler arası süreyi izlemek için basit bir zamanlayıcı. Seri yok, hedef yok, sadece saat.'),
+        "fastingWarningTitle": MessageLookupByLibrary.simpleMessage('Başlamadan önce'),
+        "fastingWarningBody": MessageLookupByLibrary.simpleMessage('Oruç sürelerini takip etmek bazı insanlara iyi gelirken, özellikle yeme bozukluğu geçmişi olanlar için zorlayıcı olabilir. Bu sen olabilirsen lütfen önce kendine iyi bak. Destek için BEAT (UK) ve NEDA (US) yardımcı olabilir.'),
+        "fastingWarningDecline": MessageLookupByLibrary.simpleMessage('Bana göre değil'),
+        "fastingWarningAccept": MessageLookupByLibrary.simpleMessage('Anladım, zamanlayıcıyı aç'),
+        "fastingPresetCustom": MessageLookupByLibrary.simpleMessage('Özel'),
+        "fastingStart": MessageLookupByLibrary.simpleMessage('Zamanlayıcıyı başlat'),
+        "fastingCancel": MessageLookupByLibrary.simpleMessage('Orucu sonlandır'),
+        "fastingCancelConfirmTitle": MessageLookupByLibrary.simpleMessage('Orucu şimdi sonlandırılsın mı?'),
+        "fastingCancelConfirmBody": MessageLookupByLibrary.simpleMessage('Bu, mevcut oturumu kapatacak.'),
+        "fastingHomeChipBody": mFastingChipTr,
+        "fastingNotificationCompleteTitle": MessageLookupByLibrary.simpleMessage('Oruç süresi tamamlandı'),
+        "fastingNotificationCompleteBody": MessageLookupByLibrary.simpleMessage('Hedef sürene ulaştın.'),
+        "fastingComplete": MessageLookupByLibrary.simpleMessage('Oturum tamamlandı'),
+        "fastingLinkBeat": MessageLookupByLibrary.simpleMessage('BEAT (UK)'),
+        "fastingLinkNeda": MessageLookupByLibrary.simpleMessage('NEDA (US)'),
+        "fastingElapsedLabel": MessageLookupByLibrary.simpleMessage('Geçen'),
+        "hoursLabel": MessageLookupByLibrary.simpleMessage('saat'),
+        "dialogCloseLabel": MessageLookupByLibrary.simpleMessage('Kapat'),
+        "fastingRemainingValue": mFastingRemaining,
+        "fastingTargetValue": mFastingTarget,
       };
 }

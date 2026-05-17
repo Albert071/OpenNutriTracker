@@ -139,6 +139,10 @@ class ConfigRepository {
     await _configDataSource.setConfigDailyWaterGoalMl(goalMl);
   }
 
+  Future<void> setFastingWarningAcknowledged(bool acknowledged) async {
+    await _configDataSource.setFastingWarningAcknowledged(acknowledged);
+  }
+
   Future<void> setConfigUseMaterialYou(bool useMaterialYou) async {
     await _configDataSource.setConfigUseMaterialYou(useMaterialYou);
   }

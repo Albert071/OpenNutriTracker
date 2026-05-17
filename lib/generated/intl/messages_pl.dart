@@ -85,6 +85,9 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String mLogWaterAmount(amount) => "Dodaj ${amount} ml";
 
+  static String mFastingRemaining(value) => "Pozostało ${value}";
+
+  static String mFastingTarget(value) => "Cel: ${value}";
   static String mMergeConfirm(loser, winner) =>
       "Spowoduje to zastąpienie wszystkich wpisów zarejestrowanych z ${loser}, tak by pokazywały ${winner}, oraz usunie ${loser} z Twoich własnych produktów. Tej operacji nie można cofnąć.";
 
@@ -92,6 +95,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Połączono — ${winner} ma teraz ${count} zarejestrowanych wpisów.";
   static String mDriRef(value) => "ref. ${value}";
   static String mMergeOnePl(winner) => "Połączono — ${winner} ma teraz 1 wpis.";
+  static String mFastingChipPl(remaining) => "Post · pozostało ${remaining}";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -1349,5 +1353,28 @@ class MessageLookup extends MessageLookupByLibrary {
         "settingsWaterGoalLabel":
             MessageLookupByLibrary.simpleMessage("Dzienny cel wody"),
         "waterChipLabel": mWaterChip,
+        "profileFastingEntry": MessageLookupByLibrary.simpleMessage('Minutnik postu'),
+        "fastingTitle": MessageLookupByLibrary.simpleMessage('Minutnik postu'),
+        "fastingSubtitle": MessageLookupByLibrary.simpleMessage('Prosty minutnik do śledzenia czasu między posiłkami. Bez serii, bez celów, tylko zegar.'),
+        "fastingWarningTitle": MessageLookupByLibrary.simpleMessage('Zanim zaczniesz'),
+        "fastingWarningBody": MessageLookupByLibrary.simpleMessage('Śledzenie czasu postu jednym pomaga, a innym może szkodzić, szczególnie osobom z historią zaburzeń odżywiania. Jeśli to o tobie, zadbaj najpierw o siebie. Wsparcie oferują BEAT (UK) i NEDA (US).'),
+        "fastingWarningDecline": MessageLookupByLibrary.simpleMessage('To nie dla mnie'),
+        "fastingWarningAccept": MessageLookupByLibrary.simpleMessage('Rozumiem, włącz minutnik'),
+        "fastingPresetCustom": MessageLookupByLibrary.simpleMessage('Własny'),
+        "fastingStart": MessageLookupByLibrary.simpleMessage('Uruchom minutnik'),
+        "fastingCancel": MessageLookupByLibrary.simpleMessage('Zakończ post'),
+        "fastingCancelConfirmTitle": MessageLookupByLibrary.simpleMessage('Zakończyć post teraz?'),
+        "fastingCancelConfirmBody": MessageLookupByLibrary.simpleMessage('Bieżąca sesja zostanie zamknięta.'),
+        "fastingHomeChipBody": mFastingChipPl,
+        "fastingNotificationCompleteTitle": MessageLookupByLibrary.simpleMessage("Sesja postu zakończona"),
+        "fastingNotificationCompleteBody": MessageLookupByLibrary.simpleMessage("Czas docelowy został osiągnięty."),
+        "fastingComplete": MessageLookupByLibrary.simpleMessage('Sesja zakończona'),
+        "fastingLinkBeat": MessageLookupByLibrary.simpleMessage('BEAT (UK)'),
+        "fastingLinkNeda": MessageLookupByLibrary.simpleMessage('NEDA (US)'),
+        "fastingElapsedLabel": MessageLookupByLibrary.simpleMessage('Upłynęło'),
+        "hoursLabel": MessageLookupByLibrary.simpleMessage('godziny'),
+        "dialogCloseLabel": MessageLookupByLibrary.simpleMessage('Zamknij'),
+        "fastingRemainingValue": mFastingRemaining,
+        "fastingTargetValue": mFastingTarget,
       };
 }

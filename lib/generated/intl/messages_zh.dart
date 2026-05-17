@@ -83,6 +83,9 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String mLogWaterAmount(amount) => "添加 ${amount} 毫升";
 
+  static String mFastingRemaining(value) => "剩余 ${value}";
+
+  static String mFastingTarget(value) => "目标:${value}";
   static String mMergeConfirm(loser, winner) =>
       "这会把所有用 ${loser} 记录的条目改为显示 ${winner}，并把 ${loser} 从你的自定义食物中移除。此操作无法撤销。";
 
@@ -90,6 +93,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "已合并 — ${winner} 现在有 ${count} 条记录。";
   static String mDriRef(value) => "参考 ${value}";
   static String mMergeOneZh(winner) => "已合并 — ${winner} 现在有 1 条记录。";
+  static String mFastingChipZh(remaining) => "禁食中 · 剩余 ${remaining}";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -1190,5 +1194,28 @@ class MessageLookup extends MessageLookupByLibrary {
         "settingsWaterGoalLabel":
             MessageLookupByLibrary.simpleMessage("每日饮水目标"),
         "waterChipLabel": mWaterChip,
+        "profileFastingEntry": MessageLookupByLibrary.simpleMessage('断食计时器'),
+        "fastingTitle": MessageLookupByLibrary.simpleMessage('断食计时器'),
+        "fastingSubtitle": MessageLookupByLibrary.simpleMessage('用来追踪两餐之间时间的简单计时器。没有连胜,没有目标,只是时钟。'),
+        "fastingWarningTitle": MessageLookupByLibrary.simpleMessage('开始之前'),
+        "fastingWarningBody": MessageLookupByLibrary.simpleMessage('记录断食时间对某些人有帮助,但对另一些人(尤其是有进食障碍经历的人)可能造成困扰。如果你属于这种情况,请先照顾好自己。BEAT(英国)和 NEDA(美国)提供专业支持。'),
+        "fastingWarningDecline": MessageLookupByLibrary.simpleMessage('不适合我'),
+        "fastingWarningAccept": MessageLookupByLibrary.simpleMessage('我了解,启用计时器'),
+        "fastingPresetCustom": MessageLookupByLibrary.simpleMessage('自定义'),
+        "fastingStart": MessageLookupByLibrary.simpleMessage('开始计时'),
+        "fastingCancel": MessageLookupByLibrary.simpleMessage('结束断食'),
+        "fastingCancelConfirmTitle": MessageLookupByLibrary.simpleMessage('现在结束断食?'),
+        "fastingCancelConfirmBody": MessageLookupByLibrary.simpleMessage('这将关闭当前会话。'),
+        "fastingHomeChipBody": mFastingChipZh,
+        "fastingNotificationCompleteTitle": MessageLookupByLibrary.simpleMessage("禁食时间到了"),
+        "fastingNotificationCompleteBody": MessageLookupByLibrary.simpleMessage("已达到你的目标时间。"),
+        "fastingComplete": MessageLookupByLibrary.simpleMessage('会话完成'),
+        "fastingLinkBeat": MessageLookupByLibrary.simpleMessage('BEAT(英国)'),
+        "fastingLinkNeda": MessageLookupByLibrary.simpleMessage('NEDA(美国)'),
+        "fastingElapsedLabel": MessageLookupByLibrary.simpleMessage('已用'),
+        "hoursLabel": MessageLookupByLibrary.simpleMessage('小时'),
+        "dialogCloseLabel": MessageLookupByLibrary.simpleMessage('关闭'),
+        "fastingRemainingValue": mFastingRemaining,
+        "fastingTargetValue": mFastingTarget,
       };
 }

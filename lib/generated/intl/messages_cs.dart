@@ -86,6 +86,9 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String mLogWaterAmount(amount) => "Přidat ${amount} ml";
 
+  static String mFastingRemaining(value) => "Zbývá ${value}";
+
+  static String mFastingTarget(value) => "Cíl: ${value}";
   static String mMergeConfirm(loser, winner) =>
       "Tímto se všechny záznamy zapsané s ${loser} nahradí, aby se zobrazovaly jako ${winner}, a ${loser} bude odstraněna z vašich vlastních potravin. Tuto akci nelze vrátit zpět.";
 
@@ -93,6 +96,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Sloučeno — ${winner} má nyní ${count} záznamů.";
   static String mDriRef(value) => "ref. ${value}";
   static String mMergeOneCs(winner) => "Sloučeno — ${winner} má nyní 1 záznam.";
+  static String mFastingChipCs(remaining) => "Půst · zbývá ${remaining}";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -1339,5 +1343,28 @@ class MessageLookup extends MessageLookupByLibrary {
         "settingsWaterGoalLabel":
             MessageLookupByLibrary.simpleMessage("Denní cíl pití vody"),
         "waterChipLabel": mWaterChip,
+        "profileFastingEntry": MessageLookupByLibrary.simpleMessage('Časovač půstu'),
+        "fastingTitle": MessageLookupByLibrary.simpleMessage('Časovač půstu'),
+        "fastingSubtitle": MessageLookupByLibrary.simpleMessage('Jednoduchý časovač pro sledování času mezi jídly. Žádné série, žádné cíle, jen hodiny.'),
+        "fastingWarningTitle": MessageLookupByLibrary.simpleMessage('Než začnete'),
+        "fastingWarningBody": MessageLookupByLibrary.simpleMessage('Sledování doby půstu může být pro někoho užitečné a pro jiného zraňující, zvlášť pokud máte zkušenost s poruchou příjmu potravy. Pokud se vás to týká, prosím postarejte se nejdřív o sebe. Podporu nabízí BEAT (UK) a NEDA (US).'),
+        "fastingWarningDecline": MessageLookupByLibrary.simpleMessage('Není to pro mě'),
+        "fastingWarningAccept": MessageLookupByLibrary.simpleMessage('Rozumím, zapnout časovač'),
+        "fastingPresetCustom": MessageLookupByLibrary.simpleMessage('Vlastní'),
+        "fastingStart": MessageLookupByLibrary.simpleMessage('Spustit časovač'),
+        "fastingCancel": MessageLookupByLibrary.simpleMessage('Ukončit půst'),
+        "fastingCancelConfirmTitle": MessageLookupByLibrary.simpleMessage('Ukončit půst teď?'),
+        "fastingCancelConfirmBody": MessageLookupByLibrary.simpleMessage('Aktuální relace bude uzavřena.'),
+        "fastingHomeChipBody": mFastingChipCs,
+        "fastingNotificationCompleteTitle": MessageLookupByLibrary.simpleMessage("Půst dokončen"),
+        "fastingNotificationCompleteBody": MessageLookupByLibrary.simpleMessage("Cílový čas byl dosažen."),
+        "fastingComplete": MessageLookupByLibrary.simpleMessage('Relace dokončena'),
+        "fastingLinkBeat": MessageLookupByLibrary.simpleMessage('BEAT (UK)'),
+        "fastingLinkNeda": MessageLookupByLibrary.simpleMessage('NEDA (US)'),
+        "fastingElapsedLabel": MessageLookupByLibrary.simpleMessage('Uplynulo'),
+        "hoursLabel": MessageLookupByLibrary.simpleMessage('hodiny'),
+        "dialogCloseLabel": MessageLookupByLibrary.simpleMessage('Zavřít'),
+        "fastingRemainingValue": mFastingRemaining,
+        "fastingTargetValue": mFastingTarget,
       };
 }

@@ -194,7 +194,9 @@
   "customMealFormSimpleFieldHelper": "{unit} per porzione",
   "@customMealFormSimpleFieldHelper": {
     "placeholders": {
-      "unit": { "type": "String" }
+      "unit": {
+        "type": "String"
+      }
     }
   },
   "customMealsDeleteConfirmContent": "Tutte le voci del diario che utilizzano questo pasto verranno rimosse.",
@@ -873,6 +875,40 @@
   "settingsWaterGoalLabel": "Obiettivo idrico giornaliero",
   "waterChipLabel": "{current} / {goal} ml",
   "zincLabel": "zinco",
+  "profileFastingEntry": "Timer di digiuno",
+  "fastingTitle": "Timer di digiuno",
+  "fastingSubtitle": "Un semplice timer per il tempo tra i pasti. Nessuna serie, nessun obiettivo, solo l'orologio.",
+  "fastingWarningTitle": "Prima di iniziare",
+  "fastingWarningBody": "Tenere traccia dei tempi di digiuno può aiutare alcune persone e turbarne altre, in particolare chi ha alle spalle un disturbo alimentare. Se è il tuo caso, prenditi prima cura di te. Puoi trovare sostegno presso BEAT (UK) e NEDA (US).",
+  "fastingWarningDecline": "Non fa per me",
+  "fastingWarningAccept": "Ho capito, attiva il timer",
+  "fastingPresetCustom": "Personalizzato",
+  "fastingStart": "Avvia timer",
+  "fastingCancel": "Termina digiuno",
+  "fastingCancelConfirmTitle": "Terminare il digiuno?",
+  "fastingCancelConfirmBody": "Chiuderà la sessione corrente.",
+  "fastingComplete": "Sessione completata",
+  "fastingLinkBeat": "BEAT (UK)",
+  "fastingLinkNeda": "NEDA (US)",
+  "fastingElapsedLabel": "Trascorso",
+  "fastingRemainingValue": "{value} rimanenti",
+  "@fastingRemainingValue": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "fastingTargetValue": "Obiettivo: {value}",
+  "@fastingTargetValue": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "hoursLabel": "ore",
+  "dialogCloseLabel": "Chiudi",
   "customMealsRowMoreTooltip": "Altre azioni",
   "customMealsMergeAction": "Unisci a un altro alimento personalizzato",
   "customMealsMergePickerTitle": "Scegli l'alimento personalizzato da unire",
@@ -897,5 +933,13 @@
       "count": { "type": "int" },
       "winner": { "type": "String" }
     }
-  }
+  },
+  "fastingHomeChipBody": "Digiuno · {remaining} rimanenti",
+  "@fastingHomeChipBody": {
+    "placeholders": {
+      "remaining": { "type": "String" }
+    }
+  },
+  "fastingNotificationCompleteTitle": "Sessione di digiuno completata",
+  "fastingNotificationCompleteBody": "Il tuo tempo obiettivo è stato raggiunto."
 }

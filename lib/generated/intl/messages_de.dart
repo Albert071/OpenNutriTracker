@@ -88,6 +88,9 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String mLogWaterAmount(amount) => "${amount} ml hinzufügen";
 
+  static String mFastingRemaining(value) => "Noch ${value}";
+
+  static String mFastingTarget(value) => "Ziel: ${value}";
   static String mMergeConfirm(loser, winner) =>
       "Dadurch werden alle Einträge, die mit ${loser} protokolliert wurden, ersetzt, sodass sie ${winner} anzeigen. Außerdem wird ${loser} aus deinen eigenen Mahlzeiten entfernt. Das kann nicht rückgängig gemacht werden.";
 
@@ -95,6 +98,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Zusammengeführt — ${winner} hat jetzt ${count} protokollierte Einträge.";
   static String mDriRef(value) => "Ref. ${value}";
   static String mMergeOneDe(winner) => "Zusammengeführt — ${winner} hat jetzt 1 Eintrag.";
+  static String mFastingChipDe(remaining) => "Fasten · noch ${remaining}";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -1362,5 +1366,28 @@ class MessageLookup extends MessageLookupByLibrary {
         "settingsWaterGoalLabel":
             MessageLookupByLibrary.simpleMessage("Tägliches Wasserziel"),
         "waterChipLabel": mWaterChip,
+        "profileFastingEntry": MessageLookupByLibrary.simpleMessage('Fasten-Timer'),
+        "fastingTitle": MessageLookupByLibrary.simpleMessage('Fasten-Timer'),
+        "fastingSubtitle": MessageLookupByLibrary.simpleMessage('Ein einfacher Timer für die Zeit zwischen den Mahlzeiten. Keine Serien, keine Ziele, nur die Uhr.'),
+        "fastingWarningTitle": MessageLookupByLibrary.simpleMessage('Bevor du beginnst'),
+        "fastingWarningBody": MessageLookupByLibrary.simpleMessage('Das Verfolgen von Fastenzeiten kann für manche hilfreich und für andere belastend sein, besonders wenn eine Essstörung Teil deiner Geschichte ist. Bitte achte zuerst auf dich. Unterstützung findest du bei BEAT (UK) und NEDA (US).'),
+        "fastingWarningDecline": MessageLookupByLibrary.simpleMessage('Nichts für mich'),
+        "fastingWarningAccept": MessageLookupByLibrary.simpleMessage('Verstanden, Timer aktivieren'),
+        "fastingPresetCustom": MessageLookupByLibrary.simpleMessage('Eigene Dauer'),
+        "fastingStart": MessageLookupByLibrary.simpleMessage('Timer starten'),
+        "fastingCancel": MessageLookupByLibrary.simpleMessage('Fasten beenden'),
+        "fastingCancelConfirmTitle": MessageLookupByLibrary.simpleMessage('Fasten jetzt beenden?'),
+        "fastingCancelConfirmBody": MessageLookupByLibrary.simpleMessage('Damit wird die aktuelle Sitzung geschlossen.'),
+        "fastingHomeChipBody": mFastingChipDe,
+        "fastingNotificationCompleteTitle": MessageLookupByLibrary.simpleMessage("Fastenzeit abgeschlossen"),
+        "fastingNotificationCompleteBody": MessageLookupByLibrary.simpleMessage("Deine Zielzeit wurde erreicht."),
+        "fastingComplete": MessageLookupByLibrary.simpleMessage('Sitzung abgeschlossen'),
+        "fastingLinkBeat": MessageLookupByLibrary.simpleMessage('BEAT (UK)'),
+        "fastingLinkNeda": MessageLookupByLibrary.simpleMessage('NEDA (US)'),
+        "fastingElapsedLabel": MessageLookupByLibrary.simpleMessage('Vergangen'),
+        "hoursLabel": MessageLookupByLibrary.simpleMessage('Stunden'),
+        "dialogCloseLabel": MessageLookupByLibrary.simpleMessage('Schließen'),
+        "fastingRemainingValue": mFastingRemaining,
+        "fastingTargetValue": mFastingTarget,
       };
 }

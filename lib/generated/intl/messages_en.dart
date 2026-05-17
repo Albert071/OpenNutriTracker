@@ -85,6 +85,9 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String mLogWaterAmount(amount) => "Add ${amount} ml";
 
+  static String mFastingRemaining(value) => "${value} remaining";
+
+  static String mFastingTarget(value) => "Target: ${value}";
   static String mMergeConfirm(loser, winner) =>
       "This will replace all entries logged with ${loser} so they show ${winner} instead, and remove ${loser} from your custom foods. This can\'t be undone.";
 
@@ -92,6 +95,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Merged — ${winner} now has ${count} logged entries.";
   static String mDriRef(value) => "ref ${value}";
   static String mMergeOneEn(winner) => "Merged — ${winner} now has 1 logged entry.";
+  static String mFastingChipEn(remaining) => "Fasting · ${remaining} left";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -1325,5 +1329,28 @@ class MessageLookup extends MessageLookupByLibrary {
         "settingsWaterGoalLabel":
             MessageLookupByLibrary.simpleMessage("Daily water goal"),
         "waterChipLabel": mWaterChip,
+        "profileFastingEntry": MessageLookupByLibrary.simpleMessage('Fasting timer'),
+        "fastingTitle": MessageLookupByLibrary.simpleMessage('Fasting timer'),
+        "fastingSubtitle": MessageLookupByLibrary.simpleMessage('A simple timer for tracking time between meals. No streaks, no targets, just the clock.'),
+        "fastingWarningTitle": MessageLookupByLibrary.simpleMessage('Before you start'),
+        "fastingWarningBody": MessageLookupByLibrary.simpleMessage('Tracking fasting time can be helpful for some people and distressing for others, especially anyone with a history of disordered eating. If that\'s you, please look after yourself first. Support is available from BEAT (UK) and NEDA (US).'),
+        "fastingWarningDecline": MessageLookupByLibrary.simpleMessage('Not for me'),
+        "fastingWarningAccept": MessageLookupByLibrary.simpleMessage('I understand, enable timer'),
+        "fastingPresetCustom": MessageLookupByLibrary.simpleMessage('Custom'),
+        "fastingStart": MessageLookupByLibrary.simpleMessage('Start timer'),
+        "fastingCancel": MessageLookupByLibrary.simpleMessage('End fast'),
+        "fastingCancelConfirmTitle": MessageLookupByLibrary.simpleMessage('End fast now?'),
+        "fastingCancelConfirmBody": MessageLookupByLibrary.simpleMessage('This will close the current session.'),
+        "fastingHomeChipBody": mFastingChipEn,
+        "fastingNotificationCompleteTitle": MessageLookupByLibrary.simpleMessage("Fasting session complete"),
+        "fastingNotificationCompleteBody": MessageLookupByLibrary.simpleMessage("Your target time has been reached."),
+        "fastingComplete": MessageLookupByLibrary.simpleMessage('Session complete'),
+        "fastingLinkBeat": MessageLookupByLibrary.simpleMessage('BEAT (UK)'),
+        "fastingLinkNeda": MessageLookupByLibrary.simpleMessage('NEDA (US)'),
+        "fastingElapsedLabel": MessageLookupByLibrary.simpleMessage('Elapsed'),
+        "hoursLabel": MessageLookupByLibrary.simpleMessage('hours'),
+        "dialogCloseLabel": MessageLookupByLibrary.simpleMessage('Close'),
+        "fastingRemainingValue": mFastingRemaining,
+        "fastingTargetValue": mFastingTarget,
       };
 }

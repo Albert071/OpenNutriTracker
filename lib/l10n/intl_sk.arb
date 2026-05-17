@@ -241,7 +241,9 @@
   "customMealFormSimpleFieldHelper": "{unit} v jednej porcii",
   "@customMealFormSimpleFieldHelper": {
     "placeholders": {
-      "unit": { "type": "String" }
+      "unit": {
+        "type": "String"
+      }
     }
   },
   "customMealsDeleteConfirmContent": "Všetky záznamy v denníku, ktoré používajú toto jedlo, budú tiež odstránené.",
@@ -903,6 +905,40 @@
   "settingsWaterGoalLabel": "Denný cieľ pitia vody",
   "waterChipLabel": "{current} / {goal} ml",
   "zincLabel": "zinok",
+  "profileFastingEntry": "Časovač pôstu",
+  "fastingTitle": "Časovač pôstu",
+  "fastingSubtitle": "Jednoduchý časovač na sledovanie času medzi jedlami. Žiadne série, žiadne ciele, len hodiny.",
+  "fastingWarningTitle": "Skôr než začneš",
+  "fastingWarningBody": "Sledovanie času pôstu môže byť niekomu užitočné a niekoho zraniť, najmä ak má za sebou poruchu príjmu potravy. Ak si to ty, postaraj sa najprv o seba. Podporu poskytujú BEAT (UK) a NEDA (US).",
+  "fastingWarningDecline": "Nie je to pre mňa",
+  "fastingWarningAccept": "Rozumiem, zapnúť časovač",
+  "fastingPresetCustom": "Vlastné",
+  "fastingStart": "Spustiť časovač",
+  "fastingCancel": "Ukončiť pôst",
+  "fastingCancelConfirmTitle": "Ukončiť pôst teraz?",
+  "fastingCancelConfirmBody": "Aktuálna relácia bude uzavretá.",
+  "fastingComplete": "Relácia dokončená",
+  "fastingLinkBeat": "BEAT (UK)",
+  "fastingLinkNeda": "NEDA (US)",
+  "fastingElapsedLabel": "Uplynulo",
+  "fastingRemainingValue": "Zostáva {value}",
+  "@fastingRemainingValue": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "fastingTargetValue": "Cieľ: {value}",
+  "@fastingTargetValue": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "hoursLabel": "hodiny",
+  "dialogCloseLabel": "Zavrieť",
   "customMealsRowMoreTooltip": "Ďalšie akcie",
   "customMealsMergeAction": "Zlúčiť s iným vlastným jedlom",
   "customMealsMergePickerTitle": "Vyberte vlastné jedlo na zlúčenie",
@@ -927,5 +963,13 @@
       "count": { "type": "int" },
       "winner": { "type": "String" }
     }
-  }
+  },
+  "fastingHomeChipBody": "Pôst · zostáva {remaining}",
+  "@fastingHomeChipBody": {
+    "placeholders": {
+      "remaining": { "type": "String" }
+    }
+  },
+  "fastingNotificationCompleteTitle": "Pôst dokončený",
+  "fastingNotificationCompleteBody": "Cieľový čas bol dosiahnutý."
 }
