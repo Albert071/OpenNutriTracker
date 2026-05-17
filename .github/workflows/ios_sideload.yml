@@ -1,0 +1,144 @@
+name: iOS sideload build
+
+# Builds an unsigned iOS .ipa that can be signed locally with a free
+# personal Apple ID via AltServer-Linux (or equivalent) and installed
+# onto a tethered iPhone without a paid Apple Developer account.
+#
+# Workflow is manual-trigger only — it costs macOS-runner minutes and
+# isn't needed on every PR. The default `ios-build` job in
+# `default_workflow.yml` covers compile-validation for fork / PR
+# scenarios; this one exists specifically to hand a developer an
+# installable artefact for on-device iOS testing.
+#
+# Why patch the bundle ID: the production identifier
+# (`com.opennutritracker.ont.opennutritracker`) is registered to the
+# project's paid Apple Developer team. A free personal Apple ID can't
+# claim a bundle ID that's already on a paid team, so AltServer signing
+# would fail. Patching it to a sideload-only id before the iOS build
+# gives the free team something it can claim. Side-effect: the
+# sideload-signed app is a distinct iOS application from the App Store
+# build (different bundle id) — separate Hive boxes, separate
+# preferences, separate notifications. For UX testing that's a feature,
+# not a bug.
+
+on:
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: 'Branch / tag / SHA to build (default: develop)'
+        required: false
+        default: 'develop'
+      bundle_id:
+        description: 'Bundle identifier for sideload signing'
+        required: false
+        default: 'com.opennutritracker.ont.opennutritracker.sideload'
+
+jobs:
+  ios-sideload:
+    runs-on: macos-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.ref }}
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.41.7'
+          channel: 'stable'
+          cache: true
+
+      - name: Cache Flutter packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.pub-cache
+          key: ${{ runner.os }}-pub-cache-${{ hashFiles('**/pubspec.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-pub-cache-
+
+      - name: Cache CocoaPods
+        uses: actions/cache@v4
+        with:
+          path: ios/Pods
+          key: ${{ runner.os }}-pods-${{ hashFiles('ios/Podfile.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-pods-
+
+      # Mirrors the stub used by the main `ios-build` job. None of
+      # Sentry / Supabase / FDC are reachable at install time on a
+      # sideloaded build because the values are stub URLs, but that's
+      # fine for UI / accessibility testing — the build compiles and
+      # the local features work.
+      - name: Generate stub .env
+        run: |
+          cat > .env <<'EOF'
+          FDC_API_KEY="sideload-stub"
+          SENTRY_DNS="https://stub@sentry.io/0"
+          SUPABASE_PROJECT_URL="https://stub.supabase.co"
+          SUPABASE_PROJECT_ANON_KEY="sideload-stub"
+          EOF
+
+      - name: Patch bundle identifier for free-team signing
+        env:
+          NEW_BUNDLE_ID: ${{ inputs.bundle_id }}
+        run: |
+          set -euo pipefail
+          PBXPROJ=ios/Runner.xcodeproj/project.pbxproj
+          if [[ ! -f "$PBXPROJ" ]]; then
+            echo "::error::$PBXPROJ not found"
+            exit 1
+          fi
+          # Match the production id wherever it appears in the project
+          # file — typically three Build Settings entries (Debug,
+          # Release, Profile) plus any Runner extension target. The
+          # replacement covers all of them in one pass.
+          sed -i '' \
+            "s|PRODUCT_BUNDLE_IDENTIFIER = com\\.opennutritracker\\.ont\\.opennutritracker;|PRODUCT_BUNDLE_IDENTIFIER = ${NEW_BUNDLE_ID};|g" \
+            "$PBXPROJ"
+          echo "Patched bundle id to: $NEW_BUNDLE_ID"
+          grep -c "PRODUCT_BUNDLE_IDENTIFIER = ${NEW_BUNDLE_ID};" "$PBXPROJ" \
+            | xargs -I {} echo "Occurrences in pbxproj: {}"
+
+      - name: Install Flutter packages
+        run: flutter pub get
+
+      - name: Generate code (build_runner)
+        run: dart run build_runner build --delete-conflicting-outputs
+
+      - name: Pod install
+        run: .github/scripts/pod_install_with_targeted_fallback.sh
+
+      - name: Build iOS (no codesign)
+        run: flutter build ios --no-codesign --release
+
+      # Flutter's `build ios --no-codesign` produces a Runner.app
+      # under `build/ios/iphoneos/` but doesn't wrap it as an IPA
+      # (because IPA export normally needs a signing identity). The
+      # AltServer flow doesn't care about pre-signing — it wants a
+      # zipped Payload/ directory containing the .app, named .ipa.
+      # Build that manually.
+      - name: Wrap .app into unsigned .ipa
+        run: |
+          set -euo pipefail
+          APP_DIR=build/ios/iphoneos/Runner.app
+          if [[ ! -d "$APP_DIR" ]]; then
+            echo "::error::$APP_DIR missing — Flutter build didn't produce a .app"
+            exit 1
+          fi
+          STAGING=build/ios/sideload
+          rm -rf "$STAGING"
+          mkdir -p "$STAGING/Payload"
+          cp -R "$APP_DIR" "$STAGING/Payload/"
+          (cd "$STAGING" && zip -qry "OpenNutriTracker-sideload.ipa" Payload)
+          ls -lh "$STAGING/OpenNutriTracker-sideload.ipa"
+
+      - name: Upload IPA artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: opennutritracker-ios-sideload
+          path: build/ios/sideload/OpenNutriTracker-sideload.ipa
+          if-no-files-found: error
+          retention-days: 7
