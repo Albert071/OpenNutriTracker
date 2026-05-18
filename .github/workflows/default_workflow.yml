@@ -594,6 +594,106 @@ jobs:
         working-directory: ios
         run: bundle exec fastlane ios beta
 
+  android-deploy:
+    if: |
+      (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
+      github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    env:
+      BUNDLE_GEMFILE: ${{ github.workspace }}/android/Gemfile
+      FDC_API_KEY: ${{ secrets.FDC_API_KEY }}
+      SENTRY_DNS: ${{ secrets.SENTRY_DNS }}
+      SUPABASE_PROJECT_URL: ${{ secrets.SUPABASE_PROJECT_URL }}
+      SUPABASE_PROJECT_ANON_KEY: ${{ secrets.SUPABASE_PROJECT_ANON_KEY }}
+      ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+      ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+      ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+      ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+      GOOGLE_PLAY_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_JSON }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.41.7'
+          channel: 'stable'
+          cache: true
+
+      - name: Setup Ruby + Bundler
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.3'
+          bundler-cache: true
+
+      - name: Cache Flutter packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.pub-cache
+          key: ${{ runner.os }}-pub-cache-${{ hashFiles('**/pubspec.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-pub-cache-
+
+      - name: Cache Gradle
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('android/**/*.gradle*', 'android/**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      - name: Generate .env from GitHub Secrets
+        run: |
+          : "${FDC_API_KEY:?Missing FDC_API_KEY secret}"
+          : "${SENTRY_DNS:?Missing SENTRY_DNS secret}"
+          : "${SUPABASE_PROJECT_URL:?Missing SUPABASE_PROJECT_URL secret}"
+          : "${SUPABASE_PROJECT_ANON_KEY:?Missing SUPABASE_PROJECT_ANON_KEY secret}"
+          cat > .env <<'EOF'
+          FDC_API_KEY="$FDC_API_KEY"
+          SENTRY_DNS="$SENTRY_DNS"
+          SUPABASE_PROJECT_URL="$SUPABASE_PROJECT_URL"
+          SUPABASE_PROJECT_ANON_KEY="$SUPABASE_PROJECT_ANON_KEY"
+          EOF
+
+      - name: Restore Android signing material
+        run: |
+          : "${ANDROID_KEYSTORE_BASE64:?Missing ANDROID_KEYSTORE_BASE64 secret}"
+          : "${ANDROID_KEYSTORE_PASSWORD:?Missing ANDROID_KEYSTORE_PASSWORD secret}"
+          : "${ANDROID_KEY_ALIAS:?Missing ANDROID_KEY_ALIAS secret}"
+          : "${ANDROID_KEY_PASSWORD:?Missing ANDROID_KEY_PASSWORD secret}"
+          mkdir -p android/app
+          printf '%s' "$ANDROID_KEYSTORE_BASE64" | base64 --decode > android/app/upload-keystore.jks
+          cat > android/key.properties <<EOF
+          storePassword=$ANDROID_KEYSTORE_PASSWORD
+          keyPassword=$ANDROID_KEY_PASSWORD
+          keyAlias=$ANDROID_KEY_ALIAS
+          storeFile=../app/upload-keystore.jks
+          EOF
+
+      - name: Install Flutter packages
+        run: flutter pub get
+
+      - name: Generate code
+        run: dart run build_runner build --delete-conflicting-outputs
+
+      - name: Build Android App Bundle
+        run: flutter build appbundle --release
+
+      - name: Upload Android App Bundle to Google Play Internal Testing via Fastlane
+        working-directory: android
+        run: bundle exec fastlane android internal
+
 # Historical reference — the original single-step `just ci` invocation that
 # was used before this workflow was split into linux-checks + ios-build.
 # Kept here so reviewers can see how the secrets-templated form would look
