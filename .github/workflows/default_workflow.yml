@@ -258,10 +258,51 @@ jobs:
       - name: Build iOS (no codesign)
         run: flutter build ios --no-codesign --release
 
+  # Fan out: one matrix entry per file in integration_test/. Each shard
+  # runs in parallel on its own runner, so wall-clock time stops scaling
+  # with the number of integration tests. With a single test today this
+  # is a no-op; with five tomorrow it's a 5x throughput win on iOS and
+  # Android both. Both ios-integration-tests and android-integration-tests
+  # consume the same matrix output.
+  discover-integration-tests:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    outputs:
+      matrix: ${{ steps.discover.outputs.matrix }}
+      count: ${{ steps.discover.outputs.count }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Discover integration test files
+        id: discover
+        run: |
+          # One JSON array of relative paths, suitable for a matrix
+          # `include:` block. `jq -R -s -c 'split("\n") | map(select(length > 0))'`
+          # turns newline-separated paths into a compact JSON list.
+          mapfile -t files < <(find integration_test -maxdepth 1 -name '*_test.dart' -type f | sort)
+          json=$(printf '%s\n' "${files[@]}" | jq -R -s -c 'split("\n") | map(select(length > 0))')
+          echo "Discovered ${#files[@]} integration test files:"
+          printf '  %s\n' "${files[@]}"
+          echo "matrix=$json" >> "$GITHUB_OUTPUT"
+          echo "count=${#files[@]}" >> "$GITHUB_OUTPUT"
+
   ios-integration-tests:
+    # Gate on a clean iOS build first — no point burning macOS minutes on
+    # a matrix of integration shards when the app doesn't compile.
+    needs: [ios-build, discover-integration-tests]
+    if: needs.discover-integration-tests.outputs.count != '0'
     runs-on: macos-latest
     permissions:
       contents: read
+    strategy:
+      # One macOS runner per integration test file. fail-fast: false so a
+      # flake in one shard doesn't cancel the rest — easier to triage
+      # when each test reports independently.
+      fail-fast: false
+      matrix:
+        test_file: ${{ fromJson(needs.discover-integration-tests.outputs.matrix) }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -325,8 +366,8 @@ jobs:
           xcrun simctl bootstatus "$DEVICE_UDID"
           echo "DEVICE_UDID=$DEVICE_UDID" >> $GITHUB_ENV
 
-      - name: Run integration tests
-        run: flutter test integration_test/ -d "$DEVICE_UDID" --reporter expanded
+      - name: Run integration test (${{ matrix.test_file }})
+        run: flutter test "${{ matrix.test_file }}" -d "$DEVICE_UDID" --reporter expanded
 
   android-build:
     runs-on: ubuntu-latest
@@ -389,9 +430,17 @@ jobs:
         run: flutter build apk --debug
 
   android-integration-tests:
+    # Gate on a clean Android build first — same logic as iOS, just on
+    # ubuntu so the minutes are cheaper.
+    needs: [android-build, discover-integration-tests]
+    if: needs.discover-integration-tests.outputs.count != '0'
     runs-on: ubuntu-latest
     permissions:
       contents: read
+    strategy:
+      fail-fast: false
+      matrix:
+        test_file: ${{ fromJson(needs.discover-integration-tests.outputs.matrix) }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -461,7 +510,9 @@ jobs:
 
       # First emulator-runner pass — only runs when the AVD cache is empty.
       # It boots the emulator once to seed the snapshot, then exits. This
-      # makes the actual test pass below much faster.
+      # makes the actual test pass below much faster. Only the first
+      # shard to land on a fresh cache pays this cost; later shards in the
+      # same run reuse the warmed AVD via the actions/cache restore key.
       - name: Generate AVD snapshot (cache miss only)
         if: steps.avd-cache.outputs.cache-hit != 'true'
         uses: reactivecircus/android-emulator-runner@v2
@@ -474,7 +525,7 @@ jobs:
           disable-animations: false
           script: echo "AVD snapshot generated for cache"
 
-      - name: Run integration tests on Android emulator
+      - name: Run integration test (${{ matrix.test_file }})
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: 34
@@ -483,7 +534,7 @@ jobs:
           force-avd-creation: false
           emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           disable-animations: true
-          script: flutter test integration_test/ --reporter expanded
+          script: flutter test "${{ matrix.test_file }}" --reporter expanded
 
 # Historical reference — the original single-step `just ci` invocation that
 # was used before this workflow was split into linux-checks + ios-build.
