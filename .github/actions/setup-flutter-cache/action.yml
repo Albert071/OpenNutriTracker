@@ -1,5 +1,5 @@
-name: Setup Flutter and cache pub packages
-description: Installs Flutter and restores/saves the pub cache.
+name: Setup Flutter
+description: Installs Flutter via subosito/flutter-action and uses its built-in SDK cache.
 inputs:
   flutter-version:
     description: Flutter SDK version.
@@ -9,10 +9,6 @@ inputs:
     description: Flutter channel.
     required: false
     default: stable
-  cache-key-prefix:
-    description: Prefix used in the pub cache key.
-    required: false
-    default: pub-cache
 runs:
   using: composite
   steps:
