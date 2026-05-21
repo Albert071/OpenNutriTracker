@@ -20,8 +20,16 @@ import 'package:opennutritracker/generated/l10n.dart';
 /// existing AddMealScreen flow.
 class FoodSearchTabView extends StatefulWidget {
   final void Function(MealEntity meal) onMealSelected;
+  // When non-null, the search bar shows a barcode-scan suffix icon and
+  // taps are forwarded here. The recipe builder uses this to push the
+  // scanner in pick mode and feed the result back through [onMealSelected].
+  final VoidCallback? onBarcodePressed;
 
-  const FoodSearchTabView({super.key, required this.onMealSelected});
+  const FoodSearchTabView({
+    super.key,
+    required this.onMealSelected,
+    this.onBarcodePressed,
+  });
 
   @override
   State<FoodSearchTabView> createState() => _FoodSearchTabViewState();
@@ -63,7 +71,7 @@ class _FoodSearchTabViewState extends State<FoodSearchTabView>
           MealSearchBar(
             searchStringListener: _searchStringListener,
             onSearchSubmit: _onSearchSubmit,
-            onBarcodePressed: null,
+            onBarcodePressed: widget.onBarcodePressed,
           ),
           const SizedBox(height: 16),
           TabBar(

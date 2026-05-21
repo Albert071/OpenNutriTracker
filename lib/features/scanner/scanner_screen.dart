@@ -28,8 +28,17 @@ class _ScannerScreenState extends State<ScannerScreen> {
   final log = Logger('ScannerScreen');
 
   String? _scannedBarcode;
-  late IntakeTypeEntity _intakeTypeEntity;
-  late DateTime _day;
+  IntakeTypeEntity? _intakeTypeEntity;
+  DateTime? _day;
+  bool _pickMode = false;
+  // BlocBuilder can rebuild for [ScannerLoadedState] more than once before
+  // the scanner route is fully unmounted (e.g. the route-transition's
+  // parent rebuild propagates down). Without this latch, the second
+  // microtask races against the now-removed scanner and ends up popping
+  // whichever route is on top — in the recipe ingredient flow that's the
+  // quantity-dialog bottom sheet, which then crashes with a result-type
+  // mismatch. The latch makes the post-load navigation idempotent.
+  bool _navigatedAfterLoad = false;
 
   late ScannerBloc _scannerBloc;
 
@@ -45,6 +54,7 @@ class _ScannerScreenState extends State<ScannerScreen> {
         ModalRoute.of(context)?.settings.arguments as ScannerScreenArguments;
     _intakeTypeEntity = args.intakeTypeEntity;
     _day = args.day;
+    _pickMode = args.pickMode;
     if (args.initialBarcode != null && _scannedBarcode == null) {
       _scannedBarcode = args.initialBarcode;
       _scannerBloc.add(ScannerLoadProductEvent(barcode: args.initialBarcode!));
@@ -72,19 +82,28 @@ class _ScannerScreenState extends State<ScannerScreen> {
           );
         } else if (state is ScannerLoadedState) {
           // Push new route after build
-          Future.microtask(() {
-            if (context.mounted) {
-              return Navigator.of(context).pushReplacementNamed(
+          if (!_navigatedAfterLoad) {
+            _navigatedAfterLoad = true;
+            Future.microtask(() {
+              if (!context.mounted) return;
+              if (_pickMode) {
+                // Recipe ingredient picker — hand the loaded MealEntity back
+                // to whoever pushed us instead of routing into the meal-detail
+                // logging flow.
+                Navigator.of(context).pop(state.product);
+                return;
+              }
+              Navigator.of(context).pushReplacementNamed(
                 NavigationOptions.mealDetailRoute,
                 arguments: MealDetailScreenArguments(
                   state.product,
-                  _intakeTypeEntity,
-                  _day,
+                  _intakeTypeEntity!,
+                  _day!,
                   state.usesImperialUnits,
                 ),
               );
-            }
-          });
+            });
+          }
         } else if (state is ScannerFailedState) {
           return Scaffold(
             appBar: AppBar(),
@@ -148,13 +167,19 @@ class _ScannerScreenState extends State<ScannerScreen> {
                   // arrive as plain text/url (not BarcodeType.product). If
                   // one of these is recognised, hand off to the matching
                   // import screen with the already-scanned code so the
-                  // user doesn't have to scan a second time.
-                  final kind = classifySharedPayload(raw);
-                  if (kind != null) {
-                    _scannedBarcode = raw;
-                    log.fine('Shared payload found: $kind');
-                    _routeToSharedImport(kind, raw);
-                    return;
+                  // user doesn't have to scan a second time. In pick mode
+                  // (recipe ingredient picker) we ignore these — handing
+                  // off would silently abandon the recipe builder mid-edit,
+                  // and a shared meal/recipe/activity isn't a single
+                  // ingredient anyway.
+                  if (!_pickMode) {
+                    final kind = classifySharedPayload(raw);
+                    if (kind != null) {
+                      _scannedBarcode = raw;
+                      log.fine('Shared payload found: $kind');
+                      _routeToSharedImport(kind, raw);
+                      return;
+                    }
                   }
 
                   if (barcode.type == BarcodeType.product) {
@@ -238,6 +263,11 @@ class _ScannerScreenState extends State<ScannerScreen> {
   }
 
   void _routeToSharedImport(SharedPayloadKind kind, String code) {
+    // Pick-mode skips shared-payload handling entirely (see onDetect), so
+    // by the time we land here `_intakeTypeEntity` and `_day` were set from
+    // the logging-flow args.
+    final intakeType = _intakeTypeEntity!;
+    final day = _day!;
     final navigator = Navigator.of(context);
     Future.microtask(() {
       if (!mounted) return;
@@ -246,9 +276,9 @@ class _ScannerScreenState extends State<ScannerScreen> {
           navigator.pushReplacementNamed(
             NavigationOptions.importMealScannerRoute,
             arguments: ImportMealScannerArguments(
-              _intakeTypeEntity,
-              AddMealExtension.fromIntakeTypeEntity(_intakeTypeEntity),
-              _day,
+              intakeType,
+              AddMealExtension.fromIntakeTypeEntity(intakeType),
+              day,
               initialCode: code,
             ),
           );
@@ -279,9 +309,30 @@ class _ScannerScreenState extends State<ScannerScreen> {
 }
 
 class ScannerScreenArguments {
-  final DateTime day;
-  final IntakeTypeEntity intakeTypeEntity;
+  // `day` and `intakeTypeEntity` are required for the normal logging flow
+  // (the scanner routes into MealDetailScreen, which needs both). In
+  // [ScannerScreenArguments.pick] they're left null because the screen
+  // simply pops the scanned [MealEntity] back to its caller — the recipe
+  // ingredient picker doesn't yet know which day or intake the user will
+  // attach it to.
+  final DateTime? day;
+  final IntakeTypeEntity? intakeTypeEntity;
   final String? initialBarcode;
+  final bool pickMode;
 
-  ScannerScreenArguments(this.day, this.intakeTypeEntity, {this.initialBarcode});
+  ScannerScreenArguments(
+    DateTime forDay,
+    IntakeTypeEntity forIntakeType, {
+    this.initialBarcode,
+  })  : day = forDay,
+        intakeTypeEntity = forIntakeType,
+        pickMode = false;
+
+  /// Opens the scanner in "pick" mode: on a successful product load it pops
+  /// the resulting [MealEntity] back to the caller instead of routing into
+  /// the meal-detail logging screen. Used by the recipe ingredient picker.
+  ScannerScreenArguments.pick({this.initialBarcode})
+      : day = null,
+        intakeTypeEntity = null,
+        pickMode = true;
 }
