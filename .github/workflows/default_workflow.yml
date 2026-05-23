@@ -151,10 +151,28 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v6
         with:
-          # Check out the PR head so auto-commit lands on the right branch.
-          # Falls back to github.ref for push and workflow_dispatch.
-          ref: ${{ github.event.pull_request.head.ref || github.ref }}
-          repository: ${{ github.event.pull_request.head.repo.full_name || github.repository }}
+          # Same-repo PRs: check out the head branch so the auto-commit
+          # step below can push Podfile.lock fixes back to the branch.
+          # Fork PRs: this job runs with `contents: write` permissions,
+          # which means GitHub issues a token that's scoped to the base
+          # repo and can't authenticate against the fork — the auto-commit
+          # step is already gated to skip for fork PRs, so we just need a
+          # checkout that works. Use the PR head SHA from the base repo's
+          # refs/pull/N/head mirror, which the GITHUB_TOKEN can always read.
+          # Push and workflow_dispatch fall back to github.ref.
+          ref: >-
+            ${{
+              github.event.pull_request.head.repo.full_name == github.repository
+                && github.event.pull_request.head.ref
+                || github.event.pull_request.head.sha
+                || github.ref
+            }}
+          repository: >-
+            ${{
+              github.event.pull_request.head.repo.full_name == github.repository
+                && github.event.pull_request.head.repo.full_name
+                || github.repository
+            }}
 
       - name: Setup Flutter + cache packages
         uses: ./.github/actions/setup-flutter-cache
@@ -216,7 +234,11 @@ jobs:
           path: ios/Podfile.lock
 
       - name: Build iOS (no codesign)
-        run: flutter build ios --no-codesign --release
+        # --flavor full maps to the `full` Xcode scheme (matches the
+        # production bundle identifier and display name). The `develop`
+        # scheme exists for local sideloading alongside a TestFlight /
+        # App Store install and isn't what CI should validate.
+        run: flutter build ios --no-codesign --release --flavor full
 
   ios-integration-tests:
     runs-on: macos-26
@@ -273,7 +295,9 @@ jobs:
           echo "DEVICE_UDID=$DEVICE_UDID" >> $GITHUB_ENV
 
       - name: Run integration tests
-        run: flutter test integration_test/ -d "$DEVICE_UDID" --reporter expanded
+        # --flavor full so the integration-test app matches the production
+        # iOS scheme (bundle id + display name) rather than the develop one.
+        run: flutter test integration_test/ -d "$DEVICE_UDID" --flavor full --reporter expanded
 
   android-build:
     runs-on: ubuntu-latest
@@ -320,7 +344,11 @@ jobs:
         # --release would need a keystore which CI doesn't have; --debug
         # exercises the same Gradle / desugaring / R8 paths sufficiently
         # for a "compiles cleanly" gate.
-        run: flutter build apk --debug
+        # --flavor full builds the production-equivalent applicationId
+        # (no .develop suffix); the develop flavor exists for local
+        # sideloading alongside the Play Store install and isn't what CI
+        # should validate.
+        run: flutter build apk --flavor full --debug
 
   android-integration-tests:
     runs-on: ubuntu-latest
@@ -404,7 +432,10 @@ jobs:
           force-avd-creation: false
           emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           disable-animations: true
-          script: flutter test integration_test/ --reporter expanded
+          # --flavor full so the integration-test APK matches the
+          # production-equivalent applicationId rather than the dev sideload
+          # variant (see android/app/build.gradle).
+          script: flutter test integration_test/ --flavor full --reporter expanded
 
   ios-package:
     if: |
@@ -639,19 +670,29 @@ jobs:
         run: dart run build_runner build --delete-conflicting-outputs
 
       - name: Build Android App Bundle
-        run: flutter build appbundle --release
+        # --flavor full is the production-equivalent applicationId
+        # (no .develop suffix); Play Store distribution requires this
+        # flavor.
+        run: flutter build appbundle --release --flavor full
 
       - name: Build Android APK
-        run: flutter build apk --release
+        run: flutter build apk --release --flavor full
 
       - name: Upload Android AAB artifact
+        # The full flavor's AAB keeps the historic `app-release.aab`
+        # filename via the rename in android/app/build.gradle so the
+        # fastlane lane's default path and the GitHub release asset list
+        # keep working unchanged.
         uses: actions/upload-artifact@v7
         with:
           name: android-aab
-          path: build/app/outputs/bundle/release/app-release.aab
+          path: build/app/outputs/bundle/fullRelease/app-release.aab
           if-no-files-found: error
 
       - name: Upload Android APK artifact
+        # Same rename trick as the AAB above — the full flavor's APK
+        # stays named app-release.apk so the website's verify-your-download
+        # instructions and update-release-fingerprint workflow keep working.
         uses: actions/upload-artifact@v7
         with:
           name: android-apk
