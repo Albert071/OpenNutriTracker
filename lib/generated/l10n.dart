@@ -3811,6 +3811,116 @@ class S {
     );
   }
 
+  /// `Quick add`
+  String get quickAddCardLabel {
+    return Intl.message(
+      'Quick add',
+      name: 'quickAddCardLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Quick add`
+  String get quickAddBottomSheetTitle {
+    return Intl.message(
+      'Quick add',
+      name: 'quickAddBottomSheetTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Quick add`
+  String get quickAddDefaultName {
+    return Intl.message(
+      'Quick add',
+      name: 'quickAddDefaultName',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Title`
+  String get quickAddTitleHint {
+    return Intl.message(
+      'Title',
+      name: 'quickAddTitleHint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Energy (kcal)`
+  String get quickAddEnergyLabelKcal {
+    return Intl.message(
+      'Energy (kcal)',
+      name: 'quickAddEnergyLabelKcal',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Energy (kJ)`
+  String get quickAddEnergyLabelKj {
+    return Intl.message(
+      'Energy (kJ)',
+      name: 'quickAddEnergyLabelKj',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Carbs (g, optional)`
+  String get quickAddCarbsHint {
+    return Intl.message(
+      'Carbs (g, optional)',
+      name: 'quickAddCarbsHint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Fat (g, optional)`
+  String get quickAddFatHint {
+    return Intl.message(
+      'Fat (g, optional)',
+      name: 'quickAddFatHint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Protein (g, optional)`
+  String get quickAddProteinHint {
+    return Intl.message(
+      'Protein (g, optional)',
+      name: 'quickAddProteinHint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Add`
+  String get quickAddSubmitLabel {
+    return Intl.message(
+      'Add',
+      name: 'quickAddSubmitLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Added to {mealType}`
+  String quickAddAddedSnack(String mealType) {
+    return Intl.message(
+      'Added to $mealType',
+      name: 'quickAddAddedSnack',
+      desc: '',
+      args: [mealType],
+    );
+  }
+
   /// `Base quantity (g/ml)`
   String get baseQuantityLabel {
     return Intl.message(

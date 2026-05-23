@@ -106,6 +106,8 @@ class MessageLookup extends MessageLookupByLibrary {
   static String mMealDetailCurrentSelection(kcal) =>
       "(+${kcal} kcal mevcut seçim)";
 
+  static String mQuickAddAdded(mealType) => "${mealType} öğününe eklendi";
+
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "activityExample": MessageLookupByLibrary.simpleMessage(
@@ -924,6 +926,24 @@ class MessageLookup extends MessageLookupByLibrary {
         "proteinLabel": MessageLookupByLibrary.simpleMessage("protein"),
         "proteinLabelShort": MessageLookupByLibrary.simpleMessage("p"),
         "quantityLabel": MessageLookupByLibrary.simpleMessage("Miktar"),
+        "quickAddAddedSnack": mQuickAddAdded,
+        "quickAddBottomSheetTitle":
+            MessageLookupByLibrary.simpleMessage("Hızlı ekle"),
+        "quickAddCardLabel": MessageLookupByLibrary.simpleMessage("Hızlı ekle"),
+        "quickAddCarbsHint": MessageLookupByLibrary.simpleMessage(
+            "Karbonhidrat (g, isteğe bağlı)"),
+        "quickAddDefaultName":
+            MessageLookupByLibrary.simpleMessage("Hızlı ekle"),
+        "quickAddEnergyLabelKcal":
+            MessageLookupByLibrary.simpleMessage("Enerji (kcal)"),
+        "quickAddEnergyLabelKj":
+            MessageLookupByLibrary.simpleMessage("Enerji (kJ)"),
+        "quickAddFatHint":
+            MessageLookupByLibrary.simpleMessage("Yağ (g, isteğe bağlı)"),
+        "quickAddProteinHint":
+            MessageLookupByLibrary.simpleMessage("Protein (g, isteğe bağlı)"),
+        "quickAddSubmitLabel": MessageLookupByLibrary.simpleMessage("Ekle"),
+        "quickAddTitleHint": MessageLookupByLibrary.simpleMessage("Başlık"),
         "readLabel": MessageLookupByLibrary.simpleMessage(
             "Gizlilik politikasını okudum ve kabul ediyorum."),
         "recentlyAddedLabel":

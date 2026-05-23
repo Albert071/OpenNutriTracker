@@ -120,6 +120,13 @@
       }
     }
   },
+  "@quickAddAddedSnack": {
+    "placeholders": {
+      "mealType": {
+        "type": "String"
+      }
+    }
+  },
   "@recipeIngredientCountLabel": {
     "placeholders": {
       "count": {
@@ -744,6 +751,17 @@
   "proteinLabel": "protein",
   "proteinLabelShort": "p",
   "quantityLabel": "Quantity",
+  "quickAddAddedSnack": "Added to {mealType}",
+  "quickAddBottomSheetTitle": "Quick add",
+  "quickAddCardLabel": "Quick add",
+  "quickAddCarbsHint": "Carbs (g, optional)",
+  "quickAddDefaultName": "Quick add",
+  "quickAddEnergyLabelKcal": "Energy (kcal)",
+  "quickAddEnergyLabelKj": "Energy (kJ)",
+  "quickAddFatHint": "Fat (g, optional)",
+  "quickAddProteinHint": "Protein (g, optional)",
+  "quickAddSubmitLabel": "Add",
+  "quickAddTitleHint": "Title",
   "readLabel": "I have read and accept the privacy policy.",
   "recentlyAddedLabel": "Recently",
   "recipeAddIngredientLabel": "Add Ingredient",

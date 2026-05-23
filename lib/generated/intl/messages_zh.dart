@@ -101,6 +101,8 @@ class MessageLookup extends MessageLookupByLibrary {
   static String mMealDetailCurrentSelection(kcal) =>
       "（+${kcal} 千卡 当前选择）";
 
+  static String mQuickAddAdded(mealType) => "已添加到${mealType}";
+
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "activityExample":
@@ -814,6 +816,22 @@ class MessageLookup extends MessageLookupByLibrary {
         "proteinLabel": MessageLookupByLibrary.simpleMessage("蛋白质"),
         "proteinLabelShort": MessageLookupByLibrary.simpleMessage("蛋"),
         "quantityLabel": MessageLookupByLibrary.simpleMessage("数量"),
+        "quickAddAddedSnack": mQuickAddAdded,
+        "quickAddBottomSheetTitle":
+            MessageLookupByLibrary.simpleMessage("快速添加"),
+        "quickAddCardLabel": MessageLookupByLibrary.simpleMessage("快速添加"),
+        "quickAddCarbsHint":
+            MessageLookupByLibrary.simpleMessage("碳水化合物（克，可选）"),
+        "quickAddDefaultName": MessageLookupByLibrary.simpleMessage("快速添加"),
+        "quickAddEnergyLabelKcal":
+            MessageLookupByLibrary.simpleMessage("能量（千卡）"),
+        "quickAddEnergyLabelKj":
+            MessageLookupByLibrary.simpleMessage("能量（千焦）"),
+        "quickAddFatHint": MessageLookupByLibrary.simpleMessage("脂肪（克，可选）"),
+        "quickAddProteinHint":
+            MessageLookupByLibrary.simpleMessage("蛋白质（克，可选）"),
+        "quickAddSubmitLabel": MessageLookupByLibrary.simpleMessage("添加"),
+        "quickAddTitleHint": MessageLookupByLibrary.simpleMessage("标题"),
         "readLabel": MessageLookupByLibrary.simpleMessage("我已阅读并接受隐私政策。"),
         "recentlyAddedLabel": MessageLookupByLibrary.simpleMessage("最近"),
         "recipeAddIngredientLabel":

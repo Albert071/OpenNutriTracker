@@ -12,6 +12,7 @@ import 'package:opennutritracker/features/add_meal/presentation/widgets/meal_sea
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:opennutritracker/features/add_meal/presentation/widgets/no_results_widget.dart';
 import 'package:opennutritracker/features/add_meal/presentation/widgets/meal_item_card.dart';
+import 'package:opennutritracker/features/add_meal/presentation/widgets/quick_add_bottom_sheet.dart';
 import 'package:opennutritracker/features/add_meal/presentation/bloc/products_bloc.dart';
 import 'package:opennutritracker/features/edit_meal/presentation/edit_meal_screen.dart';
 import 'package:opennutritracker/features/scanner/scanner_screen.dart';
@@ -72,6 +73,13 @@ class _AddMealScreenState extends State<AddMealScreen>
       appBar: AppBar(
         title: Text(_mealType.getTypeName(context)),
         actions: [
+          Semantics(
+            identifier: 'add-meal-quick-add',
+            child: TextButton(
+              onPressed: _onQuickAddPressed,
+              child: Text(S.of(context).quickAddCardLabel),
+            ),
+          ),
           BlocBuilder<AddMealBloc, AddMealState>(
             bloc: locator<AddMealBloc>()..add(InitializeAddMealEvent()),
             builder: (BuildContext context, AddMealState state) {
@@ -324,6 +332,18 @@ class _AddMealScreenState extends State<AddMealScreen>
     Navigator.of(context).pushNamed(
       NavigationOptions.scannerRoute,
       arguments: ScannerScreenArguments(_day, _mealType.getIntakeType()),
+    );
+  }
+
+  void _onQuickAddPressed() {
+    showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      showDragHandle: true,
+      builder: (sheetContext) => QuickAddBottomSheet(
+        intakeType: _mealType.getIntakeType(),
+        day: _day,
+      ),
     );
   }
 

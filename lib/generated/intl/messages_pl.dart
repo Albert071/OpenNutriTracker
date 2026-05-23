@@ -103,6 +103,8 @@ class MessageLookup extends MessageLookupByLibrary {
   static String mMealDetailCurrentSelection(kcal) =>
       "(+${kcal} kcal bieżący wybór)";
 
+  static String mQuickAddAdded(mealType) => "Dodano do ${mealType}";
+
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "activityExample": MessageLookupByLibrary.simpleMessage(
@@ -939,6 +941,25 @@ class MessageLookup extends MessageLookupByLibrary {
         "proteinLabel": MessageLookupByLibrary.simpleMessage("białko"),
         "proteinLabelShort": MessageLookupByLibrary.simpleMessage("b"),
         "quantityLabel": MessageLookupByLibrary.simpleMessage("Ilość"),
+        "quickAddAddedSnack": mQuickAddAdded,
+        "quickAddBottomSheetTitle":
+            MessageLookupByLibrary.simpleMessage("Szybkie dodawanie"),
+        "quickAddCardLabel":
+            MessageLookupByLibrary.simpleMessage("Szybkie dodawanie"),
+        "quickAddCarbsHint": MessageLookupByLibrary.simpleMessage(
+            "Węglowodany (g, opcjonalnie)"),
+        "quickAddDefaultName":
+            MessageLookupByLibrary.simpleMessage("Szybkie dodawanie"),
+        "quickAddEnergyLabelKcal":
+            MessageLookupByLibrary.simpleMessage("Energia (kcal)"),
+        "quickAddEnergyLabelKj":
+            MessageLookupByLibrary.simpleMessage("Energia (kJ)"),
+        "quickAddFatHint":
+            MessageLookupByLibrary.simpleMessage("Tłuszcze (g, opcjonalnie)"),
+        "quickAddProteinHint":
+            MessageLookupByLibrary.simpleMessage("Białko (g, opcjonalnie)"),
+        "quickAddSubmitLabel": MessageLookupByLibrary.simpleMessage("Dodaj"),
+        "quickAddTitleHint": MessageLookupByLibrary.simpleMessage("Tytuł"),
         "readLabel": MessageLookupByLibrary.simpleMessage(
             "Przeczytałem i akceptuję politykę prywatności."),
         "recentlyAddedLabel": MessageLookupByLibrary.simpleMessage("Ostatnie"),

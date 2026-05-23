@@ -104,6 +104,8 @@ class MessageLookup extends MessageLookupByLibrary {
   static String mMealDetailCurrentSelection(kcal) =>
       "(+${kcal} kcal aktuální výběr)";
 
+  static String mQuickAddAdded(mealType) => "Přidáno do ${mealType}";
+
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "activityExample": MessageLookupByLibrary.simpleMessage(
@@ -933,6 +935,25 @@ class MessageLookup extends MessageLookupByLibrary {
         "proteinLabel": MessageLookupByLibrary.simpleMessage("bílkoviny"),
         "proteinLabelShort": MessageLookupByLibrary.simpleMessage("b"),
         "quantityLabel": MessageLookupByLibrary.simpleMessage("Množství"),
+        "quickAddAddedSnack": mQuickAddAdded,
+        "quickAddBottomSheetTitle":
+            MessageLookupByLibrary.simpleMessage("Rychlé přidání"),
+        "quickAddCardLabel":
+            MessageLookupByLibrary.simpleMessage("Rychlé přidání"),
+        "quickAddCarbsHint":
+            MessageLookupByLibrary.simpleMessage("Sacharidy (g, volitelné)"),
+        "quickAddDefaultName":
+            MessageLookupByLibrary.simpleMessage("Rychlé přidání"),
+        "quickAddEnergyLabelKcal":
+            MessageLookupByLibrary.simpleMessage("Energie (kcal)"),
+        "quickAddEnergyLabelKj":
+            MessageLookupByLibrary.simpleMessage("Energie (kJ)"),
+        "quickAddFatHint":
+            MessageLookupByLibrary.simpleMessage("Tuky (g, volitelné)"),
+        "quickAddProteinHint":
+            MessageLookupByLibrary.simpleMessage("Bílkoviny (g, volitelné)"),
+        "quickAddSubmitLabel": MessageLookupByLibrary.simpleMessage("Přidat"),
+        "quickAddTitleHint": MessageLookupByLibrary.simpleMessage("Název"),
         "readLabel": MessageLookupByLibrary.simpleMessage(
             "Četl jsem pravidla ohledně soukromí a souhlasím s nimi."),
         "recentlyAddedLabel": MessageLookupByLibrary.simpleMessage("Nedávné"),

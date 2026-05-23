@@ -103,6 +103,8 @@ class MessageLookup extends MessageLookupByLibrary {
   static String mMealDetailCurrentSelection(kcal) =>
       "(+${kcal} kcal current selection)";
 
+  static String mQuickAddAdded(mealType) => "Added to ${mealType}";
+
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "activityExample": MessageLookupByLibrary.simpleMessage(
@@ -908,6 +910,24 @@ class MessageLookup extends MessageLookupByLibrary {
         "proteinLabel": MessageLookupByLibrary.simpleMessage("protein"),
         "proteinLabelShort": MessageLookupByLibrary.simpleMessage("p"),
         "quantityLabel": MessageLookupByLibrary.simpleMessage("Quantity"),
+        "quickAddAddedSnack": mQuickAddAdded,
+        "quickAddBottomSheetTitle":
+            MessageLookupByLibrary.simpleMessage("Quick add"),
+        "quickAddCardLabel": MessageLookupByLibrary.simpleMessage("Quick add"),
+        "quickAddCarbsHint":
+            MessageLookupByLibrary.simpleMessage("Carbs (g, optional)"),
+        "quickAddDefaultName":
+            MessageLookupByLibrary.simpleMessage("Quick add"),
+        "quickAddEnergyLabelKcal":
+            MessageLookupByLibrary.simpleMessage("Energy (kcal)"),
+        "quickAddEnergyLabelKj":
+            MessageLookupByLibrary.simpleMessage("Energy (kJ)"),
+        "quickAddFatHint":
+            MessageLookupByLibrary.simpleMessage("Fat (g, optional)"),
+        "quickAddProteinHint":
+            MessageLookupByLibrary.simpleMessage("Protein (g, optional)"),
+        "quickAddSubmitLabel": MessageLookupByLibrary.simpleMessage("Add"),
+        "quickAddTitleHint": MessageLookupByLibrary.simpleMessage("Title"),
         "readLabel": MessageLookupByLibrary.simpleMessage(
             "I have read and accept the privacy policy."),
         "recentlyAddedLabel": MessageLookupByLibrary.simpleMessage("Recently"),
