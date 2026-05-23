@@ -97,6 +97,14 @@ class MessageLookup extends MessageLookupByLibrary {
   static String mMergeOneEn(winner) => "Merged — ${winner} now has 1 logged entry.";
   static String mFastingChipEn(remaining) => "Fasting · ${remaining} left";
 
+  static String mMealDetailDayTotal(consumed, goal) =>
+      "Day total: ${consumed} / ${goal}";
+
+  static String mMealDetailCurrentSelection(kcal) =>
+      "(+${kcal} kcal current selection)";
+
+  static String mQuickAddAdded(mealType) => "Added to ${mealType}";
+
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "activityExample": MessageLookupByLibrary.simpleMessage(
@@ -431,6 +439,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Macronutrient Distribution:"),
         "mealBrandsLabel": MessageLookupByLibrary.simpleMessage("Brands"),
         "mealCarbsLabel": MessageLookupByLibrary.simpleMessage("Carbohydrates"),
+        "mealDetailCurrentSelectionLabel": mMealDetailCurrentSelection,
+        "mealDetailDayTotalLabel": mMealDetailDayTotal,
         "mealFatLabel": MessageLookupByLibrary.simpleMessage("Fat"),
         "mealKcalLabel": MessageLookupByLibrary.simpleMessage("kcal per"),
         "mealEnergyLabel": MessageLookupByLibrary.simpleMessage("Energy"),
@@ -510,7 +520,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "onboardingHeightExampleHintFt":
             MessageLookupByLibrary.simpleMessage("e.g. 5.8"),
         "onboardingHeightQuestionSubtitle":
-            MessageLookupByLibrary.simpleMessage("Whats your current height?"),
+            MessageLookupByLibrary.simpleMessage("What\'s your current height?"),
         "onboardingIntroDescription": MessageLookupByLibrary.simpleMessage(
             "To start, the app needs some information about you to calculate your daily calorie goal.\nAll information about you is stored securely on your device."),
         "onboardingKcalPerDayLabel":
@@ -526,7 +536,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "onboardingWeightExampleHintLbs":
             MessageLookupByLibrary.simpleMessage("e.g. 132"),
         "onboardingWeightQuestionSubtitle":
-            MessageLookupByLibrary.simpleMessage("Whats your current weight?"),
+            MessageLookupByLibrary.simpleMessage("What\'s your current weight?"),
         "onboardingTargetWeightSubtitle":
             MessageLookupByLibrary.simpleMessage("Is there a weight you\'re working towards? You can leave this blank or change it later in Profile."),
         "onboardingTargetWeightHintOptional":
@@ -900,6 +910,24 @@ class MessageLookup extends MessageLookupByLibrary {
         "proteinLabel": MessageLookupByLibrary.simpleMessage("protein"),
         "proteinLabelShort": MessageLookupByLibrary.simpleMessage("p"),
         "quantityLabel": MessageLookupByLibrary.simpleMessage("Quantity"),
+        "quickAddAddedSnack": mQuickAddAdded,
+        "quickAddBottomSheetTitle":
+            MessageLookupByLibrary.simpleMessage("Quick add"),
+        "quickAddCardLabel": MessageLookupByLibrary.simpleMessage("Quick add"),
+        "quickAddCarbsHint":
+            MessageLookupByLibrary.simpleMessage("Carbs (g, optional)"),
+        "quickAddDefaultName":
+            MessageLookupByLibrary.simpleMessage("Quick add"),
+        "quickAddEnergyLabelKcal":
+            MessageLookupByLibrary.simpleMessage("Energy (kcal)"),
+        "quickAddEnergyLabelKj":
+            MessageLookupByLibrary.simpleMessage("Energy (kJ)"),
+        "quickAddFatHint":
+            MessageLookupByLibrary.simpleMessage("Fat (g, optional)"),
+        "quickAddProteinHint":
+            MessageLookupByLibrary.simpleMessage("Protein (g, optional)"),
+        "quickAddSubmitLabel": MessageLookupByLibrary.simpleMessage("Add"),
+        "quickAddTitleHint": MessageLookupByLibrary.simpleMessage("Title"),
         "readLabel": MessageLookupByLibrary.simpleMessage(
             "I have read and accept the privacy policy."),
         "recentlyAddedLabel": MessageLookupByLibrary.simpleMessage("Recently"),

@@ -98,6 +98,14 @@ class MessageLookup extends MessageLookupByLibrary {
   static String mMergeOneUk(winner) => "Об'єднано — ${winner} тепер має 1 запис.";
   static String mFastingChipUk(remaining) => "Голодування · залишилось ${remaining}";
 
+  static String mMealDetailDayTotal(consumed, goal) =>
+      "Денний підсумок: ${consumed} / ${goal}";
+
+  static String mMealDetailCurrentSelection(kcal) =>
+      "(+${kcal} kcal поточний вибір)";
+
+  static String mQuickAddAdded(mealType) => "Додано до ${mealType}";
+
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "activityExample": MessageLookupByLibrary.simpleMessage(
@@ -441,6 +449,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "magnesiumLabel": MessageLookupByLibrary.simpleMessage("магній"),
         "mealBrandsLabel": MessageLookupByLibrary.simpleMessage("Бренди"),
         "mealCarbsLabel": MessageLookupByLibrary.simpleMessage("Вуглеводи"),
+        "mealDetailCurrentSelectionLabel": mMealDetailCurrentSelection,
+        "mealDetailDayTotalLabel": mMealDetailDayTotal,
         "mealFatLabel": MessageLookupByLibrary.simpleMessage("Жири"),
         "mealKcalLabel": MessageLookupByLibrary.simpleMessage("ккал на"),
         "mealEnergyLabel": MessageLookupByLibrary.simpleMessage("Енергія"),
@@ -935,6 +945,25 @@ class MessageLookup extends MessageLookupByLibrary {
         "proteinLabel": MessageLookupByLibrary.simpleMessage("білки"),
         "proteinLabelShort": MessageLookupByLibrary.simpleMessage("б"),
         "quantityLabel": MessageLookupByLibrary.simpleMessage("Кількість"),
+        "quickAddAddedSnack": mQuickAddAdded,
+        "quickAddBottomSheetTitle":
+            MessageLookupByLibrary.simpleMessage("Швидке додавання"),
+        "quickAddCardLabel":
+            MessageLookupByLibrary.simpleMessage("Швидке додавання"),
+        "quickAddCarbsHint": MessageLookupByLibrary.simpleMessage(
+            "Вуглеводи (г, необов'язково)"),
+        "quickAddDefaultName":
+            MessageLookupByLibrary.simpleMessage("Швидке додавання"),
+        "quickAddEnergyLabelKcal":
+            MessageLookupByLibrary.simpleMessage("Енергія (kcal)"),
+        "quickAddEnergyLabelKj":
+            MessageLookupByLibrary.simpleMessage("Енергія (kJ)"),
+        "quickAddFatHint":
+            MessageLookupByLibrary.simpleMessage("Жири (г, необов'язково)"),
+        "quickAddProteinHint":
+            MessageLookupByLibrary.simpleMessage("Білки (г, необов'язково)"),
+        "quickAddSubmitLabel": MessageLookupByLibrary.simpleMessage("Додати"),
+        "quickAddTitleHint": MessageLookupByLibrary.simpleMessage("Назва"),
         "readLabel": MessageLookupByLibrary.simpleMessage(
             "Я прочитав і приймаю політику конфіденційності."),
         "recentlyAddedLabel": MessageLookupByLibrary.simpleMessage("Нещодавно"),

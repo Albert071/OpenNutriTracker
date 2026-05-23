@@ -7,6 +7,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:opennutritracker/core/domain/entity/recipe_entity.dart';
 import 'package:opennutritracker/core/presentation/widgets/user_image_picker_tile.dart';
 import 'package:opennutritracker/core/utils/locator.dart';
+import 'package:opennutritracker/core/utils/navigation_options.dart';
 import 'package:opennutritracker/core/utils/user_image_storage.dart';
 import 'package:opennutritracker/features/add_meal/domain/entity/meal_entity.dart';
 import 'package:opennutritracker/features/recipes/presentation/bloc/recipe_builder_bloc.dart';
@@ -14,6 +15,7 @@ import 'package:opennutritracker/features/recipes/presentation/widgets/food_sear
 import 'package:opennutritracker/features/recipes/presentation/widgets/ingredient_list_item.dart';
 import 'package:opennutritracker/features/recipes/presentation/widgets/ingredient_quantity_dialog.dart';
 import 'package:opennutritracker/features/recipes/presentation/widgets/recipe_nutrition_summary.dart';
+import 'package:opennutritracker/features/scanner/scanner_screen.dart';
 import 'package:opennutritracker/generated/l10n.dart';
 
 class RecipeBuilderArguments {
@@ -316,12 +318,27 @@ class _RecipeBuilderScreenState extends State<RecipeBuilderScreen> {
   Future<void> _onAddIngredient(BuildContext context) async {
     final selectedMeal = await Navigator.of(context).push<MealEntity>(
       MaterialPageRoute(
-        builder: (_) => Scaffold(
+        builder: (searchContext) => Scaffold(
           appBar: AppBar(
             title: Text(S.of(context).recipeAddIngredientLabel),
           ),
           body: FoodSearchTabView(
-            onMealSelected: (meal) => Navigator.of(context).pop(meal),
+            onMealSelected: (meal) => Navigator.of(searchContext).pop(meal),
+            onBarcodePressed: () async {
+              // Push the scanner in pick-mode — it pops a MealEntity back to
+              // us instead of routing into the meal-detail logging flow. We
+              // then thread the scanned meal through the same code path the
+              // tap-to-pick handler uses, so the quantity dialog runs
+              // identically whether the user typed or scanned.
+              final scannedMeal = await Navigator.of(searchContext)
+                  .pushNamed(
+                    NavigationOptions.scannerRoute,
+                    arguments: ScannerScreenArguments.pick(),
+                  );
+              if (scannedMeal is MealEntity && searchContext.mounted) {
+                Navigator.of(searchContext).pop(scannedMeal);
+              }
+            },
           ),
         ),
       ),

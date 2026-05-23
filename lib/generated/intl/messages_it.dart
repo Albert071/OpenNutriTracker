@@ -98,6 +98,14 @@ class MessageLookup extends MessageLookupByLibrary {
   static String mMergeOneIt(winner) => "Unito — ${winner} ora ha 1 voce registrata.";
   static String mFastingChipIt(remaining) => "Digiuno · ${remaining} rimanenti";
 
+  static String mMealDetailDayTotal(consumed, goal) =>
+      "Totale giornaliero: ${consumed} / ${goal}";
+
+  static String mMealDetailCurrentSelection(kcal) =>
+      "(+${kcal} kcal selezione attuale)";
+
+  static String mQuickAddAdded(mealType) => "Aggiunto a ${mealType}";
+
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "activityExample": MessageLookupByLibrary.simpleMessage(
@@ -442,6 +450,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "mealBrandsLabel": MessageLookupByLibrary.simpleMessage("Marche"),
         "mealCarbsLabel":
             MessageLookupByLibrary.simpleMessage("Carboidrati"),
+        "mealDetailCurrentSelectionLabel": mMealDetailCurrentSelection,
+        "mealDetailDayTotalLabel": mMealDetailDayTotal,
         "mealFatLabel": MessageLookupByLibrary.simpleMessage("Grassi"),
         "mealKcalLabel": MessageLookupByLibrary.simpleMessage("kcal per"),
         "mealEnergyLabel": MessageLookupByLibrary.simpleMessage("Energia"),
@@ -934,6 +944,25 @@ class MessageLookup extends MessageLookupByLibrary {
         "proteinLabel": MessageLookupByLibrary.simpleMessage("proteine"),
         "proteinLabelShort": MessageLookupByLibrary.simpleMessage("p"),
         "quantityLabel": MessageLookupByLibrary.simpleMessage("Quantità"),
+        "quickAddAddedSnack": mQuickAddAdded,
+        "quickAddBottomSheetTitle":
+            MessageLookupByLibrary.simpleMessage("Aggiunta rapida"),
+        "quickAddCardLabel":
+            MessageLookupByLibrary.simpleMessage("Aggiunta rapida"),
+        "quickAddCarbsHint":
+            MessageLookupByLibrary.simpleMessage("Carboidrati (g, opzionale)"),
+        "quickAddDefaultName":
+            MessageLookupByLibrary.simpleMessage("Aggiunta rapida"),
+        "quickAddEnergyLabelKcal":
+            MessageLookupByLibrary.simpleMessage("Energia (kcal)"),
+        "quickAddEnergyLabelKj":
+            MessageLookupByLibrary.simpleMessage("Energia (kJ)"),
+        "quickAddFatHint":
+            MessageLookupByLibrary.simpleMessage("Grassi (g, opzionale)"),
+        "quickAddProteinHint":
+            MessageLookupByLibrary.simpleMessage("Proteine (g, opzionale)"),
+        "quickAddSubmitLabel": MessageLookupByLibrary.simpleMessage("Aggiungi"),
+        "quickAddTitleHint": MessageLookupByLibrary.simpleMessage("Titolo"),
         "readLabel": MessageLookupByLibrary.simpleMessage(
             "Ho letto e accetto la privacy policy."),
         "recentlyAddedLabel": MessageLookupByLibrary.simpleMessage("Recenti"),

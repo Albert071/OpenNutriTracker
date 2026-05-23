@@ -86,6 +86,23 @@
       }
     }
   },
+  "@mealDetailCurrentSelectionLabel": {
+    "placeholders": {
+      "kcal": {
+        "type": "String"
+      }
+    }
+  },
+  "@mealDetailDayTotalLabel": {
+    "placeholders": {
+      "consumed": {
+        "type": "String"
+      },
+      "goal": {
+        "type": "String"
+      }
+    }
+  },
   "@mealNutrientsPerQtyLabel": {
     "placeholders": {
       "qty": {
@@ -99,6 +116,13 @@
   "@profileTargetWeightToGo": {
     "placeholders": {
       "value": {
+        "type": "String"
+      }
+    }
+  },
+  "@quickAddAddedSnack": {
+    "placeholders": {
+      "mealType": {
         "type": "String"
       }
     }
@@ -402,6 +426,8 @@
   "magnesiumLabel": "magnesium",
   "mealBrandsLabel": "Brands",
   "mealCarbsLabel": "Carbohydrates",
+  "mealDetailCurrentSelectionLabel": "(+{kcal} kcal current selection)",
+  "mealDetailDayTotalLabel": "Day total: {consumed} / {goal}",
   "mealEnergyLabel": "Energy",
   "mealFatLabel": "Fat",
   "mealImageLabel": "Add a photo",
@@ -464,7 +490,7 @@
   "onboardingGoalQuestionSubtitle": "What's your current weight goal?",
   "onboardingHeightExampleHintCm": "e.g. 170",
   "onboardingHeightExampleHintFt": "e.g. 5.8",
-  "onboardingHeightQuestionSubtitle": "Whats your current height?",
+  "onboardingHeightQuestionSubtitle": "What's your current height?",
   "onboardingIntroDescription": "To start, the app needs some information about you to calculate your daily calorie goal.\nAll information about you is stored securely on your device.",
   "onboardingKcalPerDayLabel": "kcal per day",
   "onboardingKjPerDayLabel": "kJ per day",
@@ -475,7 +501,7 @@
   "onboardingTargetWeightSubtitle": "Is there a weight you're working towards? You can leave this blank or change it later in Profile.",
   "onboardingWeightExampleHintKg": "e.g. 60",
   "onboardingWeightExampleHintLbs": "e.g. 132",
-  "onboardingWeightQuestionSubtitle": "Whats your current weight?",
+  "onboardingWeightQuestionSubtitle": "What's your current weight?",
   "onboardingWelcomeLabel": "Welcome to",
   "onboardingWrongHeightLabel": "Enter correct height",
   "onboardingWrongWeightLabel": "Enter correct weight",
@@ -725,6 +751,17 @@
   "proteinLabel": "protein",
   "proteinLabelShort": "p",
   "quantityLabel": "Quantity",
+  "quickAddAddedSnack": "Added to {mealType}",
+  "quickAddBottomSheetTitle": "Quick add",
+  "quickAddCardLabel": "Quick add",
+  "quickAddCarbsHint": "Carbs (g, optional)",
+  "quickAddDefaultName": "Quick add",
+  "quickAddEnergyLabelKcal": "Energy (kcal)",
+  "quickAddEnergyLabelKj": "Energy (kJ)",
+  "quickAddFatHint": "Fat (g, optional)",
+  "quickAddProteinHint": "Protein (g, optional)",
+  "quickAddSubmitLabel": "Add",
+  "quickAddTitleHint": "Title",
   "readLabel": "I have read and accept the privacy policy.",
   "recentlyAddedLabel": "Recently",
   "recipeAddIngredientLabel": "Add Ingredient",

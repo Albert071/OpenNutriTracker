@@ -4,7 +4,7 @@
 # Sequential ADB smoke-test pass for all triage branches.
 #
 # For each branch:
-#   1. Checkout + flutter pub get + flutter build apk --debug
+#   1. Checkout + flutter pub get + flutter build apk --flavor full --debug
 #   2. adb install -r
 #   3. Clear app data, launch, walk onboarding (tools/adb/walk-onboarding.sh)
 #   4. Run the branch-specific feature probe (finds widgets by Semantics identifier)
@@ -32,7 +32,12 @@ PACKAGE="com.opennutritracker.ont.opennutritracker"
 ACTIVITY="com.opennutritracker.ont.opennutritracker.MainActivity"
 REPO="$(cd "$__DIR/../.." && pwd)"
 FVM="${FVM:-$(command -v fvm 2>/dev/null || echo "$HOME/fvm/bin/fvm")}"
-APK="$REPO/build/app/outputs/flutter-apk/app-debug.apk"
+# Gradle's outputFileName rename for the full flavor keeps the historic
+# app-<buildType>.apk filename in apk/full/<buildType>/, but Flutter's
+# post-build copy at flutter-apk/ ignores the rename and uses the
+# flavored name (app-full-debug.apk). Pull from Gradle's native dir
+# where the rename actually applies.
+APK="$REPO/build/app/outputs/apk/full/debug/app-debug.apk"
 SCREENSHOTS="/tmp/ont-branch-screenshots"
 LOG="/tmp/ont-branch-test.log"
 SECRETS="/tmp/ont-secrets"
@@ -332,8 +337,11 @@ for BRANCH in "${BRANCHES[@]}"; do
   _log "  pub get..."
   "$FVM" flutter pub get --no-example 2>&1 | tail -2 | tee -a "$LOG"
 
-  _log "  building debug APK..."
-  BUILD_OUT=$("$FVM" flutter build apk --debug 2>&1)
+  _log "  building debug APK (full flavor)..."
+  # --flavor full uses the production applicationId so this smoke test
+  # exercises the same install identity as a Play Store build, not the
+  # .develop sideload variant.
+  BUILD_OUT=$("$FVM" flutter build apk --flavor full --debug 2>&1)
   BUILD_EXIT=$?
   echo "$BUILD_OUT" | tail -3 | sed 's/^/  /' | tee -a "$LOG"
 
