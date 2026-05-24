@@ -35,7 +35,13 @@ flutter analyze
 
 ## Environment Setup
 
-Copy `.env` and fill in real values before running:
+Copy `.env.example` to `.env` and fill in real values before running:
+
+```sh
+cp .env.example .env
+```
+
+The template carries placeholders that have no real-world effect — they exist so `envied`'s codegen finds every key on a fresh clone. Replace them:
 
 ```
 FDC_API_KEY="YOUR_KEY"        # USDA Food Data Central API key (direct FDC source, not actively used in UI)
@@ -44,7 +50,7 @@ SUPABASE_PROJECT_URL="PROJECT_URL"
 SUPABASE_PROJECT_ANON_KEY="ANON_KEY"
 ```
 
-After editing `.env`, run `just build` to regenerate `lib/core/utils/env.g.dart` (gitignored). The `envied` package obfuscates all secret values at compile time.
+`.env` is gitignored (`.gitignore` matches `*.env`), so your real secrets won't be committed accidentally. After editing it, run `just build` to regenerate `lib/core/utils/env.g.dart` (also gitignored). The `envied` package obfuscates all secret values at compile time.
 
 ## Code Generation
 

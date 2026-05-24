@@ -50,16 +50,22 @@ This downloads the pinned Flutter version (defined in `.fvmrc`) and creates a `.
 
 `git clone https://github.com/simonoppowa/OpenNutriTracker.git .`
 
-4.⁠ ⁠Get Dependencies.
+4.⁠ ⁠Create your local environment file from the template:
+
+`cp .env.example .env`
+
+`.env` is gitignored. Edit it to fill in real values (or leave the placeholders for a debug build that doesn't need the live backend — see `docs/supabase-fdc-self-hosting.md` for the FDC keys).
+
+5.⁠ ⁠Get Dependencies.
 
 `flutter pub get`
 
-5.⁠ ⁠Run Build Runner to generate Files.
+6.⁠ ⁠Run Build Runner to generate Files.
 
 `dart run build_runner build`
 
 At the best revert all the visible generated files now, only env.g.dart is needed, it is not checked in because it is in .gitignore.
 
-6.⁠ ⁠Restart VSC, VSC detects now that this is a flutter project. On the Bottom Right "No Device" ist displayed, click on it, then select "Start Medium Phone" on the command Palette on the top. Wait for the phone to boot up.
+7.⁠ ⁠Restart VSC, VSC detects now that this is a flutter project. On the Bottom Right "No Device" ist displayed, click on it, then select "Start Medium Phone" on the command Palette on the top. Wait for the phone to boot up.
 
-7. Press F5 to start a debug session (may take a while on the first time). Keep the virtual phone running all the time, just start and stop Debugging.
+8. Press F5 to start a debug session (may take a while on the first time). Keep the virtual phone running all the time, just start and stop Debugging.
