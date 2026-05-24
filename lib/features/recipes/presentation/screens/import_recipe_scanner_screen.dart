@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
@@ -24,9 +26,42 @@ class ImportRecipeScannerScreen extends StatefulWidget {
       _ImportRecipeScannerScreenState();
 }
 
-class _ImportRecipeScannerScreenState extends State<ImportRecipeScannerScreen> {
+class _ImportRecipeScannerScreenState extends State<ImportRecipeScannerScreen>
+    with WidgetsBindingObserver {
   bool _isProcessing = false;
   bool _handledInitialCode = false;
+  late final MobileScannerController _cameraController;
+
+  @override
+  void initState() {
+    super.initState();
+    _cameraController = MobileScannerController(
+      formats: const [BarcodeFormat.qrCode],
+    );
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    unawaited(_cameraController.dispose());
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (!_cameraController.value.hasCameraPermission) return;
+    switch (state) {
+      case AppLifecycleState.detached:
+      case AppLifecycleState.hidden:
+      case AppLifecycleState.paused:
+        unawaited(_cameraController.stop());
+      case AppLifecycleState.resumed:
+        unawaited(_cameraController.start());
+      case AppLifecycleState.inactive:
+        break;
+    }
+  }
 
   @override
   void didChangeDependencies() {
@@ -57,9 +92,7 @@ class _ImportRecipeScannerScreenState extends State<ImportRecipeScannerScreen> {
         ],
       ),
       body: MobileScanner(
-        controller: MobileScannerController(
-          formats: const [BarcodeFormat.qrCode],
-        ),
+        controller: _cameraController,
         onDetect: _onDetect,
       ),
     );

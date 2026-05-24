@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math' as math;
 
 import 'dart:io';
@@ -1092,15 +1093,38 @@ class _EditMealBarcodeScanPage extends StatefulWidget {
       _EditMealBarcodeScanPageState();
 }
 
-class _EditMealBarcodeScanPageState extends State<_EditMealBarcodeScanPage> {
+class _EditMealBarcodeScanPageState extends State<_EditMealBarcodeScanPage>
+    with WidgetsBindingObserver {
   static final _log = Logger('EditMealBarcodeScan');
   final MobileScannerController _controller = MobileScannerController();
   bool _done = false;
 
   @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     _controller.dispose();
     super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (!_controller.value.hasCameraPermission) return;
+    switch (state) {
+      case AppLifecycleState.detached:
+      case AppLifecycleState.hidden:
+      case AppLifecycleState.paused:
+        unawaited(_controller.stop());
+      case AppLifecycleState.resumed:
+        unawaited(_controller.start());
+      case AppLifecycleState.inactive:
+        break;
+    }
   }
 
   void _onDetect(BarcodeCapture capture) {
