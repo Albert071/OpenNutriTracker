@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -24,7 +26,8 @@ class ScannerScreen extends StatefulWidget {
   State<ScannerScreen> createState() => _ScannerScreenState();
 }
 
-class _ScannerScreenState extends State<ScannerScreen> {
+class _ScannerScreenState extends State<ScannerScreen>
+    with WidgetsBindingObserver {
   final log = Logger('ScannerScreen');
 
   String? _scannedBarcode;
@@ -41,11 +44,37 @@ class _ScannerScreenState extends State<ScannerScreen> {
   bool _navigatedAfterLoad = false;
 
   late ScannerBloc _scannerBloc;
+  // MobileScanner stops but doesn't dispose externally-owned controllers.
+  late final MobileScannerController _cameraController;
 
   @override
   void initState() {
-    _scannerBloc = locator<ScannerBloc>();
     super.initState();
+    _scannerBloc = locator<ScannerBloc>();
+    _cameraController = MobileScannerController();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    unawaited(_cameraController.dispose());
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (!_cameraController.value.hasCameraPermission) return;
+    switch (state) {
+      case AppLifecycleState.detached:
+      case AppLifecycleState.hidden:
+      case AppLifecycleState.paused:
+        unawaited(_cameraController.stop());
+      case AppLifecycleState.resumed:
+        unawaited(_cameraController.start());
+      case AppLifecycleState.inactive:
+        break;
+    }
   }
 
   @override
@@ -123,14 +152,13 @@ class _ScannerScreenState extends State<ScannerScreen> {
   }
 
   Scaffold _getScannerContent(BuildContext context) {
-    final cameraController = MobileScannerController();
     return Scaffold(
       appBar: AppBar(
         title: Text(S.of(context).scanProductLabel),
         actions: [
           IconButton(
             icon: ValueListenableBuilder(
-              valueListenable: cameraController,
+              valueListenable: _cameraController,
               builder: (context, state, child) {
                 switch (state.torchState) {
                   case TorchState.off || TorchState.unavailable:
@@ -143,11 +171,11 @@ class _ScannerScreenState extends State<ScannerScreen> {
                 }
               },
             ),
-            onPressed: () => cameraController.toggleTorch(),
+            onPressed: () => _cameraController.toggleTorch(),
           ),
           IconButton(
             icon: const Icon(Icons.flip_camera_android_outlined),
-            onPressed: () => cameraController.switchCamera(),
+            onPressed: () => _cameraController.switchCamera(),
           ),
         ],
       ),
@@ -155,7 +183,7 @@ class _ScannerScreenState extends State<ScannerScreen> {
         children: [
           Expanded(
             child: MobileScanner(
-              controller: cameraController,
+              controller: _cameraController,
               onDetect: (capture) {
                 if (_scannedBarcode != null) return;
                 final List<Barcode> barcodes = capture.barcodes;
