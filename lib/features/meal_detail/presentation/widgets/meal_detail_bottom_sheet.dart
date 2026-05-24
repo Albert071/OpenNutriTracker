@@ -68,14 +68,16 @@ class _MealDetailBottomSheetState extends State<MealDetailBottomSheet> {
       builder: (context) {
         return Container(
           decoration: BoxDecoration(
-            border: Border.all(
-              color: Theme.of(context).colorScheme.outline,
-              width: 0.5,
+            border: Border(
+              top: BorderSide(
+                color: Theme.of(context).colorScheme.outline,
+                width: 0.5,
+              ),
             ),
             color: Theme.of(context).colorScheme.surface,
             borderRadius: const BorderRadius.only(
-              topLeft: Radius.circular(32),
-              topRight: Radius.circular(32),
+              topLeft: Radius.circular(24),
+              topRight: Radius.circular(24),
             ),
           ),
           child: SafeArea(
