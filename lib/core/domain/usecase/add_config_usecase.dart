@@ -47,7 +47,6 @@ class AddConfigUsecase {
     );
   }
 
-
   Future<void> setConfigShowActivityTracking(bool show) async {
     _configRepository.setConfigShowActivityTracking(show);
   }
@@ -70,5 +69,43 @@ class AddConfigUsecase {
 
   Future<void> setConfigShowMicronutrients(bool show) async {
     _configRepository.setConfigShowMicronutrients(show);
+  }
+
+  Future<void> setConfigUsesKilojoules(bool usesKilojoules) async {
+    await _configRepository.setConfigUsesKilojoules(usesKilojoules);
+  }
+
+  Future<void> setConfigMealKcalSharesPct(Map<String, int> shares) async {
+    await _configRepository.setConfigMealKcalSharesPct(shares);
+  }
+
+  Future<void> setDiarySortPreference(String mealKey, int sortIndex) async {
+    await _configRepository.setDiarySortPreference(mealKey, sortIndex);
+  }
+
+  Future<void> setConfigNutrientPanelVisibility(
+    Map<String, bool> visibility,
+  ) async {
+    await _configRepository.setConfigNutrientPanelVisibility(visibility);
+  }
+
+  Future<void> setConfigDayStartOffsetHours(int hours) async {
+    await _configRepository.setConfigDayStartOffsetHours(hours);
+  }
+
+  Future<void> setConfigDayStartOffsetMinutes(int minutes) async {
+    _configRepository.setConfigDayStartOffsetMinutes(minutes);
+  }
+
+  Future<void> setConfigDailyWaterGoalMl(int goalMl) async {
+    await _configRepository.setConfigDailyWaterGoalMl(goalMl);
+  }
+
+  Future<void> setConfigUseMaterialYou(bool useMaterialYou) async {
+    await _configRepository.setConfigUseMaterialYou(useMaterialYou);
+  }
+
+  Future<void> setConfigAccentColor(int? value) async {
+    await _configRepository.setConfigAccentColor(value);
   }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:opennutritracker/core/domain/usecase/get_config_usecase.dart';
 import 'package:opennutritracker/core/presentation/widgets/add_item_bottom_sheet.dart';
 import 'package:opennutritracker/core/utils/locator.dart';
 import 'package:opennutritracker/core/utils/navigation_options.dart';
@@ -103,10 +104,13 @@ class _MainScreenState extends State<MainScreen> {
       appBar: _appbarPages[_selectedPageIndex],
       body: _bodyPages[_selectedPageIndex],
       floatingActionButton: _selectedPageIndex == 0
-          ? FloatingActionButton(
-              onPressed: () => _onFabPressed(context),
-              tooltip: S.of(context).addLabel,
-              child: const Icon(Icons.add),
+          ? Semantics(
+              identifier: 'fab-add-item',
+              child: FloatingActionButton(
+                onPressed: () => _onFabPressed(context),
+                tooltip: S.of(context).addLabel,
+                child: const Icon(Icons.add),
+              ),
             )
           : null,
       bottomNavigationBar: NavigationBar(
@@ -114,27 +118,39 @@ class _MainScreenState extends State<MainScreen> {
         onDestinationSelected: _setPage,
         destinations: [
           NavigationDestination(
-            icon: _selectedPageIndex == 0
-                ? const Icon(Icons.home)
-                : const Icon(Icons.home_outlined),
+            icon: Semantics(
+              identifier: 'nav-home',
+              child: _selectedPageIndex == 0
+                  ? const Icon(Icons.home)
+                  : const Icon(Icons.home_outlined),
+            ),
             label: S.of(context).homeLabel,
           ),
           NavigationDestination(
-            icon: _selectedPageIndex == 1
-                ? const Icon(Icons.book)
-                : const Icon((Icons.book_outlined)),
+            icon: Semantics(
+              identifier: 'nav-diary',
+              child: _selectedPageIndex == 1
+                  ? const Icon(Icons.book)
+                  : const Icon((Icons.book_outlined)),
+            ),
             label: S.of(context).diaryLabel,
           ),
           NavigationDestination(
-            icon: _selectedPageIndex == 2
-                ? const Icon(Icons.menu_book)
-                : const Icon(Icons.menu_book_outlined),
+            icon: Semantics(
+              identifier: 'nav-recipes',
+              child: _selectedPageIndex == 2
+                  ? const Icon(Icons.menu_book)
+                  : const Icon(Icons.menu_book_outlined),
+            ),
             label: S.of(context).recipesLabel,
           ),
           NavigationDestination(
-            icon: _selectedPageIndex == 3
-                ? const Icon(Icons.account_circle)
-                : const Icon(Icons.account_circle_outlined),
+            icon: Semantics(
+              identifier: 'nav-profile',
+              child: _selectedPageIndex == 3
+                  ? const Icon(Icons.account_circle)
+                  : const Icon(Icons.account_circle_outlined),
+            ),
             label: S.of(context).profileLabel,
           ),
         ],
@@ -180,7 +196,9 @@ class _MainScreenState extends State<MainScreen> {
     }
   }
 
-  void _onFabPressed(BuildContext context) {
+  Future<void> _onFabPressed(BuildContext context) async {
+    final config = await locator<GetConfigUsecase>().getConfig();
+    if (!context.mounted) return;
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -191,7 +209,10 @@ class _MainScreenState extends State<MainScreen> {
         ),
       ),
       builder: (BuildContext context) {
-        return AddItemBottomSheet(day: DateTime.now());
+        return AddItemBottomSheet(
+          day: DateTime.now(),
+          showActivityTracking: config.showActivityTracking,
+        );
       },
     );
   }

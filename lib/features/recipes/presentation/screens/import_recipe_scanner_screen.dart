@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
@@ -7,6 +9,15 @@ import 'package:opennutritracker/features/recipes/domain/entity/shared_recipe_pa
 import 'package:opennutritracker/features/recipes/presentation/bloc/recipes_bloc.dart';
 import 'package:opennutritracker/generated/l10n.dart';
 
+class ImportRecipeScannerArguments {
+  /// QR text already captured by the standard barcode scanner. When set,
+  /// the import screen skips its own camera and goes straight to the
+  /// confirm dialog so the user doesn't have to point the camera twice.
+  final String? initialCode;
+
+  const ImportRecipeScannerArguments({this.initialCode});
+}
+
 class ImportRecipeScannerScreen extends StatefulWidget {
   const ImportRecipeScannerScreen({super.key});
 
@@ -15,8 +26,57 @@ class ImportRecipeScannerScreen extends StatefulWidget {
       _ImportRecipeScannerScreenState();
 }
 
-class _ImportRecipeScannerScreenState extends State<ImportRecipeScannerScreen> {
+class _ImportRecipeScannerScreenState extends State<ImportRecipeScannerScreen>
+    with WidgetsBindingObserver {
   bool _isProcessing = false;
+  bool _handledInitialCode = false;
+  late final MobileScannerController _cameraController;
+
+  @override
+  void initState() {
+    super.initState();
+    _cameraController = MobileScannerController(
+      formats: const [BarcodeFormat.qrCode],
+    );
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    unawaited(_cameraController.dispose());
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (!_cameraController.value.hasCameraPermission) return;
+    switch (state) {
+      case AppLifecycleState.detached:
+      case AppLifecycleState.hidden:
+      case AppLifecycleState.paused:
+        unawaited(_cameraController.stop());
+      case AppLifecycleState.resumed:
+        unawaited(_cameraController.start());
+      case AppLifecycleState.inactive:
+        break;
+    }
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final args = ModalRoute.of(context)?.settings.arguments;
+    if (!_handledInitialCode &&
+        args is ImportRecipeScannerArguments &&
+        args.initialCode != null) {
+      _handledInitialCode = true;
+      _isProcessing = true;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) _processCode(args.initialCode!);
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,9 +92,7 @@ class _ImportRecipeScannerScreenState extends State<ImportRecipeScannerScreen> {
         ],
       ),
       body: MobileScanner(
-        controller: MobileScannerController(
-          formats: const [BarcodeFormat.qrCode],
-        ),
+        controller: _cameraController,
         onDetect: _onDetect,
       ),
     );

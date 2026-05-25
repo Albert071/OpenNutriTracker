@@ -142,6 +142,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             setButtonContent: _setSecondPageData,
             initialHeightCm: selection.height,
             initialWeightKg: selection.weight,
+            initialTargetWeightKg: selection.targetWeight,
             initialUsesImperial: selection.usesImperialUnits,
           ),
           footer: HighlightButton(
@@ -198,6 +199,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 _onboardingBloc.getOverviewProteinGoal()?.toInt().toString() ??
                     "?",
             setButtonActive: _setOverviewPageContent,
+            showLowKcalWarning:
+                _onboardingBloc.isOverviewBelowRecommendedKcalFloor(),
+            lowKcalWarningThreshold:
+                _onboardingBloc.getOverviewRecommendedKcalFloor(),
           ),
           footer: HighlightButton(
             buttonLabel: S.of(context).buttonStartLabel,
@@ -243,11 +248,13 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     bool active,
     double? selectedHeight,
     double? selectedWeight,
+    double? selectedTargetWeight,
     bool usesImperial,
   ) {
     setState(() {
       _onboardingBloc.userSelection.height = selectedHeight;
       _onboardingBloc.userSelection.weight = selectedWeight;
+      _onboardingBloc.userSelection.targetWeight = selectedTargetWeight;
       _onboardingBloc.userSelection.usesImperialUnits = usesImperial;
 
       _secondPageButtonActive = active;

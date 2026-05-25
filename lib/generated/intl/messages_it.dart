@@ -45,7 +45,7 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m11(time) => "Orario promemoria: ${time}";
 
-  static String m12(count) => "Importati ${count} pasti dal file CSV.";
+  static String m12(count) => "Importati ${count} pasti.";
 
   static String m13(imported, skipped) =>
       "Importati ${imported} pasti; ${skipped} righe ignorate per dati non validi.";
@@ -64,8 +64,55 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m19(count) => "Importare ${count} attività?";
 
+  static String m20(detail) => "Impossibile analizzare: ${detail}";
+
+  static String m21(count, customCount) =>
+      "Registrate ${count} dal JSON, ${customCount} salvate come pasti personalizzati";
+
+  static String m22(value) => "${value} al tuo obiettivo";
+
+  static String m23(consumed, target) => "${consumed} / ${target} kcal";
+
+  static String m24(unit) => "${unit} per porzione";
+
+  static String m25(hour) => "${hour}:00";
+
+  static String m26(hour, minute) => "${hour}:${minute}";
+
+  static String mLowKcal(threshold) =>
+      "Gli adulti non dovrebbero assumere meno di ${threshold} kcal al giorno per periodi prolungati senza una guida medica. Valuta di parlare con un professionista sanitario prima di mantenere un obiettivo così basso.";
+
+  static String mWaterChip(current, goal) => "${current} / ${goal} ml";
+
+  static String mLogWaterAmount(amount) => "Aggiungi ${amount} ml";
+
+  static String mFastingRemaining(value) => "${value} rimanenti";
+
+  static String mFastingTarget(value) => "Obiettivo: ${value}";
+  static String mMergeConfirm(loser, winner) =>
+      "Tutte le voci registrate con ${loser} verranno sostituite e mostrate come ${winner}, e ${loser} sarà rimosso dai tuoi alimenti personalizzati. Questa operazione non può essere annullata.";
+
+  static String mMergeSuccess(count, winner) =>
+      "Uniti — ${winner} ora ha ${count} voci registrate.";
+  static String mDriRef(value) => "rif. ${value}";
+  static String mMergeOneIt(winner) => "Unito — ${winner} ora ha 1 voce registrata.";
+  static String mFastingChipIt(remaining) => "Digiuno · ${remaining} rimanenti";
+
+  static String mMealDetailDayTotal(consumed, goal) =>
+      "Totale giornaliero: ${consumed} / ${goal}";
+
+  static String mMealDetailCurrentSelection(kcal) =>
+      "(+${kcal} kcal selezione attuale)";
+
+  static String mQuickAddAdded(mealType) => "Aggiunto a ${mealType}";
+
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
+        "nutrientPanelLimitLabel": MessageLookupByLibrary.simpleMessage("limite"),
+        "notificationsDailyReminderChannelName": MessageLookupByLibrary.simpleMessage("Promemoria giornalieri"),
+        "notificationsDailyReminderChannelDescription": MessageLookupByLibrary.simpleMessage("Promemoria giornaliero per registrare i pasti"),
+        "fastingNotificationChannelName": MessageLookupByLibrary.simpleMessage("Timer del digiuno"),
+        "fastingNotificationChannelDescription": MessageLookupByLibrary.simpleMessage("Notifiche occasionali quando un digiuno raggiunge il suo obiettivo."),
         "activityExample": MessageLookupByLibrary.simpleMessage(
             "es. corsa, bicicletta, yoga ..."),
         "activityLabel": MessageLookupByLibrary.simpleMessage("Attività"),
@@ -172,17 +219,61 @@ class MessageLookup extends MessageLookupByLibrary {
             "Impossibile leggere il file CSV. Controlla il formato e riprova."),
         "csvImportPartialLabel": m13,
         "csvImportSuccessLabel": m12,
+        "barcodeInvalidEan13CheckDigit": MessageLookupByLibrary.simpleMessage(
+            "Questo codice a barre a 13 cifre sembra digitato male, l\'ultima cifra non corrisponde alle altre"),
+        "customMealBarcodeHint": MessageLookupByLibrary.simpleMessage(
+            "Scansiona o digita un codice a barre per richiamare questo pasto in seguito"),
+        "customMealBarcodeInvalid": MessageLookupByLibrary.simpleMessage(
+            "Il codice a barre deve avere da 8 a 14 cifre"),
+        "customMealBarcodeLabel":
+            MessageLookupByLibrary.simpleMessage("Codice a barre"),
+        "customMealBarcodeScanButton":
+            MessageLookupByLibrary.simpleMessage("Scansiona codice a barre"),
         "customMealsDeleteConfirmContent": MessageLookupByLibrary.simpleMessage(
             "Tutte le voci del diario che utilizzano questo pasto verranno rimosse."),
         "customMealsDeleteConfirmTitle": MessageLookupByLibrary.simpleMessage(
             "Eliminare il pasto personalizzato?"),
         "customMealsEmptyLabel": MessageLookupByLibrary.simpleMessage(
             "Nessun pasto personalizzato salvato."),
+        "customMealsRowMoreTooltip":
+            MessageLookupByLibrary.simpleMessage("Altre azioni"),
+        "customMealsMergeAction": MessageLookupByLibrary.simpleMessage(
+            "Unisci a un altro alimento personalizzato"),
+        "customMealsMergePickerTitle": MessageLookupByLibrary.simpleMessage(
+            "Scegli l\'alimento personalizzato da unire"),
+        "customMealsMergeChooseSurvivorTitle":
+            MessageLookupByLibrary.simpleMessage("Quale rimane?"),
+        "customMealsMergeContinueAction":
+            MessageLookupByLibrary.simpleMessage("Continua"),
+        "customMealsMergeConfirmTitle": MessageLookupByLibrary.simpleMessage(
+            "Unire gli alimenti personalizzati?"),
+        "customMealsMergeConfirmContent": mMergeConfirm,
+        "customMealsMergeConfirmAction":
+            MessageLookupByLibrary.simpleMessage("Unisci"),
+                "customMealsMergeSuccessSnackbarOne": mMergeOneIt,
+        "customMealsMergeSuccessSnackbarOther": mMergeSuccess,
         "dailyKcalAdjustmentLabel": MessageLookupByLibrary.simpleMessage(
             "Regolazione kcal giornaliere:"),
+        "dailyKjAdjustmentLabel":
+            MessageLookupByLibrary.simpleMessage("Regolazione kJ giornalieri:"),
         "dataCollectionLabel": MessageLookupByLibrary.simpleMessage(
-            "Supporta lo sviluppo inviando dati di utilizzo anonimi"),
+            "Invia segnalazioni di arresto anonime per aiutarci a correggere i bug. Non vengono inclusi diario alimentare, peso o dati personali."),
         "deleteAllLabel": MessageLookupByLibrary.simpleMessage("Elimina tutto"),
+        "settingsDeleteAllDataLabel": MessageLookupByLibrary.simpleMessage(
+            "Elimina tutti i miei dati"),
+        "settingsDeleteAllDataSubtitle": MessageLookupByLibrary.simpleMessage(
+            "Profilo, pasti, attività e cronologia del peso"),
+        "settingsDeleteAllDataConfirmTitle":
+            MessageLookupByLibrary.simpleMessage("Eliminare tutti i tuoi dati?"),
+        "settingsDeleteAllDataConfirmContent": MessageLookupByLibrary.simpleMessage(
+            "Questa operazione rimuove in modo permanente da questo dispositivo il tuo profilo, i pasti, le attività, la cronologia del peso e tutte le ricette personalizzate. I database di Open Food Facts e USDA Food Data Central non vengono modificati. L'operazione non può essere annullata."),
+        "settingsDeleteAllDataConfirmAction":
+            MessageLookupByLibrary.simpleMessage("Elimina tutto"),
+        "lowKcalWarningTitle": MessageLookupByLibrary.simpleMessage(
+            "Questo obiettivo giornaliero è piuttosto basso"),
+        "lowKcalWarningBody": mLowKcal,
+        "lowKcalWarningViewDisclaimer":
+            MessageLookupByLibrary.simpleMessage("Mostra avviso"),
         "deleteSelectedRecipesConfirmTitle": m18,
         "deleteTimeDialogContent": MessageLookupByLibrary.simpleMessage(
             "Vuoi eliminare l\'alimento selezionato?"),
@@ -196,9 +287,20 @@ class MessageLookup extends MessageLookupByLibrary {
         "dialogCopyLabel": MessageLookupByLibrary.simpleMessage("Copia a oggi"),
         "dialogDeleteLabel": MessageLookupByLibrary.simpleMessage("ELIMINA"),
         "dialogOKLabel": MessageLookupByLibrary.simpleMessage("OK"),
+        "diaryNutrientPanelDataDisclaimer":
+            MessageLookupByLibrary.simpleMessage("Vengono sommati solo i nutrienti registrati sui pasti che hai inserito. Un pasto senza un valore non contribuisce a quel nutriente — i totali potrebbero quindi essere sottostimati."),
         "diaryFutureDateWarning": MessageLookupByLibrary.simpleMessage(
             "Stai modificando una data futura"),
         "diaryLabel": MessageLookupByLibrary.simpleMessage("Diario"),
+        "diaryNutrientPanelTitle":
+            MessageLookupByLibrary.simpleMessage("Nutrienti di oggi"),
+        "driPanelInfoBody": MessageLookupByLibrary.simpleMessage(
+            "Questi valori di riferimento provengono dai Dietary Reference Intakes dell\'IOM per adulti e variano in base a età e genere. Sono un riferimento, non un obiettivo — le tue esigenze possono essere diverse."),
+        "driPanelInfoLinkLabel":
+            MessageLookupByLibrary.simpleMessage("Fonte: IOM Dietary Reference Intakes"),
+        "driPanelInfoTitle":
+            MessageLookupByLibrary.simpleMessage("Apporto di riferimento"),
+        "driPanelReferenceLabel": mDriRef,
         "dinnerExample":
             MessageLookupByLibrary.simpleMessage("es. zuppa, pollo, vino ..."),
         "dinnerLabel": MessageLookupByLibrary.simpleMessage("Cena"),
@@ -212,6 +314,14 @@ class MessageLookup extends MessageLookupByLibrary {
             "OpenNutriTracker non è un\'applicazione medica. Tutti i dati forniti non sono validati e dovrebbero essere utilizzati con cautela. Mantieni uno stile di vita sano e consulta un professionista se hai problemi. L\'uso durante malattie, gravidanza o allattamento non è raccomandato. Per le fonti sottoposte a peer review di ogni calcolo, tocca l\'icona informativa nella schermata Home o Profilo."),
         "downloadSampleCsvAction":
             MessageLookupByLibrary.simpleMessage("Pasti di esempio (csv)"),
+        "downloadSampleJsonAction":
+            MessageLookupByLibrary.simpleMessage("Pasti di esempio (json)"),
+        "importMealsJsonAction":
+            MessageLookupByLibrary.simpleMessage("Importa pasti (json)"),
+        "downloadSampleRecipesJsonAction":
+            MessageLookupByLibrary.simpleMessage("Ricette di esempio (json)"),
+        "importRecipesJsonAction":
+            MessageLookupByLibrary.simpleMessage("Importa ricette (json)"),
         "downloadSampleRecipesCsvAction": MessageLookupByLibrary.simpleMessage(
             "Ricette di esempio (csv)"),
         "duplicateMealDialogContent":
@@ -241,6 +351,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "exportAction": MessageLookupByLibrary.simpleMessage("Esporta"),
         "exportImportAppDataLabel": MessageLookupByLibrary.simpleMessage(
             "Esporta / Importa dati app"),
+        "exportImportCsvRecipesNote":
+            MessageLookupByLibrary.simpleMessage("Il CSV conserva attività, registro pasti e giorni tracciati. Le ricette e le foto allegate restano solo nel JSON — passa a JSON se vuoi includerle nel backup."),
         "exportImportDescription": MessageLookupByLibrary.simpleMessage(
             "Puoi esportare i dati dell\'app in un file zip e importarli successivamente. Utile per backup o trasferimento su un altro dispositivo.\n\nL\'app non utilizza servizi cloud per memorizzare i tuoi dati."),
         "exportImportErrorLabel": MessageLookupByLibrary.simpleMessage(
@@ -276,7 +388,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "importActivitySuccessLabel":
             MessageLookupByLibrary.simpleMessage("Allenamento importato"),
         "importCustomFoodDataDescription": MessageLookupByLibrary.simpleMessage(
-            "Importa i tuoi pasti da un file CSV. Scarica un esempio per vedere il formato delle colonne e i campi obbligatori."),
+            "Importa i tuoi pasti da un file CSV o incollando JSON. Scarica un esempio per vedere la forma attesa e i campi obbligatori."),
         "importCustomFoodDataLabel": MessageLookupByLibrary.simpleMessage(
             "Importa dati alimentari personalizzati"),
         "importMealConfirmContent": m4,
@@ -299,6 +411,14 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Ricetta importata"),
         "importRecipesCsvAction":
             MessageLookupByLibrary.simpleMessage("Importa ricette (csv)"),
+        "inconsistentNutritionWarningBody": MessageLookupByLibrary.simpleMessage(
+            "Questi valori non sembrano tornare — le calorie inserite non corrispondono all'energia di carboidrati, grassi e proteine. Salvare comunque o controllare di nuovo?"),
+        "inconsistentNutritionWarningEdit":
+            MessageLookupByLibrary.simpleMessage("Controlla di nuovo"),
+        "inconsistentNutritionWarningSaveAnyway":
+            MessageLookupByLibrary.simpleMessage("Salva comunque"),
+        "inconsistentNutritionWarningTitle":
+            MessageLookupByLibrary.simpleMessage("I numeri non tornano"),
         "infoAddedActivityLabel":
             MessageLookupByLibrary.simpleMessage("Nuova attività aggiunta"),
         "infoAddedIntakeLabel":
@@ -309,9 +429,21 @@ class MessageLookup extends MessageLookupByLibrary {
         "itemUpdatedSnackbar":
             MessageLookupByLibrary.simpleMessage("Alimento aggiornato"),
         "kcalLabel": MessageLookupByLibrary.simpleMessage("kcal"),
+        "kjLabel": MessageLookupByLibrary.simpleMessage("kJ"),
         "kcalLeftLabel": MessageLookupByLibrary.simpleMessage("kcal rimanenti"),
         "kcalTooMuchLabel":
             MessageLookupByLibrary.simpleMessage("kcal in eccesso"),
+        "energyLeftLabel": MessageLookupByLibrary.simpleMessage("rimanenti"),
+        "energyTooMuchLabel":
+            MessageLookupByLibrary.simpleMessage("in eccesso"),
+        "settingsEnergyUnitLabel":
+            MessageLookupByLibrary.simpleMessage("Unità di energia"),
+        "energyUnitKcalLabel":
+            MessageLookupByLibrary.simpleMessage("Kilocalorie (kcal)"),
+        "energyUnitKjLabel":
+            MessageLookupByLibrary.simpleMessage("Kilojoule (kJ)"),
+        "onboardingKjPerDayLabel":
+            MessageLookupByLibrary.simpleMessage("kJ al giorno"),
         "kgLabel": MessageLookupByLibrary.simpleMessage("kg"),
         "lbsLabel": MessageLookupByLibrary.simpleMessage("lbs"),
         "lunchExample": MessageLookupByLibrary.simpleMessage(
@@ -322,9 +454,12 @@ class MessageLookup extends MessageLookupByLibrary {
         "magnesiumLabel": MessageLookupByLibrary.simpleMessage("magnesio"),
         "mealBrandsLabel": MessageLookupByLibrary.simpleMessage("Marche"),
         "mealCarbsLabel":
-            MessageLookupByLibrary.simpleMessage("carboidrati per"),
-        "mealFatLabel": MessageLookupByLibrary.simpleMessage("grassi per"),
+            MessageLookupByLibrary.simpleMessage("Carboidrati"),
+        "mealDetailCurrentSelectionLabel": mMealDetailCurrentSelection,
+        "mealDetailDayTotalLabel": mMealDetailDayTotal,
+        "mealFatLabel": MessageLookupByLibrary.simpleMessage("Grassi"),
         "mealKcalLabel": MessageLookupByLibrary.simpleMessage("kcal per"),
+        "mealEnergyLabel": MessageLookupByLibrary.simpleMessage("Energia"),
         "mealNameLabel": MessageLookupByLibrary.simpleMessage("Nome pasto"),
         "mealNameValidationError": MessageLookupByLibrary.simpleMessage(
             "Il nome del pasto deve contenere almeno una lettera"),
@@ -332,7 +467,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "mealNutrientsTotalLabel":
             MessageLookupByLibrary.simpleMessage("Quantità totale"),
         "mealProteinLabel":
-            MessageLookupByLibrary.simpleMessage("proteine per 100 g/ml"),
+            MessageLookupByLibrary.simpleMessage("Proteine"),
         "mealSizeLabel":
             MessageLookupByLibrary.simpleMessage("Dimensione pasto (g/ml)"),
         "mealSizeLabelImperial":
@@ -355,6 +490,11 @@ class MessageLookup extends MessageLookupByLibrary {
         "notAvailableLabel": MessageLookupByLibrary.simpleMessage("N/D"),
         "nothingAddedLabel":
             MessageLookupByLibrary.simpleMessage("Niente aggiunto"),
+        "nutrientPanelDayLabel": MessageLookupByLibrary.simpleMessage("Giorno"),
+        "nutrientPanelWeekLabel":
+            MessageLookupByLibrary.simpleMessage("Settimana"),
+        "nutrientPanelAllHiddenLabel": MessageLookupByLibrary.simpleMessage(
+            "Tutti i nutrienti nascosti — attivane alcuni in Impostazioni → Nutrienti."),
         "nutritionInfoLabel":
             MessageLookupByLibrary.simpleMessage("Informazioni nutrizionali"),
         "nutritionalStatusNormalWeight":
@@ -422,6 +562,10 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("es. 132"),
         "onboardingWeightQuestionSubtitle":
             MessageLookupByLibrary.simpleMessage("Qual è il tuo peso attuale?"),
+        "onboardingTargetWeightSubtitle":
+            MessageLookupByLibrary.simpleMessage("C\'è un peso che vuoi raggiungere? Puoi lasciare vuoto o modificarlo più tardi dal Profilo."),
+        "onboardingTargetWeightHintOptional":
+            MessageLookupByLibrary.simpleMessage("Facoltativo"),
         "onboardingWelcomeLabel":
             MessageLookupByLibrary.simpleMessage("Benvenuto in"),
         "onboardingWrongHeightLabel": MessageLookupByLibrary.simpleMessage(
@@ -807,6 +951,25 @@ class MessageLookup extends MessageLookupByLibrary {
         "proteinLabel": MessageLookupByLibrary.simpleMessage("proteine"),
         "proteinLabelShort": MessageLookupByLibrary.simpleMessage("p"),
         "quantityLabel": MessageLookupByLibrary.simpleMessage("Quantità"),
+        "quickAddAddedSnack": mQuickAddAdded,
+        "quickAddBottomSheetTitle":
+            MessageLookupByLibrary.simpleMessage("Aggiunta rapida"),
+        "quickAddCardLabel":
+            MessageLookupByLibrary.simpleMessage("Aggiunta rapida"),
+        "quickAddCarbsHint":
+            MessageLookupByLibrary.simpleMessage("Carboidrati (g, opzionale)"),
+        "quickAddDefaultName":
+            MessageLookupByLibrary.simpleMessage("Aggiunta rapida"),
+        "quickAddEnergyLabelKcal":
+            MessageLookupByLibrary.simpleMessage("Energia (kcal)"),
+        "quickAddEnergyLabelKj":
+            MessageLookupByLibrary.simpleMessage("Energia (kJ)"),
+        "quickAddFatHint":
+            MessageLookupByLibrary.simpleMessage("Grassi (g, opzionale)"),
+        "quickAddProteinHint":
+            MessageLookupByLibrary.simpleMessage("Proteine (g, opzionale)"),
+        "quickAddSubmitLabel": MessageLookupByLibrary.simpleMessage("Aggiungi"),
+        "quickAddTitleHint": MessageLookupByLibrary.simpleMessage("Titolo"),
         "readLabel": MessageLookupByLibrary.simpleMessage(
             "Ho letto e accetto la privacy policy."),
         "recentlyAddedLabel": MessageLookupByLibrary.simpleMessage("Recenti"),
@@ -843,6 +1006,10 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Nutrizione (totale)"),
         "recipeSaveErrorLabel": MessageLookupByLibrary.simpleMessage(
             "Impossibile salvare la ricetta."),
+        "recipeSaveForLaterDescription": MessageLookupByLibrary.simpleMessage(
+            "Attiva questa opzione per mantenere il pasto nella tua lista salvata per la prossima volta. Lasciala disattivata per un pasto occasionale che non mangerai più."),
+        "recipeSaveForLaterLabel": MessageLookupByLibrary.simpleMessage(
+            "Salva per la prossima volta"),
         "recipeSaveLabel":
             MessageLookupByLibrary.simpleMessage("Salva ricetta"),
         "recipeServingsCountHelper": MessageLookupByLibrary.simpleMessage(
@@ -852,6 +1019,26 @@ class MessageLookup extends MessageLookupByLibrary {
         "recipeTagsHelper": MessageLookupByLibrary.simpleMessage(
             "Separati da virgola, es. \"colazione, vegano\""),
         "recipeTagsLabel": MessageLookupByLibrary.simpleMessage("Tag"),
+        "recipeImageLabel":
+            MessageLookupByLibrary.simpleMessage("Aggiungi una foto"),
+        "recipeImagePickFromGallery":
+            MessageLookupByLibrary.simpleMessage("Scegli dalla galleria"),
+        "recipeImageTakePhoto":
+            MessageLookupByLibrary.simpleMessage("Scatta una foto"),
+        "recipeImageRemove":
+            MessageLookupByLibrary.simpleMessage("Rimuovi foto"),
+        "recipeImageReplace":
+            MessageLookupByLibrary.simpleMessage("Sostituisci foto"),
+        "mealImageLabel":
+            MessageLookupByLibrary.simpleMessage("Aggiungi una foto"),
+        "mealImagePickFromGallery":
+            MessageLookupByLibrary.simpleMessage("Scegli dalla galleria"),
+        "mealImageTakePhoto":
+            MessageLookupByLibrary.simpleMessage("Scatta una foto"),
+        "mealImageRemove":
+            MessageLookupByLibrary.simpleMessage("Rimuovi foto"),
+        "mealImageReplace":
+            MessageLookupByLibrary.simpleMessage("Sostituisci foto"),
         "recipeTotalWeightHelper": MessageLookupByLibrary.simpleMessage(
             "Predefinito come somma degli ingredienti. I liquidi sono approssimati a 1 ml ≈ 1 g."),
         "recipeTotalWeightLabel":
@@ -872,6 +1059,18 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("grassi saturi"),
         "scanProductLabel":
             MessageLookupByLibrary.simpleMessage("Scansiona prodotto"),
+        "scannerManualEntryButton": MessageLookupByLibrary.simpleMessage(
+            "Inserisci il codice manualmente"),
+        "scannerManualEntryCancel":
+            MessageLookupByLibrary.simpleMessage("Annulla"),
+        "scannerManualEntryDialogTitle": MessageLookupByLibrary.simpleMessage(
+            "Inserisci il codice a barre"),
+        "scannerManualEntryFieldHint":
+            MessageLookupByLibrary.simpleMessage("Da 8 a 14 cifre"),
+        "scannerManualEntryInvalid": MessageLookupByLibrary.simpleMessage(
+            "Questo codice a barre non sembra valido. Controlla le cifre e riprova."),
+        "scannerManualEntrySubmit":
+            MessageLookupByLibrary.simpleMessage("Cerca"),
         "searchDefaultLabel": MessageLookupByLibrary.simpleMessage(
             "Inserisci una parola da cercare"),
         "searchFoodPage": MessageLookupByLibrary.simpleMessage("Cibo"),
@@ -899,14 +1098,57 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Informazioni"),
         "settingFeedbackLabel":
             MessageLookupByLibrary.simpleMessage("Feedback"),
-        "settingsCalculationsLabel":
-            MessageLookupByLibrary.simpleMessage("Calcoli"),
         "settingsCustomMealsLabel":
             MessageLookupByLibrary.simpleMessage("Pasti personalizzati"),
         "settingsDisclaimerLabel":
             MessageLookupByLibrary.simpleMessage("Disclaimer"),
+        "settingsFibreGoalDescription": MessageLookupByLibrary.simpleMessage(
+            "Obiettivo giornaliero di fibre in grammi. Il valore di riferimento predefinito è 30 g."),
+        "settingsFibreGoalLabel":
+            MessageLookupByLibrary.simpleMessage("Obiettivo fibre"),
+        "settingsNutrientGoalsHint": MessageLookupByLibrary.simpleMessage(
+            "Obiettivi personali per ogni nutriente del pannello giornaliero. Il diario li utilizza al posto dei valori di riferimento predefiniti ogni volta che ne imposti uno."),
+        "settingsNutrientGoalsLabel":
+            MessageLookupByLibrary.simpleMessage("Obiettivi nutrizionali"),
+        "settingsSaturatedFatGoalDescription":
+            MessageLookupByLibrary.simpleMessage(
+                "Limite giornaliero di grassi saturi in grammi. Il valore di riferimento predefinito è 20 g."),
+        "settingsSaturatedFatGoalLabel":
+            MessageLookupByLibrary.simpleMessage("Obiettivo grassi saturi"),
         "settingsSourcesLabel":
             MessageLookupByLibrary.simpleMessage("Fonti e riferimenti"),
+        "settingsSugarsGoalDescription": MessageLookupByLibrary.simpleMessage(
+            "Limite giornaliero di zuccheri in grammi. Il valore di riferimento predefinito è 50 g."),
+        "settingsSugarsGoalLabel":
+            MessageLookupByLibrary.simpleMessage("Obiettivo zuccheri"),
+        "settingsSodiumGoalLabel":
+            MessageLookupByLibrary.simpleMessage("Obiettivo sodio"),
+        "settingsSodiumGoalDescription": MessageLookupByLibrary.simpleMessage(
+            "Limite giornaliero di sodio in milligrammi. Il valore di riferimento predefinito è 2300 mg."),
+        "settingsCalciumGoalLabel":
+            MessageLookupByLibrary.simpleMessage("Obiettivo calcio"),
+        "settingsCalciumGoalDescription": MessageLookupByLibrary.simpleMessage(
+            "Obiettivo giornaliero di calcio in milligrammi. Il valore di riferimento predefinito è 1000 mg."),
+        "settingsIronGoalLabel":
+            MessageLookupByLibrary.simpleMessage("Obiettivo ferro"),
+        "settingsIronGoalDescription": MessageLookupByLibrary.simpleMessage(
+            "Obiettivo giornaliero di ferro in milligrammi. Il valore predefinito dipende dal genere (8 mg uomo, 18 mg donna, 14 mg altrimenti)."),
+        "settingsPotassiumGoalLabel":
+            MessageLookupByLibrary.simpleMessage("Obiettivo potassio"),
+        "settingsPotassiumGoalDescription": MessageLookupByLibrary.simpleMessage(
+            "Obiettivo giornaliero di potassio in milligrammi. Il valore di riferimento predefinito è 3500 mg."),
+        "settingsMagnesiumGoalLabel":
+            MessageLookupByLibrary.simpleMessage("Obiettivo magnesio"),
+        "settingsMagnesiumGoalDescription": MessageLookupByLibrary.simpleMessage(
+            "Obiettivo giornaliero di magnesio in milligrammi. Il valore predefinito dipende dal genere (400 mg uomo, 310 mg donna, 355 mg altrimenti)."),
+        "settingsVitaminDGoalLabel":
+            MessageLookupByLibrary.simpleMessage("Obiettivo vitamina D"),
+        "settingsVitaminDGoalDescription": MessageLookupByLibrary.simpleMessage(
+            "Obiettivo giornaliero di vitamina D in microgrammi. Il valore di riferimento predefinito è 15 µg."),
+        "settingsVitaminB12GoalLabel":
+            MessageLookupByLibrary.simpleMessage("Obiettivo vitamina B12"),
+        "settingsVitaminB12GoalDescription": MessageLookupByLibrary.simpleMessage(
+            "Obiettivo giornaliero di vitamina B12 in microgrammi. Il valore di riferimento predefinito è 2,4 µg."),
         "sourcesIconTooltip":
             MessageLookupByLibrary.simpleMessage("Vedi le fonti"),
         "sourcesScreenIntro": MessageLookupByLibrary.simpleMessage(
@@ -927,6 +1169,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Calorie dall\'attività (valori MET)"),
         "sourcesActivityDescription": MessageLookupByLibrary.simpleMessage(
             "Le calorie bruciate durante un\'attività si stimano come MET × peso corporeo (kg) × durata (ore), usando i valori dell\'Adult Compendium of Physical Activities."),
+        "sourcesNutrientReferenceTitle": MessageLookupByLibrary.simpleMessage("Apporti nutrizionali di riferimento"),
+        "sourcesNutrientReferenceDescription": MessageLookupByLibrary.simpleMessage("Gli apporti giornalieri mostrati nel pannello nutrienti del diario provengono dal rapporto di sintesi delle Dietary Reference Intakes dell'Institute of Medicine, che copre gli obiettivi per ciascun nutriente negli adulti."),
         "sourcesNonBinaryTitle":
             MessageLookupByLibrary.simpleMessage("Stima calorica per persone non binarie"),
         "sourcesNonBinaryDescription": MessageLookupByLibrary.simpleMessage(
@@ -937,9 +1181,28 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Distanza"),
         "settingsImperialLabel":
             MessageLookupByLibrary.simpleMessage("Imperiale (lbs, ft, oz)"),
+        "settingsKcalAdjustmentLabel":
+            MessageLookupByLibrary.simpleMessage("Aggiustamento kcal giornaliero"),
         "settingsLabel": MessageLookupByLibrary.simpleMessage("Impostazioni"),
         "settingsLanguageLabel":
             MessageLookupByLibrary.simpleMessage("Lingua"),
+        "settingsMaterialYouTitle":
+            MessageLookupByLibrary.simpleMessage("Usa i colori di sistema"),
+        "settingsMaterialYouSubtitle": MessageLookupByLibrary.simpleMessage("Riprende il colore d'accento dello sfondo su Android 12 e versioni successive."),
+        "settingsAccentColourTitle": MessageLookupByLibrary.simpleMessage("Colore d'accento"),
+        "settingsAccentSubtitleMaterialYou": MessageLookupByLibrary.simpleMessage("Material You"),
+        "settingsAccentSubtitleCustom": MessageLookupByLibrary.simpleMessage("Personalizzato"),
+        "settingsAccentSubtitleDefault": MessageLookupByLibrary.simpleMessage("Predefinito"),
+        "settingsAccentPresetsHeader": MessageLookupByLibrary.simpleMessage("Scegli un colore"),
+        "settingsAccentCustomColour": MessageLookupByLibrary.simpleMessage("Colore personalizzato…"),
+        "settingsAccentCustomSubtitle": MessageLookupByLibrary.simpleMessage("Apri il selettore di tonalità per una scelta precisa"),
+        "settingsAccentHexLabel": MessageLookupByLibrary.simpleMessage("Codice esadecimale"),
+        "settingsAccentHexInvalid": MessageLookupByLibrary.simpleMessage("Quel codice esadecimale non sembra giusto — sei caratteri, 0-9 e A-F."),
+        "settingsAccentHueTitle": MessageLookupByLibrary.simpleMessage("Colore d\u2019accento"),
+        "settingsAccentHueDisabledHint": MessageLookupByLibrary.simpleMessage("Disattiva i colori di sistema per scegliere un accento personalizzato."),
+        "settingsAccentHueReset": MessageLookupByLibrary.simpleMessage("Reimposta"),
+        "settingsMacroSplitLabel":
+            MessageLookupByLibrary.simpleMessage("Distribuzione macro"),
         "settingsLicensesLabel":
             MessageLookupByLibrary.simpleMessage("Licenze"),
         "settingsMassLabel": MessageLookupByLibrary.simpleMessage("Massa"),
@@ -963,6 +1226,21 @@ class MessageLookup extends MessageLookupByLibrary {
         "settingsShowMealMacros":
             MessageLookupByLibrary.simpleMessage("Mostra macro pasto"),
         "settingsShowMicronutrientsLabel": MessageLookupByLibrary.simpleMessage("Mostra micronutrienti"),
+        "settingsNutrientsLabel":
+            MessageLookupByLibrary.simpleMessage("Nutrienti"),
+        "settingsNutrientsSubtitle": MessageLookupByLibrary.simpleMessage(
+            "Scegli quali nutrienti compaiono nel pannello del diario"),
+        "settingsNutrientsHelp": MessageLookupByLibrary.simpleMessage(
+            "Scegli quali nutrienti sono visibili nel pannello giornaliero. Quelli nascosti possono essere riattivati in qualsiasi momento."),
+        "settingsDayStartLabel":
+            MessageLookupByLibrary.simpleMessage("Il giorno inizia alle"),
+        "settingsDayStartDescription": MessageLookupByLibrary.simpleMessage(
+            "Scegli l\'ora in cui inizia la tua giornata. I pasti e le attività registrati prima di questa ora verranno conteggiati nel giorno precedente — utile per chi lavora di notte o mangia tardi."),
+        "settingsDayStartHourLabel": m25,
+        "settingsDayStartHoursPickerLabel":
+            MessageLookupByLibrary.simpleMessage("Ore"),
+        "settingsDayStartMinutesPickerLabel":
+            MessageLookupByLibrary.simpleMessage("Minuti"),        "settingsDayStartTimeLabel": m26,
         "settingsSourceCodeLabel":
             MessageLookupByLibrary.simpleMessage("Codice sorgente"),
         "settingsSystemLabel": MessageLookupByLibrary.simpleMessage("Sistema"),
@@ -1005,5 +1283,137 @@ class MessageLookup extends MessageLookupByLibrary {
         "weightLabel": MessageLookupByLibrary.simpleMessage("Peso"),
         "yearsLabel": m3,
         "zincLabel": MessageLookupByLibrary.simpleMessage("zinco"),
+        "profileWeightHistoryTitle":
+            MessageLookupByLibrary.simpleMessage("Cronologia del peso"),
+        "weightHistoryAddEntry":
+            MessageLookupByLibrary.simpleMessage("Aggiungi voce"),
+        "weightHistoryNoEntries": MessageLookupByLibrary.simpleMessage(
+            "Nessuna registrazione del peso. Aggiungi la prima per iniziare a seguire l\'andamento."),
+        "weightHistoryDateLabel":
+            MessageLookupByLibrary.simpleMessage("Data"),
+        "weightHistoryWeightLabel":
+            MessageLookupByLibrary.simpleMessage("Peso"),
+        "weightHistoryNoteLabel":
+            MessageLookupByLibrary.simpleMessage("Nota (facoltativa)"),
+        "weightHistoryChartEmptyState": MessageLookupByLibrary.simpleMessage(
+            "Registra almeno due giorni per vedere l\'andamento."),
+        "diarySortByCarbs": MessageLookupByLibrary.simpleMessage(
+            "Carboidrati (dal più alto al più basso)"),
+        "diarySortByFat": MessageLookupByLibrary.simpleMessage(
+            "Grassi (dal più alto al più basso)"),
+        "diarySortByKcal": MessageLookupByLibrary.simpleMessage(
+            "Calorie (dal più alto al più basso)"),
+        "diarySortByLabel": MessageLookupByLibrary.simpleMessage("Ordina per"),
+        "diarySortByProtein": MessageLookupByLibrary.simpleMessage(
+            "Proteine (dal più alto al più basso)"),
+        "diarySortByTime":
+            MessageLookupByLibrary.simpleMessage("Ora di aggiunta"),
+        "profileTargetWeightLabel":
+            MessageLookupByLibrary.simpleMessage("Peso obiettivo"),
+        "profileTargetWeightNotSetLabel":
+            MessageLookupByLibrary.simpleMessage("Non impostato"),
+        "profileTargetWeightClearAction":
+            MessageLookupByLibrary.simpleMessage("Cancella"),
+        "profileTargetWeightReached": MessageLookupByLibrary.simpleMessage(
+            "Hai raggiunto il tuo obiettivo"),
+        "settingsCaloriesTaperDescription": MessageLookupByLibrary.simpleMessage(
+            "Riduce gradualmente il deficit giornaliero così gli ultimi chili non sembrano un muro."),
+        "settingsCaloriesTaperLabel": MessageLookupByLibrary.simpleMessage(
+            "Adatta l\'obiettivo calorico mentre ti avvicini al tuo peso obiettivo"),
+        "profileTargetWeightToGo": m22,
+        "customActivityDescription": MessageLookupByLibrary.simpleMessage(
+            "Inserisci direttamente le calorie bruciate, per allenamenti non in elenco o letture da un fitness tracker"),
+        "customActivityDescriptionKj":
+            MessageLookupByLibrary.simpleMessage("Inserisci direttamente i kilojoule bruciati, per allenamenti non in elenco o letture da un fitness tracker"),
+        "customActivityKcalHint":
+            MessageLookupByLibrary.simpleMessage("es. 250"),
+        "customActivityKcalLabel":
+            MessageLookupByLibrary.simpleMessage("Calorie bruciate"),
+        "customActivityName":
+            MessageLookupByLibrary.simpleMessage("Attività personalizzata"),
+        "customActivityNameFieldHint": MessageLookupByLibrary.simpleMessage(
+            "es. Tragitto serale in bici"),
+        "customActivityNameFieldLabel":
+            MessageLookupByLibrary.simpleMessage("Nome (facoltativo)"),
+        "customActivityPickFromTemplate": MessageLookupByLibrary.simpleMessage(
+            "Scegli da modelli salvati"),
+        "customActivitySaveAsTemplate": MessageLookupByLibrary.simpleMessage(
+            "Salva come modello per la prossima volta"),
+        "customActivityTemplatesEmpty": MessageLookupByLibrary.simpleMessage(
+            "Non hai ancora salvato modelli. Spunta «Salva come modello per la prossima volta» per ricordare un\'attività personalizzata da riutilizzare."),
+        "customMealFormAdvanced":
+            MessageLookupByLibrary.simpleMessage("Avanzato"),
+        "customMealFormAdvancedHelp": MessageLookupByLibrary.simpleMessage(
+            "Imposta quantità di base e valori per 100 g/ml per un calcolo preciso."),
+        "customMealFormModeLabel":
+            MessageLookupByLibrary.simpleMessage("Vista del modulo"),
+        "customMealFormSimple":
+            MessageLookupByLibrary.simpleMessage("Semplice"),
+        "customMealFormSimpleFieldHelper": m24,
+        "customMealFormSimpleHelp": MessageLookupByLibrary.simpleMessage(
+            "Inserisci i totali per una porzione."),
+        "mealPatternFiveSmall":
+            MessageLookupByLibrary.simpleMessage("Cinque piccoli"),
+        "mealPatternMediterranean":
+            MessageLookupByLibrary.simpleMessage("Mediterranea"),
+        "mealPatternOmad":
+            MessageLookupByLibrary.simpleMessage("Un pasto"),
+        "mealPatternPresetsLabel":
+            MessageLookupByLibrary.simpleMessage("Preset rapidi"),
+        "mealPatternStandard":
+            MessageLookupByLibrary.simpleMessage("Standard"),
+        "mealPatternTwoMeal":
+            MessageLookupByLibrary.simpleMessage("Due pasti"),
+        "settingsPerMealKcalShareBreakfast":
+            MessageLookupByLibrary.simpleMessage("Colazione"),
+        "settingsPerMealKcalShareDescription": MessageLookupByLibrary.simpleMessage(
+            "Distribuisci il tuo obiettivo giornaliero di kcal tra colazione, pranzo, cena e spuntini. Le quote devono sommare al 100%."),
+        "settingsPerMealKcalShareDinner":
+            MessageLookupByLibrary.simpleMessage("Cena"),
+        "settingsPerMealKcalShareLabel":
+            MessageLookupByLibrary.simpleMessage("Quota kcal per pasto"),
+        "settingsPerMealKcalShareLunch":
+            MessageLookupByLibrary.simpleMessage("Pranzo"),
+        "settingsPerMealKcalShareSnack":
+            MessageLookupByLibrary.simpleMessage("Spuntino"),
+        "diaryMealKcalConsumedOfTarget": m23,
+        "logWaterAmountLabel": mLogWaterAmount,
+        "logWaterDialogTitle":
+            MessageLookupByLibrary.simpleMessage("Registra acqua bevuta"),
+        "logWaterNothingToUndoLabel":
+            MessageLookupByLibrary.simpleMessage("Niente da annullare"),
+        "logWaterUndoLabel":
+            MessageLookupByLibrary.simpleMessage("Annulla ultimo"),
+        "mlLabel": MessageLookupByLibrary.simpleMessage("ml"),
+        "settingsWaterGoalDescription":
+            MessageLookupByLibrary.simpleMessage(
+                "Usato dal contatore d\'acqua nella schermata principale."),
+        "settingsWaterGoalLabel":
+            MessageLookupByLibrary.simpleMessage(
+                "Obiettivo idrico giornaliero"),
+        "waterChipLabel": mWaterChip,
+        "profileFastingEntry": MessageLookupByLibrary.simpleMessage('Timer di digiuno'),
+        "fastingTitle": MessageLookupByLibrary.simpleMessage('Timer di digiuno'),
+        "fastingSubtitle": MessageLookupByLibrary.simpleMessage('Un semplice timer per il tempo tra i pasti. Nessuna serie, nessun obiettivo, solo l\'orologio.'),
+        "fastingWarningTitle": MessageLookupByLibrary.simpleMessage('Prima di iniziare'),
+        "fastingWarningBody": MessageLookupByLibrary.simpleMessage('Tenere traccia dei tempi di digiuno può aiutare alcune persone e turbarne altre, in particolare chi ha alle spalle un disturbo alimentare. Se è il tuo caso, prenditi prima cura di te. Puoi trovare sostegno presso BEAT (UK) e NEDA (US).'),
+        "fastingWarningDecline": MessageLookupByLibrary.simpleMessage('Non fa per me'),
+        "fastingWarningAccept": MessageLookupByLibrary.simpleMessage('Ho capito, attiva il timer'),
+        "fastingPresetCustom": MessageLookupByLibrary.simpleMessage('Personalizzato'),
+        "fastingStart": MessageLookupByLibrary.simpleMessage('Avvia timer'),
+        "fastingCancel": MessageLookupByLibrary.simpleMessage('Termina digiuno'),
+        "fastingCancelConfirmTitle": MessageLookupByLibrary.simpleMessage('Terminare il digiuno?'),
+        "fastingCancelConfirmBody": MessageLookupByLibrary.simpleMessage('Chiuderà la sessione corrente.'),
+        "fastingHomeChipBody": mFastingChipIt,
+        "fastingNotificationCompleteTitle": MessageLookupByLibrary.simpleMessage("Sessione di digiuno completata"),
+        "fastingNotificationCompleteBody": MessageLookupByLibrary.simpleMessage("Il tuo tempo obiettivo è stato raggiunto."),
+        "fastingComplete": MessageLookupByLibrary.simpleMessage('Sessione completata'),
+        "fastingLinkBeat": MessageLookupByLibrary.simpleMessage('BEAT (UK)'),
+        "fastingLinkNeda": MessageLookupByLibrary.simpleMessage('NEDA (US)'),
+        "fastingElapsedLabel": MessageLookupByLibrary.simpleMessage('Trascorso'),
+        "hoursLabel": MessageLookupByLibrary.simpleMessage('ore'),
+        "dialogCloseLabel": MessageLookupByLibrary.simpleMessage('Chiudi'),
+        "fastingRemainingValue": mFastingRemaining,
+        "fastingTargetValue": mFastingTarget,
       };
 }

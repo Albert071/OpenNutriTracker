@@ -25,6 +25,15 @@ class UserDBO extends HiveObject {
   double? weeklyWeightGoalKg;
   @HiveField(7)
   CaloriesProfileDBO? caloriesProfile;
+  @HiveField(8)
+  double? targetWeightKg;
+  // Opt-in linear taper that scales the daily kcal deficit down as
+  // current weight approaches the target. Sits next to targetWeightKg
+  // because the toggle only has anything to act on once a target
+  // weight is set; lives on the user, not on app config, since it's a
+  // personal weight-goal preference rather than an app-wide setting.
+  @HiveField(9)
+  bool caloriesTaperEnabled;
 
   UserDBO({
     required this.birthday,
@@ -35,6 +44,8 @@ class UserDBO extends HiveObject {
     required this.pal,
     this.weeklyWeightGoalKg,
     this.caloriesProfile,
+    this.targetWeightKg,
+    this.caloriesTaperEnabled = false,
   });
 
   factory UserDBO.fromUserEntity(UserEntity entity) {
@@ -49,6 +60,8 @@ class UserDBO extends HiveObject {
       caloriesProfile: entity.caloriesProfile == null
           ? null
           : CaloriesProfileDBO.fromEntity(entity.caloriesProfile!),
+      targetWeightKg: entity.targetWeightKg,
+      caloriesTaperEnabled: entity.caloriesTaperEnabled,
     );
   }
 }

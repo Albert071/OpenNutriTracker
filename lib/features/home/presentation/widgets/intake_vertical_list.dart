@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:opennutritracker/core/data/repository/recipe_repository.dart';
 import 'package:opennutritracker/core/domain/entity/intake_entity.dart';
 import 'package:opennutritracker/core/domain/entity/tracked_day_entity.dart';
 import 'package:opennutritracker/core/presentation/widgets/copy_dialog.dart';
 import 'package:opennutritracker/core/presentation/widgets/delete_all_dialog.dart';
 import 'package:opennutritracker/core/presentation/widgets/intake_card.dart';
 import 'package:opennutritracker/core/presentation/widgets/placeholder_card.dart';
+import 'package:opennutritracker/core/presentation/widgets/share_qr_dialog.dart';
+import 'package:opennutritracker/core/utils/energy_display.dart';
 import 'package:opennutritracker/core/utils/locator.dart';
 import 'package:opennutritracker/core/utils/navigation_options.dart';
 import 'package:opennutritracker/core/utils/vertical_list_popup_menu_selections.dart';
@@ -12,9 +15,10 @@ import 'package:opennutritracker/features/add_meal/presentation/add_meal_screen.
 import 'package:opennutritracker/features/add_meal/presentation/add_meal_type.dart';
 import 'package:opennutritracker/features/diary/presentation/bloc/calendar_day_bloc.dart';
 import 'package:opennutritracker/features/diary/presentation/bloc/diary_bloc.dart';
+import 'package:opennutritracker/features/diary/presentation/widgets/diary_sort_type.dart';
+import 'package:opennutritracker/features/home/domain/entity/shared_meal_payload.dart';
 import 'package:opennutritracker/features/home/presentation/bloc/home_bloc.dart';
 import 'package:opennutritracker/features/home/presentation/screens/import_meal_scanner_screen.dart';
-import 'package:opennutritracker/features/home/presentation/widgets/share_meal_qr_dialog.dart';
 import 'package:opennutritracker/features/meal_detail/presentation/bloc/meal_detail_bloc.dart';
 import 'package:opennutritracker/generated/l10n.dart';
 
@@ -34,6 +38,22 @@ class IntakeVerticalList extends StatefulWidget {
   final Function(IntakeEntity intake, TrackedDayEntity? trackedDayEntity,
       AddMealType? type)? onCopyIntakeCallback;
   final TrackedDayEntity? trackedDayEntity;
+  // #150: optional recommended kcal target for this meal section. When
+  // supplied and > 0, the section header shows "consumed / target kcal" so
+  // someone scanning the day can see at a glance whether breakfast (or any
+  // other meal) sat inside the share they had planned for it.
+  final double? mealKcalTarget;
+
+  /// Current sort applied to [intakeList]. When non-null (and
+  /// [onSortTypeChanged] is also provided), a small sort menu is rendered in
+  /// the section header. Callers are responsible for sorting [intakeList]
+  /// before it reaches the widget — this field only drives the menu's
+  /// highlighted selection.
+  final DiarySortType? sortType;
+
+  /// Called when the user picks a new sort option from the section header.
+  /// When null, the sort menu is hidden.
+  final ValueChanged<DiarySortType>? onSortTypeChanged;
 
   const IntakeVerticalList({
     super.key,
@@ -50,6 +70,9 @@ class IntakeVerticalList extends StatefulWidget {
     this.onItemTappedCallback,
     this.onCopyIntakeCallback,
     this.trackedDayEntity,
+    this.mealKcalTarget,
+    this.sortType,
+    this.onSortTypeChanged,
   });
 
   @override
@@ -87,6 +110,31 @@ class _IntakeVerticalListState extends State<IntakeVerticalList> {
         .fold(0, (previousValue, element) => previousValue + element.totalProteinsGram);
   }
 
+  // #150: only show a header when we have something to say — either some
+  // food was logged, or a recommended target exists so the section can read
+  // "0 / 600 kcal" before anything is logged.
+  bool get _hasMealKcalTarget =>
+      widget.mealKcalTarget != null && widget.mealKcalTarget! > 0;
+
+  bool get _shouldShowHeaderSummary => totalKcal > 0 || _hasMealKcalTarget;
+
+  String _buildHeaderSummary(BuildContext context) {
+    final consumed = EnergyDisplay.formatValue(context, totalKcal);
+    final kcalLine = _hasMealKcalTarget
+        ? S.of(context).diaryMealKcalConsumedOfTarget(
+              consumed,
+              EnergyDisplay.formatValue(context, widget.mealKcalTarget!),
+            )
+        : EnergyDisplay.formatWithUnit(context, totalKcal);
+    if (widget.showMealMacros && totalKcal > 0) {
+      return '$kcalLine\n'
+          '${totalCarbsGram.toInt()} ${S.of(context).carbsLabelShort}  '
+          '${totalFatsGram.toInt()} ${S.of(context).fatLabelShort}  '
+          '${totalProteinsGram.toInt()} ${S.of(context).proteinLabelShort}';
+    }
+    return kcalLine;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -107,12 +155,9 @@ class _IntakeVerticalListState extends State<IntakeVerticalList> {
                     ?.copyWith(color: Theme.of(context).colorScheme.onSurface),
               ),
               const Spacer(),
-              if (totalKcal > 0)
+              if (_shouldShowHeaderSummary)
                 Text(
-                  widget.showMealMacros
-                      ? '${totalKcal.toInt()} ${S.of(context).kcalLabel}\n'
-                          '${totalCarbsGram.toInt()} ${S.of(context).carbsLabelShort}  ${totalFatsGram.toInt()} ${S.of(context).fatLabelShort}  ${totalProteinsGram.toInt()} ${S.of(context).proteinLabelShort}'
-                      : '${totalKcal.toInt()} ${S.of(context).kcalLabel}',
+                  _buildHeaderSummary(context),
                   style: Theme.of(context).textTheme.titleSmall?.copyWith(
                       color: Theme.of(context)
                           .colorScheme
@@ -120,6 +165,8 @@ class _IntakeVerticalListState extends State<IntakeVerticalList> {
                           .withValues(alpha: 0.7)),
                   textAlign: TextAlign.center,
                 ),
+              if (widget.onSortTypeChanged != null && totalKcal > 0)
+                _buildSortMenu(context),
               PopupMenuButton<VerticalListPopupMenuSelections>(
                     onSelected:
                         (VerticalListPopupMenuSelections selection) async {
@@ -151,10 +198,16 @@ class _IntakeVerticalListState extends State<IntakeVerticalList> {
                           }
                         case VerticalListPopupMenuSelections.onShare:
                           if (context.mounted) {
+                            final code = SharedMealPayload.fromIntakeList(
+                              widget.intakeList,
+                              recipeRepository: locator<RecipeRepository>(),
+                            ).toJsonString();
                             await showDialog(
                               context: context,
-                              builder: (_) => ShareMealQrDialog(
-                                intakeList: widget.intakeList,
+                              builder: (_) => ShareQrDialog(
+                                title: S.of(context).shareMealLabel,
+                                code: code,
+                                fileBaseName: 'meal_qr',
                               ),
                             );
                           }
@@ -266,6 +319,46 @@ class _IntakeVerticalListState extends State<IntakeVerticalList> {
           },
         ),
       ],
+    );
+  }
+
+  Widget _buildSortMenu(BuildContext context) {
+    final current = widget.sortType ?? DiarySortType.timeAdded;
+    return Semantics(
+      identifier: 'diary-section-sort-menu',
+      child: PopupMenuButton<DiarySortType>(
+        tooltip: S.of(context).diarySortByLabel,
+        icon: const Icon(Icons.sort),
+        initialValue: current,
+        onSelected: (sort) => widget.onSortTypeChanged?.call(sort),
+        itemBuilder: (context) => <PopupMenuEntry<DiarySortType>>[
+          CheckedPopupMenuItem<DiarySortType>(
+            value: DiarySortType.timeAdded,
+            checked: current == DiarySortType.timeAdded,
+            child: Text(S.of(context).diarySortByTime),
+          ),
+          CheckedPopupMenuItem<DiarySortType>(
+            value: DiarySortType.kcal,
+            checked: current == DiarySortType.kcal,
+            child: Text(S.of(context).diarySortByKcal),
+          ),
+          CheckedPopupMenuItem<DiarySortType>(
+            value: DiarySortType.protein,
+            checked: current == DiarySortType.protein,
+            child: Text(S.of(context).diarySortByProtein),
+          ),
+          CheckedPopupMenuItem<DiarySortType>(
+            value: DiarySortType.carbs,
+            checked: current == DiarySortType.carbs,
+            child: Text(S.of(context).diarySortByCarbs),
+          ),
+          CheckedPopupMenuItem<DiarySortType>(
+            value: DiarySortType.fat,
+            checked: current == DiarySortType.fat,
+            child: Text(S.of(context).diarySortByFat),
+          ),
+        ],
+      ),
     );
   }
 

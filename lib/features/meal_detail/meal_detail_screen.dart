@@ -7,11 +7,13 @@ import 'package:opennutritracker/core/domain/entity/intake_type_entity.dart';
 import 'package:opennutritracker/core/presentation/widgets/meal_value_unit_text.dart';
 import 'package:opennutritracker/core/presentation/widgets/image_full_screen.dart';
 import 'package:opennutritracker/core/domain/usecase/get_config_usecase.dart';
+import 'package:opennutritracker/core/utils/energy_display.dart';
 import 'package:opennutritracker/core/utils/locator.dart';
 import 'package:opennutritracker/core/utils/navigation_options.dart';
 import 'package:opennutritracker/features/add_meal/domain/entity/meal_entity.dart';
 import 'package:opennutritracker/features/edit_meal/presentation/edit_meal_screen.dart';
 import 'package:opennutritracker/features/meal_detail/presentation/bloc/meal_detail_bloc.dart';
+import 'package:opennutritracker/features/meal_detail/presentation/widgets/daily_kcal_overview.dart';
 import 'package:opennutritracker/features/meal_detail/presentation/widgets/meal_detail_bottom_sheet.dart';
 import 'package:opennutritracker/features/meal_detail/presentation/widgets/meal_detail_macro_nutrients.dart';
 import 'package:opennutritracker/features/meal_detail/presentation/widgets/meal_detail_nutriments_table.dart';
@@ -73,6 +75,8 @@ class _MealDetailScreenState extends State<MealDetailScreen> {
     intakeTypeEntity = args.intakeTypeEntity;
     _usesImperialUnits = args.usesImperialUnits;
 
+    _mealDetailBloc.add(LoadDailyTotalsEvent(_day));
+
     // Set initial unit
     if (_initialUnit == "") {
       if (meal.hasServingValues) {
@@ -129,6 +133,8 @@ class _MealDetailScreenState extends State<MealDetailScreen> {
                 state.totalFat,
                 state.totalProtein,
                 state.selectedUnit,
+                state.dayKcalConsumed,
+                state.dayKcalGoal,
               );
             }
             return const Center(child: CircularProgressIndicator());
@@ -161,13 +167,23 @@ class _MealDetailScreenState extends State<MealDetailScreen> {
     double totalFat,
     double totalProtein,
     String selectedUnit,
+    double dayKcalConsumed,
+    double dayKcalGoal,
   ) {
     return CustomScrollView(
       controller: _scrollController,
       slivers: [
         SliverAppBar(
           pinned: true,
-          expandedHeight: 200,
+          expandedHeight: dayKcalGoal > 0 ? 268 : 200,
+          bottom: PreferredSize(
+            preferredSize: Size.fromHeight(dayKcalGoal > 0 ? 68 : 0),
+            child: DailyKcalOverview(
+              dayKcalConsumed: dayKcalConsumed,
+              dayKcalGoal: dayKcalGoal,
+              currentSelectionKcal: totalKcal,
+            ),
+          ),
           flexibleSpace: LayoutBuilder(
             builder: (BuildContext context, BoxConstraints constraints) {
               final top = constraints.biggest.height;
@@ -176,9 +192,14 @@ class _MealDetailScreenState extends State<MealDetailScreen> {
               const offset = 10;
               return FlexibleSpaceBar(
                 expandedTitleScale: 1, // don't scale title
-                background: MealTitleExpanded(
-                  meal: meal,
-                  usesImperialUnits: _usesImperialUnits,
+                background: Padding(
+                  padding: EdgeInsets.only(
+                    bottom: dayKcalGoal > 0 ? 68 : 0,
+                  ),
+                  child: MealTitleExpanded(
+                    meal: meal,
+                    usesImperialUnits: _usesImperialUnits,
+                  ),
                 ),
                 title: AnimatedOpacity(
                   opacity: 1.0,
@@ -249,7 +270,7 @@ class _MealDetailScreenState extends State<MealDetailScreen> {
                   Row(
                     children: [
                       Text(
-                        '${totalKcal.toInt()} ${S.of(context).kcalLabel}',
+                        EnergyDisplay.formatWithUnit(context, totalKcal),
                         style: Theme.of(context).textTheme.headlineSmall,
                       ),
                       MealValueUnitText(
@@ -347,3 +368,4 @@ class MealDetailScreenArguments {
     this.usesImperialUnits,
   );
 }
+

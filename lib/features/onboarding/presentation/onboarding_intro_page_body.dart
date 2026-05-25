@@ -72,13 +72,16 @@ class _OnboardingIntroPageBodyState extends State<OnboardingIntroPageBody> {
                     ],
                   ),
                 ),
-                leading: Checkbox(
-                  value: _acceptedPolicy,
-                  onChanged: (value) {
-                    if (value != null) {
-                      _togglePolicy();
-                    }
-                  },
+                leading: Semantics(
+                  identifier: 'onboarding-checkbox-privacy',
+                  child: Checkbox(
+                    value: _acceptedPolicy,
+                    onChanged: (value) {
+                      if (value != null) {
+                        _togglePolicy();
+                      }
+                    },
+                  ),
                 ),
               ),
               ListTile(
@@ -88,9 +91,12 @@ class _OnboardingIntroPageBodyState extends State<OnboardingIntroPageBody> {
                   textAlign: TextAlign.center,
                   style: Theme.of(context).textTheme.bodySmall,
                 ),
-                leading: Checkbox(
-                  value: _acceptedDataCollection,
-                  onChanged: (value) => _toggleDataCollection(),
+                leading: Semantics(
+                  identifier: 'onboarding-checkbox-data',
+                  child: Checkbox(
+                    value: _acceptedDataCollection,
+                    onChanged: (value) => _toggleDataCollection(),
+                  ),
                 ),
               ),
               const SizedBox(height: 8.0),

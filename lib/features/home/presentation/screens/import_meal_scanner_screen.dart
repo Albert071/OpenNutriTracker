@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
@@ -26,7 +28,18 @@ class ImportMealScannerArguments {
   final AddMealType addMealType;
   final DateTime day;
 
-  ImportMealScannerArguments(this.intakeTypeEntity, this.addMealType, this.day);
+  /// QR text already captured by the standard barcode scanner. When set,
+  /// the import screen skips its own camera and goes straight to the
+  /// confirm dialog so the user doesn't have to point the camera at the
+  /// same QR twice.
+  final String? initialCode;
+
+  ImportMealScannerArguments(
+    this.intakeTypeEntity,
+    this.addMealType,
+    this.day, {
+    this.initialCode,
+  });
 }
 
 class ImportMealScannerScreen extends StatefulWidget {
@@ -37,20 +50,50 @@ class ImportMealScannerScreen extends StatefulWidget {
       _ImportMealScannerScreenState();
 }
 
-class _ImportMealScannerScreenState extends State<ImportMealScannerScreen> {
+class _ImportMealScannerScreenState extends State<ImportMealScannerScreen>
+    with WidgetsBindingObserver {
   late MealDetailBloc _mealDetailBloc;
   late SearchProductByBarcodeUseCase _searchProductByBarcodeUseCase;
   late IntakeTypeEntity _intakeTypeEntity;
   late AddMealType _addMealType;
   late DateTime _day;
   bool _isProcessing = false;
+  late final MobileScannerController _cameraController;
 
   @override
   void initState() {
+    super.initState();
     _mealDetailBloc = locator<MealDetailBloc>();
     _searchProductByBarcodeUseCase = locator<SearchProductByBarcodeUseCase>();
-    super.initState();
+    _cameraController = MobileScannerController(
+      formats: const [BarcodeFormat.qrCode],
+    );
+    WidgetsBinding.instance.addObserver(this);
   }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    unawaited(_cameraController.dispose());
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (!_cameraController.value.hasCameraPermission) return;
+    switch (state) {
+      case AppLifecycleState.detached:
+      case AppLifecycleState.hidden:
+      case AppLifecycleState.paused:
+        unawaited(_cameraController.stop());
+      case AppLifecycleState.resumed:
+        unawaited(_cameraController.start());
+      case AppLifecycleState.inactive:
+        break;
+    }
+  }
+
+  bool _handledInitialCode = false;
 
   @override
   void didChangeDependencies() {
@@ -60,6 +103,16 @@ class _ImportMealScannerScreenState extends State<ImportMealScannerScreen> {
     _addMealType = args.addMealType;
     _day = args.day;
     super.didChangeDependencies();
+
+    // If the standard scanner already captured the QR text, jump straight
+    // to the confirm dialog instead of opening another camera.
+    if (!_handledInitialCode && args.initialCode != null) {
+      _handledInitialCode = true;
+      _isProcessing = true;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) _processCode(args.initialCode!);
+      });
+    }
   }
 
   @override
@@ -76,9 +129,7 @@ class _ImportMealScannerScreenState extends State<ImportMealScannerScreen> {
         ],
       ),
       body: MobileScanner(
-        controller: MobileScannerController(
-          formats: const [BarcodeFormat.qrCode],
-        ),
+        controller: _cameraController,
         onDetect: _onDetect,
       ),
     );

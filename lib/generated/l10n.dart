@@ -430,6 +430,26 @@ class S {
     );
   }
 
+  /// `Save for next time`
+  String get recipeSaveForLaterLabel {
+    return Intl.message(
+      'Save for next time',
+      name: 'recipeSaveForLaterLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Turn this on to keep this meal in your saved list for next time. Leave it off for a one-off you won't eat again.`
+  String get recipeSaveForLaterDescription {
+    return Intl.message(
+      'Turn this on to keep this meal in your saved list for next time. Leave it off for a one-off you won\'t eat again.',
+      name: 'recipeSaveForLaterDescription',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Recipe needs a name`
   String get recipeNameRequiredLabel {
     return Intl.message(
@@ -505,6 +525,156 @@ class S {
     return Intl.message(
       'Comma-separated, e.g. "breakfast, vegan"',
       name: 'recipeTagsHelper',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Add a photo`
+  String get recipeImageLabel {
+    return Intl.message(
+      'Add a photo',
+      name: 'recipeImageLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Barcode`
+  String get customMealBarcodeLabel {
+    return Intl.message(
+      'Barcode',
+      name: 'customMealBarcodeLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Choose from gallery`
+  String get recipeImagePickFromGallery {
+    return Intl.message(
+      'Choose from gallery',
+      name: 'recipeImagePickFromGallery',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Scan or type a barcode to recall this meal later`
+  String get customMealBarcodeHint {
+    return Intl.message(
+      'Scan or type a barcode to recall this meal later',
+      name: 'customMealBarcodeHint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Take photo`
+  String get recipeImageTakePhoto {
+    return Intl.message(
+      'Take photo',
+      name: 'recipeImageTakePhoto',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Scan barcode`
+  String get customMealBarcodeScanButton {
+    return Intl.message(
+      'Scan barcode',
+      name: 'customMealBarcodeScanButton',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Remove photo`
+  String get recipeImageRemove {
+    return Intl.message(
+      'Remove photo',
+      name: 'recipeImageRemove',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Barcode must be 8 to 14 digits`
+  String get customMealBarcodeInvalid {
+    return Intl.message(
+      'Barcode must be 8 to 14 digits',
+      name: 'customMealBarcodeInvalid',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Replace photo`
+  String get recipeImageReplace {
+    return Intl.message(
+      'Replace photo',
+      name: 'recipeImageReplace',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Add a photo`
+  String get mealImageLabel {
+    return Intl.message(
+      'Add a photo',
+      name: 'mealImageLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Choose from gallery`
+  String get mealImagePickFromGallery {
+    return Intl.message(
+      'Choose from gallery',
+      name: 'mealImagePickFromGallery',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Take photo`
+  String get mealImageTakePhoto {
+    return Intl.message(
+      'Take photo',
+      name: 'mealImageTakePhoto',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Remove photo`
+  String get mealImageRemove {
+    return Intl.message(
+      'Remove photo',
+      name: 'mealImageRemove',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Replace photo`
+  String get mealImageReplace {
+    return Intl.message(
+      'Replace photo',
+      name: 'mealImageReplace',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `This 13-digit barcode looks miskeyed: its last digit doesn't match the rest`
+  String get barcodeInvalidEan13CheckDigit {
+    return Intl.message(
+      'This 13-digit barcode looks miskeyed: its last digit doesn\'t match the rest',
+      name: 'barcodeInvalidEan13CheckDigit',
       desc: '',
       args: [],
     );
@@ -910,21 +1080,41 @@ class S {
     );
   }
 
-  /// `Whats your current height?`
+  /// `What's your current height?`
   String get onboardingHeightQuestionSubtitle {
     return Intl.message(
-      'Whats your current height?',
+      'What\'s your current height?',
       name: 'onboardingHeightQuestionSubtitle',
       desc: '',
       args: [],
     );
   }
 
-  /// `Whats your current weight?`
+  /// `What's your current weight?`
   String get onboardingWeightQuestionSubtitle {
     return Intl.message(
-      'Whats your current weight?',
+      'What\'s your current weight?',
       name: 'onboardingWeightQuestionSubtitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Is there a weight you're working towards? You can leave this blank or change it later in Profile.`
+  String get onboardingTargetWeightSubtitle {
+    return Intl.message(
+      'Is there a weight you\'re working towards? You can leave this blank or change it later in Profile.',
+      name: 'onboardingTargetWeightSubtitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Optional`
+  String get onboardingTargetWeightHintOptional {
+    return Intl.message(
+      'Optional',
+      name: 'onboardingTargetWeightHintOptional',
       desc: '',
       args: [],
     );
@@ -1030,11 +1220,241 @@ class S {
     );
   }
 
-  /// `Calculations`
-  String get settingsCalculationsLabel {
+  /// `Daily kcal adjustment`
+  String get settingsKcalAdjustmentLabel {
     return Intl.message(
-      'Calculations',
-      name: 'settingsCalculationsLabel',
+      'Daily kcal adjustment',
+      name: 'settingsKcalAdjustmentLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Macro split`
+  String get settingsMacroSplitLabel {
+    return Intl.message(
+      'Macro split',
+      name: 'settingsMacroSplitLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Nutrient goals`
+  String get settingsNutrientGoalsLabel {
+    return Intl.message(
+      'Nutrient goals',
+      name: 'settingsNutrientGoalsLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Personal targets for every nutrient on the daily panel. The diary uses these in place of the default daily references whenever you set one.`
+  String get settingsNutrientGoalsHint {
+    return Intl.message(
+      'Personal targets for every nutrient on the daily panel. The diary uses these in place of the default daily references whenever you set one.',
+      name: 'settingsNutrientGoalsHint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Fibre goal`
+  String get settingsFibreGoalLabel {
+    return Intl.message(
+      'Fibre goal',
+      name: 'settingsFibreGoalLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Daily fibre target in grams. Default reference is 30g.`
+  String get settingsFibreGoalDescription {
+    return Intl.message(
+      'Daily fibre target in grams. Default reference is 30g.',
+      name: 'settingsFibreGoalDescription',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Saturated fat goal`
+  String get settingsSaturatedFatGoalLabel {
+    return Intl.message(
+      'Saturated fat goal',
+      name: 'settingsSaturatedFatGoalLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Daily saturated fat cap in grams. Default reference is 20g.`
+  String get settingsSaturatedFatGoalDescription {
+    return Intl.message(
+      'Daily saturated fat cap in grams. Default reference is 20g.',
+      name: 'settingsSaturatedFatGoalDescription',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Sugars goal`
+  String get settingsSugarsGoalLabel {
+    return Intl.message(
+      'Sugars goal',
+      name: 'settingsSugarsGoalLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Daily sugars cap in grams. Default reference is 50g.`
+  String get settingsSugarsGoalDescription {
+    return Intl.message(
+      'Daily sugars cap in grams. Default reference is 50g.',
+      name: 'settingsSugarsGoalDescription',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Sodium goal`
+  String get settingsSodiumGoalLabel {
+    return Intl.message(
+      'Sodium goal',
+      name: 'settingsSodiumGoalLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Daily sodium cap in milligrams. Default reference is 2300mg.`
+  String get settingsSodiumGoalDescription {
+    return Intl.message(
+      'Daily sodium cap in milligrams. Default reference is 2300mg.',
+      name: 'settingsSodiumGoalDescription',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Calcium goal`
+  String get settingsCalciumGoalLabel {
+    return Intl.message(
+      'Calcium goal',
+      name: 'settingsCalciumGoalLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Daily calcium target in milligrams. Default reference is 1000mg.`
+  String get settingsCalciumGoalDescription {
+    return Intl.message(
+      'Daily calcium target in milligrams. Default reference is 1000mg.',
+      name: 'settingsCalciumGoalDescription',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Iron goal`
+  String get settingsIronGoalLabel {
+    return Intl.message(
+      'Iron goal',
+      name: 'settingsIronGoalLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Daily iron target in milligrams. Default varies by gender (8mg male, 18mg female, 14mg otherwise).`
+  String get settingsIronGoalDescription {
+    return Intl.message(
+      'Daily iron target in milligrams. Default varies by gender (8mg male, 18mg female, 14mg otherwise).',
+      name: 'settingsIronGoalDescription',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Potassium goal`
+  String get settingsPotassiumGoalLabel {
+    return Intl.message(
+      'Potassium goal',
+      name: 'settingsPotassiumGoalLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Daily potassium target in milligrams. Default reference is 3500mg.`
+  String get settingsPotassiumGoalDescription {
+    return Intl.message(
+      'Daily potassium target in milligrams. Default reference is 3500mg.',
+      name: 'settingsPotassiumGoalDescription',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Magnesium goal`
+  String get settingsMagnesiumGoalLabel {
+    return Intl.message(
+      'Magnesium goal',
+      name: 'settingsMagnesiumGoalLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Daily magnesium target in milligrams. Default varies by gender (400mg male, 310mg female, 355mg otherwise).`
+  String get settingsMagnesiumGoalDescription {
+    return Intl.message(
+      'Daily magnesium target in milligrams. Default varies by gender (400mg male, 310mg female, 355mg otherwise).',
+      name: 'settingsMagnesiumGoalDescription',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Vitamin D goal`
+  String get settingsVitaminDGoalLabel {
+    return Intl.message(
+      'Vitamin D goal',
+      name: 'settingsVitaminDGoalLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Daily vitamin D target in micrograms. Default reference is 15µg.`
+  String get settingsVitaminDGoalDescription {
+    return Intl.message(
+      'Daily vitamin D target in micrograms. Default reference is 15µg.',
+      name: 'settingsVitaminDGoalDescription',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Vitamin B12 goal`
+  String get settingsVitaminB12GoalLabel {
+    return Intl.message(
+      'Vitamin B12 goal',
+      name: 'settingsVitaminB12GoalLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Daily vitamin B12 target in micrograms. Default reference is 2.4µg.`
+  String get settingsVitaminB12GoalDescription {
+    return Intl.message(
+      'Daily vitamin B12 target in micrograms. Default reference is 2.4µg.',
+      name: 'settingsVitaminB12GoalDescription',
       desc: '',
       args: [],
     );
@@ -1085,6 +1505,146 @@ class S {
     return Intl.message(
       'Language',
       name: 'settingsLanguageLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Use system colours`
+  String get settingsMaterialYouTitle {
+    return Intl.message(
+      'Use system colours',
+      name: 'settingsMaterialYouTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Match your wallpaper accent on Android 12 and newer.`
+  String get settingsMaterialYouSubtitle {
+    return Intl.message(
+      'Match your wallpaper accent on Android 12 and newer.',
+      name: 'settingsMaterialYouSubtitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Accent colour`
+  String get settingsAccentColourTitle {
+    return Intl.message(
+      'Accent colour',
+      name: 'settingsAccentColourTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Material You`
+  String get settingsAccentSubtitleMaterialYou {
+    return Intl.message(
+      'Material You',
+      name: 'settingsAccentSubtitleMaterialYou',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Custom`
+  String get settingsAccentSubtitleCustom {
+    return Intl.message(
+      'Custom',
+      name: 'settingsAccentSubtitleCustom',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Default`
+  String get settingsAccentSubtitleDefault {
+    return Intl.message(
+      'Default',
+      name: 'settingsAccentSubtitleDefault',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Pick a colour`
+  String get settingsAccentPresetsHeader {
+    return Intl.message(
+      'Pick a colour',
+      name: 'settingsAccentPresetsHeader',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Custom colour…`
+  String get settingsAccentCustomColour {
+    return Intl.message(
+      'Custom colour…',
+      name: 'settingsAccentCustomColour',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Open the hue picker for a precise choice`
+  String get settingsAccentCustomSubtitle {
+    return Intl.message(
+      'Open the hue picker for a precise choice',
+      name: 'settingsAccentCustomSubtitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Hex code`
+  String get settingsAccentHexLabel {
+    return Intl.message(
+      'Hex code',
+      name: 'settingsAccentHexLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `That hex code doesn’t look right — six digits, 0-9 and A-F.`
+  String get settingsAccentHexInvalid {
+    return Intl.message(
+      "That hex code doesn't look right — six digits, 0-9 and A-F.",
+      name: 'settingsAccentHexInvalid',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Accent colour`
+  String get settingsAccentHueTitle {
+    return Intl.message(
+      'Accent colour',
+      name: 'settingsAccentHueTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Turn off system colours to choose a custom accent.`
+  String get settingsAccentHueDisabledHint {
+    return Intl.message(
+      'Turn off system colours to choose a custom accent.',
+      name: 'settingsAccentHueDisabledHint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Reset`
+  String get settingsAccentHueReset {
+    return Intl.message(
+      'Reset',
+      name: 'settingsAccentHueReset',
       desc: '',
       args: [],
     );
@@ -1239,6 +1799,26 @@ class S {
     );
   }
 
+  /// `Nutrient reference intakes`
+  String get sourcesNutrientReferenceTitle {
+    return Intl.message(
+      'Nutrient reference intakes',
+      name: 'sourcesNutrientReferenceTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Daily reference amounts shown on the diary nutrient panel come from the Institute of Medicine's Dietary Reference Intakes summary, which covers per-nutrient targets for adults.`
+  String get sourcesNutrientReferenceDescription {
+    return Intl.message(
+      "Daily reference amounts shown on the diary nutrient panel come from the Institute of Medicine's Dietary Reference Intakes summary, which covers per-nutrient targets for adults.",
+      name: 'sourcesNutrientReferenceDescription',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `View source`
   String get sourcesOpenSourceLabel {
     return Intl.message(
@@ -1323,6 +1903,56 @@ class S {
     return Intl.message(
       'OpenNutriTracker',
       name: 'notificationsDailyReminderTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Daily Reminders`
+  String get notificationsDailyReminderChannelName {
+    return Intl.message(
+      'Daily Reminders',
+      name: 'notificationsDailyReminderChannelName',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Daily meal logging reminder`
+  String get notificationsDailyReminderChannelDescription {
+    return Intl.message(
+      'Daily meal logging reminder',
+      name: 'notificationsDailyReminderChannelDescription',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Fasting timer`
+  String get fastingNotificationChannelName {
+    return Intl.message(
+      'Fasting timer',
+      name: 'fastingNotificationChannelName',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `One-off pings when a fasting session reaches its target.`
+  String get fastingNotificationChannelDescription {
+    return Intl.message(
+      'One-off pings when a fasting session reaches its target.',
+      name: 'fastingNotificationChannelDescription',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `limit`
+  String get nutrientPanelLimitLabel {
+    return Intl.message(
+      'limit',
+      name: 'nutrientPanelLimitLabel',
       desc: '',
       args: [],
     );
@@ -1415,6 +2045,226 @@ class S {
       name: 'settingsShowMicronutrientsLabel',
       desc: '',
       args: [],
+    );
+  }
+
+  /// `Per-meal kcal share`
+  String get settingsPerMealKcalShareLabel {
+    return Intl.message(
+      'Per-meal kcal share',
+      name: 'settingsPerMealKcalShareLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Nutrients`
+  String get settingsNutrientsLabel {
+    return Intl.message(
+      'Nutrients',
+      name: 'settingsNutrientsLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Split your daily kcal goal across breakfast, lunch, dinner, and snacks. The shares must add up to 100%.`
+  String get settingsPerMealKcalShareDescription {
+    return Intl.message(
+      'Split your daily kcal goal across breakfast, lunch, dinner, and snacks. The shares must add up to 100%.',
+      name: 'settingsPerMealKcalShareDescription',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Pick which nutrients appear on the diary panel`
+  String get settingsNutrientsSubtitle {
+    return Intl.message(
+      'Pick which nutrients appear on the diary panel',
+      name: 'settingsNutrientsSubtitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Breakfast`
+  String get settingsPerMealKcalShareBreakfast {
+    return Intl.message(
+      'Breakfast',
+      name: 'settingsPerMealKcalShareBreakfast',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Choose which nutrients are visible on the daily panel. Hidden ones can be turned back on at any time.`
+  String get settingsNutrientsHelp {
+    return Intl.message(
+      'Choose which nutrients are visible on the daily panel. Hidden ones can be turned back on at any time.',
+      name: 'settingsNutrientsHelp',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Lunch`
+  String get settingsPerMealKcalShareLunch {
+    return Intl.message(
+      'Lunch',
+      name: 'settingsPerMealKcalShareLunch',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Dinner`
+  String get settingsPerMealKcalShareDinner {
+    return Intl.message(
+      'Dinner',
+      name: 'settingsPerMealKcalShareDinner',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Snack`
+  String get settingsPerMealKcalShareSnack {
+    return Intl.message(
+      'Snack',
+      name: 'settingsPerMealKcalShareSnack',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Quick presets`
+  String get mealPatternPresetsLabel {
+    return Intl.message(
+      'Quick presets',
+      name: 'mealPatternPresetsLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Standard`
+  String get mealPatternStandard {
+    return Intl.message(
+      'Standard',
+      name: 'mealPatternStandard',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Mediterranean`
+  String get mealPatternMediterranean {
+    return Intl.message(
+      'Mediterranean',
+      name: 'mealPatternMediterranean',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Two-meal`
+  String get mealPatternTwoMeal {
+    return Intl.message(
+      'Two-meal',
+      name: 'mealPatternTwoMeal',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `OMAD`
+  String get mealPatternOmad {
+    return Intl.message(
+      'OMAD',
+      name: 'mealPatternOmad',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Five-small`
+  String get mealPatternFiveSmall {
+    return Intl.message(
+      'Five-small',
+      name: 'mealPatternFiveSmall',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `{consumed} / {target} kcal`
+  String diaryMealKcalConsumedOfTarget(String consumed, String target) {
+    return Intl.message(
+      '$consumed / $target kcal',
+      name: 'diaryMealKcalConsumedOfTarget',
+      desc: '',
+      args: [consumed, target],
+    );
+  }
+
+  /// `Day starts at`
+  String get settingsDayStartLabel {
+    return Intl.message(
+      'Day starts at',
+      name: 'settingsDayStartLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Choose the hour at which your day begins. Meals and activities logged before this hour count toward the previous day — useful if you work nights or eat late.`
+  String get settingsDayStartDescription {
+    return Intl.message(
+      'Choose the hour at which your day begins. Meals and activities logged before this hour count toward the previous day — useful if you work nights or eat late.',
+      name: 'settingsDayStartDescription',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `{hour}:00`
+  String settingsDayStartHourLabel(int hour) {
+    return Intl.message(
+      '$hour:00',
+      name: 'settingsDayStartHourLabel',
+      desc: '',
+      args: [hour],
+    );
+  }
+
+  /// `Hours`
+  String get settingsDayStartHoursPickerLabel {
+    return Intl.message(
+      'Hours',
+      name: 'settingsDayStartHoursPickerLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Minutes`
+  String get settingsDayStartMinutesPickerLabel {
+    return Intl.message(
+      'Minutes',
+      name: 'settingsDayStartMinutesPickerLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `{hour}:{minute}`
+  String settingsDayStartTimeLabel(int hour, String minute) {
+    return Intl.message(
+      '$hour:$minute',
+      name: 'settingsDayStartTimeLabel',
+      desc: '',
+      args: [hour, minute],
     );
   }
 
@@ -1539,6 +2389,16 @@ class S {
     );
   }
 
+  /// `Daily kJ adjustment:`
+  String get dailyKjAdjustmentLabel {
+    return Intl.message(
+      'Daily kJ adjustment:',
+      name: 'dailyKjAdjustmentLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Macronutrient Distribution:`
   String get macroDistributionLabel {
     return Intl.message(
@@ -1584,6 +2444,65 @@ class S {
     return Intl.message(
       'All diary entries using this meal will also be removed.',
       name: 'customMealsDeleteConfirmContent',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Form view`
+  String get customMealFormModeLabel {
+    return Intl.message(
+      'Form view',
+      name: 'customMealFormModeLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Simple`
+  String get customMealFormSimple {
+    return Intl.message(
+      'Simple',
+      name: 'customMealFormSimple',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Advanced`
+  String get customMealFormAdvanced {
+    return Intl.message(
+      'Advanced',
+      name: 'customMealFormAdvanced',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Type the totals for one serving.`
+  String get customMealFormSimpleHelp {
+    return Intl.message(
+      'Type the totals for one serving.',
+      name: 'customMealFormSimpleHelp',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String customMealFormSimpleFieldHelper(String unit) {
+    return Intl.message(
+      '$unit in one serving',
+      name: 'customMealFormSimpleFieldHelper',
+      desc: '',
+      args: [unit],
+    );
+  }
+
+  /// `Set base quantity and per-100 values for precise scaling.`
+  String get customMealFormAdvancedHelp {
+    return Intl.message(
+      'Set base quantity and per-100 values for precise scaling.',
+      name: 'customMealFormAdvancedHelp',
       desc: '',
       args: [],
     );
@@ -1652,6 +2571,16 @@ class S {
     );
   }
 
+  /// `CSV keeps your activity, meal log and tracked days. Recipes and any photos you've attached are JSON-only — switch to JSON if you want them in your backup.`
+  String get exportImportCsvRecipesNote {
+    return Intl.message(
+      'CSV keeps your activity, meal log and tracked days. Recipes and any photos you\'ve attached are JSON-only — switch to JSON if you want them in your backup.',
+      name: 'exportImportCsvRecipesNote',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `You can export the app data to a zip file and import it later. This is useful if you want to backup your data or transfer it to another device.\n\nThe app does not use any cloud service to store your data.`
   String get exportImportDescription {
     return Intl.message(
@@ -1711,6 +2640,15 @@ class S {
     );
   }
 
+  String get downloadSampleJsonAction {
+    return Intl.message(
+      'Sample meals (json)',
+      name: 'downloadSampleJsonAction',
+      desc: '',
+      args: [],
+    );
+  }
+
   String get downloadSampleRecipesCsvAction {
     return Intl.message(
       'Sample recipes (csv)',
@@ -1731,7 +2669,7 @@ class S {
 
   String csvImportSuccessLabel(int count) {
     return Intl.message(
-      'Imported $count meal(s) from the CSV file.',
+      'Imported $count meal(s).',
       name: 'csvImportSuccessLabel',
       desc: '',
       args: [count],
@@ -1778,6 +2716,36 @@ class S {
     return Intl.message(
       'iOS',
       name: 'csvImportContributeOffIosLink',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Import meals (json)`
+  String get importMealsJsonAction {
+    return Intl.message(
+      'Import meals (json)',
+      name: 'importMealsJsonAction',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Sample recipes (json)`
+  String get downloadSampleRecipesJsonAction {
+    return Intl.message(
+      'Sample recipes (json)',
+      name: 'downloadSampleRecipesJsonAction',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Import recipes (json)`
+  String get importRecipesJsonAction {
+    return Intl.message(
+      'Import recipes (json)',
+      name: 'importRecipesJsonAction',
       desc: '',
       args: [],
     );
@@ -2033,6 +3001,116 @@ class S {
     );
   }
 
+  /// `Sort by`
+  String get diarySortByLabel {
+    return Intl.message(
+      'Sort by',
+      name: 'diarySortByLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Only nutrients tracked on the meals you logged are summed here. A meal missing a value contributes nothing to that nutrient — so these totals may underreport.`
+  String get diaryNutrientPanelDataDisclaimer {
+    return Intl.message(
+      'Only nutrients tracked on the meals you logged are summed here. A meal missing a value contributes nothing to that nutrient — so these totals may underreport.',
+      name: 'diaryNutrientPanelDataDisclaimer',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Time added`
+  String get diarySortByTime {
+    return Intl.message(
+      'Time added',
+      name: 'diarySortByTime',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Today's nutrients`
+  String get diaryNutrientPanelTitle {
+    return Intl.message(
+      "Today's nutrients",
+      name: 'diaryNutrientPanelTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Calories (high to low)`
+  String get diarySortByKcal {
+    return Intl.message(
+      'Calories (high to low)',
+      name: 'diarySortByKcal',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Day`
+  String get nutrientPanelDayLabel {
+    return Intl.message(
+      'Day',
+      name: 'nutrientPanelDayLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Protein (high to low)`
+  String get diarySortByProtein {
+    return Intl.message(
+      'Protein (high to low)',
+      name: 'diarySortByProtein',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Week`
+  String get nutrientPanelWeekLabel {
+    return Intl.message(
+      'Week',
+      name: 'nutrientPanelWeekLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Carbs (high to low)`
+  String get diarySortByCarbs {
+    return Intl.message(
+      'Carbs (high to low)',
+      name: 'diarySortByCarbs',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Fat (high to low)`
+  String get diarySortByFat {
+    return Intl.message(
+      'Fat (high to low)',
+      name: 'diarySortByFat',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `All nutrients hidden — turn some on in Settings → Nutrients.`
+  String get nutrientPanelAllHiddenLabel {
+    return Intl.message(
+      'All nutrients hidden — turn some on in Settings → Nutrients.',
+      name: 'nutrientPanelAllHiddenLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Delete Item?`
   String get deleteTimeDialogTitle {
     return Intl.message(
@@ -2203,6 +3281,86 @@ class S {
     );
   }
 
+  /// `Delete all my data`
+  String get settingsDeleteAllDataLabel {
+    return Intl.message(
+      'Delete all my data',
+      name: 'settingsDeleteAllDataLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Profile, meals, activities and weight history`
+  String get settingsDeleteAllDataSubtitle {
+    return Intl.message(
+      'Profile, meals, activities and weight history',
+      name: 'settingsDeleteAllDataSubtitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Delete all your data?`
+  String get settingsDeleteAllDataConfirmTitle {
+    return Intl.message(
+      'Delete all your data?',
+      name: 'settingsDeleteAllDataConfirmTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `This permanently removes your profile, meals, activities, weight history and any custom recipes from this device. The Open Food Facts and USDA Food Data Central catalogues are not affected. This cannot be undone.`
+  String get settingsDeleteAllDataConfirmContent {
+    return Intl.message(
+      'This permanently removes your profile, meals, activities, weight history and any custom recipes from this device. The Open Food Facts and USDA Food Data Central catalogues are not affected. This cannot be undone.',
+      name: 'settingsDeleteAllDataConfirmContent',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Delete everything`
+  String get settingsDeleteAllDataConfirmAction {
+    return Intl.message(
+      'Delete everything',
+      name: 'settingsDeleteAllDataConfirmAction',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `This daily target is on the low side`
+  String get lowKcalWarningTitle {
+    return Intl.message(
+      'This daily target is on the low side',
+      name: 'lowKcalWarningTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Most adults shouldn't eat fewer than {threshold} kcal a day for any length of time without medical guidance. Please consider speaking with a healthcare professional before sticking with a target this low.`
+  String lowKcalWarningBody(int threshold) {
+    return Intl.message(
+      'Most adults shouldn\'t eat fewer than $threshold kcal a day for any length of time without medical guidance. Please consider speaking with a healthcare professional before sticking with a target this low.',
+      name: 'lowKcalWarningBody',
+      desc: '',
+      args: [threshold],
+    );
+  }
+
+  /// `View disclaimer`
+  String get lowKcalWarningViewDisclaimer {
+    return Intl.message(
+      'View disclaimer',
+      name: 'lowKcalWarningViewDisclaimer',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `supplied`
   String get suppliedLabel {
     return Intl.message(
@@ -2258,6 +3416,76 @@ class S {
     return Intl.message(
       'kcal',
       name: 'kcalLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `kJ`
+  String get kjLabel {
+    return Intl.message(
+      'kJ',
+      name: 'kjLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `left`
+  String get energyLeftLabel {
+    return Intl.message(
+      'left',
+      name: 'energyLeftLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `too much`
+  String get energyTooMuchLabel {
+    return Intl.message(
+      'too much',
+      name: 'energyTooMuchLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Energy unit`
+  String get settingsEnergyUnitLabel {
+    return Intl.message(
+      'Energy unit',
+      name: 'settingsEnergyUnitLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Kilocalories (kcal)`
+  String get energyUnitKcalLabel {
+    return Intl.message(
+      'Kilocalories (kcal)',
+      name: 'energyUnitKcalLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Kilojoules (kJ)`
+  String get energyUnitKjLabel {
+    return Intl.message(
+      'Kilojoules (kJ)',
+      name: 'energyUnitKjLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `kJ per day`
+  String get onboardingKjPerDayLabel {
+    return Intl.message(
+      'kJ per day',
+      name: 'onboardingKjPerDayLabel',
       desc: '',
       args: [],
     );
@@ -2643,6 +3871,116 @@ class S {
     );
   }
 
+  /// `Quick add`
+  String get quickAddCardLabel {
+    return Intl.message(
+      'Quick add',
+      name: 'quickAddCardLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Quick add`
+  String get quickAddBottomSheetTitle {
+    return Intl.message(
+      'Quick add',
+      name: 'quickAddBottomSheetTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Quick add`
+  String get quickAddDefaultName {
+    return Intl.message(
+      'Quick add',
+      name: 'quickAddDefaultName',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Title`
+  String get quickAddTitleHint {
+    return Intl.message(
+      'Title',
+      name: 'quickAddTitleHint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Energy (kcal)`
+  String get quickAddEnergyLabelKcal {
+    return Intl.message(
+      'Energy (kcal)',
+      name: 'quickAddEnergyLabelKcal',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Energy (kJ)`
+  String get quickAddEnergyLabelKj {
+    return Intl.message(
+      'Energy (kJ)',
+      name: 'quickAddEnergyLabelKj',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Carbs (g, optional)`
+  String get quickAddCarbsHint {
+    return Intl.message(
+      'Carbs (g, optional)',
+      name: 'quickAddCarbsHint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Fat (g, optional)`
+  String get quickAddFatHint {
+    return Intl.message(
+      'Fat (g, optional)',
+      name: 'quickAddFatHint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Protein (g, optional)`
+  String get quickAddProteinHint {
+    return Intl.message(
+      'Protein (g, optional)',
+      name: 'quickAddProteinHint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Add`
+  String get quickAddSubmitLabel {
+    return Intl.message(
+      'Add',
+      name: 'quickAddSubmitLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Added to {mealType}`
+  String quickAddAddedSnack(String mealType) {
+    return Intl.message(
+      'Added to $mealType',
+      name: 'quickAddAddedSnack',
+      desc: '',
+      args: [mealType],
+    );
+  }
+
   /// `Base quantity (g/ml)`
   String get baseQuantityLabel {
     return Intl.message(
@@ -2668,6 +4006,66 @@ class S {
     return Intl.message(
       'Scan Product',
       name: 'scanProductLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Type code manually`
+  String get scannerManualEntryButton {
+    return Intl.message(
+      'Type code manually',
+      name: 'scannerManualEntryButton',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Cancel`
+  String get scannerManualEntryCancel {
+    return Intl.message(
+      'Cancel',
+      name: 'scannerManualEntryCancel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Enter barcode`
+  String get scannerManualEntryDialogTitle {
+    return Intl.message(
+      'Enter barcode',
+      name: 'scannerManualEntryDialogTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `8 to 14 digits`
+  String get scannerManualEntryFieldHint {
+    return Intl.message(
+      '8 to 14 digits',
+      name: 'scannerManualEntryFieldHint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `That barcode doesn't look valid. Please check the digits and try again.`
+  String get scannerManualEntryInvalid {
+    return Intl.message(
+      'That barcode doesn\'t look valid. Please check the digits and try again.',
+      name: 'scannerManualEntryInvalid',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Look up`
+  String get scannerManualEntrySubmit {
+    return Intl.message(
+      'Look up',
+      name: 'scannerManualEntrySubmit',
       desc: '',
       args: [],
     );
@@ -2793,6 +4191,46 @@ class S {
     );
   }
 
+  /// `Numbers don't quite line up`
+  String get inconsistentNutritionWarningTitle {
+    return Intl.message(
+      'Numbers don\'t quite line up',
+      name: 'inconsistentNutritionWarningTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `These values don't quite line up — the calories you've entered don't match the energy in the carbs, fat and protein below. Save anyway, or take a second look?`
+  String get inconsistentNutritionWarningBody {
+    return Intl.message(
+      'These values don\'t quite line up — the calories you\'ve entered don\'t match the energy in the carbs, fat and protein below. Save anyway, or take a second look?',
+      name: 'inconsistentNutritionWarningBody',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Save anyway`
+  String get inconsistentNutritionWarningSaveAnyway {
+    return Intl.message(
+      'Save anyway',
+      name: 'inconsistentNutritionWarningSaveAnyway',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Take another look`
+  String get inconsistentNutritionWarningEdit {
+    return Intl.message(
+      'Take another look',
+      name: 'inconsistentNutritionWarningEdit',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Brands`
   String get mealBrandsLabel {
     return Intl.message(
@@ -2883,6 +4321,16 @@ class S {
     );
   }
 
+  /// `Energy`
+  String get mealEnergyLabel {
+    return Intl.message(
+      'Energy',
+      name: 'mealEnergyLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Carbohydrates (g)`
   String get mealCarbsLabel {
     return Intl.message(
@@ -2890,6 +4338,26 @@ class S {
       name: 'mealCarbsLabel',
       desc: '',
       args: [],
+    );
+  }
+
+  /// `Day total: {consumed} / {goal}`
+  String mealDetailDayTotalLabel(String consumed, String goal) {
+    return Intl.message(
+      'Day total: $consumed / $goal',
+      name: 'mealDetailDayTotalLabel',
+      desc: '',
+      args: [consumed, goal],
+    );
+  }
+
+  /// `(+{kcal} kcal current selection)`
+  String mealDetailCurrentSelectionLabel(String kcal) {
+    return Intl.message(
+      '(+$kcal kcal current selection)',
+      name: 'mealDetailCurrentSelectionLabel',
+      desc: '',
+      args: [kcal],
     );
   }
 
@@ -5772,6 +7240,697 @@ class S {
       args: [],
     );
   }
+
+
+  /// `Not set`
+  String get profileTargetWeightNotSetLabel {
+    return Intl.message(
+      'Not set',
+      name: 'profileTargetWeightNotSetLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Clear`
+  String get profileTargetWeightClearAction {
+    return Intl.message(
+      'Clear',
+      name: 'profileTargetWeightClearAction',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Target weight`
+  String get profileTargetWeightLabel {
+    return Intl.message(
+      'Target weight',
+      name: 'profileTargetWeightLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `{value} to your target`
+  String profileTargetWeightToGo(String value) {
+    return Intl.message(
+      '$value to your target',
+      name: 'profileTargetWeightToGo',
+      desc: '',
+      args: [value],
+    );
+  }
+
+  /// `You've reached your target`
+  String get profileTargetWeightReached {
+    return Intl.message(
+      'You\'ve reached your target',
+      name: 'profileTargetWeightReached',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Adjust calorie goal as you approach target`
+  String get settingsCaloriesTaperLabel {
+    return Intl.message(
+      'Adjust calorie goal as you approach target',
+      name: 'settingsCaloriesTaperLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Reduces the daily deficit gradually so the last few kg don't feel like a wall.`
+  String get settingsCaloriesTaperDescription {
+    return Intl.message(
+      'Reduces the daily deficit gradually so the last few kg don\'t feel like a wall.',
+      name: 'settingsCaloriesTaperDescription',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Weight history`
+  String get profileWeightHistoryTitle {
+    return Intl.message(
+      'Weight history',
+      name: 'profileWeightHistoryTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Add entry`
+  String get weightHistoryAddEntry {
+    return Intl.message(
+      'Add entry',
+      name: 'weightHistoryAddEntry',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No weight readings yet. Add your first one to start tracking a trend.`
+  String get weightHistoryNoEntries {
+    return Intl.message(
+      'No weight readings yet. Add your first one to start tracking a trend.',
+      name: 'weightHistoryNoEntries',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Date`
+  String get weightHistoryDateLabel {
+    return Intl.message(
+      'Date',
+      name: 'weightHistoryDateLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Weight`
+  String get weightHistoryWeightLabel {
+    return Intl.message(
+      'Weight',
+      name: 'weightHistoryWeightLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Note (optional)`
+  String get weightHistoryNoteLabel {
+    return Intl.message(
+      'Note (optional)',
+      name: 'weightHistoryNoteLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Log at least two days to see your trend.`
+  String get weightHistoryChartEmptyState {
+    return Intl.message(
+      'Log at least two days to see your trend.',
+      name: 'weightHistoryChartEmptyState',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Custom activity`
+  String get customActivityName {
+    return Intl.message(
+      'Custom activity',
+      name: 'customActivityName',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Enter calories burned directly, for workouts that aren't in the list or readings from a fitness tracker`
+  String get customActivityDescription {
+    return Intl.message(
+      'Enter calories burned directly, for workouts that aren\'t in the list or readings from a fitness tracker',
+      name: 'customActivityDescription',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Enter kilojoules burned directly, for workouts that aren't in the list or readings from a fitness tracker`
+  String get customActivityDescriptionKj {
+    return Intl.message(
+      'Enter kilojoules burned directly, for workouts that aren\'t in the list or readings from a fitness tracker',
+      name: 'customActivityDescriptionKj',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Calories burned`
+  String get customActivityKcalLabel {
+    return Intl.message(
+      'Calories burned',
+      name: 'customActivityKcalLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `e.g. 250`
+  String get customActivityKcalHint {
+    return Intl.message(
+      'e.g. 250',
+      name: 'customActivityKcalHint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Name (optional)`
+  String get customActivityNameFieldLabel {
+    return Intl.message(
+      'Name (optional)',
+      name: 'customActivityNameFieldLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `e.g. Evening bike commute`
+  String get customActivityNameFieldHint {
+    return Intl.message(
+      'e.g. Evening bike commute',
+      name: 'customActivityNameFieldHint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Save as template for next time`
+  String get customActivitySaveAsTemplate {
+    return Intl.message(
+      'Save as template for next time',
+      name: 'customActivitySaveAsTemplate',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Pick from saved templates`
+  String get customActivityPickFromTemplate {
+    return Intl.message(
+      'Pick from saved templates',
+      name: 'customActivityPickFromTemplate',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `You haven't saved any templates yet. Tick "Save as template for next time" to remember a Custom activity for later.`
+  String get customActivityTemplatesEmpty {
+    return Intl.message(
+      'You haven\'t saved any templates yet. Tick "Save as template for next time" to remember a Custom activity for later.',
+      name: 'customActivityTemplatesEmpty',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `{current} / {goal} ml`
+  String waterChipLabel(int current, int goal) {
+    return Intl.message(
+      '$current / $goal ml',
+      name: 'waterChipLabel',
+      desc: '',
+      args: [current, goal],
+    );
+  }
+
+  /// `Log water intake`
+  String get logWaterDialogTitle {
+    return Intl.message(
+      'Log water intake',
+      name: 'logWaterDialogTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Add {amount} ml`
+  String logWaterAmountLabel(int amount) {
+    return Intl.message(
+      'Add $amount ml',
+      name: 'logWaterAmountLabel',
+      desc: '',
+      args: [amount],
+    );
+  }
+
+  /// `Undo last`
+  String get logWaterUndoLabel {
+    return Intl.message(
+      'Undo last',
+      name: 'logWaterUndoLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Nothing to undo`
+  String get logWaterNothingToUndoLabel {
+    return Intl.message(
+      'Nothing to undo',
+      name: 'logWaterNothingToUndoLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `ml`
+  String get mlLabel {
+    return Intl.message(
+      'ml',
+      name: 'mlLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Daily water goal`
+  String get settingsWaterGoalLabel {
+    return Intl.message(
+      'Daily water goal',
+      name: 'settingsWaterGoalLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Used by the water chip on the home screen.`
+  String get settingsWaterGoalDescription {
+    return Intl.message(
+      'Used by the water chip on the home screen.',
+      name: 'settingsWaterGoalDescription',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Fasting timer`
+  String get profileFastingEntry {
+    return Intl.message(
+      'Fasting timer',
+      name: 'profileFastingEntry',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `More actions`
+  String get customMealsRowMoreTooltip {
+    return Intl.message(
+      'More actions',
+      name: 'customMealsRowMoreTooltip',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Fasting timer`
+  String get fastingTitle {
+    return Intl.message(
+      'Fasting timer',
+      name: 'fastingTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Reference intake`
+  String get driPanelInfoTitle {
+    return Intl.message(
+      'Reference intake',
+      name: 'driPanelInfoTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `A simple timer for tracking time between meals. No streaks, no targets, just the clock.`
+  String get fastingSubtitle {
+    return Intl.message(
+      'A simple timer for tracking time between meals. No streaks, no targets, just the clock.',
+      name: 'fastingSubtitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Merge with another custom food`
+  String get customMealsMergeAction {
+    return Intl.message(
+      'Merge with another custom food',
+      name: 'customMealsMergeAction',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Before you start`
+  String get fastingWarningTitle {
+    return Intl.message(
+      'Before you start',
+      name: 'fastingWarningTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `These reference amounts come from the IOM Dietary Reference Intakes for adults and vary by age and gender. They're a point of reference, not a target — your own needs may differ.`
+  String get driPanelInfoBody {
+    return Intl.message(
+      "These reference amounts come from the IOM Dietary Reference Intakes for adults and vary by age and gender. They're a point of reference, not a target — your own needs may differ.",
+      name: 'driPanelInfoBody',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Tracking fasting time can be helpful for some people and distressing for others, especially anyone with a history of disordered eating. If that's you, please look after yourself first. Support is available from BEAT (UK) and NEDA (US).`
+  String get fastingWarningBody {
+    return Intl.message(
+      "Tracking fasting time can be helpful for some people and distressing for others, especially anyone with a history of disordered eating. If that's you, please look after yourself first. Support is available from BEAT (UK) and NEDA (US).",
+      name: 'fastingWarningBody',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Pick the custom food to merge with`
+  String get customMealsMergePickerTitle {
+    return Intl.message(
+      'Pick the custom food to merge with',
+      name: 'customMealsMergePickerTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Not for me`
+  String get fastingWarningDecline {
+    return Intl.message(
+      'Not for me',
+      name: 'fastingWarningDecline',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Source: IOM Dietary Reference Intakes`
+  String get driPanelInfoLinkLabel {
+    return Intl.message(
+      'Source: IOM Dietary Reference Intakes',
+      name: 'driPanelInfoLinkLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `I understand, enable timer`
+  String get fastingWarningAccept {
+    return Intl.message(
+      'I understand, enable timer',
+      name: 'fastingWarningAccept',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Which one stays?`
+  String get customMealsMergeChooseSurvivorTitle {
+    return Intl.message(
+      'Which one stays?',
+      name: 'customMealsMergeChooseSurvivorTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Custom`
+  String get fastingPresetCustom {
+    return Intl.message(
+      'Custom',
+      name: 'fastingPresetCustom',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Continue`
+  String get customMealsMergeContinueAction {
+    return Intl.message(
+      'Continue',
+      name: 'customMealsMergeContinueAction',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Start timer`
+  String get fastingStart {
+    return Intl.message(
+      'Start timer',
+      name: 'fastingStart',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Merge custom foods?`
+  String get customMealsMergeConfirmTitle {
+    return Intl.message(
+      'Merge custom foods?',
+      name: 'customMealsMergeConfirmTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `End fast`
+  String get fastingCancel {
+    return Intl.message(
+      'End fast',
+      name: 'fastingCancel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `This will replace all entries logged with {loser} so they show {winner} instead, and remove {loser} from your custom foods. This can't be undone.`
+  String customMealsMergeConfirmContent(String loser, String winner) {
+    return Intl.message(
+      "This will replace all entries logged with $loser so they show $winner instead, and remove $loser from your custom foods. This can't be undone.",
+      name: 'customMealsMergeConfirmContent',
+      desc: '',
+      args: [loser, winner],
+    );
+  }
+
+  /// `Merge`
+  String get customMealsMergeConfirmAction {
+    return Intl.message(
+      'Merge',
+      name: 'customMealsMergeConfirmAction',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `End fast now?`
+  String get fastingCancelConfirmTitle {
+    return Intl.message(
+      'End fast now?',
+      name: 'fastingCancelConfirmTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `This will close the current session.`
+  String get fastingCancelConfirmBody {
+    return Intl.message(
+      'This will close the current session.',
+      name: 'fastingCancelConfirmBody',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Session complete`
+  String get fastingComplete {
+    return Intl.message(
+      'Session complete',
+      name: 'fastingComplete',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `BEAT (UK)`
+  String get fastingLinkBeat {
+    return Intl.message(
+      'BEAT (UK)',
+      name: 'fastingLinkBeat',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `NEDA (US)`
+  String get fastingLinkNeda {
+    return Intl.message(
+      'NEDA (US)',
+      name: 'fastingLinkNeda',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Elapsed`
+  String get fastingElapsedLabel {
+    return Intl.message(
+      'Elapsed',
+      name: 'fastingElapsedLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `{value} remaining`
+  String fastingRemainingValue(String value) {
+    return Intl.message(
+      '$value remaining',
+      name: 'fastingRemainingValue',
+      desc: '',
+      args: [value],
+    );
+  }
+
+  /// `Merged — {winner} now has 1 logged entry.`
+  String customMealsMergeSuccessSnackbarOne(String winner) {
+    return Intl.message(
+      'Merged — $winner now has 1 logged entry.',
+      name: 'customMealsMergeSuccessSnackbarOne',
+      desc: '',
+      args: [winner],
+    );
+  }
+
+  /// `Merged — {winner} now has {count} logged entries.`
+  String customMealsMergeSuccessSnackbarOther(int count, String winner) {
+    return Intl.message(
+      'Merged — $winner now has $count logged entries.',
+      name: 'customMealsMergeSuccessSnackbarOther',
+      desc: '',
+      args: [count, winner],
+    );
+  }
+
+  /// `ref {value}`
+  String driPanelReferenceLabel(String value) {
+    return Intl.message(
+      'ref $value',
+      name: 'driPanelReferenceLabel',
+      desc: '',
+      args: [value],
+    );
+  }
+
+  /// `Target: {value}`
+  String fastingTargetValue(String value) {
+    return Intl.message(
+      'Target: $value',
+      name: 'fastingTargetValue',
+      desc: '',
+      args: [value],
+    );
+  }
+
+  /// `hours`
+  String get hoursLabel {
+    return Intl.message(
+      'hours',
+      name: 'hoursLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Close`
+  String get dialogCloseLabel {
+    return Intl.message(
+      'Close',
+      name: 'dialogCloseLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Fasting · {remaining} left`
+  String fastingHomeChipBody(String remaining) {
+    return Intl.message(
+      'Fasting · $remaining left',
+      name: 'fastingHomeChipBody',
+      desc: '',
+      args: [remaining],
+    );
+  }
+
+  /// `Fasting session complete`
+  String get fastingNotificationCompleteTitle {
+    return Intl.message(
+      'Fasting session complete',
+      name: 'fastingNotificationCompleteTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Your target time has been reached.`
+  String get fastingNotificationCompleteBody {
+    return Intl.message(
+      'Your target time has been reached.',
+      name: 'fastingNotificationCompleteBody',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {
@@ -5784,6 +7943,7 @@ class AppLocalizationDelegate extends LocalizationsDelegate<S> {
       Locale.fromSubtags(languageCode: 'de'),
       Locale.fromSubtags(languageCode: 'it'),
       Locale.fromSubtags(languageCode: 'pl'),
+      Locale.fromSubtags(languageCode: 'sk'),
       Locale.fromSubtags(languageCode: 'tr'),
       Locale.fromSubtags(languageCode: 'uk'),
       Locale.fromSubtags(languageCode: 'zh'),

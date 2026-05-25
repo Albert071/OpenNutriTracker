@@ -71,6 +71,7 @@ class _DiaryPageState extends State<DiaryPage> with WidgetsBindingObserver {
             state.trackedDayMap,
             state.usesImperialUnits,
             state.showMealMacros,
+            state.showActivityTracking,
           );
         }
         return const SizedBox();
@@ -95,6 +96,7 @@ class _DiaryPageState extends State<DiaryPage> with WidgetsBindingObserver {
     Map<String, TrackedDayEntity> trackedDaysMap,
     bool usesImperialUnits,
     bool showMealMacros,
+    bool showActivityTracking,
   ) {
     return ListView(
       children: [
@@ -131,6 +133,16 @@ class _DiaryPageState extends State<DiaryPage> with WidgetsBindingObserver {
                 onEditActivity: _onEditActivityItem,
                 usesImperialUnits: usesImperialUnits,
                 showMealMacros: showMealMacros,
+                showActivityTracking: showActivityTracking,
+                breakfastKcalTarget: state.breakfastKcalTarget,
+                lunchKcalTarget: state.lunchKcalTarget,
+                dinnerKcalTarget: state.dinnerKcalTarget,
+                snackKcalTarget: state.snackKcalTarget,
+                breakfastSharePct: state.breakfastSharePct,
+                lunchSharePct: state.lunchSharePct,
+                dinnerSharePct: state.dinnerSharePct,
+                snackSharePct: state.snackSharePct,
+                diarySortPreferences: state.diarySortPreferences,
               );
             }
             return const SizedBox();
@@ -204,18 +216,33 @@ class _DiaryPageState extends State<DiaryPage> with WidgetsBindingObserver {
     UserActivityEntity userActivityEntity,
     TrackedDayEntity? trackedDayEntity,
   ) async {
-    final user = await locator<GetUserUsecase>().getUserData();
-    final burnedKcal = METCalc.getTotalBurnedKcal(
-      user,
-      userActivityEntity.physicalActivityEntity,
-      userActivityEntity.duration,
-    );
-    _activityDetailBloc.persistActivity(
-      userActivityEntity.duration.toString(),
-      burnedKcal,
-      userActivityEntity.physicalActivityEntity,
-      DateTime.now(),
-    );
+    final activity = userActivityEntity.physicalActivityEntity;
+    if (activity.isCustom) {
+      // Custom activities (#70) store the user-entered kcal directly — the
+      // MET formula would just return zero for them, so we pass the saved
+      // kcal figure through unchanged so a copied entry keeps its calories.
+      final kcal =
+          userActivityEntity.userKcal ?? userActivityEntity.burnedKcal;
+      _activityDetailBloc.persistActivity(
+        kcal.toString(),
+        kcal,
+        activity,
+        DateTime.now(),
+      );
+    } else {
+      final user = await locator<GetUserUsecase>().getUserData();
+      final burnedKcal = METCalc.getTotalBurnedKcal(
+        user,
+        activity,
+        userActivityEntity.duration,
+      );
+      _activityDetailBloc.persistActivity(
+        userActivityEntity.duration.toString(),
+        burnedKcal,
+        activity,
+        DateTime.now(),
+      );
+    }
     _diaryBloc.updateHomePage();
   }
 
@@ -291,9 +318,12 @@ class _DiaryPageState extends State<DiaryPage> with WidgetsBindingObserver {
   }
 
   void _refreshPageOnDayChange() {
-    if (DateUtils.isSameDay(_selectedDate, DateTime.now())) {
-      _calendarDayBloc.add(LoadCalendarDayEvent(_selectedDate));
-      _diaryBloc.add(const LoadDiaryYearEvent());
-    }
+    // #139: refresh unconditionally on resume so any day-boundary
+    // setting change while the app was backgrounded is picked up.
+    // The cost is one extra LoadDiaryYearEvent (already cheap) plus a
+    // single CalendarDay refresh; keeping the original isSameDay check
+    // would miss the offset case entirely.
+    _calendarDayBloc.add(LoadCalendarDayEvent(_selectedDate));
+    _diaryBloc.add(const LoadDiaryYearEvent());
   }
 }

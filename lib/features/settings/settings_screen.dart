@@ -4,7 +4,10 @@ import 'package:opennutritracker/core/domain/entity/app_theme_entity.dart';
 import 'package:opennutritracker/core/presentation/sources_screen.dart';
 import 'package:opennutritracker/core/presentation/widgets/app_banner_version.dart';
 import 'package:opennutritracker/core/presentation/widgets/disclaimer_dialog.dart';
+import 'package:opennutritracker/core/domain/usecase/delete_all_user_data_usecase.dart';
 import 'package:opennutritracker/core/utils/app_const.dart';
+import 'package:opennutritracker/core/utils/navigation_options.dart';
+import 'package:opennutritracker/core/utils/energy_unit_provider.dart';
 import 'package:opennutritracker/core/utils/locator.dart';
 import 'package:opennutritracker/core/utils/notification_service.dart';
 import 'package:opennutritracker/core/utils/locale_provider.dart';
@@ -17,12 +20,17 @@ import 'package:opennutritracker/features/profile/presentation/bloc/profile_bloc
 import 'package:opennutritracker/features/settings/presentation/bloc/settings_bloc.dart';
 import 'package:opennutritracker/features/settings/presentation/widgets/export_import_dialog.dart';
 import 'package:opennutritracker/features/settings/presentation/widgets/import_custom_food_data_dialog.dart';
+import 'package:opennutritracker/features/settings/presentation/widgets/nutrient_visibility_screen.dart';
 import 'package:opennutritracker/generated/l10n.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:provider/provider.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:opennutritracker/features/settings/presentation/widgets/calculations_dialog.dart';
+import 'package:opennutritracker/features/settings/presentation/widgets/diary_day_boundary_dialog.dart';
+import 'package:opennutritracker/features/settings/presentation/widgets/kcal_adjustment_dialog.dart';
+import 'package:opennutritracker/features/settings/presentation/widgets/macro_split_dialog.dart';
+import 'package:opennutritracker/features/settings/presentation/widgets/nutrient_goals_screen.dart';
+import 'package:opennutritracker/features/settings/presentation/widgets/per_meal_kcal_share_dialog.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -77,10 +85,65 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   onTap: () =>
                       _showUnitsDialog(context, state.usesImperialUnits),
                 ),
-                ListTile(
-                  leading: const Icon(Icons.calculate_outlined),
-                  title: Text(S.of(context).settingsCalculationsLabel),
-                  onTap: () => _showCalculationsDialog(context),
+                Semantics(
+                  identifier: 'settings-energy-unit',
+                  child: ListTile(
+                    leading: const Icon(Icons.local_fire_department_outlined),
+                    title: Text(S.of(context).settingsEnergyUnitLabel),
+                    subtitle: Text(
+                      state.usesKilojoules
+                          ? S.of(context).energyUnitKjLabel
+                          : S.of(context).energyUnitKcalLabel,
+                    ),
+                    onTap: () =>
+                        _showEnergyUnitDialog(context, state.usesKilojoules),
+                  ),
+                ),
+                // The old Calculations dialog had grown into a wall of
+                // sliders covering daily kcal, macros, per-meal split,
+                // ten nutrient goals, and the diary day boundary. Each
+                // is now its own focused entry so people can find the
+                // setting they want and only see the controls for it.
+                Semantics(
+                  identifier: 'settings-kcal-adjustment',
+                  child: ListTile(
+                    leading: const Icon(Icons.calculate_outlined),
+                    title: Text(S.of(context).settingsKcalAdjustmentLabel),
+                    onTap: () => _showKcalAdjustmentDialog(context),
+                  ),
+                ),
+                Semantics(
+                  identifier: 'settings-macro-split',
+                  child: ListTile(
+                    leading: const Icon(Icons.pie_chart_outline),
+                    title: Text(S.of(context).settingsMacroSplitLabel),
+                    onTap: () => _showMacroSplitDialog(context),
+                  ),
+                ),
+                Semantics(
+                  identifier: 'settings-per-meal-share',
+                  child: ListTile(
+                    leading: const Icon(Icons.restaurant_menu_outlined),
+                    title: Text(S.of(context).settingsPerMealKcalShareLabel),
+                    onTap: () => _showPerMealKcalShareDialog(context),
+                  ),
+                ),
+                Semantics(
+                  identifier: 'settings-nutrient-goals',
+                  child: ListTile(
+                    leading: const Icon(Icons.spa_outlined),
+                    title: Text(S.of(context).settingsNutrientGoalsLabel),
+                    trailing: const Icon(Icons.chevron_right),
+                    onTap: () => _openNutrientGoalsScreen(context),
+                  ),
+                ),
+                Semantics(
+                  identifier: 'settings-day-boundary',
+                  child: ListTile(
+                    leading: const Icon(Icons.schedule_outlined),
+                    title: Text(S.of(context).settingsDayStartLabel),
+                    onTap: () => _showDayBoundaryDialog(context),
+                  ),
                 ),
                 SwitchListTile(
                   secondary: const Icon(Icons.directions_run_outlined),
@@ -90,6 +153,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     _settingsBloc.setShowActivityTracking(value);
                     _settingsBloc.add(LoadSettingsEvent());
                     _homeBloc.add(LoadItemsEvent());
+                    // DiaryBloc is a lazy singleton so its loaded state
+                    // survives navigation. Without an explicit reload here the
+                    // diary keeps the stale flag and the per-day Activity
+                    // section stays visible after the user has toggled off.
+                    _diaryBloc.add(const LoadDiaryYearEvent());
                   },
                 ),
                 SwitchListTile(
@@ -111,6 +179,19 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     _settingsBloc.add(LoadSettingsEvent());
                   },
                 ),
+                // #160 follow-up: lets the user pick which nutrients show on
+                // the diary's daily nutrient panel. Lives next to the meal-
+                // detail micronutrient toggle above; both shape what the
+                // user sees from the same underlying nutrient data.
+                Semantics(
+                  identifier: 'settings-nutrient-visibility',
+                  child: ListTile(
+                    leading: const Icon(Icons.tune_outlined),
+                    title: Text(S.of(context).settingsNutrientsLabel),
+                    subtitle: Text(S.of(context).settingsNutrientsSubtitle),
+                    onTap: () => _openNutrientVisibilityScreen(context),
+                  ),
+                ),
                 const Divider(),
                 // App
                 ListTile(
@@ -118,12 +199,34 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   title: Text(S.of(context).settingsThemeLabel),
                   onTap: () => _showThemeDialog(context, state.appTheme),
                 ),
+                Semantics(
+                  identifier: 'settings-accent-colour',
+                  child: ListTile(
+                    leading: const Icon(Icons.palette_outlined),
+                    title: Text(S.of(context).settingsAccentColourTitle),
+                    subtitle: Text(
+                      _accentSubtitle(
+                        context,
+                        useMaterialYou: state.useMaterialYou,
+                        accentColor: state.accentColor,
+                      ),
+                    ),
+                    trailing: _AccentTrailingSwatch(
+                      useMaterialYou: state.useMaterialYou,
+                      accentColor: state.accentColor,
+                    ),
+                    onTap: () => Navigator.of(context).pushNamed(
+                      NavigationOptions.accentColourRoute,
+                    ),
+                  ),
+                ),
                 ListTile(
                   leading: const Icon(Icons.language_outlined),
                   title: Text(S.of(context).settingsLanguageLabel),
                   subtitle: Text(
-                      _localeDisplayName(state.selectedLocale) ??
-                          S.of(context).settingsThemeSystemDefaultLabel),
+                    _localeDisplayName(state.selectedLocale) ??
+                        S.of(context).settingsThemeSystemDefaultLabel,
+                  ),
                   onTap: () =>
                       _showLanguageDialog(context, state.selectedLocale),
                 ),
@@ -131,9 +234,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   secondary: const Icon(Icons.notifications_outlined),
                   title: Text(S.of(context).settingsNotificationsLabel),
                   subtitle: state.notificationsEnabled
-                      ? Text(S.of(context).settingsNotificationsTimeLabel(
-                          _formatNotificationTime(
-                              state.notificationHour, state.notificationMinute)))
+                      ? Text(
+                          S
+                              .of(context)
+                              .settingsNotificationsTimeLabel(
+                                _formatNotificationTime(
+                                  state.notificationHour,
+                                  state.notificationMinute,
+                                ),
+                              ),
+                        )
                       : null,
                   value: state.notificationsEnabled,
                   onChanged: (bool value) =>
@@ -142,21 +252,33 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 if (state.notificationsEnabled)
                   ListTile(
                     leading: const Icon(Icons.access_time_outlined),
-                    title: Text(S.of(context).settingsNotificationsTimeLabel(
-                        _formatNotificationTime(state.notificationHour,
-                            state.notificationMinute))),
+                    title: Text(
+                      S
+                          .of(context)
+                          .settingsNotificationsTimeLabel(
+                            _formatNotificationTime(
+                              state.notificationHour,
+                              state.notificationMinute,
+                            ),
+                          ),
+                    ),
                     onTap: () => _pickNotificationTime(
-                        context,
-                        TimeOfDay(
-                            hour: state.notificationHour,
-                            minute: state.notificationMinute)),
+                      context,
+                      TimeOfDay(
+                        hour: state.notificationHour,
+                        minute: state.notificationMinute,
+                      ),
+                    ),
                   ),
                 const Divider(),
                 // Data
-                ListTile(
-                  leading: const Icon(Icons.restaurant_menu_outlined),
-                  title: Text(S.of(context).importCustomFoodDataLabel),
-                  onTap: () => _showImportCustomFoodDataDialog(context),
+                Semantics(
+                  identifier: 'settings-import-custom-food',
+                  child: ListTile(
+                    leading: const Icon(Icons.restaurant_menu_outlined),
+                    title: Text(S.of(context).importCustomFoodDataLabel),
+                    onTap: () => _showImportCustomFoodDataDialog(context),
+                  ),
                 ),
                 ListTile(
                   leading: const Icon(Icons.import_export),
@@ -166,12 +288,33 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 ListTile(
                   leading: const Icon(Icons.cached_outlined),
                   title: Text(S.of(context).clearOffCacheLabel),
-                  subtitle: Text(S.of(context).clearOffCacheSubtitle(
-                    state.offCacheCount,
-                    _formatBytes(state.offCacheSizeBytes),
-                  )),
+                  subtitle: Text(
+                    S
+                        .of(context)
+                        .clearOffCacheSubtitle(
+                          state.offCacheCount,
+                          _formatBytes(state.offCacheSizeBytes),
+                        ),
+                  ),
                   enabled: state.offCacheCount > 0,
                   onTap: () => _confirmClearOffCache(context),
+                ),
+                Semantics(
+                  identifier: 'settings-delete-all-data',
+                  child: ListTile(
+                    leading: Icon(
+                      Icons.delete_forever_outlined,
+                      color: Theme.of(context).colorScheme.error,
+                    ),
+                    title: Text(
+                      S.of(context).settingsDeleteAllDataLabel,
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.error,
+                      ),
+                    ),
+                    subtitle: Text(S.of(context).settingsDeleteAllDataSubtitle),
+                    onTap: () => _confirmDeleteAllData(context),
+                  ),
                 ),
                 const Divider(),
                 // About
@@ -221,7 +364,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   Future<void> _onNotificationToggled(
-      BuildContext context, bool enabled, SettingsLoadedState state) async {
+    BuildContext context,
+    bool enabled,
+    SettingsLoadedState state,
+  ) async {
     final l10n = S.of(context);
     final notificationService = locator<NotificationService>();
     await notificationService.initialize();
@@ -240,6 +386,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
         minute: state.notificationMinute,
         title: l10n.notificationsDailyReminderTitle,
         body: l10n.notificationsDailyReminderBody,
+        channelName: l10n.notificationsDailyReminderChannelName,
+        channelDescription: l10n.notificationsDailyReminderChannelDescription,
       );
     } else {
       await notificationService.cancelDailyReminder();
@@ -249,12 +397,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   Future<void> _pickNotificationTime(
-      BuildContext context, TimeOfDay current) async {
+    BuildContext context,
+    TimeOfDay current,
+  ) async {
     final l10n = S.of(context);
-    final picked = await showTimePicker(
-      context: context,
-      initialTime: current,
-    );
+    final picked = await showTimePicker(context: context, initialTime: current);
     if (picked == null) return;
     _settingsBloc.setNotificationTime(picked.hour, picked.minute);
     final notificationService = locator<NotificationService>();
@@ -263,6 +410,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
       minute: picked.minute,
       title: l10n.notificationsDailyReminderTitle,
       body: l10n.notificationsDailyReminderBody,
+      channelName: l10n.notificationsDailyReminderChannelName,
+      channelDescription: l10n.notificationsDailyReminderChannelDescription,
     );
     _settingsBloc.add(LoadSettingsEvent());
   }
@@ -330,14 +479,124 @@ class _SettingsScreenState extends State<SettingsScreen> {
     }
   }
 
-  void _showCalculationsDialog(BuildContext context) {
+  // #177: Pick between kilocalories (default) and kilojoules for the
+  // energy display unit. Internal storage stays in kcal; this only
+  // toggles how energy is rendered everywhere it appears.
+  void _showEnergyUnitDialog(
+    BuildContext context,
+    bool currentUsesKilojoules,
+  ) async {
+    bool selectedUsesKilojoules = currentUsesKilojoules;
+    final shouldUpdate = await showDialog<bool?>(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          contentPadding: EdgeInsets.zero,
+          title: Text(S.of(context).settingsEnergyUnitLabel),
+          content: StatefulBuilder(
+            builder:
+                (
+                  BuildContext context,
+                  void Function(void Function()) setState,
+                ) {
+                  return RadioGroup<bool>(
+                    groupValue: selectedUsesKilojoules,
+                    onChanged: (value) {
+                      setState(() {
+                        selectedUsesKilojoules = value ?? false;
+                      });
+                    },
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        RadioListTile<bool>(
+                          title: Text(S.of(context).energyUnitKcalLabel),
+                          value: false,
+                        ),
+                        RadioListTile<bool>(
+                          title: Text(S.of(context).energyUnitKjLabel),
+                          value: true,
+                        ),
+                      ],
+                    ),
+                  );
+                },
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: Text(S.of(context).dialogCancelLabel),
+            ),
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(true),
+              child: Text(S.of(context).dialogOKLabel),
+            ),
+          ],
+        );
+      },
+    );
+    if (shouldUpdate == true) {
+      _settingsBloc.setUsesKilojoules(selectedUsesKilojoules);
+      _settingsBloc.add(LoadSettingsEvent());
+      if (context.mounted) {
+        Provider.of<EnergyUnitProvider>(
+          context,
+          listen: false,
+        ).updateUsesKilojoules(selectedUsesKilojoules);
+      }
+    }
+  }
+
+  void _showKcalAdjustmentDialog(BuildContext context) {
     showDialog(
       context: context,
-      builder: (context) => CalculationsDialog(
+      builder: (context) => KcalAdjustmentDialog(
         settingsBloc: _settingsBloc,
         profileBloc: _profileBloc,
         homeBloc: _homeBloc,
-        diaryBloc: _diaryBloc,
+      ),
+    );
+  }
+
+  void _showMacroSplitDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) =>
+          MacroSplitDialog(settingsBloc: _settingsBloc, homeBloc: _homeBloc),
+    );
+  }
+
+  void _showPerMealKcalShareDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => PerMealKcalShareDialog(
+        settingsBloc: _settingsBloc,
+        homeBloc: _homeBloc,
+        calendarDayBloc: _calendarDayBloc,
+      ),
+    );
+  }
+
+  void _openNutrientGoalsScreen(BuildContext context) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => NutrientGoalsScreen(
+          settingsBloc: _settingsBloc,
+          profileBloc: _profileBloc,
+          diaryBloc: _diaryBloc,
+          calendarDayBloc: _calendarDayBloc,
+          homeBloc: _homeBloc,
+        ),
+      ),
+    );
+  }
+
+  void _showDayBoundaryDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => DiaryDayBoundaryDialog(
+        settingsBloc: _settingsBloc,
+        homeBloc: _homeBloc,
         calendarDayBloc: _calendarDayBloc,
       ),
     );
@@ -351,6 +610,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
     showDialog(
       context: context,
       builder: (context) => ImportCustomFoodDataDialog(),
+    );
+  }
+
+  void _openNutrientVisibilityScreen(BuildContext context) {
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(builder: (_) => const NutrientVisibilityScreen()),
     );
   }
 
@@ -377,6 +642,38 @@ class _SettingsScreenState extends State<SettingsScreen> {
     }
   }
 
+  Future<void> _confirmDeleteAllData(BuildContext context) async {
+    final l10n = S.of(context);
+    final navigator = Navigator.of(context);
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text(l10n.settingsDeleteAllDataConfirmTitle),
+        content: Text(l10n.settingsDeleteAllDataConfirmContent),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(false),
+            child: Text(l10n.dialogCancelLabel),
+          ),
+          TextButton(
+            style: TextButton.styleFrom(
+              foregroundColor: Theme.of(ctx).colorScheme.error,
+            ),
+            onPressed: () => Navigator.of(ctx).pop(true),
+            child: Text(l10n.settingsDeleteAllDataConfirmAction),
+          ),
+        ],
+      ),
+    );
+    if (confirmed != true) return;
+    await locator<DeleteAllUserDataUsecase>().deleteAll();
+    if (!mounted) return;
+    navigator.pushNamedAndRemoveUntil(
+      NavigationOptions.onboardingRoute,
+      (_) => false,
+    );
+  }
+
   /// Format a byte count for display in the cache-clear tile subtitle.
   /// Uses KB up to 1 MB, then MB with one decimal place above that.
   String _formatBytes(int bytes) {
@@ -394,36 +691,39 @@ class _SettingsScreenState extends State<SettingsScreen> {
           contentPadding: EdgeInsets.zero,
           title: Text(S.of(context).settingsThemeLabel),
           content: StatefulBuilder(
-            builder: (
-              BuildContext context,
-              void Function(void Function()) setState,
-            ) {
-              return RadioGroup(
-                groupValue: selectedTheme,
-                onChanged: (value) {
-                  setState(() {
-                    selectedTheme = value as AppThemeEntity;
-                  });
+            builder:
+                (
+                  BuildContext context,
+                  void Function(void Function()) setState,
+                ) {
+                  return RadioGroup(
+                    groupValue: selectedTheme,
+                    onChanged: (value) {
+                      setState(() {
+                        selectedTheme = value as AppThemeEntity;
+                      });
+                    },
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        RadioListTile(
+                          title: Text(
+                            S.of(context).settingsThemeSystemDefaultLabel,
+                          ),
+                          value: AppThemeEntity.system,
+                        ),
+                        RadioListTile(
+                          title: Text(S.of(context).settingsThemeLightLabel),
+                          value: AppThemeEntity.light,
+                        ),
+                        RadioListTile(
+                          title: Text(S.of(context).settingsThemeDarkLabel),
+                          value: AppThemeEntity.dark,
+                        ),
+                      ],
+                    ),
+                  );
                 },
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    RadioListTile(
-                      title: Text(S.of(context).settingsThemeSystemDefaultLabel),
-                      value: AppThemeEntity.system,
-                    ),
-                    RadioListTile(
-                      title: Text(S.of(context).settingsThemeLightLabel),
-                      value: AppThemeEntity.light,
-                    ),
-                    RadioListTile(
-                      title: Text(S.of(context).settingsThemeDarkLabel),
-                      value: AppThemeEntity.dark,
-                    ),
-                  ],
-                ),
-              );
-            },
           ),
           actions: [
             TextButton(
@@ -462,6 +762,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     'uk': 'Українська',
     'zh': '中文',
     'pl': 'Polski',
+    'sk': 'Slovenčina',
   };
 
   String? _localeDisplayName(String? code) => _supportedLocales[code];
@@ -478,29 +779,34 @@ class _SettingsScreenState extends State<SettingsScreen> {
           contentPadding: EdgeInsets.zero,
           title: Text(S.of(context).settingsLanguageLabel),
           content: StatefulBuilder(
-            builder: (BuildContext context,
-                void Function(void Function()) setState) {
-              return RadioGroup<String>(
-                groupValue: selectedCode,
-                onChanged: (v) => setState(() => selectedCode = v as String),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    RadioListTile<String>(
-                      title:
-                          Text(S.of(context).settingsThemeSystemDefaultLabel),
-                      value: _systemLocale,
+            builder:
+                (
+                  BuildContext context,
+                  void Function(void Function()) setState,
+                ) {
+                  return RadioGroup<String>(
+                    groupValue: selectedCode,
+                    onChanged: (v) =>
+                        setState(() => selectedCode = v as String),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        RadioListTile<String>(
+                          title: Text(
+                            S.of(context).settingsThemeSystemDefaultLabel,
+                          ),
+                          value: _systemLocale,
+                        ),
+                        ..._supportedLocales.entries.map(
+                          (e) => RadioListTile<String>(
+                            title: Text(e.value),
+                            value: e.key,
+                          ),
+                        ),
+                      ],
                     ),
-                    ..._supportedLocales.entries.map(
-                      (e) => RadioListTile<String>(
-                        title: Text(e.value),
-                        value: e.key,
-                      ),
-                    ),
-                  ],
-                ),
-              );
-            },
+                  );
+                },
           ),
           actions: [
             TextButton(
@@ -509,14 +815,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ),
             TextButton(
               onPressed: () {
-                final locale =
-                    selectedCode.isEmpty ? null : selectedCode;
+                final locale = selectedCode.isEmpty ? null : selectedCode;
                 _settingsBloc.setSelectedLocale(locale);
                 _settingsBloc.add(LoadSettingsEvent());
-                Provider.of<LocaleProvider>(context, listen: false)
-                    .updateLocale(
-                  locale != null ? Locale(locale) : null,
-                );
+                Provider.of<LocaleProvider>(
+                  context,
+                  listen: false,
+                ).updateLocale(locale != null ? Locale(locale) : null);
                 Navigator.of(context).pop();
               },
               child: Text(S.of(context).dialogOKLabel),
@@ -591,20 +896,21 @@ class _SettingsScreenState extends State<SettingsScreen> {
         return AlertDialog(
           title: Text(S.of(context).settingsPrivacySettings),
           content: StatefulBuilder(
-            builder: (
-              BuildContext context,
-              void Function(void Function()) setState,
-            ) {
-              return SwitchListTile(
-                title: Text(S.of(context).sendAnonymousUserData),
-                value: switchActive,
-                onChanged: (bool value) {
-                  setState(() {
-                    switchActive = value;
-                  });
+            builder:
+                (
+                  BuildContext context,
+                  void Function(void Function()) setState,
+                ) {
+                  return SwitchListTile(
+                    title: Text(S.of(context).sendAnonymousUserData),
+                    value: switchActive,
+                    onChanged: (bool value) {
+                      setState(() {
+                        switchActive = value;
+                      });
+                    },
+                  );
                 },
-              );
-            },
           ),
           actions: [
             TextButton(
@@ -636,7 +942,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
         applicationName: S.of(context).appTitle,
         applicationIcon: SizedBox(
           width: 40,
-          child: Image.asset('assets/icon/ont_logo_square.png'),
+          child: Image.asset(
+            Theme.of(context).brightness == Brightness.dark
+                ? 'assets/icon/ont_logo_square_color_white_1024x1024.png'
+                : 'assets/icon/ont_logo_square_color_back_1024x1024.png',
+          ),
         ),
         applicationVersion: packageInfo.version,
         applicationLegalese: S.of(context).appLicenseLabel,
@@ -691,5 +1001,63 @@ class _SettingsScreenState extends State<SettingsScreen> {
         );
       }
     }
+  }
+}
+
+
+String _accentSubtitle(
+  BuildContext context, {
+  required bool useMaterialYou,
+  required int? accentColor,
+}) {
+  final isAndroid = Theme.of(context).platform == TargetPlatform.android;
+  if (isAndroid && useMaterialYou) {
+    return S.of(context).settingsAccentSubtitleMaterialYou;
+  }
+  if (accentColor != null) {
+    return S.of(context).settingsAccentSubtitleCustom;
+  }
+  return S.of(context).settingsAccentSubtitleDefault;
+}
+
+class _AccentTrailingSwatch extends StatelessWidget {
+  final bool useMaterialYou;
+  final int? accentColor;
+
+  const _AccentTrailingSwatch({
+    required this.useMaterialYou,
+    required this.accentColor,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final isAndroid = Theme.of(context).platform == TargetPlatform.android;
+    if (isAndroid && useMaterialYou) {
+      return Container(
+        width: 24,
+        height: 24,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          gradient: const SweepGradient(
+            colors: <Color>[
+              Color(0xFFFF5252),
+              Color(0xFFFFD740),
+              Color(0xFF69F0AE),
+              Color(0xFF40C4FF),
+              Color(0xFFB388FF),
+              Color(0xFFFF5252),
+            ],
+          ),
+        ),
+      );
+    }
+    final color = accentColor != null
+        ? Color(accentColor!)
+        : const Color(0xFF43A047); // default green disc preview
+    return Container(
+      width: 24,
+      height: 24,
+      decoration: BoxDecoration(color: color, shape: BoxShape.circle),
+    );
   }
 }

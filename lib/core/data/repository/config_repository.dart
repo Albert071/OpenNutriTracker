@@ -96,4 +96,58 @@ class ConfigRepository {
   Future<void> setConfigShowMicronutrients(bool show) async {
     await _configDataSource.setConfigShowMicronutrients(show);
   }
+
+  Future<void> setConfigUsesKilojoules(bool usesKilojoules) async {
+    await _configDataSource.setConfigUsesKilojoules(usesKilojoules);
+  }
+
+  Future<void> setConfigMealKcalSharesPct(Map<String, int> shares) async {
+    await _configDataSource.setConfigMealKcalSharesPct(shares);
+  }
+
+  Future<String?> getCustomMealFormMode() async {
+    return await _configDataSource.getCustomMealFormMode();
+  }
+
+  Future<void> setCustomMealFormMode(String mode) async {
+    await _configDataSource.setCustomMealFormMode(mode);
+  }
+
+  Future<Map<String, int>?> getDiarySortPreferences() async {
+    return await _configDataSource.getDiarySortPreferences();
+  }
+
+  Future<void> setDiarySortPreference(String mealKey, int sortIndex) async {
+    await _configDataSource.setDiarySortPreference(mealKey, sortIndex);
+  }
+
+  Future<void> setConfigNutrientPanelVisibility(
+    Map<String, bool> visibility,
+  ) async {
+    await _configDataSource.setConfigNutrientPanelVisibility(visibility);
+  }
+
+  Future<void> setConfigDayStartOffsetHours(int hours) async {
+    await _configDataSource.setConfigDayStartOffsetHours(hours);
+  }
+
+  Future<void> setConfigDayStartOffsetMinutes(int minutes) async {
+    await _configDataSource.setConfigDayStartOffsetMinutes(minutes);
+  }
+
+  Future<void> setConfigDailyWaterGoalMl(int goalMl) async {
+    await _configDataSource.setConfigDailyWaterGoalMl(goalMl);
+  }
+
+  Future<void> setFastingWarningAcknowledged(bool acknowledged) async {
+    await _configDataSource.setFastingWarningAcknowledged(acknowledged);
+  }
+
+  Future<void> setConfigUseMaterialYou(bool useMaterialYou) async {
+    await _configDataSource.setConfigUseMaterialYou(useMaterialYou);
+  }
+
+  Future<void> setConfigAccentColor(int? value) async {
+    await _configDataSource.setConfigAccentColor(value);
+  }
 }

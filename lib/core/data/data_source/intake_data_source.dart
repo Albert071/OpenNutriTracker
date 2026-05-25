@@ -5,6 +5,7 @@ import 'package:logging/logging.dart';
 import 'package:opennutritracker/core/data/dbo/intake_dbo.dart';
 import 'package:opennutritracker/core/data/dbo/intake_type_dbo.dart';
 import 'package:opennutritracker/core/data/dbo/meal_dbo.dart';
+import 'package:opennutritracker/core/utils/calc/day_boundary_calc.dart';
 
 class IntakeDataSource {
   final log = Logger('IntakeDataSource');
@@ -62,12 +63,34 @@ class IntakeDataSource {
 
   Future<List<IntakeDBO>> getAllIntakesByDate(
     IntakeTypeDBO intakeType,
-    DateTime dateTime,
-  ) async {
+    DateTime dateTime, {
+    int dayStartOffsetHours = 0,
+    int dayStartOffsetMinutes = 0,
+  }) async {
+    // #139: when a non-zero day-start offset is configured, an entry
+    // logged before that hour rolls into the previous wall-clock day.
+    // A zero total offset preserves the original wall-clock behaviour.
+    // The follow-up to #139 adds a minutes companion; both compose
+    // additively into a single total-minutes value here.
+    final totalMinutes = dayStartOffsetHours * 60 +
+        dayStartOffsetMinutes.clamp(0, 59);
+    if (totalMinutes == 0) {
+      return _intakeBox.values
+          .where(
+            (intake) =>
+                DateUtils.isSameDay(dateTime, intake.dateTime) &&
+                intake.type == intakeType,
+          )
+          .toList();
+    }
     return _intakeBox.values
         .where(
           (intake) =>
-              DateUtils.isSameDay(dateTime, intake.dateTime) &&
+              DayBoundaryCalc.isSameLogicalDayMinutes(
+                dateTime,
+                intake.dateTime,
+                totalMinutes,
+              ) &&
               intake.type == intakeType,
         )
         .toList();
@@ -95,5 +118,38 @@ class IntakeDataSource {
 
   Future<List<IntakeDBO>> getCustomMealIntakes() async {
     return _intakeBox.values.where((dbo) => dbo.meal.source == MealSourceDBO.custom).toList();
+  }
+
+  /// Replace the denormalised [MealDBO] snapshot on every intake whose
+  /// `(meal.code ?? meal.name)` matches [fromMealKey] *and* whose meal source
+  /// is custom. Used by the custom-meal merge flow: callers compute the
+  /// kcal/macro deltas before invoking this and apply them to TrackedDay
+  /// totals separately.
+  ///
+  /// Returns the list of `(oldIntake, newIntake)` pairs that were rewritten,
+  /// so the caller can recompute totals from the diff.
+  Future<List<(IntakeDBO, IntakeDBO)>> remapCustomMealOnIntakes({
+    required String fromMealKey,
+    required MealDBO toMeal,
+  }) async {
+    final rewrites = <(IntakeDBO, IntakeDBO)>[];
+    final entries = _intakeBox.toMap().entries.toList();
+    for (final entry in entries) {
+      final dbo = entry.value;
+      if (dbo.meal.source != MealSourceDBO.custom) continue;
+      final key = dbo.meal.code ?? dbo.meal.name;
+      if (key != fromMealKey) continue;
+      final updated = IntakeDBO(
+        id: dbo.id,
+        unit: dbo.unit,
+        amount: dbo.amount,
+        type: dbo.type,
+        meal: toMeal,
+        dateTime: dbo.dateTime,
+      );
+      await _intakeBox.put(entry.key, updated);
+      rewrites.add((dbo, updated));
+    }
+    return rewrites;
   }
 }

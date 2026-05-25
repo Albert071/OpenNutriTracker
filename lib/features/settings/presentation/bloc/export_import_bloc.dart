@@ -1,10 +1,13 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:opennutritracker/features/settings/domain/usecase/download_sample_csv_usecase.dart';
+import 'package:opennutritracker/features/settings/domain/usecase/download_sample_json_usecase.dart';
 import 'package:opennutritracker/features/settings/domain/usecase/export_data_usecase.dart';
 import 'package:opennutritracker/features/settings/domain/usecase/import_data_usecase.dart';
 import 'package:opennutritracker/features/settings/domain/usecase/import_meals_csv_usecase.dart';
+import 'package:opennutritracker/features/settings/domain/usecase/import_meals_json_usecase.dart';
 import 'package:opennutritracker/features/settings/domain/usecase/import_recipes_csv_usecase.dart';
+import 'package:opennutritracker/features/settings/domain/usecase/import_recipes_json_usecase.dart';
 
 part 'export_import_event.dart';
 
@@ -16,12 +19,19 @@ class ExportImportBloc extends Bloc<ExportImportEvent, ExportImportState> {
   static const userIntakeJsonFileName = 'user_intake.json';
   static const trackedDayJsonFileName = 'user_tracked_day.json';
   static const recipeJsonFileName = 'user_recipes.json';
+  static const weightLogJsonFileName = 'weight_log.json';
+  // #70 follow-up: saved Custom activity templates (name + typical kcal).
+  static const customActivityTemplateJsonFileName =
+      'custom_activity_templates.json';
 
   final ExportDataUsecase _exportDataUsecase;
   final ImportDataUsecase _importDataUsecase;
   final ImportMealsCsvUsecase _importMealsCsvUsecase;
   final ImportRecipesCsvUsecase _importRecipesCsvUsecase;
   final DownloadSampleCsvUsecase _downloadSampleCsvUsecase;
+  final DownloadSampleJsonUsecase _downloadSampleJsonUsecase;
+  final ImportMealsJsonUsecase _importMealsJsonUsecase;
+  final ImportRecipesJsonUsecase _importRecipesJsonUsecase;
 
   ExportImportBloc(
     this._exportDataUsecase,
@@ -29,6 +39,9 @@ class ExportImportBloc extends Bloc<ExportImportEvent, ExportImportState> {
     this._importMealsCsvUsecase,
     this._importRecipesCsvUsecase,
     this._downloadSampleCsvUsecase,
+    this._downloadSampleJsonUsecase,
+    this._importMealsJsonUsecase,
+    this._importRecipesJsonUsecase,
   ) : super(ExportImportInitial()) {
     on<ExportDataEvent>((event, emit) async {
       try {
@@ -40,6 +53,9 @@ class ExportImportBloc extends Bloc<ExportImportEvent, ExportImportState> {
           userIntakeJsonFileName,
           trackedDayJsonFileName,
           recipeJsonFileName,
+          weightLogJsonFileName,
+          customActivityTemplateJsonFileName,
+          format: event.format,
         );
 
         if (result) {
@@ -56,12 +72,16 @@ class ExportImportBloc extends Bloc<ExportImportEvent, ExportImportState> {
       try {
         emit(ExportImportLoadingState());
 
-        final result = await _importDataUsecase.importData(
-          userActivityJsonFileName,
-          userIntakeJsonFileName,
-          trackedDayJsonFileName,
-          recipeJsonFileName,
-        );
+        final result = event.format == ExportFormat.csv
+            ? await _importDataUsecase.importDataCsv()
+            : await _importDataUsecase.importData(
+                userActivityJsonFileName,
+                userIntakeJsonFileName,
+                trackedDayJsonFileName,
+                recipeJsonFileName,
+                weightLogJsonFileName,
+                customActivityTemplateJsonFileName,
+              );
         if (result) {
           emit(ExportImportSuccess());
         } else {
@@ -127,6 +147,74 @@ class ExportImportBloc extends Bloc<ExportImportEvent, ExportImportState> {
       } catch (e) {
         emit(ExportImportError());
       }
+    });
+
+    on<DownloadSampleJsonEvent>((event, emit) async {
+      try {
+        emit(ExportImportLoadingState());
+        final saved = await _downloadSampleJsonUsecase.downloadSample();
+        emit(saved ? ExportImportSuccess() : ExportImportInitial());
+      } catch (e) {
+        emit(ExportImportError());
+      }
+    });
+
+    on<ImportMealsJsonEvent>((event, emit) async {
+      try {
+        emit(ExportImportLoadingState());
+        final result = await _importMealsJsonUsecase.importFromPickedFile();
+        if (result == null) {
+          // User cancelled the file picker.
+          emit(ExportImportInitial());
+        } else if (result.imported == 0) {
+          emit(JsonImportErrorState(result.errorMessages));
+        } else {
+          emit(JsonImportResultState(
+            imported: result.imported,
+            savedAsCustomMeals: result.savedAsCustomMeals,
+            errorMessages: result.errorMessages,
+          ));
+        }
+      } catch (e) {
+        emit(JsonImportErrorState([e.toString()]));
+      }
+    });
+
+    on<ImportRecipesJsonEvent>((event, emit) async {
+      try {
+        emit(ExportImportLoadingState());
+        final result = await _importRecipesJsonUsecase.importFromPickedFile();
+        if (result == null) {
+          emit(ExportImportInitial());
+        } else if (result.imported == 0) {
+          emit(RecipeJsonImportErrorState(result.errorMessages));
+        } else {
+          emit(RecipeJsonImportResultState(
+            imported: result.imported,
+            skipped: result.skippedRecipes,
+            errorMessages: result.errorMessages,
+          ));
+        }
+      } catch (e) {
+        emit(RecipeJsonImportErrorState([e.toString()]));
+      }
+    });
+
+    on<DownloadSampleRecipesJsonEvent>((event, emit) async {
+      try {
+        emit(ExportImportLoadingState());
+        // Reuses the meals download usecase shape — recipes share the
+        // same single-file save flow.
+        final saved =
+            await _downloadSampleJsonUsecase.downloadRecipeSample();
+        emit(saved ? ExportImportSuccess() : ExportImportInitial());
+      } catch (e) {
+        emit(ExportImportError());
+      }
+    });
+
+    on<ResetExportImportStateEvent>((event, emit) {
+      emit(ExportImportInitial());
     });
   }
 }
