@@ -276,6 +276,7 @@ jobs:
     needs: [ios-build, discover-integration-tests]
     if: needs.discover-integration-tests.outputs.count != '0'
     runs-on: macos-26
+
     permissions:
       contents: read
     strategy:
@@ -321,6 +322,12 @@ jobs:
       # ships several preinstalled; we don't care which exact model — the
       # boot-smoke test is platform-bridge driven, not display-pixel driven.
       - name: Pick + boot iPhone simulator
+        # 3-minute hard cap: xcrun simctl bootstatus blocks until the sim
+        # is fully up. On a cold runner this can silently wedge if the
+        # simulator process never transitions out of 'Booting'. Without a
+        # timeout the job occupies the runner slot until GitHub's 6-hour
+        # workflow limit kills it.
+        timeout-minutes: 3
         run: |
           DEVICE_UDID=$(xcrun simctl list devices available iPhone -j | python3 -c "
           import sys, json
@@ -331,14 +338,24 @@ jobs:
           print(devices[0]['udid'])
           ")
           echo "Booting simulator UDID: $DEVICE_UDID"
-          xcrun simctl boot "$DEVICE_UDID"
-          xcrun simctl bootstatus "$DEVICE_UDID"
+          # Open Simulator.app first so the graphical process is alive
+          # before boot. Flutter's integration-test runner installs the
+          # .app bundle via simctl *and* drives the UI through the running
+          # Simulator window; without Simulator.app open, `flutter test`
+          # finishes the Xcode build, successfully installs the app, then
+          # hangs indefinitely waiting for a launch event that never fires.
+          open -a Simulator
+          xcrun simctl boot "$DEVICE_UDID" 2>/dev/null || true  # no-op if already Booted
+          xcrun simctl bootstatus "$DEVICE_UDID" -b
           echo "DEVICE_UDID=$DEVICE_UDID" >> $GITHUB_ENV
 
       - name: Run integration test (${{ matrix.test_file }})
         # --flavor full so the integration-test app matches the production
         # iOS scheme (bundle id + display name) rather than the develop one.
-        run: flutter test "${{ matrix.test_file }}" -d "$DEVICE_UDID" --flavor full --reporter expanded
+        # --timeout 300 (seconds) gives flutter test a hard deadline so a
+        # hung test fails fast instead of blocking the runner for hours.
+        timeout-minutes: 20
+        run: flutter test "${{ matrix.test_file }}" -d "$DEVICE_UDID" --flavor full --reporter expanded --timeout 300s
 
   android-build:
     runs-on: ubuntu-latest
