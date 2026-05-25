@@ -589,6 +589,15 @@ jobs:
       - name: Generate code
         run: fvm dart run build_runner build --delete-conflicting-outputs
 
+      # The Podfile's Flutter post-install hook needs the iOS engine
+      # artifacts (Flutter.xcframework). The setup-flutter-cache action used
+      # by ios-build precaches them, but this job installs Flutter via FVM
+      # (for parity with local dev) which does not, so `pod install` fails
+      # with "Flutter.xcframework must exist ... run flutter precache --ios
+      # first". Precache the iOS engine before pods.
+      - name: Precache iOS Flutter engine
+        run: fvm flutter precache --ios
+
       - name: Install CocoaPods dependencies
         working-directory: ios
         run: bundle exec pod install
