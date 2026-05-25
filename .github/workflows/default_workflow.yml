@@ -269,9 +269,13 @@ jobs:
           echo "count=${#files[@]}" >> "$GITHUB_OUTPUT"
 
   ios-integration-tests:
-    # Gate on a clean iOS build first — no point burning macOS minutes on
-    # the integration suite when the app doesn't compile.
-    needs: [ios-build, discover-integration-tests]
+    # Deliberately not gated on ios-build. The integration run rebuilds the
+    # app from source anyway (it compiles its own test binary), so depending
+    # on ios-build only serialised ~6-11 min of build in front of this job
+    # for no shared output. Running them in parallel cuts the iOS feedback
+    # path by that much; the cost is one extra macOS build when the app does
+    # not compile, which this job's own build would surface regardless.
+    needs: [discover-integration-tests]
     if: needs.discover-integration-tests.outputs.count != '0'
     runs-on: macos-26
     # Bound the job so a hung test fails fast rather than drifting toward
@@ -388,9 +392,11 @@ jobs:
         run: flutter build apk --flavor full --debug
 
   android-integration-tests:
-    # Gate on a clean Android build first — same logic as iOS, just on
-    # ubuntu so the minutes are cheaper.
-    needs: [android-build, discover-integration-tests]
+    # Not gated on android-build — same reasoning as iOS: this job rebuilds
+    # the app itself, so the dependency only serialised the build for no
+    # shared artifact. Running in parallel is cheaper here anyway since it is
+    # all ubuntu minutes.
+    needs: [discover-integration-tests]
     if: needs.discover-integration-tests.outputs.count != '0'
     runs-on: ubuntu-latest
     # Same bound as iOS so a hung test fails fast rather than running to the
