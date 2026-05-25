@@ -623,7 +623,12 @@ jobs:
       github.event_name == 'workflow_dispatch'
     needs:
       - ios-package
-    runs-on: ubuntu-latest
+    # Must run on macOS. The TestFlight upload goes through Apple's iTunes
+    # Transporter, which needs the macOS toolchain (xcrun/altool); on
+    # ubuntu it failed with "No such file or directory @ dir_chdir0" as the
+    # transporter couldn't resolve its working directory. The IPA is built
+    # in ios-package and handed off as an artifact, so this job only uploads.
+    runs-on: macos-26
     permissions:
       contents: read
     env:
