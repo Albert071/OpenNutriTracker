@@ -16,7 +16,11 @@ platform :ios do
     # production bundle identifier and BUNDLE_DISPLAY_NAME (no .develop
     # suffix). The develop scheme exists for local sideloading and isn't
     # what App Store distribution should ever pick up.
-    sh("cd .. && fvm flutter build ipa --release --flavor full --export-method app-store --build-number=#{ENV.fetch('CI_BUILD_NUMBER', '1')}")
+    #
+    # No --build-number: flutter takes CFBundleVersion from the pubspec build
+    # number (the +N in `version:`), so iOS and Android share one build number
+    # sourced from pubspec instead of iOS using the CI run number.
+    sh('cd .. && fvm flutter build ipa --release --flavor full --export-method app-store')
   end
 
   desc 'Upload the latest IPA to TestFlight'
