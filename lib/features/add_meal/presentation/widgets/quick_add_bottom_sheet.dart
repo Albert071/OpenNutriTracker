@@ -111,13 +111,17 @@ class _QuickAddBottomSheetState extends State<QuickAddBottomSheet> {
       if (!mounted) return;
       final mealTypeLabel = _intakeTypeLabel(context, widget.intakeType);
       final scaffoldMessenger = ScaffoldMessenger.of(context);
+      // Resolve the localized message before navigating: the push below
+      // removes every route (including this sheet's), so reading from
+      // context afterwards would be looking up a deactivated widget.
+      final addedMessage = S.of(context).quickAddAddedSnack(mealTypeLabel);
       Navigator.of(context, rootNavigator: true).pushNamedAndRemoveUntil(
         NavigationOptions.mainRoute,
         (route) => false,
       );
       scaffoldMessenger.showSnackBar(
         SnackBar(
-          content: Text(S.of(context).quickAddAddedSnack(mealTypeLabel)),
+          content: Text(addedMessage),
         ),
       );
     } catch (e, st) {
