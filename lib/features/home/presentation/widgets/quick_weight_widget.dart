@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:opennutritracker/core/domain/entity/weight_log_entity.dart';
+import 'package:opennutritracker/core/domain/usecase/add_weight_log_usecase.dart';
 import 'package:opennutritracker/core/domain/usecase/get_user_usecase.dart';
 import 'package:opennutritracker/core/utils/locator.dart';
 import 'package:opennutritracker/features/profile/presentation/bloc/profile_bloc.dart';
@@ -63,6 +65,14 @@ class QuickWeightWidget extends StatelessWidget {
     if (newWeight == null || !context.mounted) return;
 
     final newWeightKg = usesImperialUnits ? newWeight / 2.20462 : newWeight;
+
+    final now = DateTime.now();
+    await locator<AddWeightLogUsecase>().addEntry(
+      WeightLogEntity(
+        date: DateTime(now.year, now.month, now.day),
+        weightKg: newWeightKg,
+      ),
+    );
 
     final user = await locator<GetUserUsecase>().getUserData();
     user.weightKG = newWeightKg;
