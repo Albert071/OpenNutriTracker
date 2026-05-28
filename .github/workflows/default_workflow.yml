@@ -858,8 +858,9 @@ jobs:
         run: |
           APP_VERSION=$(awk '/^version:/ {print $2}' pubspec.yaml)
           VERSION_NO_BUILD="${APP_VERSION%+*}"
+          BUILD_NUMBER="${APP_VERSION##*+}"
           TAG_NAME="v${VERSION_NO_BUILD}"
-          RELEASE_NAME="Release v${VERSION_NO_BUILD} (build ${GITHUB_RUN_NUMBER})"
+          RELEASE_NAME="Release v${VERSION_NO_BUILD} (build ${BUILD_NUMBER})"
           echo "TAG_NAME=$TAG_NAME" >> "$GITHUB_ENV"
           echo "RELEASE_NAME=$RELEASE_NAME" >> "$GITHUB_ENV"
 
