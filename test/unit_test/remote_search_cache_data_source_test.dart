@@ -20,6 +20,7 @@ MealDBO _meal({
   String? code,
   String? name,
   MealSourceDBO source = MealSourceDBO.off,
+  bool? detailed,
 }) {
   return MealDBO(
     code: code,
@@ -35,6 +36,7 @@ MealDBO _meal({
     servingSize: null,
     nutriments: _emptyNutriments(),
     source: source,
+    detailed: detailed,
   );
 }
 
@@ -198,6 +200,52 @@ void main() {
       expect(ds.getByBarcode('X')?.name, equals('Item X'));
       expect(ds.getByBarcode('Y')?.name, equals('Item Y'));
       expect(ds.getByBarcode('Z'), isNull);
+    });
+
+    group('detailed flag (thin search vs full product)', () {
+      test('getDetailedByBarcode ignores thin entries, returns full ones',
+          () async {
+        await ds.cache(_meal(code: 'THIN', name: 'Thin', detailed: false));
+        await ds.cache(_meal(code: 'FULL', name: 'Full', detailed: true));
+
+        expect(ds.getDetailedByBarcode('THIN'), isNull,
+            reason: 'a thin search result must not satisfy a detailed lookup');
+        expect(ds.getDetailedByBarcode('FULL')?.name, equals('Full'));
+        // getByBarcode still returns either, for callers that accept thin data.
+        expect(ds.getByBarcode('THIN')?.name, equals('Thin'));
+      });
+
+      test('legacy entries with null detailed are treated as thin', () async {
+        await ds.cache(_meal(code: 'OLD', name: 'Legacy')); // detailed == null
+        expect(ds.getDetailedByBarcode('OLD'), isNull);
+      });
+
+      test(
+          'cacheFromSearch does not downgrade a full entry to a thin search '
+          'result', () async {
+        await ds.cache(_meal(code: 'A', name: 'Full', detailed: true));
+
+        await ds.cacheFromSearch([
+          _meal(code: 'A', name: 'Thin from search', detailed: false),
+        ]);
+
+        final entry = ds.getByBarcode('A')!;
+        expect(entry.name, equals('Full'),
+            reason: 'the hydrated full entry must survive a re-search');
+        expect(entry.detailed, isTrue);
+        expect(ds.getDetailedByBarcode('A')?.name, equals('Full'));
+      });
+
+      test('cacheFromSearch still refreshes a thin entry with newer thin data',
+          () async {
+        await ds.cache(_meal(code: 'B', name: 'Thin v1', detailed: false));
+
+        await ds.cacheFromSearch([
+          _meal(code: 'B', name: 'Thin v2', detailed: false),
+        ]);
+
+        expect(ds.getByBarcode('B')?.name, equals('Thin v2'));
+      });
     });
 
     test('touch refreshes the timestamp without changing meal data', () async {

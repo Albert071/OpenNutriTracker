@@ -143,6 +143,33 @@ void main() {
       expect(cachedOffMealDataSource.writes.single.code, '9999');
     });
 
+    test(
+        'a thin (search-only) cache entry does not satisfy the scan; OFF is '
+        'queried for the full product', () async {
+      cachedOffMealDataSource.entries.add(_offCacheDbo(
+        code: '4321',
+        name: 'Thin Cached',
+        detailed: false,
+      ));
+      repo.barcodeResult = MealEntity(
+        code: '4321',
+        name: 'Full OFF',
+        url: null,
+        mealQuantity: '100',
+        mealUnit: 'g',
+        servingQuantity: null,
+        servingUnit: 'g',
+        servingSize: null,
+        nutriments: _emptyNutriments(),
+        source: MealSourceEntity.off,
+      );
+
+      final result = await useCase.searchProductByBarcode('4321');
+
+      expect(result.name, 'Full OFF');
+      expect(repo.getOFFProductByBarcodeCalls, 1);
+    });
+
     test('custom-meal match takes priority over cached match', () async {
       customMealDataSource.meals.add(_customMealDbo(
         code: '5555',
@@ -162,7 +189,11 @@ void main() {
   });
 }
 
-MealDBO _offCacheDbo({required String code, required String name}) =>
+MealDBO _offCacheDbo({
+  required String code,
+  required String name,
+  bool detailed = true,
+}) =>
     MealDBO(
       code: code,
       name: name,
@@ -175,6 +206,7 @@ MealDBO _offCacheDbo({required String code, required String name}) =>
       servingQuantity: null,
       servingUnit: 'g',
       servingSize: null,
+      detailed: detailed,
       source: MealSourceDBO.off,
       nutriments: MealNutrimentsDBO(
         energyKcal100: 0,
@@ -211,6 +243,14 @@ class _FakeRemoteSearchCacheDataSource implements RemoteSearchCacheDataSource {
   MealDBO? getByBarcode(String barcode) {
     for (final m in entries) {
       if (m.code == barcode) return m;
+    }
+    return null;
+  }
+
+  @override
+  MealDBO? getDetailedByBarcode(String barcode) {
+    for (final m in entries) {
+      if (m.code == barcode && (m.detailed ?? false)) return m;
     }
     return null;
   }

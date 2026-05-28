@@ -4,6 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:opennutritracker/core/utils/supported_language.dart';
 import 'package:opennutritracker/features/add_meal/data/dto/off/off_product_dto.dart';
 import 'package:opennutritracker/features/add_meal/data/dto/off/off_product_nutriments_dto.dart';
+import 'package:opennutritracker/features/add_meal/data/dto/off/off_word_response_dto.dart';
 
 void main() {
   group('OFFProductDTO getLocaleName', () {
@@ -177,6 +178,62 @@ void main() {
       final product = _buildProduct(product_name: 'Default name');
       expect(product.getLocaleName(SupportedLanguage.cs),
           equals('Default name'));
+    });
+  });
+
+  group('OFFProductDTO.fromJson brands coercion', () {
+    test('Search-a-licious returns brands as a list; joined to a string', () {
+      final product = OFFProductDTO.fromJson({
+        'code': '1',
+        'brands': ['Gerber', 'Yogurt Melts'],
+      });
+      expect(product.brands, 'Gerber, Yogurt Melts');
+    });
+
+    test('v2 returns brands as a comma-separated string; kept as-is', () {
+      final product = OFFProductDTO.fromJson({
+        'code': '1',
+        'brands': 'Nutella',
+      });
+      expect(product.brands, 'Nutella');
+    });
+
+    test('null / empty brands normalise to null', () {
+      expect(OFFProductDTO.fromJson({'code': '1'}).brands, isNull);
+      expect(OFFProductDTO.fromJson({'code': '1', 'brands': ''}).brands, isNull);
+      expect(
+        OFFProductDTO.fromJson({'code': '1', 'brands': <dynamic>[]}).brands,
+        isNull,
+      );
+    });
+
+    test('blank entries in a brands list are dropped', () {
+      final product = OFFProductDTO.fromJson({
+        'code': '1',
+        'brands': ['', '  ', 'Real'],
+      });
+      expect(product.brands, 'Real');
+    });
+  });
+
+  group('OFFWordResponseDTO.fromJson Search-a-licious envelope', () {
+    test('maps the hits array onto products and reads page metadata', () {
+      final response = OFFWordResponseDTO.fromJson({
+        'count': 631,
+        'page': 1,
+        'page_size': 2,
+        'page_count': 316,
+        'hits': [
+          {'code': '111', 'product_name': 'A', 'brands': ['X']},
+          {'code': '222', 'product_name': 'B'},
+        ],
+      });
+
+      expect(response.products, hasLength(2));
+      expect(response.products.first.code, '111');
+      expect(response.products.first.brands, 'X');
+      expect(response.count, 631);
+      expect(response.page_count, 316);
     });
   });
 }

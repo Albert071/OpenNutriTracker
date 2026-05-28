@@ -6,6 +6,19 @@ import 'package:opennutritracker/features/add_meal/data/dto/off/off_product_nutr
 
 part 'off_product_dto.g.dart';
 
+String? _brandsFromJson(dynamic value) {
+  if (value == null) return null;
+  if (value is List) {
+    final parts = value
+        .map((e) => e?.toString().trim())
+        .whereType<String>()
+        .where((e) => e.isNotEmpty);
+    return parts.isEmpty ? null : parts.join(', ');
+  }
+  final text = value.toString().trim();
+  return text.isEmpty ? null : text;
+}
+
 @JsonSerializable()
 class OFFProductDTO {
   final String? code;
@@ -23,6 +36,9 @@ class OFFProductDTO {
   final String? product_name_tr;
   final String? product_name_uk;
 
+  // Search-a-licious returns brands as a list, the v2 product endpoint as a
+  // comma-separated string; normalise both to a single display string.
+  @JsonKey(fromJson: _brandsFromJson)
   final String? brands;
 
   final String? image_front_thumb_url;
@@ -37,6 +53,18 @@ class OFFProductDTO {
   final dynamic product_quantity; // Can either be int or String
   final dynamic serving_quantity; // Can either be int or String
   final String? serving_size; // E.g. 2 Tbsp (32 g)
+
+  // Open Food Facts' precomputed ranking key (a composite of scan popularity,
+  // data completeness and quality). Higher is better; null/absent for sparse
+  // or never-scanned products. Used to re-rank text-search results so popular,
+  // well-maintained products surface first. Only present on Search-a-licious
+  // results — the v2 barcode endpoint omits it, which is fine (single product).
+  final num? popularity_key;
+
+  // Open Food Facts country tags (e.g. `en:united-kingdom`). Used to softly
+  // boost products sold in the user's country up the search ranking. Only
+  // present on Search-a-licious results.
+  final List<String>? countries_tags;
 
   final OFFProductNutrimentsDTO? nutriments;
 
@@ -104,6 +132,8 @@ class OFFProductDTO {
     required this.serving_quantity,
     required this.serving_size,
     required this.nutriments,
+    this.popularity_key,
+    this.countries_tags,
   });
 
   factory OFFProductDTO.fromJson(Map<String, dynamic> json) =>

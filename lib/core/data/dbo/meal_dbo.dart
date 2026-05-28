@@ -50,6 +50,15 @@ class MealDBO extends HiveObject {
   @HiveField(13)
   final String? localImagePath;
 
+  /// True when this cached entry holds the full product record. Search
+  /// results from Search-a-licious are cached thin (`false` / null on legacy
+  /// rows); barcode and hydrated lookups are cached full (`true`). Used so a
+  /// thin cache entry doesn't satisfy a hydration/barcode lookup and so
+  /// [RemoteSearchCacheDataSource.cacheFromSearch] never downgrades a full
+  /// entry. Nullable for backward compatibility with pre-existing rows.
+  @HiveField(14)
+  final bool? detailed;
+
   MealDBO({
     required this.code,
     required this.name,
@@ -65,6 +74,7 @@ class MealDBO extends HiveObject {
     required this.nutriments,
     required this.source,
     this.localImagePath,
+    this.detailed,
   });
 
   factory MealDBO.fromMealEntity(MealEntity mealEntity) => MealDBO(
@@ -84,6 +94,7 @@ class MealDBO extends HiveObject {
         ),
         source: MealSourceDBO.fromMealSourceEntity(mealEntity.source),
         localImagePath: mealEntity.localImagePath,
+        detailed: mealEntity.detailed,
       );
 
   factory MealDBO.fromJson(Map<String, dynamic> json) =>

@@ -314,3 +314,41 @@ NutrimentsValidationResult validateNutriments(MealNutrimentsEntity nutriments) {
 
   return const NutrimentsValidationResult.ok();
 }
+
+/// Maximum relative gap between declared and Atwater-computed energy before a
+/// product is treated as data-incoherent for ranking. Deliberately generous:
+/// across a sample of ~700 Open Food Facts products the legitimate noise floor
+/// (energy/macro rounding, food-specific Atwater factors, the EU/US fibre-in-
+/// carbs convention) reaches ~10-15%, while genuine data errors are gross
+/// (77% to >20000%). 25% sits in the empty gap between the two, so it demotes
+/// real errors without penalising correctly-entered data.
+const double atwaterEnergyTolerance = 0.25;
+
+/// Relative difference between the declared energy and the energy implied by
+/// the macros via the general Atwater factors (carbs 4, protein 4, fat 9
+/// kcal/g). Fibre is not added separately for the same reason the macro-sum
+/// check omits it — it is already inside the carbohydrate total here.
+///
+/// Returns null when there is nothing to judge (no declared kcal, or none of
+/// the three macros present); callers should treat null as "no opinion" rather
+/// than as inconsistent, so products with sparse data are ranked on the other
+/// signals instead of being penalised.
+double? atwaterEnergyRelativeError(MealNutrimentsEntity nutriments) {
+  final energy = nutriments.energyKcal100;
+  if (energy == null || energy <= 0) return null;
+  final carbs = nutriments.carbohydrates100;
+  final fat = nutriments.fat100;
+  final protein = nutriments.proteins100;
+  if (carbs == null && fat == null && protein == null) return null;
+
+  final computed = 4 * (carbs ?? 0) + 4 * (protein ?? 0) + 9 * (fat ?? 0);
+  return (energy - computed).abs() / energy;
+}
+
+/// True when a product's declared energy is coherent with its macros (within
+/// [atwaterEnergyTolerance]) or cannot be judged. False only for products that
+/// are computable AND diverge beyond the tolerance — the gross-error outliers.
+bool isAtwaterConsistent(MealNutrimentsEntity nutriments) {
+  final error = atwaterEnergyRelativeError(nutriments);
+  return error == null || error <= atwaterEnergyTolerance;
+}

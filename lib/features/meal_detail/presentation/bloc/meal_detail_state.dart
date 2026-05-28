@@ -12,6 +12,14 @@ abstract class MealDetailState extends Equatable {
   final double dayKcalConsumed;
   final double dayKcalGoal;
 
+  /// Full product record once a thin OFF search result has been hydrated;
+  /// null until then. The screen swaps the displayed meal for this when it
+  /// arrives so serving options and micronutrients appear.
+  final MealEntity? hydratedMeal;
+
+  /// True while the hydration network call is in flight.
+  final bool isHydrating;
+
   const MealDetailState({
     required this.totalQuantityConverted,
     this.totalKcal = 0,
@@ -21,10 +29,12 @@ abstract class MealDetailState extends Equatable {
     required this.selectedUnit,
     this.dayKcalConsumed = 0,
     this.dayKcalGoal = 0,
+    this.hydratedMeal,
+    this.isHydrating = false,
   });
 
   @override
-  List<Object> get props => [
+  List<Object?> get props => [
         totalQuantityConverted,
         totalKcal,
         totalCarbs,
@@ -33,6 +43,8 @@ abstract class MealDetailState extends Equatable {
         selectedUnit,
         dayKcalConsumed,
         dayKcalGoal,
+        hydratedMeal,
+        isHydrating,
       ];
 
   MealDetailInitial copyWith({
@@ -44,6 +56,8 @@ abstract class MealDetailState extends Equatable {
     String? selectedUnit,
     double? dayKcalConsumed,
     double? dayKcalGoal,
+    MealEntity? hydratedMeal,
+    bool? isHydrating,
   }) {
     return MealDetailInitial(
       totalQuantityConverted:
@@ -55,6 +69,8 @@ abstract class MealDetailState extends Equatable {
       selectedUnit: selectedUnit ?? this.selectedUnit,
       dayKcalConsumed: dayKcalConsumed ?? this.dayKcalConsumed,
       dayKcalGoal: dayKcalGoal ?? this.dayKcalGoal,
+      hydratedMeal: hydratedMeal ?? this.hydratedMeal,
+      isHydrating: isHydrating ?? this.isHydrating,
     );
   }
 }
@@ -69,5 +85,7 @@ class MealDetailInitial extends MealDetailState {
     required super.selectedUnit,
     super.dayKcalConsumed,
     super.dayKcalGoal,
+    super.hydratedMeal,
+    super.isHydrating,
   });
 }

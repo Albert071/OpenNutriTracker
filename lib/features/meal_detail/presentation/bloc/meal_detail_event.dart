@@ -40,3 +40,15 @@ class LoadDailyTotalsEvent extends MealDetailEvent {
   @override
   List<Object?> get props => [day];
 }
+
+/// Fetch the full product record for a thin Open Food Facts search result so
+/// the detail view can show serving options and micronutrients. A no-op for
+/// non-OFF meals, already-detailed meals, or meals without a code.
+class HydrateMealEvent extends MealDetailEvent {
+  final MealEntity meal;
+
+  const HydrateMealEvent(this.meal);
+
+  @override
+  List<Object?> get props => [meal];
+}

@@ -11,6 +11,9 @@ class OFFWordResponseDTO {
   final int? page_count;
   final int? page_size;
 
+  // Search-a-licious returns matches under `hits`; the rest of the app still
+  // reads them as `products`.
+  @JsonKey(name: 'hits')
   final List<OFFProductDTO> products;
 
   OFFWordResponseDTO({

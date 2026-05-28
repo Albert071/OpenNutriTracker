@@ -10,8 +10,10 @@ import 'package:opennutritracker/features/add_meal/domain/entity/meal_entity.dar
 ///      with a barcode (#167) wins over remote data, because the user
 ///      explicitly created the entry and a matching scan should pull
 ///      that exact saved record back.
-///   2. **Cached OFF lookup** — makes repeat scans instant and works
-///      offline.
+///   2. **Cached full OFF lookup** — makes repeat scans instant and works
+///      offline. Only full (hydrated/scanned) cache entries count; a thin
+///      Search-a-licious search result under the same code is skipped so the
+///      scan still pulls the complete product.
 ///   3. **Live OFF API** — only when nothing local matches. The
 ///      successful result is then written to the cache for next time.
 ///
@@ -40,7 +42,7 @@ class SearchProductByBarcodeUseCase {
       return MealEntity.fromMealDBO(customMatch);
     }
 
-    final cachedMatch = _cachedOffMealDataSource.getByBarcode(barcode);
+    final cachedMatch = _cachedOffMealDataSource.getDetailedByBarcode(barcode);
     if (cachedMatch != null) {
       return MealEntity.fromMealDBO(cachedMatch);
     }

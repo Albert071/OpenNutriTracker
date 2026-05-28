@@ -84,8 +84,15 @@ class RemoteSearchCacheDataSource {
     for (final meal in meals) {
       final existingKey = _lookupExistingKey(meal, index);
       if (existingKey != null) {
-        // Refresh data, leave timestamp alone.
-        await _cacheBox.put(existingKey, meal);
+        // Refresh data, leave timestamp alone — but never let a thin search
+        // result overwrite an entry we've already hydrated to the full
+        // record, or the next open/scan would lose serving + micronutrients.
+        final existing = _cacheBox.get(existingKey);
+        final wouldDowngrade =
+            (existing?.detailed ?? false) && !(meal.detailed ?? false);
+        if (!wouldDowngrade) {
+          await _cacheBox.put(existingKey, meal);
+        }
       } else {
         final newKey = await _cacheBox.add(meal);
         _registerInIndex(meal, newKey, index);
@@ -169,6 +176,17 @@ class RemoteSearchCacheDataSource {
   MealDBO? getByBarcode(String barcode) {
     for (final meal in _cacheBox.values) {
       if (meal.code == barcode) return meal;
+    }
+    return null;
+  }
+
+  /// Look up a cached meal by barcode but only return it when it holds the
+  /// full product record. A thin Search-a-licious search result cached under
+  /// the same code is ignored so the caller fetches (and re-caches) the full
+  /// product instead of serving up macros-only data on a scan or hydration.
+  MealDBO? getDetailedByBarcode(String barcode) {
+    for (final meal in _cacheBox.values) {
+      if (meal.code == barcode && (meal.detailed ?? false)) return meal;
     }
     return null;
   }

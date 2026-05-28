@@ -5,6 +5,9 @@ import 'package:opennutritracker/generated/l10n.dart';
 class MealSearchBar extends StatelessWidget {
   final ValueNotifier<String> searchStringListener;
   final Function(String) onSearchSubmit;
+  // Fired on every keystroke for debounced search-as-you-type. Optional so
+  // callers that only want submit-on-enter can omit it.
+  final Function(String)? onSearchChanged;
   // Nullable so callers that don't surface a barcode flow (e.g. the recipe
   // ingredient picker) can omit the suffix icon entirely.
   final Function()? onBarcodePressed;
@@ -16,6 +19,7 @@ class MealSearchBar extends StatelessWidget {
     required this.searchStringListener,
     required this.onSearchSubmit,
     required this.onBarcodePressed,
+    this.onSearchChanged,
   });
 
   @override
@@ -29,6 +33,7 @@ class MealSearchBar extends StatelessWidget {
             textInputAction: TextInputAction.search,
             onChanged: (input) {
               searchStringListener.value = input;
+              onSearchChanged?.call(input);
             },
             onSubmitted: onSearchSubmit,
             decoration: InputDecoration(

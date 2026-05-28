@@ -52,6 +52,9 @@ class _MealDetailScreenState extends State<MealDetailScreen> {
   String _initialUnit = "";
   String _initialQuantity = "";
 
+  bool _hydrationRequested = false;
+  bool _userChangedSelection = false;
+
   @override
   void initState() {
     _mealDetailBloc = locator<MealDetailBloc>();
@@ -77,7 +80,24 @@ class _MealDetailScreenState extends State<MealDetailScreen> {
 
     _mealDetailBloc.add(LoadDailyTotalsEvent(_day));
 
-    // Set initial unit
+    // Thin OFF search results get hydrated to the full product record (serving
+    // fields + micronutrients) once, in the background; the listener in build()
+    // swaps the displayed meal in when it arrives.
+    if (!_hydrationRequested) {
+      _hydrationRequested = true;
+      _mealDetailBloc.add(HydrateMealEvent(meal));
+    }
+
+    _applyInitialSelection();
+
+    super.didChangeDependencies();
+  }
+
+  /// Pick the default unit and quantity from the meal's shape. Serving-based
+  /// meals default to 1 serving; otherwise to 100 g/ml (or 1 oz/fl oz in
+  /// imperial). Guarded so it only runs while the user hasn't chosen yet, and
+  /// re-run after hydration reveals serving values.
+  void _applyInitialSelection() {
     if (_initialUnit == "") {
       if (meal.hasServingValues) {
         _initialUnit = UnitDropdownItem.serving.toString();
@@ -97,7 +117,6 @@ class _MealDetailScreenState extends State<MealDetailScreen> {
       );
     }
 
-    // Set initial quantity
     if (_initialQuantity == "") {
       if (meal.hasServingValues) {
         _initialQuantity = "1";
@@ -113,33 +132,58 @@ class _MealDetailScreenState extends State<MealDetailScreen> {
         UpdateKcalEvent(meal: meal, totalQuantity: quantityTextController.text),
       );
     }
+  }
 
-    super.didChangeDependencies();
+  /// Apply the hydrated full product to the screen. If the user hasn't touched
+  /// the quantity/unit yet, re-pick the defaults (so serving becomes the
+  /// default now that serving data exists); otherwise just recompute totals
+  /// against the fuller nutriments while keeping the user's selection.
+  void _onMealHydrated(MealEntity full) {
+    setState(() => meal = full);
+    if (_userChangedSelection) {
+      _mealDetailBloc.add(
+        UpdateKcalEvent(
+          meal: meal,
+          totalQuantity: quantityTextController.text,
+          selectedUnit: _mealDetailBloc.state.selectedUnit,
+        ),
+      );
+    } else {
+      _initialUnit = "";
+      _initialQuantity = "";
+      _applyInitialSelection();
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        body: BlocBuilder<MealDetailBloc, MealDetailState>(
-          bloc: _mealDetailBloc,
-          builder: (context, state) {
-            if (state is MealDetailInitial) {
-              return _getLoadedContent(
-                context,
-                state.totalQuantityConverted,
-                state.totalKcal,
-                state.totalCarbs,
-                state.totalFat,
-                state.totalProtein,
-                state.selectedUnit,
-                state.dayKcalConsumed,
-                state.dayKcalGoal,
-              );
-            }
-            return const Center(child: CircularProgressIndicator());
-          },
-        ),
+    return BlocListener<MealDetailBloc, MealDetailState>(
+      bloc: _mealDetailBloc,
+      listenWhen: (prev, curr) =>
+          curr.hydratedMeal != null && curr.hydratedMeal != prev.hydratedMeal,
+      listener: (context, state) => _onMealHydrated(state.hydratedMeal!),
+      child: SafeArea(
+        child: Scaffold(
+          body: BlocBuilder<MealDetailBloc, MealDetailState>(
+            bloc: _mealDetailBloc,
+            builder: (context, state) {
+              if (state is MealDetailInitial) {
+                return _getLoadedContent(
+                  context,
+                  state.totalQuantityConverted,
+                  state.totalKcal,
+                  state.totalCarbs,
+                  state.totalFat,
+                  state.totalProtein,
+                  state.selectedUnit,
+                  state.dayKcalConsumed,
+                  state.dayKcalGoal,
+                  state.isHydrating,
+                );
+              }
+              return const Center(child: CircularProgressIndicator());
+            },
+          ),
         bottomSheet: BlocSelector<MealDetailBloc, MealDetailState, String>(
           bloc: _mealDetailBloc,
           selector: (state) => state.selectedUnit,
@@ -154,6 +198,7 @@ class _MealDetailScreenState extends State<MealDetailScreen> {
               onQuantityOrUnitChanged: onQuantityOrUnitChanged,
             );
           },
+          ),
         ),
       ),
     );
@@ -169,6 +214,7 @@ class _MealDetailScreenState extends State<MealDetailScreen> {
     String selectedUnit,
     double dayKcalConsumed,
     double dayKcalGoal,
+    bool isHydrating,
   ) {
     return CustomScrollView(
       controller: _scrollController,
@@ -306,6 +352,11 @@ class _MealDetailScreenState extends State<MealDetailScreen> {
                   ),
                   const Divider(),
                   const SizedBox(height: 16.0),
+                  if (isHydrating)
+                    const Padding(
+                      padding: EdgeInsets.only(bottom: 16.0),
+                      child: LinearProgressIndicator(minHeight: 2),
+                    ),
                   MealDetailNutrimentsTable(
                     product: meal,
                     usesImperialUnits: _usesImperialUnits,
@@ -334,6 +385,7 @@ class _MealDetailScreenState extends State<MealDetailScreen> {
     if (quantityString == null || unit == null) {
       return;
     }
+    _userChangedSelection = true;
     _mealDetailBloc.add(
       UpdateKcalEvent(
         meal: meal,

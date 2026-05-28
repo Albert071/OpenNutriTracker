@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:http/http.dart' as http;
 import 'package:logging/logging.dart';
@@ -6,6 +7,7 @@ import 'package:opennutritracker/core/utils/app_const.dart';
 import 'package:opennutritracker/core/utils/off_const.dart';
 import 'package:opennutritracker/core/utils/ont_http_client.dart';
 import 'package:opennutritracker/core/utils/retry_util.dart';
+import 'package:opennutritracker/core/utils/supported_language.dart';
 import 'package:opennutritracker/features/add_meal/data/dto/off/off_product_response_dto.dart';
 import 'package:opennutritracker/features/add_meal/data/dto/off/off_word_response_dto.dart';
 import 'package:opennutritracker/features/scanner/data/product_not_found_exception.dart';
@@ -15,10 +17,19 @@ class OFFDataSource {
   static const _timeoutDuration = Duration(seconds: 60);
   final log = Logger('OFFDataSource');
 
+  /// The device language as a Search-a-licious relevance context, always with
+  /// English appended as a fallback so non-English locales still match the
+  /// large English-only slice of the catalogue.
+  String _searchLangs() {
+    final lang = SupportedLanguage.fromCode(Platform.localeName).name;
+    return lang == 'en' ? 'en' : '$lang,en';
+  }
+
   Future<OFFWordResponseDTO> fetchSearchWordResults(String searchString) async {
     try {
       return await withRetry(() async {
-        final searchUrlString = OFFConst.getOffWordSearchUrl(searchString);
+        final searchUrlString =
+            OFFConst.getOffWordSearchUrl(searchString, langs: _searchLangs());
         final userAgentString = await AppConst.getUserAgentString();
         final httpClient = ONTHttpClient(userAgentString, http.Client());
         final response =

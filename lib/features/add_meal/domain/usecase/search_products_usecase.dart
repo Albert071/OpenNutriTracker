@@ -41,9 +41,16 @@ class SearchProductsUseCase {
     this._recipeDataSource,
   );
 
+  /// [skipRemote] limits the search to local matches (custom meals, recipes,
+  /// recent intake, cached results) and does not touch the network — used for
+  /// short as-you-type queries.
   Future<SearchProductsResult> searchOFFProductsByString(
-    String searchString,
-  ) async {
+    String searchString, {
+    bool skipRemote = false,
+  }) async {
+    if (skipRemote) {
+      return _buildResult(searchString, const [], remoteSkipped: true);
+    }
     final remote = await _safeRemoteCall(
       'OFF',
       () => _productsRepository.getOFFProductsByString(searchString),
@@ -57,7 +64,13 @@ class SearchProductsUseCase {
     return _buildResult(searchString, remote);
   }
 
-  Future<SearchProductsResult> searchFDCFoodByString(String searchString) async {
+  Future<SearchProductsResult> searchFDCFoodByString(
+    String searchString, {
+    bool skipRemote = false,
+  }) async {
+    if (skipRemote) {
+      return _buildResult(searchString, const [], remoteSkipped: true);
+    }
     final remote = await _safeRemoteCall(
       'FDC',
       () => _productsRepository.getSupabaseFDCFoodsByString(searchString),
@@ -99,9 +112,13 @@ class SearchProductsUseCase {
 
   Future<SearchProductsResult> _buildResult(
     String searchString,
-    List<MealEntity> remoteResults,
-  ) async {
-    final remoteSourceEmpty = remoteResults.isEmpty;
+    List<MealEntity> remoteResults, {
+    bool remoteSkipped = false,
+  }) async {
+    // When the remote source was deliberately skipped (short query), don't
+    // claim it returned nothing — that would show a misleading "no results"
+    // hint while the user is still typing.
+    final remoteSourceEmpty = !remoteSkipped && remoteResults.isEmpty;
 
     final normalizedSearchString = searchString.trim().toLowerCase();
     if (normalizedSearchString.isEmpty) {

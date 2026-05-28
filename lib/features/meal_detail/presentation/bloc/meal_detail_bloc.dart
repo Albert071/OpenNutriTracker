@@ -119,6 +119,38 @@ class MealDetailBloc extends Bloc<MealDetailEvent, MealDetailState> {
         Sentry.captureException(e);
       }
     });
+
+    on<HydrateMealEvent>((event, emit) async {
+      final meal = event.meal;
+      final code = meal.code;
+      if (meal.source != MealSourceEntity.off ||
+          meal.detailed ||
+          code == null ||
+          code.isEmpty) {
+        return;
+      }
+
+      emit(state.copyWith(isHydrating: true));
+      try {
+        // A full cache entry (from an earlier scan/hydration) lets us skip the
+        // network entirely and works offline; otherwise fetch and cache it.
+        final cached = _remoteSearchCacheDataSource.getDetailedByBarcode(code);
+        final full = cached != null
+            ? MealEntity.fromMealDBO(cached)
+            : await _productsRepository.getOFFProductByBarcode(code);
+        if (cached == null) {
+          await _remoteSearchCacheDataSource.cache(
+            MealDBO.fromMealEntity(full),
+          );
+        }
+        emit(state.copyWith(hydratedMeal: full, isHydrating: false));
+      } catch (e, st) {
+        // Soft failure: keep the thin result so the user can still log
+        // macros-only. The Add button is never blocked on hydration.
+        log.warning('OFF hydration failed for $code', e, st);
+        emit(state.copyWith(isHydrating: false));
+      }
+    });
   }
 
   void addIntake(

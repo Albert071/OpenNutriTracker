@@ -49,6 +49,15 @@ class MealEntity extends Equatable {
 
   final MealNutrimentsEntity nutriments;
 
+  /// Whether this meal carries the full product record (serving fields and
+  /// micronutrients). Open Food Facts text search now comes from the
+  /// Search-a-licious index, which only returns a thin projection
+  /// (`detailed == false`); opening such a result hydrates it to the full
+  /// record via the v2 product endpoint (`detailed == true`). Barcode scans
+  /// and FDC/custom meals are always full. See [hasServingValues] and the
+  /// hydration step in MealDetailBloc.
+  final bool detailed;
+
   bool get isLiquid => liquidUnits.contains(mealUnit);
 
   bool get isSolid => solidUnits.contains(mealUnit);
@@ -68,6 +77,7 @@ class MealEntity extends Equatable {
     required this.nutriments,
     required this.source,
     this.localImagePath,
+    this.detailed = false,
   });
 
   factory MealEntity.empty() => MealEntity(
@@ -99,9 +109,15 @@ class MealEntity extends Equatable {
             MealNutrimentsEntity.fromMealNutrimentsDBO(mealDBO.nutriments),
         source: MealSourceEntity.fromMealSourceDBO(mealDBO.source),
         localImagePath: mealDBO.localImagePath,
+        detailed: mealDBO.detailed ?? false,
       );
 
-  factory MealEntity.fromOFFProduct(OFFProductDTO offProduct) {
+  /// [detailed] is true for full-product responses (the v2 barcode endpoint),
+  /// false for the thin Search-a-licious text-search projection.
+  factory MealEntity.fromOFFProduct(
+    OFFProductDTO offProduct, {
+    bool detailed = false,
+  }) {
     return MealEntity(
       code: offProduct.code,
       name: offProduct.getLocaleName(
@@ -118,6 +134,7 @@ class MealEntity extends Equatable {
       servingSize: offProduct.serving_size,
       nutriments: MealNutrimentsEntity.fromOffNutriments(offProduct.nutriments),
       source: MealSourceEntity.off,
+      detailed: detailed,
     );
   }
 
