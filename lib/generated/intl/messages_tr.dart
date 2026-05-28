@@ -110,6 +110,22 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
+        "copyActionLabel": MessageLookupByLibrary.simpleMessage("Kopyala"),
+        "copyToProfileLabel": MessageLookupByLibrary.simpleMessage("Profile kopyala"),
+        "copiedToProfileSnackbar": MessageLookupByLibrary.simpleMessage("Öğün profile kopyalandı"),
+        "profileImageLabel": MessageLookupByLibrary.simpleMessage("Fotoğraf ekle"),
+        "profileImageReplace": MessageLookupByLibrary.simpleMessage("Fotoğrafı değiştir"),
+        "profileImageRemove": MessageLookupByLibrary.simpleMessage("Fotoğrafı kaldır"),
+        "switchProfileLabel": MessageLookupByLibrary.simpleMessage("Profil değiştir"),
+        "addProfileLabel": MessageLookupByLibrary.simpleMessage("Profil ekle"),
+        "manageProfilesLabel": MessageLookupByLibrary.simpleMessage("Profilleri yönet"),
+        "editProfileTitle": MessageLookupByLibrary.simpleMessage("Profili düzenle"),
+        "profileNameLabel": MessageLookupByLibrary.simpleMessage("Ad"),
+        "profileNameHint": MessageLookupByLibrary.simpleMessage("Profil adı"),
+        "defaultProfileName": MessageLookupByLibrary.simpleMessage("Profil 1"),
+        "profileActiveLabel": MessageLookupByLibrary.simpleMessage("Etkin"),
+        "deleteProfileConfirmTitle": MessageLookupByLibrary.simpleMessage("Profil silinsin mi?"),
+        "deleteProfileConfirmContent": MessageLookupByLibrary.simpleMessage("Bu işlem profili ve tüm verilerini kalıcı olarak siler. Bu geri alınamaz."),
         "nutrientPanelLimitLabel": MessageLookupByLibrary.simpleMessage("sınır"),
         "notificationsDailyReminderChannelName": MessageLookupByLibrary.simpleMessage("Günlük hatırlatıcılar"),
         "notificationsDailyReminderChannelDescription": MessageLookupByLibrary.simpleMessage("Öğünlerinizi kaydetmeniz için günlük hatırlatma"),

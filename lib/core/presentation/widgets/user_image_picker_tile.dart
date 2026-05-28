@@ -36,11 +36,13 @@ class UserImagePickerTile extends StatelessWidget {
   IconData get _fallbackIcon => switch (kind) {
         UserImageKind.recipe => Icons.restaurant_menu,
         UserImageKind.meal => Icons.restaurant_outlined,
+        UserImageKind.profile => Icons.person_outline,
       };
 
   String get _semanticsIdentifier => switch (kind) {
         UserImageKind.recipe => 'recipe-builder-image-picker',
         UserImageKind.meal => 'edit-meal-image-picker',
+        UserImageKind.profile => 'profile-image-picker',
       };
 
   _Strings _stringsFor(BuildContext context) {
@@ -59,6 +61,13 @@ class UserImagePickerTile extends StatelessWidget {
           takePhoto: s.mealImageTakePhoto,
           pickFromGallery: s.mealImagePickFromGallery,
           remove: s.mealImageRemove,
+        ),
+      UserImageKind.profile => _Strings(
+          add: s.profileImageLabel,
+          replace: s.profileImageReplace,
+          takePhoto: s.mealImageTakePhoto,
+          pickFromGallery: s.mealImagePickFromGallery,
+          remove: s.profileImageRemove,
         ),
     };
   }

@@ -13,11 +13,17 @@ class ShareQrDialog extends StatefulWidget {
   final String code;
   final String fileBaseName;
 
+  /// Optional "Copy to profile" action shown beneath the share buttons.
+  /// Only the meal-share flow supplies it (and only when more than one
+  /// profile exists); the dialog dismisses itself before invoking it.
+  final VoidCallback? onCopyToProfile;
+
   const ShareQrDialog({
     super.key,
     required this.title,
     required this.code,
     required this.fileBaseName,
+    this.onCopyToProfile,
   });
 
   @override
@@ -73,6 +79,20 @@ class _ShareQrDialogState extends State<ShareQrDialog> {
                 ),
               ],
             ),
+            if (widget.onCopyToProfile != null) ...[
+              const SizedBox(height: 8),
+              Semantics(
+                identifier: 'share-copy-to-profile',
+                child: OutlinedButton.icon(
+                  icon: const Icon(Icons.people_alt_outlined, size: 18),
+                  label: Text(S.of(context).copyToProfileLabel),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    widget.onCopyToProfile!();
+                  },
+                ),
+              ),
+            ],
           ],
         ),
       ),

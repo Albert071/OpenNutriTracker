@@ -105,6 +105,22 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
+        "copyActionLabel": MessageLookupByLibrary.simpleMessage("复制"),
+        "copyToProfileLabel": MessageLookupByLibrary.simpleMessage("复制到档案"),
+        "copiedToProfileSnackbar": MessageLookupByLibrary.simpleMessage("餐食已复制到档案"),
+        "profileImageLabel": MessageLookupByLibrary.simpleMessage("添加照片"),
+        "profileImageReplace": MessageLookupByLibrary.simpleMessage("更换照片"),
+        "profileImageRemove": MessageLookupByLibrary.simpleMessage("移除照片"),
+        "switchProfileLabel": MessageLookupByLibrary.simpleMessage("切换档案"),
+        "addProfileLabel": MessageLookupByLibrary.simpleMessage("添加档案"),
+        "manageProfilesLabel": MessageLookupByLibrary.simpleMessage("管理档案"),
+        "editProfileTitle": MessageLookupByLibrary.simpleMessage("编辑档案"),
+        "profileNameLabel": MessageLookupByLibrary.simpleMessage("名称"),
+        "profileNameHint": MessageLookupByLibrary.simpleMessage("档案名称"),
+        "defaultProfileName": MessageLookupByLibrary.simpleMessage("档案 1"),
+        "profileActiveLabel": MessageLookupByLibrary.simpleMessage("当前"),
+        "deleteProfileConfirmTitle": MessageLookupByLibrary.simpleMessage("删除档案？"),
+        "deleteProfileConfirmContent": MessageLookupByLibrary.simpleMessage("这将永久删除该档案及其所有数据，此操作无法撤销。"),
         "nutrientPanelLimitLabel": MessageLookupByLibrary.simpleMessage("上限"),
         "notificationsDailyReminderChannelName": MessageLookupByLibrary.simpleMessage("每日提醒"),
         "notificationsDailyReminderChannelDescription": MessageLookupByLibrary.simpleMessage("每日记录餐食的提醒"),

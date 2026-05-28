@@ -960,5 +960,21 @@
   "fastingNotificationChannelName": "Minutnik postu",
   "fastingNotificationChannelDescription": "Jednorazowe powiadomienia, gdy post osiągnie swój cel.",
   "fastingNotificationCompleteTitle": "Sesja postu zakończona",
-  "fastingNotificationCompleteBody": "Czas docelowy został osiągnięty."
+  "fastingNotificationCompleteBody": "Czas docelowy został osiągnięty.",
+  "profileImageLabel": "Dodaj zdjęcie",
+  "profileImageReplace": "Zmień zdjęcie",
+  "profileImageRemove": "Usuń zdjęcie",
+  "switchProfileLabel": "Przełącz profil",
+  "addProfileLabel": "Dodaj profil",
+  "manageProfilesLabel": "Zarządzaj profilami",
+  "editProfileTitle": "Edytuj profil",
+  "profileNameLabel": "Imię",
+  "profileNameHint": "Nazwa profilu",
+  "defaultProfileName": "Profil 1",
+  "profileActiveLabel": "Aktywny",
+  "deleteProfileConfirmTitle": "Usunąć profil?",
+  "deleteProfileConfirmContent": "Spowoduje to trwałe usunięcie profilu i wszystkich jego danych. Tej operacji nie można cofnąć.",
+  "copyToProfileLabel": "Kopiuj do profilu",
+  "copiedToProfileSnackbar": "Posiłek skopiowany do profilu",
+  "copyActionLabel": "Kopiuj"
 }

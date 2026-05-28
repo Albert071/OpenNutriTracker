@@ -961,5 +961,21 @@
   "fastingNotificationChannelName": "断食计时器",
   "fastingNotificationChannelDescription": "断食达到目标时的一次性提醒。",
   "fastingNotificationCompleteTitle": "禁食时间到了",
-  "fastingNotificationCompleteBody": "已达到你的目标时间。"
+  "fastingNotificationCompleteBody": "已达到你的目标时间。",
+  "profileImageLabel": "添加照片",
+  "profileImageReplace": "更换照片",
+  "profileImageRemove": "移除照片",
+  "switchProfileLabel": "切换档案",
+  "addProfileLabel": "添加档案",
+  "manageProfilesLabel": "管理档案",
+  "editProfileTitle": "编辑档案",
+  "profileNameLabel": "名称",
+  "profileNameHint": "档案名称",
+  "defaultProfileName": "档案 1",
+  "profileActiveLabel": "当前",
+  "deleteProfileConfirmTitle": "删除档案？",
+  "deleteProfileConfirmContent": "这将永久删除该档案及其所有数据，此操作无法撤销。",
+  "copyToProfileLabel": "复制到档案",
+  "copiedToProfileSnackbar": "餐食已复制到档案",
+  "copyActionLabel": "复制"
 }

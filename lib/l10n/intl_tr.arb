@@ -991,5 +991,21 @@
   "fastingNotificationChannelName": "Oruç zamanlayıcısı",
   "fastingNotificationChannelDescription": "Bir oruç hedefe ulaştığında tek seferlik bildirimler.",
   "fastingNotificationCompleteTitle": "Oruç süresi tamamlandı",
-  "fastingNotificationCompleteBody": "Hedef sürene ulaştın."
+  "fastingNotificationCompleteBody": "Hedef sürene ulaştın.",
+  "profileImageLabel": "Fotoğraf ekle",
+  "profileImageReplace": "Fotoğrafı değiştir",
+  "profileImageRemove": "Fotoğrafı kaldır",
+  "switchProfileLabel": "Profil değiştir",
+  "addProfileLabel": "Profil ekle",
+  "manageProfilesLabel": "Profilleri yönet",
+  "editProfileTitle": "Profili düzenle",
+  "profileNameLabel": "Ad",
+  "profileNameHint": "Profil adı",
+  "defaultProfileName": "Profil 1",
+  "profileActiveLabel": "Etkin",
+  "deleteProfileConfirmTitle": "Profil silinsin mi?",
+  "deleteProfileConfirmContent": "Bu işlem profili ve tüm verilerini kalıcı olarak siler. Bu geri alınamaz.",
+  "copyToProfileLabel": "Profile kopyala",
+  "copiedToProfileSnackbar": "Öğün profile kopyalandı",
+  "copyActionLabel": "Kopyala"
 }

@@ -1032,5 +1032,21 @@
   "fastingNotificationChannelName": "Fasting timer",
   "fastingNotificationChannelDescription": "One-off pings when a fasting session reaches its target.",
   "fastingNotificationCompleteTitle": "Fasting session complete",
-  "fastingNotificationCompleteBody": "Your target time has been reached."
+  "fastingNotificationCompleteBody": "Your target time has been reached.",
+  "profileImageLabel": "Add a photo",
+  "profileImageReplace": "Change photo",
+  "profileImageRemove": "Remove photo",
+  "switchProfileLabel": "Switch profile",
+  "addProfileLabel": "Add profile",
+  "manageProfilesLabel": "Manage profiles",
+  "editProfileTitle": "Edit profile",
+  "profileNameLabel": "Name",
+  "profileNameHint": "Profile name",
+  "defaultProfileName": "Profile 1",
+  "profileActiveLabel": "Active",
+  "deleteProfileConfirmTitle": "Delete profile?",
+  "deleteProfileConfirmContent": "This permanently deletes the profile and all of its data and cannot be undone.",
+  "copyToProfileLabel": "Copy to profile",
+  "copiedToProfileSnackbar": "Meal copied to profile",
+  "copyActionLabel": "Copy"
 }

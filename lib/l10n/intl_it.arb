@@ -960,5 +960,21 @@
   "fastingNotificationChannelName": "Timer del digiuno",
   "fastingNotificationChannelDescription": "Notifiche occasionali quando un digiuno raggiunge il suo obiettivo.",
   "fastingNotificationCompleteTitle": "Sessione di digiuno completata",
-  "fastingNotificationCompleteBody": "Il tuo tempo obiettivo è stato raggiunto."
+  "fastingNotificationCompleteBody": "Il tuo tempo obiettivo è stato raggiunto.",
+  "profileImageLabel": "Aggiungi una foto",
+  "profileImageReplace": "Cambia foto",
+  "profileImageRemove": "Rimuovi foto",
+  "switchProfileLabel": "Cambia profilo",
+  "addProfileLabel": "Aggiungi profilo",
+  "manageProfilesLabel": "Gestisci profili",
+  "editProfileTitle": "Modifica profilo",
+  "profileNameLabel": "Nome",
+  "profileNameHint": "Nome profilo",
+  "defaultProfileName": "Profilo 1",
+  "profileActiveLabel": "Attivo",
+  "deleteProfileConfirmTitle": "Eliminare il profilo?",
+  "deleteProfileConfirmContent": "Questa operazione elimina definitivamente il profilo e tutti i suoi dati e non può essere annullata.",
+  "copyToProfileLabel": "Copia nel profilo",
+  "copiedToProfileSnackbar": "Pasto copiato nel profilo",
+  "copyActionLabel": "Copia"
 }

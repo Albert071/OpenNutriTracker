@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:opennutritracker/core/data/repository/recipe_repository.dart';
 import 'package:opennutritracker/core/domain/entity/intake_entity.dart';
 import 'package:opennutritracker/core/domain/entity/tracked_day_entity.dart';
+import 'package:opennutritracker/core/domain/usecase/get_profiles_usecase.dart';
 import 'package:opennutritracker/core/presentation/widgets/copy_dialog.dart';
+import 'package:opennutritracker/core/presentation/widgets/copy_to_profile_sheet.dart';
 import 'package:opennutritracker/core/presentation/widgets/delete_all_dialog.dart';
 import 'package:opennutritracker/core/presentation/widgets/intake_card.dart';
 import 'package:opennutritracker/core/presentation/widgets/placeholder_card.dart';
@@ -167,7 +169,12 @@ class _IntakeVerticalListState extends State<IntakeVerticalList> {
                 ),
               if (widget.onSortTypeChanged != null && totalKcal > 0)
                 _buildSortMenu(context),
-              PopupMenuButton<VerticalListPopupMenuSelections>(
+              Semantics(
+                  identifier: 'intake-section-menu',
+                  // Tight bounds: without this the node inherits the flex
+                  // Row's full-width box and coordinate taps miss the button.
+                  container: true,
+                  child: PopupMenuButton<VerticalListPopupMenuSelections>(
                     onSelected:
                         (VerticalListPopupMenuSelections selection) async {
                       switch (selection) {
@@ -202,12 +209,23 @@ class _IntakeVerticalListState extends State<IntakeVerticalList> {
                               widget.intakeList,
                               recipeRepository: locator<RecipeRepository>(),
                             ).toJsonString();
+                            final hasOtherProfiles =
+                                locator<GetProfilesUsecase>()
+                                        .getProfiles()
+                                        .length >
+                                    1;
                             await showDialog(
                               context: context,
                               builder: (_) => ShareQrDialog(
                                 title: S.of(context).shareMealLabel,
                                 code: code,
                                 fileBaseName: 'meal_qr',
+                                onCopyToProfile: hasOtherProfiles
+                                    ? () => showCopyToProfileSheet(
+                                          context,
+                                          widget.intakeList,
+                                        )
+                                    : null,
                               ),
                             );
                           }
@@ -242,7 +260,7 @@ class _IntakeVerticalListState extends State<IntakeVerticalList> {
                           PopupMenuItem<VerticalListPopupMenuSelections>(
                               value: VerticalListPopupMenuSelections.onImport,
                               child: Text(S.of(context).importMealLabel)),
-                        ]),
+                        ])),
             ],
           ),
         ),
@@ -263,6 +281,7 @@ class _IntakeVerticalListState extends State<IntakeVerticalList> {
                       day: widget.day,
                       onTap: () => _onPlaceholderCardTapped(context),
                       firstListElement: true,
+                      semanticIdentifier: 'add-meal-placeholder',
                     );
                   }
                   final intakeEntity = widget.intakeList[index - 1];

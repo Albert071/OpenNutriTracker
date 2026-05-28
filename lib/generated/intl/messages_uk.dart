@@ -108,6 +108,22 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
+        "copyActionLabel": MessageLookupByLibrary.simpleMessage("Копіювати"),
+        "copyToProfileLabel": MessageLookupByLibrary.simpleMessage("Копіювати в профіль"),
+        "copiedToProfileSnackbar": MessageLookupByLibrary.simpleMessage("Прийом їжі скопійовано в профіль"),
+        "profileImageLabel": MessageLookupByLibrary.simpleMessage("Додати фото"),
+        "profileImageReplace": MessageLookupByLibrary.simpleMessage("Змінити фото"),
+        "profileImageRemove": MessageLookupByLibrary.simpleMessage("Видалити фото"),
+        "switchProfileLabel": MessageLookupByLibrary.simpleMessage("Змінити профіль"),
+        "addProfileLabel": MessageLookupByLibrary.simpleMessage("Додати профіль"),
+        "manageProfilesLabel": MessageLookupByLibrary.simpleMessage("Керувати профілями"),
+        "editProfileTitle": MessageLookupByLibrary.simpleMessage("Редагувати профіль"),
+        "profileNameLabel": MessageLookupByLibrary.simpleMessage("Ім'я"),
+        "profileNameHint": MessageLookupByLibrary.simpleMessage("Назва профілю"),
+        "defaultProfileName": MessageLookupByLibrary.simpleMessage("Профіль 1"),
+        "profileActiveLabel": MessageLookupByLibrary.simpleMessage("Активний"),
+        "deleteProfileConfirmTitle": MessageLookupByLibrary.simpleMessage("Видалити профіль?"),
+        "deleteProfileConfirmContent": MessageLookupByLibrary.simpleMessage("Це назавжди видалить профіль та всі його дані. Цю дію не можна скасувати."),
         "nutrientPanelLimitLabel": MessageLookupByLibrary.simpleMessage("ліміт"),
         "notificationsDailyReminderChannelName": MessageLookupByLibrary.simpleMessage("Щоденні нагадування"),
         "notificationsDailyReminderChannelDescription": MessageLookupByLibrary.simpleMessage("Щоденне нагадування записати прийоми їжі"),

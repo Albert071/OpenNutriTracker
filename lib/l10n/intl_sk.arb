@@ -990,5 +990,21 @@
   "fastingNotificationChannelName": "Časovač pôstu",
   "fastingNotificationChannelDescription": "Jednorazové upozornenia, keď pôst dosiahne svoj cieľ.",
   "fastingNotificationCompleteTitle": "Pôst dokončený",
-  "fastingNotificationCompleteBody": "Cieľový čas bol dosiahnutý."
+  "fastingNotificationCompleteBody": "Cieľový čas bol dosiahnutý.",
+  "profileImageLabel": "Pridať fotku",
+  "profileImageReplace": "Zmeniť fotku",
+  "profileImageRemove": "Odstrániť fotku",
+  "switchProfileLabel": "Prepnúť profil",
+  "addProfileLabel": "Pridať profil",
+  "manageProfilesLabel": "Spravovať profily",
+  "editProfileTitle": "Upraviť profil",
+  "profileNameLabel": "Meno",
+  "profileNameHint": "Názov profilu",
+  "defaultProfileName": "Profil 1",
+  "profileActiveLabel": "Aktívny",
+  "deleteProfileConfirmTitle": "Odstrániť profil?",
+  "deleteProfileConfirmContent": "Týmto sa natrvalo odstráni profil aj všetky jeho údaje. Túto akciu nie je možné vrátiť späť.",
+  "copyToProfileLabel": "Kopírovať do profilu",
+  "copiedToProfileSnackbar": "Jedlo skopírované do profilu",
+  "copyActionLabel": "Kopírovať"
 }

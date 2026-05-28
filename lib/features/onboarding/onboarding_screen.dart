@@ -2,8 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:introduction_screen/introduction_screen.dart';
 import 'package:opennutritracker/core/domain/entity/calories_profile_entity.dart';
+import 'package:opennutritracker/core/domain/entity/profile_entity.dart';
+import 'package:opennutritracker/core/domain/usecase/delete_profile_usecase.dart';
+import 'package:opennutritracker/core/domain/usecase/get_profiles_usecase.dart';
 import 'package:opennutritracker/core/utils/locator.dart';
 import 'package:opennutritracker/core/utils/navigation_options.dart';
+import 'package:opennutritracker/features/profile/presentation/utils/profile_switch_coordinator.dart';
 import 'package:opennutritracker/features/onboarding/domain/entity/user_activity_selection_entity.dart';
 import 'package:opennutritracker/features/onboarding/domain/entity/user_gender_selection_entity.dart';
 import 'package:opennutritracker/features/onboarding/domain/entity/user_goal_selection_entity.dart';
@@ -51,7 +55,14 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    // When onboarding is reached by adding a new profile, the route carries
+    // the id of the profile to return to if the user backs out. First-run
+    // onboarding has no argument, so this stays null and back behaves as
+    // before (exits the app).
+    final cancelToProfileId =
+        ModalRoute.of(context)?.settings.arguments as String?;
+
+    final scaffold = Scaffold(
       body: SafeArea(
         child: BlocBuilder<OnboardingBloc, OnboardingState>(
           bloc: _onboardingBloc,
@@ -69,6 +80,44 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         ),
       ),
     );
+
+    if (cancelToProfileId == null) return scaffold;
+
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, _) {
+        if (!didPop) _onCancelAddProfile(cancelToProfileId);
+      },
+      child: scaffold,
+    );
+  }
+
+  /// Backs out of onboarding for a freshly-added profile: deletes that
+  /// half-created profile and its boxes, then returns to the profile the
+  /// user came from. Keeps an abandoned add from stranding them on an
+  /// empty profile on the next launch.
+  Future<void> _onCancelAddProfile(String cancelToProfileId) async {
+    final getProfiles = locator<GetProfilesUsecase>();
+    final draft = getProfiles.getActiveProfile();
+    ProfileEntity? cancelTo;
+    for (final profile in getProfiles.getProfiles()) {
+      if (profile.id == cancelToProfileId) {
+        cancelTo = profile;
+        break;
+      }
+    }
+
+    if (draft != null && draft.id != cancelToProfileId) {
+      await locator<DeleteProfileUsecase>().deleteProfile(draft);
+    }
+    if (!mounted) return;
+
+    if (cancelTo != null) {
+      await locator<ProfileSwitchCoordinator>().switchTo(context, cancelTo);
+    } else {
+      ProfileSwitchCoordinator.reloadTabBlocs();
+      Navigator.pushReplacementNamed(context, NavigationOptions.mainRoute);
+    }
   }
 
   Widget _getLoadingContent() {
@@ -311,6 +360,11 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         usesImperialUnits,
       );
       if (!context.mounted) return;
+      // Onboarding can run for a profile added after the app has been in
+      // use, so the screen-persistent tab BLoCs may still hold the previous
+      // profile's data. Refresh them against the now-populated active
+      // profile before landing on the main screen.
+      ProfileSwitchCoordinator.reloadTabBlocs();
       Navigator.pushReplacementNamed(context, NavigationOptions.mainRoute);
     } else {
       // Error with user input

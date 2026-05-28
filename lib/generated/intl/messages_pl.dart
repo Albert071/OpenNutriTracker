@@ -107,6 +107,22 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
+        "copyActionLabel": MessageLookupByLibrary.simpleMessage("Kopiuj"),
+        "copyToProfileLabel": MessageLookupByLibrary.simpleMessage("Kopiuj do profilu"),
+        "copiedToProfileSnackbar": MessageLookupByLibrary.simpleMessage("Posiłek skopiowany do profilu"),
+        "profileImageLabel": MessageLookupByLibrary.simpleMessage("Dodaj zdjęcie"),
+        "profileImageReplace": MessageLookupByLibrary.simpleMessage("Zmień zdjęcie"),
+        "profileImageRemove": MessageLookupByLibrary.simpleMessage("Usuń zdjęcie"),
+        "switchProfileLabel": MessageLookupByLibrary.simpleMessage("Przełącz profil"),
+        "addProfileLabel": MessageLookupByLibrary.simpleMessage("Dodaj profil"),
+        "manageProfilesLabel": MessageLookupByLibrary.simpleMessage("Zarządzaj profilami"),
+        "editProfileTitle": MessageLookupByLibrary.simpleMessage("Edytuj profil"),
+        "profileNameLabel": MessageLookupByLibrary.simpleMessage("Imię"),
+        "profileNameHint": MessageLookupByLibrary.simpleMessage("Nazwa profilu"),
+        "defaultProfileName": MessageLookupByLibrary.simpleMessage("Profil 1"),
+        "profileActiveLabel": MessageLookupByLibrary.simpleMessage("Aktywny"),
+        "deleteProfileConfirmTitle": MessageLookupByLibrary.simpleMessage("Usunąć profil?"),
+        "deleteProfileConfirmContent": MessageLookupByLibrary.simpleMessage("Spowoduje to trwałe usunięcie profilu i wszystkich jego danych. Tej operacji nie można cofnąć."),
         "nutrientPanelLimitLabel": MessageLookupByLibrary.simpleMessage("limit"),
         "notificationsDailyReminderChannelName": MessageLookupByLibrary.simpleMessage("Codzienne przypomnienia"),
         "notificationsDailyReminderChannelDescription": MessageLookupByLibrary.simpleMessage("Codzienne przypomnienie o zapisaniu posiłków"),

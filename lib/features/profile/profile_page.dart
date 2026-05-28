@@ -12,6 +12,7 @@ import 'package:opennutritracker/core/utils/locator.dart';
 import 'package:opennutritracker/core/utils/navigation_options.dart';
 import 'package:opennutritracker/features/profile/presentation/bloc/profile_bloc.dart';
 import 'package:opennutritracker/features/profile/presentation/widgets/bmi_overview.dart';
+import 'package:opennutritracker/features/profile/presentation/widgets/profile_switcher_header.dart';
 import 'package:opennutritracker/features/profile/presentation/widgets/set_gender_dialog.dart';
 import 'package:opennutritracker/features/profile/presentation/widgets/set_goal_dialog.dart';
 import 'package:opennutritracker/features/profile/presentation/widgets/set_height_dialog.dart';
@@ -78,7 +79,9 @@ class _ProfilePageState extends State<ProfilePage> {
   ) {
     return ListView(
       children: [
-        const SizedBox(height: 32.0),
+        const SizedBox(height: 8.0),
+        const ProfileSwitcherHeader(),
+        const SizedBox(height: 16.0),
         BMIOverview(
           bmiValue: userBMIEntity.bmiValue,
           nutritionalStatus: userBMIEntity.nutritionalStatus,

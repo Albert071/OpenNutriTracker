@@ -991,5 +991,21 @@
   "fastingNotificationChannelName": "Fasten-Timer",
   "fastingNotificationChannelDescription": "Einmalige Hinweise, wenn eine Fastenphase ihr Ziel erreicht.",
   "fastingNotificationCompleteTitle": "Fastenzeit abgeschlossen",
-  "fastingNotificationCompleteBody": "Deine Zielzeit wurde erreicht."
+  "fastingNotificationCompleteBody": "Deine Zielzeit wurde erreicht.",
+  "profileImageLabel": "Foto hinzufügen",
+  "profileImageReplace": "Foto ändern",
+  "profileImageRemove": "Foto entfernen",
+  "switchProfileLabel": "Profil wechseln",
+  "addProfileLabel": "Profil hinzufügen",
+  "manageProfilesLabel": "Profile verwalten",
+  "editProfileTitle": "Profil bearbeiten",
+  "profileNameLabel": "Name",
+  "profileNameHint": "Profilname",
+  "defaultProfileName": "Profil 1",
+  "profileActiveLabel": "Aktiv",
+  "deleteProfileConfirmTitle": "Profil löschen?",
+  "deleteProfileConfirmContent": "Dadurch werden das Profil und alle seine Daten dauerhaft gelöscht. Dies kann nicht rückgängig gemacht werden.",
+  "copyToProfileLabel": "In Profil kopieren",
+  "copiedToProfileSnackbar": "Mahlzeit ins Profil kopiert",
+  "copyActionLabel": "Kopieren"
 }

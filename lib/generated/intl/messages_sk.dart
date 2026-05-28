@@ -108,6 +108,22 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
+        "copyActionLabel": MessageLookupByLibrary.simpleMessage("Kopírovať"),
+        "copyToProfileLabel": MessageLookupByLibrary.simpleMessage("Kopírovať do profilu"),
+        "copiedToProfileSnackbar": MessageLookupByLibrary.simpleMessage("Jedlo skopírované do profilu"),
+        "profileImageLabel": MessageLookupByLibrary.simpleMessage("Pridať fotku"),
+        "profileImageReplace": MessageLookupByLibrary.simpleMessage("Zmeniť fotku"),
+        "profileImageRemove": MessageLookupByLibrary.simpleMessage("Odstrániť fotku"),
+        "switchProfileLabel": MessageLookupByLibrary.simpleMessage("Prepnúť profil"),
+        "addProfileLabel": MessageLookupByLibrary.simpleMessage("Pridať profil"),
+        "manageProfilesLabel": MessageLookupByLibrary.simpleMessage("Spravovať profily"),
+        "editProfileTitle": MessageLookupByLibrary.simpleMessage("Upraviť profil"),
+        "profileNameLabel": MessageLookupByLibrary.simpleMessage("Meno"),
+        "profileNameHint": MessageLookupByLibrary.simpleMessage("Názov profilu"),
+        "defaultProfileName": MessageLookupByLibrary.simpleMessage("Profil 1"),
+        "profileActiveLabel": MessageLookupByLibrary.simpleMessage("Aktívny"),
+        "deleteProfileConfirmTitle": MessageLookupByLibrary.simpleMessage("Odstrániť profil?"),
+        "deleteProfileConfirmContent": MessageLookupByLibrary.simpleMessage("Týmto sa natrvalo odstráni profil aj všetky jeho údaje. Túto akciu nie je možné vrátiť späť."),
         "nutrientPanelLimitLabel": MessageLookupByLibrary.simpleMessage("limit"),
         "notificationsDailyReminderChannelName": MessageLookupByLibrary.simpleMessage("Denné pripomenutia"),
         "notificationsDailyReminderChannelDescription": MessageLookupByLibrary.simpleMessage("Denné pripomenutie na zaznamenanie jedál"),

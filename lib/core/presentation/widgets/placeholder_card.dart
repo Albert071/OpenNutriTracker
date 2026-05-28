@@ -5,11 +5,16 @@ class PlaceholderCard extends StatelessWidget {
   final VoidCallback onTap;
   final bool firstListElement;
 
+  /// Stable handle for UI drivers. Differs per list (meals vs activity) so
+  /// the right "add" card can be targeted unambiguously.
+  final String semanticIdentifier;
+
   const PlaceholderCard({
     super.key,
     required this.day,
     required this.onTap,
     required this.firstListElement,
+    required this.semanticIdentifier,
   });
 
   @override
@@ -29,14 +34,17 @@ class PlaceholderCard extends StatelessWidget {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(16.0),
               ),
-              child: InkWell(
-                onTap: onTap,
-                child: Icon(
-                  Icons.add,
-                  size: 36,
-                  color: Theme.of(
-                    context,
-                  ).colorScheme.onSurface.withValues(alpha: 0.5),
+              child: Semantics(
+                identifier: semanticIdentifier,
+                child: InkWell(
+                  onTap: onTap,
+                  child: Icon(
+                    Icons.add,
+                    size: 36,
+                    color: Theme.of(
+                      context,
+                    ).colorScheme.onSurface.withValues(alpha: 0.5),
+                  ),
                 ),
               ),
             ),

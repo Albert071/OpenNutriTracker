@@ -960,5 +960,21 @@
   "fastingNotificationChannelName": "Таймер голодування",
   "fastingNotificationChannelDescription": "Одноразові сповіщення, коли голодування досягає своєї мети.",
   "fastingNotificationCompleteTitle": "Сесія голодування завершена",
-  "fastingNotificationCompleteBody": "Цільовий час досягнуто."
+  "fastingNotificationCompleteBody": "Цільовий час досягнуто.",
+  "profileImageLabel": "Додати фото",
+  "profileImageReplace": "Змінити фото",
+  "profileImageRemove": "Видалити фото",
+  "switchProfileLabel": "Змінити профіль",
+  "addProfileLabel": "Додати профіль",
+  "manageProfilesLabel": "Керувати профілями",
+  "editProfileTitle": "Редагувати профіль",
+  "profileNameLabel": "Ім'я",
+  "profileNameHint": "Назва профілю",
+  "defaultProfileName": "Профіль 1",
+  "profileActiveLabel": "Активний",
+  "deleteProfileConfirmTitle": "Видалити профіль?",
+  "deleteProfileConfirmContent": "Це назавжди видалить профіль та всі його дані. Цю дію не можна скасувати.",
+  "copyToProfileLabel": "Копіювати в профіль",
+  "copiedToProfileSnackbar": "Прийом їжі скопійовано в профіль",
+  "copyActionLabel": "Копіювати"
 }
