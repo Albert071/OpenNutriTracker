@@ -398,6 +398,21 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v6
 
+      # The hosted ubuntu runner has ~14 GB free after its preinstalled
+      # toolchains, and pulling the android-34 system image plus booting the
+      # emulator can tip it into "No space left on device". That kills the
+      # emulator before it boots, surfacing downstream as the misleading
+      # "could not connect to TCP port 5554". Reclaim ~15 GB by dropping the
+      # large toolchains this job never uses. Deliberately leaves the Flutter
+      # and Java toolcache and the Android SDK dir untouched.
+      - name: Free up disk space for the emulator
+        run: |
+          df -h /
+          sudo rm -rf /usr/share/dotnet /opt/ghc /usr/local/.ghcup \
+            /usr/local/share/boost /usr/share/swift /opt/hostedtoolcache/CodeQL
+          sudo docker image prune --all --force || true
+          df -h /
+
       - name: Setup Java
         uses: actions/setup-java@v5
         with:
