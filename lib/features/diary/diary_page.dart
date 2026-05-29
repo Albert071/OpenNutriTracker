@@ -7,6 +7,7 @@ import 'package:opennutritracker/core/domain/entity/tracked_day_entity.dart';
 import 'package:opennutritracker/core/domain/entity/user_activity_entity.dart';
 import 'package:opennutritracker/core/presentation/widgets/edit_activity_dialog.dart';
 import 'package:opennutritracker/core/presentation/widgets/edit_dialog.dart';
+import 'package:opennutritracker/core/styles/dimens.dart';
 import 'package:opennutritracker/core/utils/calc/met_calc.dart';
 import 'package:opennutritracker/core/domain/usecase/get_user_usecase.dart';
 import 'package:opennutritracker/features/activity_detail/presentation/bloc/activity_detail_bloc.dart';
@@ -99,6 +100,7 @@ class _DiaryPageState extends State<DiaryPage> with WidgetsBindingObserver {
     bool showActivityTracking,
   ) {
     return ListView(
+      padding: const EdgeInsets.only(bottom: Dimens.spacing16),
       children: [
         DiaryTableCalendar(
           trackedDaysMap: trackedDaysMap,
@@ -108,7 +110,7 @@ class _DiaryPageState extends State<DiaryPage> with WidgetsBindingObserver {
           selectedDate: _selectedDate,
           focusedDate: _focusedDate,
         ),
-        const SizedBox(height: 16.0),
+        const SizedBox(height: Dimens.spacing8),
         BlocBuilder<CalendarDayBloc, CalendarDayState>(
           bloc: _calendarDayBloc,
           builder: (context, state) {

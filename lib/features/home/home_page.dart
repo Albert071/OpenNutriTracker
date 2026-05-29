@@ -5,6 +5,7 @@ import 'package:opennutritracker/core/domain/entity/calories_profile_entity.dart
 import 'package:opennutritracker/core/domain/entity/intake_entity.dart';
 import 'package:opennutritracker/core/domain/entity/user_gender_entity.dart';
 import 'package:opennutritracker/core/presentation/widgets/low_kcal_warning_card.dart';
+import 'package:opennutritracker/core/styles/dimens.dart';
 import 'package:opennutritracker/core/utils/calc/calorie_goal_calc.dart';
 import 'package:opennutritracker/core/domain/entity/intake_type_entity.dart';
 import 'package:opennutritracker/core/domain/entity/tracked_day_entity.dart';
@@ -161,23 +162,29 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         ListView(
           children: [
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              padding: const EdgeInsets.fromLTRB(
+                Dimens.spacing16,
+                Dimens.spacing16,
+                Dimens.spacing16,
+                Dimens.spacing4,
+              ),
               child: Row(
                 children: [
                   QuickWeightWidget(
                     weightKg: userWeightKg,
                     usesImperialUnits: usesImperialUnits,
                   ),
-                  const Spacer(),
+                  const SizedBox(width: Dimens.spacing12),
                   QuickWaterWidget(
                     waterMlToday: waterMlToday,
                     waterGoalMl: waterGoalMl,
                   ),
+                  const Spacer(),
                 ],
               ),
             ),
             const FastingHomeChip(),
-            const SizedBox(height: 8.0),
+            const SizedBox(height: Dimens.spacing8),
             DashboardWidget(
               totalKcalDaily: totalKcalDaily,
               totalKcalLeft: totalKcalLeft,
@@ -292,12 +299,21 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                     },
                     builder: (context, candidateData, rejectedData) {
                       return Container(
-                        color: Theme.of(context).colorScheme.error,
-                        child: const Center(
+                        margin: const EdgeInsets.fromLTRB(
+                          Dimens.spacing16,
+                          0,
+                          Dimens.spacing16,
+                          Dimens.spacing12,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).colorScheme.error,
+                          borderRadius: Dimens.borderRadiusL,
+                        ),
+                        child: Center(
                           child: Icon(
-                            Icons.delete_outline,
-                            size: 36,
-                            color: Colors.white,
+                            Icons.delete_rounded,
+                            size: 32,
+                            color: Theme.of(context).colorScheme.onError,
                           ),
                         ),
                       );

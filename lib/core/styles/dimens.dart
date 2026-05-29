@@ -29,6 +29,10 @@ abstract final class Dimens {
 
   static const double hairline = 1;
   static const double minTouchTarget = 52;
+
+  // Recurring widget sizes.
+  static const double mealThumb = 60;
+  static const double intakeCardSize = 120;
 }
 
 /// Gentle motion — emphasised easing for delight without flashiness.

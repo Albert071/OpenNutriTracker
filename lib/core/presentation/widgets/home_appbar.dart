@@ -29,7 +29,7 @@ class HomeAppbar extends StatelessWidget implements PreferredSizeWidget {
       actions: [
         IconButton(
           icon: Icon(
-            Icons.settings_outlined,
+            Icons.settings_rounded,
             color: Theme.of(context).colorScheme.onSurface,
           ),
           tooltip: S.of(context).settingsLabel,

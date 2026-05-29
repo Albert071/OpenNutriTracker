@@ -6,7 +6,10 @@ import 'package:opennutritracker/core/domain/entity/user_entity.dart';
 import 'package:opennutritracker/core/domain/entity/user_gender_entity.dart';
 import 'package:opennutritracker/core/domain/entity/user_pal_entity.dart';
 import 'package:opennutritracker/core/domain/entity/user_weight_goal_entity.dart';
+import 'package:opennutritracker/core/presentation/widgets/app_card.dart';
 import 'package:opennutritracker/core/presentation/widgets/calories_profile_info_dialog.dart';
+import 'package:opennutritracker/core/styles/app_palette.dart';
+import 'package:opennutritracker/core/styles/dimens.dart';
 import 'package:opennutritracker/core/utils/calc/unit_calc.dart';
 import 'package:opennutritracker/core/utils/locator.dart';
 import 'package:opennutritracker/core/utils/navigation_options.dart';
@@ -77,288 +80,216 @@ class _ProfilePageState extends State<ProfilePage> {
     bool usesImperialUnits,
     int effectiveWaterGoalMl,
   ) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final palette = isDark ? AppPalette.dark : AppPalette.light;
     return ListView(
+      padding: const EdgeInsets.fromLTRB(
+        Dimens.spacing16,
+        Dimens.spacing12,
+        Dimens.spacing16,
+        Dimens.spacing32,
+      ),
       children: [
-        const SizedBox(height: 8.0),
         const ProfileSwitcherHeader(),
-        const SizedBox(height: 16.0),
+        const SizedBox(height: Dimens.spacing24),
         BMIOverview(
           bmiValue: userBMIEntity.bmiValue,
           nutritionalStatus: userBMIEntity.nutritionalStatus,
         ),
-        const SizedBox(height: 32.0),
-        Semantics(
-          identifier: 'profile-activity',
-          child: ListTile(
-            title: Text(
-              S.of(context).activityLabel,
-              style: Theme.of(context).textTheme.titleLarge,
+        const SizedBox(height: Dimens.spacing32),
+        _SectionHeader(label: S.of(context).goalLabel, palette: palette),
+        const SizedBox(height: Dimens.spacing12),
+        _ProfileGroup(
+          palette: palette,
+          tiles: [
+            _ProfileTile(
+              identifier: 'profile-activity',
+              palette: palette,
+              icon: Icons.directions_walk_rounded,
+              title: S.of(context).activityLabel,
+              subtitle: user.pal.getName(context),
+              onTap: () => _showSetPALCategoryDialog(context, user),
             ),
-            subtitle: Text(
-              user.pal.getName(context),
-              style: Theme.of(context).textTheme.titleMedium,
+            _ProfileTile(
+              identifier: 'profile-goal',
+              palette: palette,
+              icon: Icons.flag_rounded,
+              title: S.of(context).goalLabel,
+              subtitle: user.goal.getName(context),
+              onTap: () => _showSetGoalDialog(context, user),
             ),
-            leading: const SizedBox(
-              height: double.infinity,
-              child: Icon(Icons.directions_walk_outlined),
+            _ProfileTile(
+              identifier: 'profile-weekly-goal',
+              palette: palette,
+              icon: Icons.trending_down_rounded,
+              title: S.of(context).weeklyWeightGoalLabel,
+              subtitle: _weeklyGoalSubtitle(context, user, usesImperialUnits),
+              onTap: () => _showSetWeeklyWeightGoalDialog(
+                context,
+                user,
+                usesImperialUnits,
+              ),
             ),
-            onTap: () => _showSetPALCategoryDialog(context, user),
-          ),
+          ],
         ),
-        Semantics(
-          identifier: 'profile-goal',
-          child: ListTile(
-            title: Text(
-              S.of(context).goalLabel,
-              style: Theme.of(context).textTheme.titleLarge,
-            ),
-            subtitle: Text(
-              user.goal.getName(context),
-              style: Theme.of(context).textTheme.titleMedium,
-            ),
-            leading: const SizedBox(
-              height: double.infinity,
-              child: Icon(Icons.flag_outlined),
-            ),
-            onTap: () => _showSetGoalDialog(context, user),
-          ),
-        ),
-        Semantics(
-          identifier: 'profile-weekly-goal',
-          child: ListTile(
-            title: Text(
-              S.of(context).weeklyWeightGoalLabel,
-              style: Theme.of(context).textTheme.titleLarge,
-            ),
-            subtitle: Text(
-              _weeklyGoalSubtitle(context, user, usesImperialUnits),
-              style: Theme.of(context).textTheme.titleMedium,
-            ),
-            leading: const SizedBox(
-              height: double.infinity,
-              child: Icon(Icons.trending_down_outlined),
-            ),
-            onTap: () => _showSetWeeklyWeightGoalDialog(
-              context,
-              user,
-              usesImperialUnits,
-            ),
-          ),
-        ),
-        Semantics(
-          identifier: 'profile-weight',
-          child: ListTile(
-            title: Text(
-              S.of(context).weightLabel,
-              style: Theme.of(context).textTheme.titleLarge,
-            ),
-            subtitle: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  '${_profileBloc.getDisplayWeight(user, usesImperialUnits)} ${usesImperialUnits ? S.of(context).lbsLabel : S.of(context).kgLabel}',
-                  style: Theme.of(context).textTheme.titleMedium,
-                ),
-                // #119: When the user has set a concrete target weight, surface
-                // the distance to it directly below the current weight. The
-                // delta is signed-agnostic — the message holds whether the
-                // target is above or below current (cut or gain).
-                if (user.targetWeightKg != null)
+        const SizedBox(height: Dimens.spacing24),
+        _SectionHeader(label: S.of(context).weightLabel, palette: palette),
+        const SizedBox(height: Dimens.spacing12),
+        _ProfileGroup(
+          palette: palette,
+          tiles: [
+            _ProfileTile(
+              identifier: 'profile-weight',
+              palette: palette,
+              icon: Icons.monitor_weight_rounded,
+              title: S.of(context).weightLabel,
+              subtitleWidget: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
                   Text(
-                    _targetWeightSubLabel(context, user, usesImperialUnits),
-                    style: Theme.of(context).textTheme.bodySmall,
+                    '${_profileBloc.getDisplayWeight(user, usesImperialUnits)} ${usesImperialUnits ? S.of(context).lbsLabel : S.of(context).kgLabel}',
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          color: palette.textMuted,
+                        ),
                   ),
-              ],
+                  // #119: When the user has set a concrete target weight, surface
+                  // the distance to it directly below the current weight. The
+                  // delta is signed-agnostic — the message holds whether the
+                  // target is above or below current (cut or gain).
+                  if (user.targetWeightKg != null)
+                    Text(
+                      _targetWeightSubLabel(context, user, usesImperialUnits),
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            color: palette.textMuted,
+                          ),
+                    ),
+                ],
+              ),
+              onTap: () {
+                _showSetWeightDialog(context, user, usesImperialUnits);
+              },
             ),
-            leading: const SizedBox(
-              height: double.infinity,
-              child: Icon(Icons.monitor_weight_outlined),
-            ),
-            onTap: () {
-              _showSetWeightDialog(context, user, usesImperialUnits);
-            },
-          ),
-        ),
-        Semantics(
-          identifier: 'profile-target-weight',
-          child: ListTile(
-            title: Text(
-              S.of(context).profileTargetWeightLabel,
-              style: Theme.of(context).textTheme.titleLarge,
-            ),
-            subtitle: Text(
-              user.targetWeightKg == null
+            _ProfileTile(
+              identifier: 'profile-target-weight',
+              palette: palette,
+              icon: Icons.flag_rounded,
+              title: S.of(context).profileTargetWeightLabel,
+              subtitle: user.targetWeightKg == null
                   ? S.of(context).profileTargetWeightNotSetLabel
                   : '${_formatTargetWeightDisplay(user.targetWeightKg!, usesImperialUnits)} '
                         '${usesImperialUnits ? S.of(context).lbsLabel : S.of(context).kgLabel}',
-              style: Theme.of(context).textTheme.titleMedium,
+              onTap: () =>
+                  _showSetTargetWeightDialog(context, user, usesImperialUnits),
             ),
-            leading: const SizedBox(
-              height: double.infinity,
-              child: Icon(Icons.flag_outlined),
-            ),
-            onTap: () =>
-                _showSetTargetWeightDialog(context, user, usesImperialUnits),
-          ),
-        ),
-        Semantics(
-          identifier: 'profile-water-goal',
-          child: ListTile(
-            title: Text(
-              S.of(context).settingsWaterGoalLabel,
-              style: Theme.of(context).textTheme.titleLarge,
-            ),
-            subtitle: Text(
-              '$effectiveWaterGoalMl ${S.of(context).mlLabel}',
-              style: Theme.of(context).textTheme.titleMedium,
-            ),
-            leading: const SizedBox(
-              height: double.infinity,
-              child: Icon(Icons.water_drop_outlined),
-            ),
-            onTap: () => _showWaterGoalDialog(context),
-          ),
-        ),
-        // The opt-in linear taper scales the daily kcal deficit down
-        // as current weight approaches the target. Surfaced here only
-        // once a target weight is set, since without one the toggle
-        // has nothing to scale against.
-        if (user.targetWeightKg != null)
-          Semantics(
-            identifier: 'profile-calorie-taper',
-            child: SwitchListTile(
-              title: Text(
-                S.of(context).settingsCaloriesTaperLabel,
-                style: Theme.of(context).textTheme.titleLarge,
+            // The opt-in linear taper scales the daily kcal deficit down
+            // as current weight approaches the target. Surfaced here only
+            // once a target weight is set, since without one the toggle
+            // has nothing to scale against.
+            if (user.targetWeightKg != null)
+              _ProfileSwitchTile(
+                identifier: 'profile-calorie-taper',
+                palette: palette,
+                icon: Icons.trending_down_rounded,
+                title: S.of(context).settingsCaloriesTaperLabel,
+                subtitle: S.of(context).settingsCaloriesTaperDescription,
+                value: user.caloriesTaperEnabled,
+                onChanged: (v) => _profileBloc.setCaloriesTaperEnabled(v),
               ),
-              subtitle: Text(
-                S.of(context).settingsCaloriesTaperDescription,
-                style: Theme.of(context).textTheme.bodySmall,
-              ),
-              secondary: const SizedBox(
-                height: double.infinity,
-                child: Icon(Icons.trending_down_outlined),
-              ),
-              value: user.caloriesTaperEnabled,
-              onChanged: (v) => _profileBloc.setCaloriesTaperEnabled(v),
+            _ProfileTile(
+              identifier: 'profile-weight-history',
+              palette: palette,
+              icon: Icons.show_chart_rounded,
+              title: S.of(context).profileWeightHistoryTitle,
+              showChevron: true,
+              onTap: () => Navigator.of(
+                context,
+              ).pushNamed(NavigationOptions.weightHistoryRoute),
             ),
-          ),
-        Semantics(
-          identifier: 'profile-fasting-entry',
-          child: ListTile(
-            title: Text(
-              S.of(context).profileFastingEntry,
-              style: Theme.of(context).textTheme.titleLarge,
-            ),
-            leading: const SizedBox(
-              height: double.infinity,
-              child: Icon(Icons.timer_outlined),
-            ),
-            trailing: const Icon(Icons.chevron_right),
-            onTap: () =>
-                Navigator.of(context).pushNamed(NavigationOptions.fastingRoute),
-          ),
+          ],
         ),
-        Semantics(
-          identifier: 'profile-weight-history',
-          child: ListTile(
-            title: Text(
-              S.of(context).profileWeightHistoryTitle,
-              style: Theme.of(context).textTheme.titleLarge,
-            ),
-            leading: const SizedBox(
-              height: double.infinity,
-              child: Icon(Icons.show_chart_outlined),
-            ),
-            trailing: const Icon(Icons.chevron_right),
-            onTap: () => Navigator.of(
-              context,
-            ).pushNamed(NavigationOptions.weightHistoryRoute),
-          ),
+        const SizedBox(height: Dimens.spacing24),
+        _SectionHeader(
+          label: S.of(context).settingsWaterGoalLabel,
+          palette: palette,
         ),
-        Semantics(
-          identifier: 'profile-height',
-          child: ListTile(
-            title: Text(
-              S.of(context).heightLabel,
-              style: Theme.of(context).textTheme.titleLarge,
+        const SizedBox(height: Dimens.spacing12),
+        _ProfileGroup(
+          palette: palette,
+          tiles: [
+            _ProfileTile(
+              identifier: 'profile-water-goal',
+              palette: palette,
+              icon: Icons.water_drop_rounded,
+              title: S.of(context).settingsWaterGoalLabel,
+              subtitle: '$effectiveWaterGoalMl ${S.of(context).mlLabel}',
+              onTap: () => _showWaterGoalDialog(context),
             ),
-            subtitle: Text(
-              '${_profileBloc.getDisplayHeight(user, usesImperialUnits)} ${usesImperialUnits ? S.of(context).ftLabel : S.of(context).cmLabel}',
-              style: Theme.of(context).textTheme.titleMedium,
+            _ProfileTile(
+              identifier: 'profile-fasting-entry',
+              palette: palette,
+              icon: Icons.timer_rounded,
+              title: S.of(context).profileFastingEntry,
+              showChevron: true,
+              onTap: () =>
+                  Navigator.of(context).pushNamed(NavigationOptions.fastingRoute),
             ),
-            leading: const SizedBox(
-              height: double.infinity,
-              child: Icon(Icons.height_outlined),
-            ),
-            onTap: () {
-              _showSetHeightDialog(context, user, usesImperialUnits);
-            },
-          ),
+          ],
         ),
-        Semantics(
-          identifier: 'profile-age',
-          child: ListTile(
-            title: Text(
-              S.of(context).ageLabel,
-              style: Theme.of(context).textTheme.titleLarge,
-            ),
-            subtitle: Text(
-              S.of(context).yearsLabel(user.age),
-              style: Theme.of(context).textTheme.titleMedium,
-            ),
-            leading: const SizedBox(
-              height: double.infinity,
-              child: Icon(Icons.cake_outlined),
-            ),
-            onTap: () {
-              _showSetBirthdayDialog(context, user);
-            },
-          ),
+        const SizedBox(height: Dimens.spacing24),
+        _SectionHeader(
+          label: S.of(context).profileLabel,
+          palette: palette,
         ),
-        Semantics(
-          identifier: 'profile-gender',
-          child: ListTile(
-            title: Text(
-              S.of(context).genderLabel,
-              style: Theme.of(context).textTheme.titleLarge,
-            ),
-            subtitle: Text(
-              user.gender.getName(context),
-              style: Theme.of(context).textTheme.titleMedium,
-            ),
-            leading: SizedBox(
-              height: double.infinity,
-              child: user.gender.getIcon(),
-            ),
-            onTap: () {
-              _showSetGenderDialog(context, user);
-            },
-          ),
-        ),
-        if (user.gender == UserGenderEntity.nonBinary)
-          Semantics(
-            identifier: 'profile-calories-profile',
-            child: ListTile(
-              title: Text(
-                S.of(context).caloriesProfileInfoTitle,
-                style: Theme.of(context).textTheme.titleLarge,
-              ),
-              subtitle: Text(
-                (user.caloriesProfile ?? CaloriesProfileEntity.averaged)
-                    .getName(context),
-                style: Theme.of(context).textTheme.titleMedium,
-              ),
-              leading: const SizedBox(
-                height: double.infinity,
-                child: Icon(Icons.tune_outlined),
-              ),
+        const SizedBox(height: Dimens.spacing12),
+        _ProfileGroup(
+          palette: palette,
+          tiles: [
+            _ProfileTile(
+              identifier: 'profile-height',
+              palette: palette,
+              icon: Icons.height_rounded,
+              title: S.of(context).heightLabel,
+              subtitle:
+                  '${_profileBloc.getDisplayHeight(user, usesImperialUnits)} ${usesImperialUnits ? S.of(context).ftLabel : S.of(context).cmLabel}',
               onTap: () {
-                _showCaloriesProfileDialog(context, user);
+                _showSetHeightDialog(context, user, usesImperialUnits);
               },
             ),
-          ),
+            _ProfileTile(
+              identifier: 'profile-age',
+              palette: palette,
+              icon: Icons.cake_rounded,
+              title: S.of(context).ageLabel,
+              subtitle: S.of(context).yearsLabel(user.age),
+              onTap: () {
+                _showSetBirthdayDialog(context, user);
+              },
+            ),
+            _ProfileTile(
+              identifier: 'profile-gender',
+              palette: palette,
+              iconWidget: user.gender.getIcon(),
+              title: S.of(context).genderLabel,
+              subtitle: user.gender.getName(context),
+              onTap: () {
+                _showSetGenderDialog(context, user);
+              },
+            ),
+            if (user.gender == UserGenderEntity.nonBinary)
+              _ProfileTile(
+                identifier: 'profile-calories-profile',
+                palette: palette,
+                icon: Icons.tune_rounded,
+                title: S.of(context).caloriesProfileInfoTitle,
+                subtitle: (user.caloriesProfile ?? CaloriesProfileEntity.averaged)
+                    .getName(context),
+                onTap: () {
+                  _showCaloriesProfileDialog(context, user);
+                },
+              ),
+          ],
+        ),
       ],
     );
   }
@@ -623,5 +554,176 @@ class _ProfilePageState extends State<ProfilePage> {
     final formatted =
         '${displayDelta.toStringAsFixed(1)} ${usesImperialUnits ? S.of(context).lbsLabel : S.of(context).kgLabel}';
     return S.of(context).profileTargetWeightToGo(formatted);
+  }
+}
+
+/// A quiet section label that gives the grouped cards a consistent rhythm —
+/// muted, lightly tracked, sitting just above the card it introduces.
+class _SectionHeader extends StatelessWidget {
+  final String label;
+  final AppPalette palette;
+
+  const _SectionHeader({required this.label, required this.palette});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(left: Dimens.spacing4),
+      child: Text(
+        label,
+        style: Theme.of(context).textTheme.labelLarge?.copyWith(
+              color: palette.textMuted,
+              fontWeight: FontWeight.w700,
+              letterSpacing: 0.3,
+            ),
+      ),
+    );
+  }
+}
+
+/// Wraps a run of related rows inside one [AppCard] so they read as a single
+/// surface, with a hairline divider between rows rather than between cards.
+class _ProfileGroup extends StatelessWidget {
+  final AppPalette palette;
+  final List<Widget> tiles;
+
+  const _ProfileGroup({required this.palette, required this.tiles});
+
+  @override
+  Widget build(BuildContext context) {
+    final rows = <Widget>[];
+    for (var i = 0; i < tiles.length; i++) {
+      if (i > 0) {
+        rows.add(Divider(height: Dimens.hairline, color: palette.border));
+      }
+      rows.add(tiles[i]);
+    }
+    return AppCard(
+      padding: const EdgeInsets.symmetric(vertical: Dimens.spacing4),
+      child: Column(mainAxisSize: MainAxisSize.min, children: rows),
+    );
+  }
+}
+
+/// A single tappable row inside a [_ProfileGroup]. Keeps the underlying
+/// [ListTile] (so its role semantics carry through) but dresses the leading
+/// icon as a soft, accent-tinted rounded chip in the friendly-flat style.
+class _ProfileTile extends StatelessWidget {
+  final String identifier;
+  final AppPalette palette;
+  final IconData? icon;
+  final Widget? iconWidget;
+  final String title;
+  final String? subtitle;
+  final Widget? subtitleWidget;
+  final bool showChevron;
+  final VoidCallback onTap;
+
+  const _ProfileTile({
+    required this.identifier,
+    required this.palette,
+    required this.title,
+    required this.onTap,
+    this.icon,
+    this.iconWidget,
+    this.subtitle,
+    this.subtitleWidget,
+    this.showChevron = false,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final accent = Theme.of(context).colorScheme.primary;
+    final text = Theme.of(context).textTheme;
+    return Semantics(
+      identifier: identifier,
+      child: ListTile(
+        leading: _IconChip(palette: palette, icon: icon, iconWidget: iconWidget),
+        title: Text(
+          title,
+          style: text.titleMedium?.copyWith(fontWeight: FontWeight.w700),
+        ),
+        subtitle: subtitleWidget ??
+            (subtitle != null
+                ? Text(
+                    subtitle!,
+                    style: text.bodyMedium?.copyWith(color: palette.textMuted),
+                  )
+                : null),
+        trailing: showChevron
+            ? Icon(Icons.chevron_right_rounded, color: accent)
+            : null,
+        onTap: onTap,
+      ),
+    );
+  }
+}
+
+/// Switch variant of [_ProfileTile] for the calorie-taper toggle.
+class _ProfileSwitchTile extends StatelessWidget {
+  final String identifier;
+  final AppPalette palette;
+  final IconData icon;
+  final String title;
+  final String subtitle;
+  final bool value;
+  final ValueChanged<bool> onChanged;
+
+  const _ProfileSwitchTile({
+    required this.identifier,
+    required this.palette,
+    required this.icon,
+    required this.title,
+    required this.subtitle,
+    required this.value,
+    required this.onChanged,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final text = Theme.of(context).textTheme;
+    return Semantics(
+      identifier: identifier,
+      child: SwitchListTile(
+        secondary: _IconChip(palette: palette, icon: icon),
+        title: Text(
+          title,
+          style: text.titleMedium?.copyWith(fontWeight: FontWeight.w700),
+        ),
+        subtitle: Text(
+          subtitle,
+          style: text.bodySmall?.copyWith(color: palette.textMuted),
+        ),
+        value: value,
+        onChanged: onChanged,
+      ),
+    );
+  }
+}
+
+/// The soft rounded leading chip shared by every profile row — a tinted square
+/// holding the row's icon in the active accent.
+class _IconChip extends StatelessWidget {
+  final AppPalette palette;
+  final IconData? icon;
+  final Widget? iconWidget;
+
+  const _IconChip({required this.palette, this.icon, this.iconWidget});
+
+  @override
+  Widget build(BuildContext context) {
+    final accent = Theme.of(context).colorScheme.primary;
+    return Container(
+      width: 40,
+      height: 40,
+      decoration: BoxDecoration(
+        color: accent.withValues(alpha: 0.12),
+        borderRadius: Dimens.borderRadiusS,
+      ),
+      child: IconTheme(
+        data: IconThemeData(color: accent, size: 22),
+        child: Center(child: iconWidget ?? Icon(icon, color: accent, size: 22)),
+      ),
+    );
   }
 }

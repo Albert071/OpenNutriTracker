@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:opennutritracker/core/domain/usecase/delete_recipe_usecase.dart';
 import 'package:opennutritracker/core/domain/usecase/get_config_usecase.dart';
+import 'package:opennutritracker/core/styles/app_palette.dart';
+import 'package:opennutritracker/core/styles/dimens.dart';
 import 'package:opennutritracker/core/utils/locator.dart';
 import 'package:opennutritracker/core/utils/navigation_options.dart';
 import 'package:opennutritracker/features/recipes/presentation/bloc/recipes_bloc.dart';
@@ -134,20 +136,25 @@ class _RecipesPageState extends State<RecipesPage>
                 _activeTag == null || r.tags.contains(_activeTag);
             return matchesQuery && matchesTag;
           }).toList();
+          final isDark = Theme.of(context).brightness == Brightness.dark;
+          final palette = isDark ? AppPalette.dark : AppPalette.light;
           return Column(
             children: [
               Padding(
-                padding: const EdgeInsets.fromLTRB(16, 8, 16, 4),
+                padding: const EdgeInsets.fromLTRB(
+                    Dimens.spacing16, Dimens.spacing12, Dimens.spacing16, Dimens.spacing4),
                 child: TextField(
                   controller: _searchController,
                   onChanged: (v) => setState(() => _searchQuery = v),
                   decoration: InputDecoration(
                     isDense: true,
+                    filled: true,
+                    fillColor: palette.surfaceMuted,
                     hintText: S.of(context).searchLabel,
-                    prefixIcon: const Icon(Icons.search),
+                    prefixIcon: Icon(Icons.search_rounded, color: palette.textMuted),
                     suffixIcon: _searchQuery.isNotEmpty
                         ? IconButton(
-                            icon: const Icon(Icons.clear),
+                            icon: Icon(Icons.clear_rounded, color: palette.textMuted),
                             onPressed: () {
                               _searchController.clear();
                               setState(() => _searchQuery = '');
@@ -155,20 +162,25 @@ class _RecipesPageState extends State<RecipesPage>
                           )
                         : null,
                     border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
+                      borderRadius: Dimens.borderRadiusM,
+                      borderSide: BorderSide.none,
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: Dimens.borderRadiusM,
+                      borderSide: BorderSide.none,
                     ),
                   ),
                 ),
               ),
               if (allTags.isNotEmpty)
                 SizedBox(
-                  height: 40,
+                  height: 44,
                   child: ListView(
                     scrollDirection: Axis.horizontal,
-                    padding: const EdgeInsets.symmetric(horizontal: 12),
+                    padding: const EdgeInsets.symmetric(horizontal: Dimens.spacing12),
                     children: [
                       Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 4),
+                        padding: const EdgeInsets.symmetric(horizontal: Dimens.spacing4),
                         child: ChoiceChip(
                           label: Text(S.of(context).recipesFilterAllLabel),
                           selected: _activeTag == null,
@@ -178,8 +190,7 @@ class _RecipesPageState extends State<RecipesPage>
                       ),
                       for (final tag in allTags)
                         Padding(
-                          padding:
-                              const EdgeInsets.symmetric(horizontal: 4),
+                          padding: const EdgeInsets.symmetric(horizontal: Dimens.spacing4),
                           child: ChoiceChip(
                             label: Text(tag),
                             selected: _activeTag == tag,
@@ -195,12 +206,13 @@ class _RecipesPageState extends State<RecipesPage>
                 child: filtered.isEmpty
                     ? Center(
                         child: Padding(
-                          padding: const EdgeInsets.all(32),
+                          padding: const EdgeInsets.all(Dimens.spacing32),
                           child: Text(
                             S.of(context).recipesEmptyLabel,
-                            style: TextStyle(
-                              color: Theme.of(context).colorScheme.outline,
-                            ),
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyLarge
+                                ?.copyWith(color: palette.textMuted),
                           ),
                         ),
                       )
@@ -210,7 +222,7 @@ class _RecipesPageState extends State<RecipesPage>
                           Expanded(
                             child: ListView.builder(
                               padding:
-                                  const EdgeInsets.symmetric(vertical: 8),
+                                  const EdgeInsets.symmetric(vertical: Dimens.spacing8),
                               itemCount: filtered.length,
                               itemBuilder: (context, index) {
                                 final recipe = filtered[index];
@@ -259,30 +271,36 @@ class _RecipesPageState extends State<RecipesPage>
 
   Widget _buildSelectionBar(BuildContext context) {
     final s = S.of(context);
-    return Material(
-      color: Theme.of(context).colorScheme.primaryContainer,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-        child: Row(
-          children: [
-            IconButton(
-              tooltip: s.dialogCancelLabel,
-              icon: const Icon(Icons.close),
-              onPressed: () => setState(_selectedIds.clear),
+    final accent = Theme.of(context).colorScheme.primary;
+    return Container(
+      margin: const EdgeInsets.fromLTRB(Dimens.spacing16, Dimens.spacing4, Dimens.spacing16, Dimens.spacing4),
+      padding: const EdgeInsets.symmetric(horizontal: Dimens.spacing8, vertical: Dimens.spacing4),
+      decoration: BoxDecoration(
+        color: accent.withValues(alpha: 0.12),
+        borderRadius: Dimens.borderRadiusM,
+      ),
+      child: Row(
+        children: [
+          IconButton(
+            tooltip: s.dialogCancelLabel,
+            icon: Icon(Icons.close_rounded, color: accent),
+            onPressed: () => setState(_selectedIds.clear),
+          ),
+          Expanded(
+            child: Text(
+              s.selectionCountLabel(_selectedIds.length),
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    color: accent,
+                    fontWeight: FontWeight.w700,
+                  ),
             ),
-            Expanded(
-              child: Text(
-                s.selectionCountLabel(_selectedIds.length),
-                style: Theme.of(context).textTheme.titleMedium,
-              ),
-            ),
-            IconButton(
-              tooltip: s.dialogDeleteLabel,
-              icon: const Icon(Icons.delete_outline),
-              onPressed: _onBulkDelete,
-            ),
-          ],
-        ),
+          ),
+          IconButton(
+            tooltip: s.dialogDeleteLabel,
+            icon: Icon(Icons.delete_outline_rounded, color: accent),
+            onPressed: _onBulkDelete,
+          ),
+        ],
       ),
     );
   }
@@ -318,29 +336,33 @@ class _RecipesPageState extends State<RecipesPage>
   }
 
   Widget _buildEmptyState(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final palette = isDark ? AppPalette.dark : AppPalette.light;
+    final accent = Theme.of(context).colorScheme.primary;
     return Center(
       child: Padding(
-        padding: const EdgeInsets.all(32),
+        padding: const EdgeInsets.all(Dimens.spacing32),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              Icons.menu_book_outlined,
-              size: 96,
-              color: Theme.of(context).colorScheme.outline,
+            Container(
+              padding: const EdgeInsets.all(Dimens.spacing24),
+              decoration: BoxDecoration(
+                color: accent.withValues(alpha: 0.12),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(Icons.menu_book_rounded, size: 56, color: accent),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: Dimens.spacing24),
             Text(
               S.of(context).recipesEmptyLabel,
-              style: Theme.of(context).textTheme.titleLarge,
+              style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w700),
               textAlign: TextAlign.center,
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: Dimens.spacing8),
             Text(
               S.of(context).recipesEmptyHint,
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: Theme.of(context).colorScheme.outline,
-                  ),
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: palette.textMuted),
               textAlign: TextAlign.center,
             ),
           ],

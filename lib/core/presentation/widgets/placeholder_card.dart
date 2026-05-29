@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:opennutritracker/core/presentation/widgets/app_card.dart';
+import 'package:opennutritracker/core/styles/app_palette.dart';
+import 'package:opennutritracker/core/styles/dimens.dart';
 
 class PlaceholderCard extends StatelessWidget {
   final DateTime day;
@@ -19,31 +22,29 @@ class PlaceholderCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final palette = isDark ? AppPalette.dark : AppPalette.light;
     return Align(
       alignment: Alignment.topLeft,
       child: Row(
         children: [
           SizedBox(
-            width: firstListElement ? 16 : 0, // Add leading padding
+            width: firstListElement ? Dimens.spacing16 : 0, // Add leading padding
           ),
           SizedBox(
             width: 120,
             height: 120,
-            child: Card(
-              clipBehavior: Clip.antiAliasWithSaveLayer,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16.0),
-              ),
-              child: Semantics(
-                identifier: semanticIdentifier,
-                child: InkWell(
-                  onTap: onTap,
+            child: Semantics(
+              identifier: semanticIdentifier,
+              child: AppCard(
+                color: palette.surfaceMuted,
+                borderRadius: Dimens.radiusM,
+                onTap: onTap,
+                child: Center(
                   child: Icon(
-                    Icons.add,
-                    size: 36,
-                    color: Theme.of(
-                      context,
-                    ).colorScheme.onSurface.withValues(alpha: 0.5),
+                    Icons.add_rounded,
+                    size: 32,
+                    color: palette.textMuted,
                   ),
                 ),
               ),

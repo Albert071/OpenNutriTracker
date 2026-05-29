@@ -7,6 +7,8 @@ import 'package:opennutritracker/core/domain/usecase/add_tracked_day_usecase.dar
 import 'package:opennutritracker/core/domain/usecase/add_user_activity_usercase.dart';
 import 'package:opennutritracker/core/domain/usecase/get_kcal_goal_usecase.dart';
 import 'package:opennutritracker/core/domain/usecase/get_macro_goal_usecase.dart';
+import 'package:opennutritracker/core/styles/app_palette.dart';
+import 'package:opennutritracker/core/styles/dimens.dart';
 import 'package:opennutritracker/core/utils/calc/macro_calc.dart';
 import 'package:opennutritracker/core/utils/calc/unit_calc.dart';
 import 'package:opennutritracker/core/utils/energy_unit_provider.dart';
@@ -158,16 +160,23 @@ class _QuickAddActivityBottomSheetState
     return Padding(
       padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
       child: SingleChildScrollView(
-        padding: const EdgeInsets.fromLTRB(24, 8, 24, 24),
+        padding: const EdgeInsets.fromLTRB(
+          Dimens.spacing24,
+          Dimens.spacing8,
+          Dimens.spacing24,
+          Dimens.spacing24,
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           mainAxisSize: MainAxisSize.min,
           children: [
             Padding(
-              padding: const EdgeInsets.only(bottom: 16),
+              padding: const EdgeInsets.only(bottom: Dimens.spacing16),
               child: Text(
                 s.quickAddActivityTitleLabel,
-                style: Theme.of(context).textTheme.titleLarge,
+                style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                      fontWeight: FontWeight.w700,
+                    ),
                 textAlign: TextAlign.center,
               ),
             ),
@@ -193,10 +202,14 @@ class _QuickAddActivityBottomSheetState
               label: s.quickAddActivityDurationLabel,
               isRequired: false,
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: Dimens.spacing16),
             Semantics(
               identifier: 'quick-add-activity-submit',
               child: FilledButton(
+                style: FilledButton.styleFrom(
+                  shape: Dimens.shapeM,
+                  padding: const EdgeInsets.symmetric(vertical: Dimens.spacing16),
+                ),
                 onPressed: _canSubmit ? _onSubmit : null,
                 child: _saving
                     ? const SizedBox(
@@ -221,8 +234,11 @@ class _QuickAddActivityBottomSheetState
     bool numeric = true,
     bool autofocus = false,
   }) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final palette = isDark ? AppPalette.dark : AppPalette.light;
+    final accent = Theme.of(context).colorScheme.primary;
     return Padding(
-      padding: const EdgeInsets.only(bottom: 12),
+      padding: const EdgeInsets.only(bottom: Dimens.spacing12),
       child: Semantics(
         identifier: identifier,
         child: TextField(
@@ -238,7 +254,20 @@ class _QuickAddActivityBottomSheetState
               : null,
           decoration: InputDecoration(
             labelText: isRequired ? '$label *' : label,
-            border: const OutlineInputBorder(),
+            filled: true,
+            fillColor: palette.surfaceMuted,
+            border: OutlineInputBorder(
+              borderRadius: Dimens.borderRadiusM,
+              borderSide: BorderSide(color: palette.border, width: Dimens.hairline),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: Dimens.borderRadiusM,
+              borderSide: BorderSide(color: palette.border, width: Dimens.hairline),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: Dimens.borderRadiusM,
+              borderSide: BorderSide(color: accent, width: 1.5),
+            ),
           ),
         ),
       ),

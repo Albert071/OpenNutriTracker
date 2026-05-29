@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:opennutritracker/core/presentation/widgets/error_dialog.dart';
+import 'package:opennutritracker/core/styles/app_palette.dart';
+import 'package:opennutritracker/core/styles/dimens.dart';
 import 'package:opennutritracker/core/utils/locator.dart';
 import 'package:opennutritracker/core/utils/navigation_options.dart';
 import 'package:opennutritracker/features/add_meal/domain/entity/meal_entity.dart';
@@ -69,6 +71,9 @@ class _AddMealScreenState extends State<AddMealScreen>
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final palette = isDark ? AppPalette.dark : AppPalette.light;
+    final accent = Theme.of(context).colorScheme.primary;
     return Scaffold(
       // Let the keyboard overlay the results rather than compress the body.
       // In landscape the space above the keyboard is shorter than the pinned
@@ -102,26 +107,47 @@ class _AddMealScreenState extends State<AddMealScreen>
       body: SafeArea(
         top: false,
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8),
+          padding: const EdgeInsets.symmetric(horizontal: Dimens.spacing16),
           child: Column(
             children: [
+              const SizedBox(height: Dimens.spacing8),
               MealSearchBar(
                 searchStringListener: _searchStringListener,
                 onSearchSubmit: _onSearchSubmit,
                 onSearchChanged: _onSearchChanged,
                 onBarcodePressed: _onBarcodeIconPressed,
               ),
-              const SizedBox(height: 16.0),
-              TabBar(
-                tabs: [
-                  Tab(text: S.of(context).searchProductsPage),
-                  Tab(text: S.of(context).searchFoodPage),
-                  Tab(text: S.of(context).recentlyAddedLabel),
-                ],
-                controller: _tabController,
-                indicatorSize: TabBarIndicatorSize.tab,
+              const SizedBox(height: Dimens.spacing16),
+              Container(
+                padding: const EdgeInsets.all(Dimens.spacing4),
+                decoration: BoxDecoration(
+                  color: palette.surfaceMuted,
+                  borderRadius: Dimens.borderRadiusM,
+                ),
+                child: TabBar(
+                  tabs: [
+                    Tab(text: S.of(context).searchProductsPage),
+                    Tab(text: S.of(context).searchFoodPage),
+                    Tab(text: S.of(context).recentlyAddedLabel),
+                  ],
+                  controller: _tabController,
+                  indicatorSize: TabBarIndicatorSize.tab,
+                  dividerColor: Colors.transparent,
+                  indicator: BoxDecoration(
+                    color: palette.surface,
+                    borderRadius: Dimens.borderRadiusS,
+                    boxShadow: [
+                      BoxShadow(color: palette.shadow, blurRadius: 8, offset: const Offset(0, 2)),
+                    ],
+                  ),
+                  labelColor: accent,
+                  unselectedLabelColor: palette.textMuted,
+                  labelStyle: Theme.of(context).textTheme.labelLarge?.copyWith(fontWeight: FontWeight.w700),
+                  unselectedLabelStyle:
+                      Theme.of(context).textTheme.labelLarge?.copyWith(fontWeight: FontWeight.w600),
+                ),
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: Dimens.spacing16),
               Expanded(
                 child: TabBarView(
                   controller: _tabController,
@@ -129,11 +155,14 @@ class _AddMealScreenState extends State<AddMealScreen>
                     Column(
                       children: [
                         Container(
-                          padding: const EdgeInsets.only(left: 8.0),
+                          padding: const EdgeInsets.symmetric(vertical: Dimens.spacing4),
                           alignment: Alignment.centerLeft,
                           child: Text(
                             S.of(context).searchResultsLabel,
-                            style: Theme.of(context).textTheme.headlineSmall,
+                            style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                  fontWeight: FontWeight.w700,
+                                  color: palette.textMuted,
+                                ),
                           ),
                         ),
                         BlocBuilder<ProductsBloc, ProductsState>(
@@ -187,11 +216,14 @@ class _AddMealScreenState extends State<AddMealScreen>
                     Column(
                       children: [
                         Container(
-                          padding: const EdgeInsets.only(left: 8.0),
+                          padding: const EdgeInsets.symmetric(vertical: Dimens.spacing4),
                           alignment: Alignment.centerLeft,
                           child: Text(
                             S.of(context).searchResultsLabel,
-                            style: Theme.of(context).textTheme.headlineSmall,
+                            style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                  fontWeight: FontWeight.w700,
+                                  color: palette.textMuted,
+                                ),
                           ),
                         ),
                         BlocBuilder<FoodBloc, FoodState>(

@@ -9,6 +9,8 @@ import 'package:opennutritracker/core/presentation/widgets/delete_all_dialog.dar
 import 'package:opennutritracker/core/presentation/widgets/intake_card.dart';
 import 'package:opennutritracker/core/presentation/widgets/placeholder_card.dart';
 import 'package:opennutritracker/core/presentation/widgets/share_qr_dialog.dart';
+import 'package:opennutritracker/core/styles/app_palette.dart';
+import 'package:opennutritracker/core/styles/dimens.dart';
 import 'package:opennutritracker/core/utils/energy_display.dart';
 import 'package:opennutritracker/core/utils/locator.dart';
 import 'package:opennutritracker/core/utils/navigation_options.dart';
@@ -139,33 +141,48 @@ class _IntakeVerticalListState extends State<IntakeVerticalList> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final palette = isDark ? AppPalette.dark : AppPalette.light;
+    final accent = Theme.of(context).colorScheme.primary;
+    final textTheme = Theme.of(context).textTheme;
     return Column(
       children: [
         Container(
-          padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+          padding: const EdgeInsets.fromLTRB(
+            Dimens.spacing16,
+            Dimens.spacing20,
+            Dimens.spacing12,
+            Dimens.spacing8,
+          ),
           alignment: Alignment.centerLeft,
           child: Row(
             children: [
-              Icon(widget.listIcon,
-                  size: 24, color: Theme.of(context).colorScheme.onSurface),
-              const SizedBox(width: 4.0),
+              Container(
+                padding: const EdgeInsets.all(Dimens.spacing8),
+                decoration: BoxDecoration(
+                  color: accent.withValues(alpha: 0.12),
+                  borderRadius: Dimens.borderRadiusS,
+                ),
+                child: Icon(widget.listIcon, size: 20, color: accent),
+              ),
+              const SizedBox(width: Dimens.spacing12),
               Text(
                 widget.title,
-                style: Theme.of(context)
-                    .textTheme
-                    .titleLarge
-                    ?.copyWith(color: Theme.of(context).colorScheme.onSurface),
+                style: textTheme.titleLarge?.copyWith(
+                  color: palette.textStrong,
+                  fontWeight: FontWeight.w700,
+                ),
               ),
               const Spacer(),
               if (_shouldShowHeaderSummary)
                 Text(
                   _buildHeaderSummary(context),
-                  style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                      color: Theme.of(context)
-                          .colorScheme
-                          .onSurface
-                          .withValues(alpha: 0.7)),
-                  textAlign: TextAlign.center,
+                  style: textTheme.labelMedium?.copyWith(
+                    color: palette.textMuted,
+                    fontWeight: FontWeight.w700,
+                    height: 1.3,
+                  ),
+                  textAlign: TextAlign.end,
                 ),
               if (widget.onSortTypeChanged != null && totalKcal > 0)
                 _buildSortMenu(context),
@@ -175,6 +192,8 @@ class _IntakeVerticalListState extends State<IntakeVerticalList> {
                   // Row's full-width box and coordinate taps miss the button.
                   container: true,
                   child: PopupMenuButton<VerticalListPopupMenuSelections>(
+                    icon: Icon(Icons.more_vert_rounded, color: palette.textMuted),
+                    shape: Dimens.shapeM,
                     onSelected:
                         (VerticalListPopupMenuSelections selection) async {
                       switch (selection) {
@@ -294,9 +313,8 @@ class _IntakeVerticalListState extends State<IntakeVerticalList> {
                     },
                     data: intakeEntity,
                     feedback: Material(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16.0),
-                      ),
+                      color: Colors.transparent,
+                      shape: Dimens.shapeM,
                       child: Opacity(
                         opacity: 0.7,
                         child: IntakeCard(
@@ -309,14 +327,17 @@ class _IntakeVerticalListState extends State<IntakeVerticalList> {
                     ),
                     childWhenDragging: Row(
                       children: [
-                        SizedBox(
+                        Container(
                           width: 120,
                           height: 120,
-                          child: Card(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(16.0),
+                          margin: const EdgeInsets.all(Dimens.spacing4),
+                          decoration: BoxDecoration(
+                            color: palette.surfaceMuted,
+                            borderRadius: Dimens.borderRadiusM,
+                            border: Border.all(
+                              color: palette.border,
+                              width: Dimens.hairline,
                             ),
-                            color: Theme.of(context).cardColor,
                           ),
                         ),
                       ],
@@ -341,11 +362,14 @@ class _IntakeVerticalListState extends State<IntakeVerticalList> {
 
   Widget _buildSortMenu(BuildContext context) {
     final current = widget.sortType ?? DiarySortType.timeAdded;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final palette = isDark ? AppPalette.dark : AppPalette.light;
     return Semantics(
       identifier: 'diary-section-sort-menu',
       child: PopupMenuButton<DiarySortType>(
         tooltip: S.of(context).diarySortByLabel,
-        icon: const Icon(Icons.sort),
+        icon: Icon(Icons.sort_rounded, color: palette.textMuted),
+        shape: Dimens.shapeM,
         initialValue: current,
         onSelected: (sort) => widget.onSortTypeChanged?.call(sort),
         itemBuilder: (context) => <PopupMenuEntry<DiarySortType>>[

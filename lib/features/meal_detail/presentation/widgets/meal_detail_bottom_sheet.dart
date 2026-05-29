@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:opennutritracker/core/styles/app_palette.dart';
+import 'package:opennutritracker/core/styles/dimens.dart';
 import 'package:opennutritracker/core/domain/entity/intake_entity.dart';
 import 'package:opennutritracker/core/domain/entity/intake_type_entity.dart';
 import 'package:opennutritracker/core/domain/usecase/get_intake_usecase.dart';
@@ -83,23 +85,22 @@ class _MealDetailBottomSheetState extends State<MealDetailBottomSheet> {
   @override
   Widget build(BuildContext context) {
     final productMissingRequiredInfo = _hasRequiredProductInfoMissing();
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final palette = isDark ? AppPalette.dark : AppPalette.light;
     return BottomSheet(
-      elevation: 10,
+      elevation: 0,
       onClosing: () {},
       enableDrag: false,
       builder: (context) {
         return Container(
           decoration: BoxDecoration(
             border: Border(
-              top: BorderSide(
-                color: Theme.of(context).colorScheme.outline,
-                width: 0.5,
-              ),
+              top: BorderSide(color: palette.border, width: Dimens.hairline),
             ),
-            color: Theme.of(context).colorScheme.surface,
+            color: palette.surface,
             borderRadius: const BorderRadius.only(
-              topLeft: Radius.circular(24),
-              topRight: Radius.circular(24),
+              topLeft: Radius.circular(Dimens.radiusL),
+              topRight: Radius.circular(Dimens.radiusL),
             ),
           ),
           child: SafeArea(
@@ -127,7 +128,9 @@ class _MealDetailBottomSheetState extends State<MealDetailBottomSheet> {
                                 ),
                               ],
                               decoration: InputDecoration(
-                                border: const OutlineInputBorder(),
+                                border: const OutlineInputBorder(
+                                  borderRadius: Dimens.borderRadiusM,
+                                ),
                                 labelText: S.of(context).quantityLabel,
                               ),
                             ),
@@ -140,7 +143,9 @@ class _MealDetailBottomSheetState extends State<MealDetailBottomSheet> {
                               initialValue: widget.selectedUnit,
                               key: ValueKey(widget.selectedUnit),
                               decoration: InputDecoration(
-                                border: const OutlineInputBorder(),
+                                border: const OutlineInputBorder(
+                                  borderRadius: Dimens.borderRadiusM,
+                                ),
                                 labelText: S.of(context).unitLabel,
                               ),
                               items: <DropdownMenuItem<String>>[
@@ -166,27 +171,28 @@ class _MealDetailBottomSheetState extends State<MealDetailBottomSheet> {
                           ),
                         ],
                       ),
-                      SizedBox(
-                        width: double.infinity, // Make button full width
-                        child: ElevatedButton.icon(
-                          onPressed: !productMissingRequiredInfo
-                              ? () {
-                                  onAddButtonPressed(context);
-                                }
-                              : null,
-                          style:
-                              ElevatedButton.styleFrom(
-                                foregroundColor: Theme.of(
-                                  context,
-                                ).colorScheme.onPrimaryContainer,
-                                backgroundColor: Theme.of(
-                                  context,
-                                ).colorScheme.primaryContainer,
-                              ).copyWith(
-                                elevation: ButtonStyleButton.allOrNull(0.0),
+                      const SizedBox(height: Dimens.spacing16),
+                      Semantics(
+                        identifier: 'meal-detail-add',
+                        child: SizedBox(
+                          width: double.infinity, // Make button full width
+                          child: FilledButton.icon(
+                            onPressed: !productMissingRequiredInfo
+                                ? () {
+                                    onAddButtonPressed(context);
+                                  }
+                                : null,
+                            style: FilledButton.styleFrom(
+                              padding: const EdgeInsets.symmetric(
+                                vertical: Dimens.spacing16,
                               ),
-                          icon: const Icon(Icons.add_outlined),
-                          label: Text(S.of(context).addLabel),
+                              shape: const RoundedRectangleBorder(
+                                borderRadius: Dimens.borderRadiusM,
+                              ),
+                            ),
+                            icon: const Icon(Icons.add_rounded),
+                            label: Text(S.of(context).addLabel),
+                          ),
                         ),
                       ),
                       productMissingRequiredInfo

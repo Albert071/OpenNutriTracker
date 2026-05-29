@@ -3,7 +3,10 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
+import 'package:opennutritracker/core/presentation/widgets/app_card.dart';
 import 'package:opennutritracker/core/presentation/widgets/error_dialog.dart';
+import 'package:opennutritracker/core/styles/app_palette.dart';
+import 'package:opennutritracker/core/styles/dimens.dart';
 import 'package:opennutritracker/core/utils/locator.dart';
 import 'package:opennutritracker/features/add_meal/domain/entity/meal_entity.dart';
 import 'package:opennutritracker/features/add_meal/presentation/bloc/food_bloc.dart';
@@ -260,65 +263,69 @@ class _PickableMealCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      elevation: 0,
-      shape: RoundedRectangleBorder(
-        side: BorderSide(color: Theme.of(context).colorScheme.outline),
-        borderRadius: const BorderRadius.all(Radius.circular(12)),
-      ),
-      child: InkWell(
-        onTap: () => onTap(meal),
-        child: SizedBox(
-          height: 100,
-          child: Center(
-            child: ListTile(
-              leading: meal.thumbnailImageUrl != null
-                  ? ClipRRect(
-                      borderRadius: BorderRadius.circular(16),
-                      child: CachedNetworkImage(
-                        cacheManager: locator<CacheManager>(),
-                        fit: BoxFit.cover,
-                        width: 60,
-                        height: 60,
-                        imageUrl: meal.thumbnailImageUrl ?? '',
-                      ),
-                    )
-                  : ClipRRect(
-                      borderRadius: BorderRadius.circular(16),
-                      child: Container(
-                        width: 60,
-                        height: 60,
-                        color: Theme.of(context).colorScheme.secondaryContainer,
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final palette = isDark ? AppPalette.dark : AppPalette.light;
+    final accent = Theme.of(context).colorScheme.primary;
+    final textTheme = Theme.of(context).textTheme;
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: Dimens.spacing8, vertical: Dimens.spacing4),
+      child: AppCard(
+        padding: EdgeInsets.zero,
+        child: InkWell(
+          borderRadius: Dimens.borderRadiusL,
+          onTap: () => onTap(meal),
+          child: Padding(
+            padding: const EdgeInsets.all(Dimens.spacing12),
+            child: Row(
+              children: [
+                meal.thumbnailImageUrl != null
+                    ? ClipRRect(
+                        borderRadius: Dimens.borderRadiusS,
+                        child: CachedNetworkImage(
+                          cacheManager: locator<CacheManager>(),
+                          fit: BoxFit.cover,
+                          width: 52,
+                          height: 52,
+                          imageUrl: meal.thumbnailImageUrl ?? '',
+                        ),
+                      )
+                    : Container(
+                        width: 52,
+                        height: 52,
+                        decoration: BoxDecoration(
+                          color: accent.withValues(alpha: 0.14),
+                          borderRadius: Dimens.borderRadiusS,
+                        ),
                         child: Icon(
                           meal.source == MealSourceEntity.recipe
-                              ? Icons.menu_book_outlined
-                              : Icons.restaurant_outlined,
+                              ? Icons.menu_book_rounded
+                              : Icons.restaurant_rounded,
+                          color: accent,
+                          size: 24,
                         ),
                       ),
-                    ),
-              title: AutoSizeText.rich(
-                TextSpan(
-                  text: meal.name ?? '?',
-                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                        color: Theme.of(context).colorScheme.onSurface,
-                      ),
-                  children: [
+                const SizedBox(width: Dimens.spacing12),
+                Expanded(
+                  child: AutoSizeText.rich(
                     TextSpan(
-                      text: ' ${meal.brands ?? ''}',
-                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                            color: Theme.of(context)
-                                .colorScheme
-                                .onSurface
-                                .withValues(alpha: 0.8),
-                          ),
+                      text: meal.name ?? '?',
+                      style: textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w700),
+                      children: [
+                        TextSpan(
+                          text: ' ${meal.brands ?? ''}',
+                          style: textTheme.bodyMedium?.copyWith(color: palette.textMuted),
+                        ),
+                      ],
                     ),
-                  ],
+                    style: textTheme.titleSmall,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 ),
-                style: Theme.of(context).textTheme.titleLarge,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-              ),
-              trailing: const Icon(Icons.add_outlined),
+                const SizedBox(width: Dimens.spacing8),
+                Icon(Icons.add_circle_outline_rounded, color: accent, size: 24),
+              ],
             ),
           ),
         ),
