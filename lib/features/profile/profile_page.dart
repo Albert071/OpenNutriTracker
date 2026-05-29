@@ -290,6 +290,23 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
           ],
         ),
+        const SizedBox(height: Dimens.spacing24),
+        _SectionHeader(label: S.of(context).settingsLabel, palette: palette),
+        const SizedBox(height: Dimens.spacing12),
+        _ProfileGroup(
+          palette: palette,
+          tiles: [
+            _ProfileTile(
+              identifier: 'profile-settings',
+              palette: palette,
+              icon: Icons.settings_rounded,
+              title: S.of(context).settingsLabel,
+              showChevron: true,
+              onTap: () =>
+                  Navigator.of(context).pushNamed(NavigationOptions.settingsRoute),
+            ),
+          ],
+        ),
       ],
     );
   }
