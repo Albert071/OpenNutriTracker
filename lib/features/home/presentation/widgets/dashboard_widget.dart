@@ -110,7 +110,10 @@ class _DashboardWidgetState extends State<DashboardWidget> {
                   ],
                 ),
                 const SizedBox(height: Dimens.spacing16),
-                CircularPercentIndicator(
+                Semantics(
+                  label: '${displayValue.toInt()} $kcalLabelText',
+                  excludeSemantics: true,
+                  child: CircularPercentIndicator(
                   radius: 90,
                   lineWidth: 16,
                   percent: gaugeValue.clamp(0.0, 1.0),
@@ -132,6 +135,7 @@ class _DashboardWidgetState extends State<DashboardWidget> {
                       const SizedBox(height: 2),
                       Text(kcalLabelText, style: textTheme.bodyMedium?.copyWith(color: palette.textMuted)),
                     ],
+                  ),
                   ),
                 ),
               ],

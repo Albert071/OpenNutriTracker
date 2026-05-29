@@ -148,7 +148,9 @@ class _CaloriesTrendCard extends StatelessWidget {
         children: [
           Text(S.of(context).trendsCaloriesLabel, style: text.titleMedium),
           const SizedBox(height: Dimens.spacing20),
-          SizedBox(
+          Semantics(
+            label: S.of(context).trendsCaloriesLabel,
+            child: SizedBox(
             height: 140,
             child: LineChart(
               LineChartData(
@@ -184,6 +186,7 @@ class _CaloriesTrendCard extends StatelessWidget {
                 ],
               ),
             ),
+          ),
           ),
         ],
       ),
@@ -264,7 +267,10 @@ class _WeightCard extends StatelessWidget {
         children: [
           Text(S.of(context).weightHistoryWeightLabel, style: text.titleMedium),
           const SizedBox(height: Dimens.spacing20),
-          SizedBox(height: 150, child: _buildChart(context)),
+          Semantics(
+            label: S.of(context).weightHistoryWeightLabel,
+            child: SizedBox(height: 150, child: _buildChart(context)),
+          ),
         ],
       ),
     );
