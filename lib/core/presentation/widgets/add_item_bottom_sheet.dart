@@ -175,6 +175,27 @@ class AddItemBottomSheet extends StatelessWidget {
               },
             ),
           ),
+          const Divider(indent: 16, endIndent: 16),
+          Semantics(
+            identifier: 'add-item-recipes',
+            child: ListTile(
+              title: Text(
+                S.of(context).recipesLabel,
+                style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                      color: Theme.of(context).colorScheme.onSurface,
+                    ),
+              ),
+              // ignore: sized_box_for_whitespace
+              leading: Container(
+                height: double.infinity,
+                child: const Icon(Icons.menu_book_outlined),
+              ),
+              onTap: () {
+                Navigator.of(context).pop();
+                Navigator.of(context).pushNamed(NavigationOptions.recipesRoute);
+              },
+            ),
+          ),
         ],
       ),
     );
