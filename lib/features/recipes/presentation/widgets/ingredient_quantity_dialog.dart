@@ -74,24 +74,28 @@ class _IngredientQuantitySheetState extends State<_IngredientQuantitySheet> {
   List<DropdownMenuItem<String>> _unitItems(BuildContext context) {
     final items = <DropdownMenuItem<String>>[];
     if (widget.meal.hasServingValues) {
-      items.add(const DropdownMenuItem(
-        value: 'serving',
-        child: Text('serving'),
-      ));
+      items.add(_unitItem('serving'));
     }
     if (widget.meal.isSolid ||
         (!widget.meal.isLiquid && !widget.meal.isSolid)) {
-      items.add(const DropdownMenuItem(value: 'g', child: Text('g')));
-      items.add(const DropdownMenuItem(value: 'kg', child: Text('kg')));
-      items.add(const DropdownMenuItem(value: 'oz', child: Text('oz')));
+      items.add(_unitItem('g'));
+      items.add(_unitItem('kg'));
+      items.add(_unitItem('oz'));
     }
     if (widget.meal.isLiquid ||
         (!widget.meal.isLiquid && !widget.meal.isSolid)) {
-      items.add(const DropdownMenuItem(value: 'ml', child: Text('ml')));
-      items.add(const DropdownMenuItem(value: 'l', child: Text('l')));
-      items.add(const DropdownMenuItem(value: 'fl.oz', child: Text('fl.oz')));
+      items.add(_unitItem('ml'));
+      items.add(_unitItem('l'));
+      items.add(_unitItem('fl.oz'));
     }
     return items;
+  }
+
+  DropdownMenuItem<String> _unitItem(String unit) {
+    return DropdownMenuItem(
+      value: unit,
+      child: Text(unit, maxLines: 1, overflow: TextOverflow.ellipsis),
+    );
   }
 
   @override
@@ -145,6 +149,7 @@ class _IngredientQuantitySheetState extends State<_IngredientQuantitySheet> {
                   flex: 2,
                   child: DropdownButtonFormField<String>(
                     isExpanded: true,
+                    itemHeight: null,
                     initialValue: _unit,
                     decoration: InputDecoration(
                       labelText: S.of(context).recipeIngredientUnitLabel,

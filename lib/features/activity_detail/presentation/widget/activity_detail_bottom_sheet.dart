@@ -221,6 +221,7 @@ class _ActivityDetailBottomSheetState extends State<ActivityDetailBottomSheet> {
                           const SizedBox(width: 16.0),
                           Expanded(
                             child: DropdownButtonFormField(
+                              itemHeight: null,
                               decoration: InputDecoration(
                                 border: const OutlineInputBorder(),
                                 labelText: S.of(context).unitLabel,

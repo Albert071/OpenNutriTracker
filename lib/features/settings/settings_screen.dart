@@ -432,6 +432,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   DropdownButtonFormField(
                     initialValue: selectedUnit,
                     key: ValueKey(selectedUnit),
+                    itemHeight: null,
                     decoration: InputDecoration(
                       enabled: true,
                       filled: false,

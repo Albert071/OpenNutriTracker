@@ -165,6 +165,7 @@ class _KcalAdjustmentDialogState extends State<KcalAdjustmentDialog> {
                   // doesn't feel hidden.
                   DropdownButtonFormField(
                     isExpanded: true,
+                    itemHeight: null,
                     decoration: InputDecoration(
                       enabled: false,
                       filled: false,

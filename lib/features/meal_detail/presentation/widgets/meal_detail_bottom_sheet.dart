@@ -136,6 +136,7 @@ class _MealDetailBottomSheetState extends State<MealDetailBottomSheet> {
                           Expanded(
                             child: DropdownButtonFormField(
                               isExpanded: true,
+                              itemHeight: null,
                               initialValue: widget.selectedUnit,
                               key: ValueKey(widget.selectedUnit),
                               decoration: InputDecoration(
