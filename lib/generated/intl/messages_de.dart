@@ -405,6 +405,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "gramMilliliterUnit": MessageLookupByLibrary.simpleMessage("g/ml"),
         "gramUnit": MessageLookupByLibrary.simpleMessage("g"),
         "heightLabel": MessageLookupByLibrary.simpleMessage("Größe"),
+        "homeFirstMealHint": MessageLookupByLibrary.simpleMessage(
+            "Tippe auf +, um deine erste Mahlzeit oder Aktivität zu erfassen"),
         "homeLabel": MessageLookupByLibrary.simpleMessage("Startseite"),
         "importAction": MessageLookupByLibrary.simpleMessage("Importieren"),
         "importActivityConfirmContent":
@@ -1305,6 +1307,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "suppliedLabel": MessageLookupByLibrary.simpleMessage("zugeführt"),
         "transFatLabel": MessageLookupByLibrary.simpleMessage("Transfettsäuren"),
         "trendsCaloriesLabel": MessageLookupByLibrary.simpleMessage("Kalorien"),
+        "trendsDailyAverageLabel": MessageLookupByLibrary.simpleMessage("Tagesdurchschnitt"),
         "trendsDaysOnTrack": MessageLookupByLibrary.simpleMessage("Tage im Plan diese Woche"),
         "trendsLabel": MessageLookupByLibrary.simpleMessage("Trends"),
         "unitLabel": MessageLookupByLibrary.simpleMessage("Einheit"),

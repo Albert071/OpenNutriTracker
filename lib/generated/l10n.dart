@@ -160,6 +160,16 @@ class S {
     );
   }
 
+  /// `Tap + to log your first meal or activity`
+  String get homeFirstMealHint {
+    return Intl.message(
+      'Tap + to log your first meal or activity',
+      name: 'homeFirstMealHint',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Home`
   String get homeLabel {
     return Intl.message(
@@ -195,6 +205,16 @@ class S {
     return Intl.message(
       'Calories',
       name: 'trendsCaloriesLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Daily average`
+  String get trendsDailyAverageLabel {
+    return Intl.message(
+      'Daily average',
+      name: 'trendsDailyAverageLabel',
       desc: '',
       args: [],
     );

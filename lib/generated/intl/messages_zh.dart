@@ -378,6 +378,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "gramMilliliterUnit": MessageLookupByLibrary.simpleMessage("g/ml"),
         "gramUnit": MessageLookupByLibrary.simpleMessage("g"),
         "heightLabel": MessageLookupByLibrary.simpleMessage("身高"),
+        "homeFirstMealHint": MessageLookupByLibrary.simpleMessage("点按 + 记录你的第一餐或运动"),
         "homeLabel": MessageLookupByLibrary.simpleMessage("主页"),
         "importAction": MessageLookupByLibrary.simpleMessage("导入"),
         "importActivityConfirmContent":
@@ -1134,6 +1135,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "suppliedLabel": MessageLookupByLibrary.simpleMessage("提供"),
         "transFatLabel": MessageLookupByLibrary.simpleMessage("反式脂肪"),
         "trendsCaloriesLabel": MessageLookupByLibrary.simpleMessage("卡路里"),
+        "trendsDailyAverageLabel": MessageLookupByLibrary.simpleMessage("每日平均"),
         "trendsDaysOnTrack": MessageLookupByLibrary.simpleMessage("本周达标天数"),
         "trendsLabel": MessageLookupByLibrary.simpleMessage("趋势"),
         "unitLabel": MessageLookupByLibrary.simpleMessage("单位"),

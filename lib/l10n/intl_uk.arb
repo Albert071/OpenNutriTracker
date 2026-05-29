@@ -295,6 +295,8 @@
   "gramUnit": "г",
   "heightLabel": "Зріст",
   "homeLabel": "Головна",
+  "homeFirstMealHint": "Натисніть +, щоб додати першу їжу чи активність",
+  "trendsDailyAverageLabel": "Середнє за день",
   "trendsLabel": "Тренди",
   "youLabel": "Ви",
   "trendsCaloriesLabel": "Калорії",

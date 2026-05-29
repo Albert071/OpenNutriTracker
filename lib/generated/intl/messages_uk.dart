@@ -399,6 +399,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "gramMilliliterUnit": MessageLookupByLibrary.simpleMessage("г/мл"),
         "gramUnit": MessageLookupByLibrary.simpleMessage("г"),
         "heightLabel": MessageLookupByLibrary.simpleMessage("Зріст"),
+        "homeFirstMealHint": MessageLookupByLibrary.simpleMessage("Натисніть +, щоб додати першу їжу чи активність"),
         "homeLabel": MessageLookupByLibrary.simpleMessage("Головна"),
         "importAction": MessageLookupByLibrary.simpleMessage("Імпортувати"),
         "importActivityConfirmContent":
@@ -1295,6 +1296,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "suppliedLabel": MessageLookupByLibrary.simpleMessage("спожито"),
         "transFatLabel": MessageLookupByLibrary.simpleMessage("трансжири"),
         "trendsCaloriesLabel": MessageLookupByLibrary.simpleMessage("Калорії"),
+        "trendsDailyAverageLabel": MessageLookupByLibrary.simpleMessage("Середнє за день"),
         "trendsDaysOnTrack": MessageLookupByLibrary.simpleMessage("днів у нормі цього тижня"),
         "trendsLabel": MessageLookupByLibrary.simpleMessage("Тренди"),
         "unitLabel": MessageLookupByLibrary.simpleMessage("Одиниця"),

@@ -273,8 +273,7 @@ class _MacrosTrendCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Average intake vs goal over the window — daily-average macros.
-          Text('Ø ${S.of(context).carbsLabel} · ${S.of(context).fatLabel} · ${S.of(context).proteinLabel}',
-              style: text.titleMedium),
+          Text(S.of(context).trendsDailyAverageLabel, style: text.titleMedium),
           const SizedBox(height: Dimens.spacing16),
           for (final (label, intake, goal, color) in rows) ...[
             Row(

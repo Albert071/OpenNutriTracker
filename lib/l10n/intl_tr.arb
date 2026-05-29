@@ -326,6 +326,8 @@
   "gramUnit": "g",
   "heightLabel": "Boy",
   "homeLabel": "Ana Sayfa",
+  "homeFirstMealHint": "İlk öğününü veya aktiviteni eklemek için + simgesine dokun",
+  "trendsDailyAverageLabel": "Günlük ortalama",
   "trendsLabel": "Eğilimler",
   "youLabel": "Siz",
   "trendsCaloriesLabel": "Kaloriler",

@@ -396,6 +396,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "gramMilliliterUnit": MessageLookupByLibrary.simpleMessage("g/ml"),
         "gramUnit": MessageLookupByLibrary.simpleMessage("g"),
         "heightLabel": MessageLookupByLibrary.simpleMessage("Výška"),
+        "homeFirstMealHint": MessageLookupByLibrary.simpleMessage(
+            "Klepnutím na + zaznamenáte svoje prvé jedlo alebo aktivitu"),
         "homeLabel": MessageLookupByLibrary.simpleMessage("Domov"),
         "importAction": MessageLookupByLibrary.simpleMessage("Importovať"),
         "importActivityConfirmContent":
@@ -1195,6 +1197,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "suppliedLabel": MessageLookupByLibrary.simpleMessage("prijaté"),
         "transFatLabel": MessageLookupByLibrary.simpleMessage("trans tuky"),
         "trendsCaloriesLabel": MessageLookupByLibrary.simpleMessage("Kalórie"),
+        "trendsDailyAverageLabel": MessageLookupByLibrary.simpleMessage("Denný priemer"),
         "trendsDaysOnTrack": MessageLookupByLibrary.simpleMessage("dní v pláne tento týždeň"),
         "trendsLabel": MessageLookupByLibrary.simpleMessage("Trendy"),
         "unitLabel": MessageLookupByLibrary.simpleMessage("Jednotka"),

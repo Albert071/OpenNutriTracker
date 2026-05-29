@@ -295,6 +295,8 @@
   "gramUnit": "g",
   "heightLabel": "Wzrost",
   "homeLabel": "Strona główna",
+  "homeFirstMealHint": "Dotknij +, aby dodać swój pierwszy posiłek lub aktywność",
+  "trendsDailyAverageLabel": "Średnia dzienna",
   "trendsLabel": "Trendy",
   "youLabel": "Ty",
   "trendsCaloriesLabel": "Kalorie",

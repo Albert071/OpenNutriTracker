@@ -295,6 +295,8 @@
   "gramUnit": "g",
   "heightLabel": "Výška",
   "homeLabel": "Domů",
+  "homeFirstMealHint": "Klepnutím na + zaznamenáte své první jídlo nebo aktivitu",
+  "trendsDailyAverageLabel": "Denní průměr",
   "trendsLabel": "Trendy",
   "youLabel": "Vy",
   "trendsCaloriesLabel": "Kalorie",

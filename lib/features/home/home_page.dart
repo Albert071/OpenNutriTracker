@@ -4,6 +4,7 @@ import 'package:logging/logging.dart';
 import 'package:opennutritracker/core/domain/entity/calories_profile_entity.dart';
 import 'package:opennutritracker/core/domain/entity/intake_entity.dart';
 import 'package:opennutritracker/core/domain/entity/user_gender_entity.dart';
+import 'package:opennutritracker/core/presentation/widgets/empty_hint.dart';
 import 'package:opennutritracker/core/presentation/widgets/low_kcal_warning_card.dart';
 import 'package:opennutritracker/core/styles/dimens.dart';
 import 'package:opennutritracker/core/utils/calc/calorie_goal_calc.dart';
@@ -197,6 +198,17 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
               totalFatsGoal: totalFatsGoal,
               totalProteinsGoal: totalProteinsGoal,
             ),
+            // Day-one / empty-day guidance: when nothing is logged yet, point
+            // the way to the centre + rather than leaving a silent dashboard.
+            if (breakfastIntakeList.isEmpty &&
+                lunchIntakeList.isEmpty &&
+                dinnerIntakeList.isEmpty &&
+                snackIntakeList.isEmpty &&
+                userActivities.isEmpty)
+              EmptyHint(
+                icon: Icons.add_circle_outline_rounded,
+                title: S.of(context).homeFirstMealHint,
+              ),
             if (CalorieGoalCalc.isBelowRecommendedDailyKcalFloor(
               goalKcal: totalKcalDaily,
               gender: userGender,

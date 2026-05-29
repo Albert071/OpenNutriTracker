@@ -295,6 +295,8 @@
   "gramUnit": "g",
   "heightLabel": "Altezza",
   "homeLabel": "Home",
+  "homeFirstMealHint": "Tocca + per registrare il tuo primo pasto o attività",
+  "trendsDailyAverageLabel": "Media giornaliera",
   "trendsLabel": "Andamento",
   "youLabel": "Tu",
   "trendsCaloriesLabel": "Calorie",

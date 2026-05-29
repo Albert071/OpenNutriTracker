@@ -399,6 +399,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "gramMilliliterUnit": MessageLookupByLibrary.simpleMessage("g/ml"),
         "gramUnit": MessageLookupByLibrary.simpleMessage("g"),
         "heightLabel": MessageLookupByLibrary.simpleMessage("Boy"),
+        "homeFirstMealHint": MessageLookupByLibrary.simpleMessage(
+            "İlk öğününü veya aktiviteni eklemek için + simgesine dokun"),
         "homeLabel": MessageLookupByLibrary.simpleMessage("Ana Sayfa"),
         "importAction": MessageLookupByLibrary.simpleMessage("İçe Aktar"),
         "importActivityConfirmContent":
@@ -1267,6 +1269,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "suppliedLabel": MessageLookupByLibrary.simpleMessage("tüketilen"),
         "transFatLabel": MessageLookupByLibrary.simpleMessage("trans yağ"),
         "trendsCaloriesLabel": MessageLookupByLibrary.simpleMessage("Kaloriler"),
+        "trendsDailyAverageLabel": MessageLookupByLibrary.simpleMessage("Günlük ortalama"),
         "trendsDaysOnTrack": MessageLookupByLibrary.simpleMessage("bu hafta hedefteki gün"),
         "trendsLabel": MessageLookupByLibrary.simpleMessage("Eğilimler"),
         "unitLabel": MessageLookupByLibrary.simpleMessage("Birim"),

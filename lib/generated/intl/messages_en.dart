@@ -406,6 +406,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "gramMilliliterUnit": MessageLookupByLibrary.simpleMessage("g/ml"),
         "gramUnit": MessageLookupByLibrary.simpleMessage("g"),
         "heightLabel": MessageLookupByLibrary.simpleMessage("Height"),
+        "homeFirstMealHint": MessageLookupByLibrary.simpleMessage("Tap + to log your first meal or activity"),
         "homeLabel": MessageLookupByLibrary.simpleMessage("Home"),
         "importAction": MessageLookupByLibrary.simpleMessage("Import"),
         "importActivityConfirmContent": MessageLookupByLibrary.simpleMessage(
@@ -1269,6 +1270,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "suppliedLabel": MessageLookupByLibrary.simpleMessage("supplied"),
         "transFatLabel": MessageLookupByLibrary.simpleMessage("trans fat"),
         "trendsCaloriesLabel": MessageLookupByLibrary.simpleMessage("Calories"),
+        "trendsDailyAverageLabel": MessageLookupByLibrary.simpleMessage("Daily average"),
         "trendsDaysOnTrack": MessageLookupByLibrary.simpleMessage("days on track this week"),
         "trendsLabel": MessageLookupByLibrary.simpleMessage("Trends"),
         "unitLabel": MessageLookupByLibrary.simpleMessage("Unit"),

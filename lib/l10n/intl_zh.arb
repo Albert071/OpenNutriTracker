@@ -296,6 +296,8 @@
   "gramUnit": "g",
   "heightLabel": "身高",
   "homeLabel": "主页",
+  "homeFirstMealHint": "点按 + 记录你的第一餐或运动",
+  "trendsDailyAverageLabel": "每日平均",
   "trendsLabel": "趋势",
   "youLabel": "我的",
   "trendsCaloriesLabel": "卡路里",
