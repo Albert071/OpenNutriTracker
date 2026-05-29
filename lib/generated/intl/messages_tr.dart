@@ -110,6 +110,11 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
+        "quickAddActivityTitleLabel": MessageLookupByLibrary.simpleMessage("Hızlı aktivite ekle"),
+        "quickAddActivityDurationLabel": MessageLookupByLibrary.simpleMessage("Süre (dk, isteğe bağlı)"),
+        "quickAddActivityEnergyLabelKcal": MessageLookupByLibrary.simpleMessage("Yakılan enerji (kcal)"),
+        "quickAddActivityEnergyLabelKj": MessageLookupByLibrary.simpleMessage("Yakılan enerji (kJ)"),
+        "quickAddActivityAddedSnack": MessageLookupByLibrary.simpleMessage("Aktivite eklendi"),
         "copyActionLabel": MessageLookupByLibrary.simpleMessage("Kopyala"),
         "copyToProfileLabel": MessageLookupByLibrary.simpleMessage("Profile kopyala"),
         "copiedToProfileSnackbar": MessageLookupByLibrary.simpleMessage("Öğün profile kopyalandı"),

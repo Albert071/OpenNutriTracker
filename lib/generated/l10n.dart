@@ -765,6 +765,51 @@ class S {
     );
   }
 
+  String get quickAddActivityTitleLabel {
+    return Intl.message(
+      'Quick add activity',
+      name: 'quickAddActivityTitleLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get quickAddActivityDurationLabel {
+    return Intl.message(
+      'Duration (min, optional)',
+      name: 'quickAddActivityDurationLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get quickAddActivityEnergyLabelKcal {
+    return Intl.message(
+      'Energy burned (kcal)',
+      name: 'quickAddActivityEnergyLabelKcal',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get quickAddActivityEnergyLabelKj {
+    return Intl.message(
+      'Energy burned (kJ)',
+      name: 'quickAddActivityEnergyLabelKj',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get quickAddActivityAddedSnack {
+    return Intl.message(
+      'Activity added',
+      name: 'quickAddActivityAddedSnack',
+      desc: '',
+      args: [],
+    );
+  }
+
   String get mealImageLabel {
     return Intl.message(
       'Add a photo',

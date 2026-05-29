@@ -1048,5 +1048,10 @@
   "deleteProfileConfirmContent": "This permanently deletes the profile and all of its data and cannot be undone.",
   "copyToProfileLabel": "Copy to profile",
   "copiedToProfileSnackbar": "Meal copied to profile",
-  "copyActionLabel": "Copy"
+  "copyActionLabel": "Copy",
+  "quickAddActivityTitleLabel": "Quick add activity",
+  "quickAddActivityDurationLabel": "Duration (min, optional)",
+  "quickAddActivityEnergyLabelKcal": "Energy burned (kcal)",
+  "quickAddActivityEnergyLabelKj": "Energy burned (kJ)",
+  "quickAddActivityAddedSnack": "Activity added"
 }

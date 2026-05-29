@@ -1007,5 +1007,10 @@
   "deleteProfileConfirmContent": "Dadurch werden das Profil und alle seine Daten dauerhaft gelöscht. Dies kann nicht rückgängig gemacht werden.",
   "copyToProfileLabel": "In Profil kopieren",
   "copiedToProfileSnackbar": "Mahlzeit ins Profil kopiert",
-  "copyActionLabel": "Kopieren"
+  "copyActionLabel": "Kopieren",
+  "quickAddActivityTitleLabel": "Aktivität schnell hinzufügen",
+  "quickAddActivityDurationLabel": "Dauer (Min., optional)",
+  "quickAddActivityEnergyLabelKcal": "Verbrannte Energie (kcal)",
+  "quickAddActivityEnergyLabelKj": "Verbrannte Energie (kJ)",
+  "quickAddActivityAddedSnack": "Aktivität hinzugefügt"
 }

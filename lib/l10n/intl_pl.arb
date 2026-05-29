@@ -976,5 +976,10 @@
   "deleteProfileConfirmContent": "Spowoduje to trwałe usunięcie profilu i wszystkich jego danych. Tej operacji nie można cofnąć.",
   "copyToProfileLabel": "Kopiuj do profilu",
   "copiedToProfileSnackbar": "Posiłek skopiowany do profilu",
-  "copyActionLabel": "Kopiuj"
+  "copyActionLabel": "Kopiuj",
+  "quickAddActivityTitleLabel": "Szybkie dodawanie aktywności",
+  "quickAddActivityDurationLabel": "Czas trwania (min, opcjonalnie)",
+  "quickAddActivityEnergyLabelKcal": "Spalona energia (kcal)",
+  "quickAddActivityEnergyLabelKj": "Spalona energia (kJ)",
+  "quickAddActivityAddedSnack": "Dodano aktywność"
 }

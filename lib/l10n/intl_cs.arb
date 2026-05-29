@@ -976,5 +976,10 @@
   "deleteProfileConfirmContent": "Tímto se trvale smaže profil i všechna jeho data. Tuto akci nelze vrátit zpět.",
   "copyToProfileLabel": "Kopírovat do profilu",
   "copiedToProfileSnackbar": "Jídlo zkopírováno do profilu",
-  "copyActionLabel": "Kopírovat"
+  "copyActionLabel": "Kopírovat",
+  "quickAddActivityTitleLabel": "Rychlé přidání aktivity",
+  "quickAddActivityDurationLabel": "Doba trvání (min, volitelné)",
+  "quickAddActivityEnergyLabelKcal": "Spálená energie (kcal)",
+  "quickAddActivityEnergyLabelKj": "Spálená energie (kJ)",
+  "quickAddActivityAddedSnack": "Aktivita přidána"
 }

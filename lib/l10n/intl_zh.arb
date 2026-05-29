@@ -977,5 +977,10 @@
   "deleteProfileConfirmContent": "这将永久删除该档案及其所有数据，此操作无法撤销。",
   "copyToProfileLabel": "复制到档案",
   "copiedToProfileSnackbar": "餐食已复制到档案",
-  "copyActionLabel": "复制"
+  "copyActionLabel": "复制",
+  "quickAddActivityTitleLabel": "快速添加活动",
+  "quickAddActivityDurationLabel": "时长（分钟，可选）",
+  "quickAddActivityEnergyLabelKcal": "消耗能量（kcal）",
+  "quickAddActivityEnergyLabelKj": "消耗能量（kJ）",
+  "quickAddActivityAddedSnack": "已添加活动"
 }

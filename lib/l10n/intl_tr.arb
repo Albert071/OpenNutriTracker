@@ -1007,5 +1007,10 @@
   "deleteProfileConfirmContent": "Bu işlem profili ve tüm verilerini kalıcı olarak siler. Bu geri alınamaz.",
   "copyToProfileLabel": "Profile kopyala",
   "copiedToProfileSnackbar": "Öğün profile kopyalandı",
-  "copyActionLabel": "Kopyala"
+  "copyActionLabel": "Kopyala",
+  "quickAddActivityTitleLabel": "Hızlı aktivite ekle",
+  "quickAddActivityDurationLabel": "Süre (dk, isteğe bağlı)",
+  "quickAddActivityEnergyLabelKcal": "Yakılan enerji (kcal)",
+  "quickAddActivityEnergyLabelKj": "Yakılan enerji (kJ)",
+  "quickAddActivityAddedSnack": "Aktivite eklendi"
 }

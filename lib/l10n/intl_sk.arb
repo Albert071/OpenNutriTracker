@@ -1006,5 +1006,10 @@
   "deleteProfileConfirmContent": "Týmto sa natrvalo odstráni profil aj všetky jeho údaje. Túto akciu nie je možné vrátiť späť.",
   "copyToProfileLabel": "Kopírovať do profilu",
   "copiedToProfileSnackbar": "Jedlo skopírované do profilu",
-  "copyActionLabel": "Kopírovať"
+  "copyActionLabel": "Kopírovať",
+  "quickAddActivityTitleLabel": "Rýchle pridanie aktivity",
+  "quickAddActivityDurationLabel": "Trvanie (min, voliteľné)",
+  "quickAddActivityEnergyLabelKcal": "Spálená energia (kcal)",
+  "quickAddActivityEnergyLabelKj": "Spálená energia (kJ)",
+  "quickAddActivityAddedSnack": "Aktivita pridaná"
 }
