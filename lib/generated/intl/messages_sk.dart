@@ -108,6 +108,12 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
+        "quickAddActivityNameLabel": MessageLookupByLibrary.simpleMessage("Názov (voliteľné)"),
+        "quickAddActivityTitleLabel": MessageLookupByLibrary.simpleMessage("Rýchle pridanie aktivity"),
+        "quickAddActivityDurationLabel": MessageLookupByLibrary.simpleMessage("Trvanie (min, voliteľné)"),
+        "quickAddActivityEnergyLabelKcal": MessageLookupByLibrary.simpleMessage("Spálená energia (kcal)"),
+        "quickAddActivityEnergyLabelKj": MessageLookupByLibrary.simpleMessage("Spálená energia (kJ)"),
+        "quickAddActivityAddedSnack": MessageLookupByLibrary.simpleMessage("Aktivita pridaná"),
         "copyActionLabel": MessageLookupByLibrary.simpleMessage("Kopírovať"),
         "copyToProfileLabel": MessageLookupByLibrary.simpleMessage("Kopírovať do profilu"),
         "copiedToProfileSnackbar": MessageLookupByLibrary.simpleMessage("Jedlo skopírované do profilu"),

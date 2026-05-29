@@ -8,6 +8,7 @@ import 'package:opennutritracker/features/activity_detail/activity_detail_screen
 import 'package:opennutritracker/features/add_activity/presentation/bloc/activities_bloc.dart';
 import 'package:opennutritracker/features/add_activity/presentation/bloc/recent_activities_bloc.dart';
 import 'package:opennutritracker/features/add_activity/presentation/widgets/activity_item_card.dart';
+import 'package:opennutritracker/features/add_activity/presentation/widgets/quick_add_activity_bottom_sheet.dart';
 import 'package:opennutritracker/features/add_meal/presentation/widgets/no_results_widget.dart';
 import 'package:opennutritracker/generated/l10n.dart';
 
@@ -55,6 +56,13 @@ class _AddActivityScreenState extends State<AddActivityScreen>
       appBar: AppBar(
         title: Text(S.of(context).activityLabel),
         actions: [
+          Semantics(
+            identifier: 'add-activity-quick-add',
+            child: TextButton(
+              onPressed: _onQuickAddPressed,
+              child: Text(S.of(context).quickAddCardLabel),
+            ),
+          ),
           Semantics(
             identifier: 'add-activity-custom',
             child: IconButton(
@@ -196,6 +204,15 @@ class _AddActivityScreenState extends State<AddActivityScreen>
           ],
         ),
       ),
+    );
+  }
+
+  void _onQuickAddPressed() {
+    showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      showDragHandle: true,
+      builder: (_) => QuickAddActivityBottomSheet(day: _day),
     );
   }
 

@@ -976,5 +976,11 @@
   "deleteProfileConfirmContent": "Questa operazione elimina definitivamente il profilo e tutti i suoi dati e non può essere annullata.",
   "copyToProfileLabel": "Copia nel profilo",
   "copiedToProfileSnackbar": "Pasto copiato nel profilo",
-  "copyActionLabel": "Copia"
+  "copyActionLabel": "Copia",
+  "quickAddActivityTitleLabel": "Aggiunta rapida attività",
+  "quickAddActivityDurationLabel": "Durata (min, facoltativo)",
+  "quickAddActivityEnergyLabelKcal": "Energia bruciata (kcal)",
+  "quickAddActivityEnergyLabelKj": "Energia bruciata (kJ)",
+  "quickAddActivityAddedSnack": "Attività aggiunta",
+  "quickAddActivityNameLabel": "Nome (facoltativo)"
 }
