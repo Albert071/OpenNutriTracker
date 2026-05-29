@@ -9,8 +9,8 @@ import 'package:opennutritracker/core/presentation/widgets/copy_or_delete_dialog
 import 'package:opennutritracker/core/presentation/widgets/macro_nutriments_widget.dart';
 import 'package:opennutritracker/core/presentation/widgets/copy_dialog.dart';
 import 'package:opennutritracker/core/presentation/widgets/app_card.dart';
+import 'package:opennutritracker/core/presentation/widgets/empty_hint.dart';
 import 'package:opennutritracker/core/presentation/widgets/delete_dialog.dart';
-import 'package:opennutritracker/core/styles/app_palette.dart';
 import 'package:opennutritracker/core/styles/dimens.dart';
 import 'package:opennutritracker/core/utils/calc/unit_calc.dart';
 import 'package:opennutritracker/core/utils/custom_icons.dart';
@@ -177,8 +177,6 @@ class _DayInfoWidgetState extends State<DayInfoWidget> {
   @override
   Widget build(BuildContext context) {
     final trackedDay = widget.trackedDayEntity;
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final palette = isDark ? AppPalette.dark : AppPalette.light;
     final textTheme = Theme.of(context).textTheme;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -200,12 +198,9 @@ class _DayInfoWidgetState extends State<DayInfoWidget> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             trackedDay == null
-                ? Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: Dimens.spacing20),
-                    child: Text(
-                      S.of(context).nothingAddedLabel,
-                      style: textTheme.bodyMedium?.copyWith(color: palette.textMuted),
-                    ),
+                ? EmptyHint(
+                    icon: Icons.restaurant_rounded,
+                    title: S.of(context).nothingAddedLabel,
                   )
                 : const SizedBox(),
             trackedDay != null
