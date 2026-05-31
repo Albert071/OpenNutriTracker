@@ -137,6 +137,7 @@ class _MacroSplitDialogState extends State<MacroSplitDialog> {
           Expanded(
             child: Text(
               s.settingsMacroSplitLabel,
+              maxLines: 2,
               overflow: TextOverflow.ellipsis,
             ),
           ),
