@@ -16,7 +16,8 @@ class TrendsLoading extends TrendsState {
 }
 
 class TrendsLoaded extends TrendsState {
-  final int rangeDays;
+  final int rangeDays; // the selected range chip: 7, 30, 90, or 0 for "All"
+  final int windowDays; // effective span the charts plot over (resolved "All")
   final List<TrackedDayEntity> days; // tracked days over the selected window
   final List<TrackedDayEntity> priorWeek; // the 7 days before this week
   final List<WeightLogEntity> weight; // full weight history, windowed in the UI
@@ -27,6 +28,7 @@ class TrendsLoaded extends TrendsState {
 
   const TrendsLoaded({
     required this.rangeDays,
+    required this.windowDays,
     required this.days,
     required this.priorWeek,
     required this.weight,
@@ -39,6 +41,7 @@ class TrendsLoaded extends TrendsState {
   @override
   List<Object?> get props => [
         rangeDays,
+        windowDays,
         days,
         priorWeek,
         weight,

@@ -210,6 +210,25 @@ void main() {
       expect(loaded.targetWeightKg, 68);
     });
 
+    test('a fixed range sets windowDays equal to the chip', () async {
+      final emitted = await load(const LoadTrendsEvent(rangeDays: 30));
+      expect((emitted.last as TrendsLoaded).windowDays, 30);
+    });
+
+    test('the "All" range (0) spans back to the earliest data, min 30', () async {
+      // Earliest signal is a weight reading 50 days ago.
+      weightLog.result = [_wl(today.subtract(const Duration(days: 50)), 80)];
+      final emitted = await load(const LoadTrendsEvent(rangeDays: 0));
+      final loaded = emitted.last as TrendsLoaded;
+      expect(loaded.rangeDays, 0); // the selector still shows "All"
+      expect(loaded.windowDays, 51); // 50 days back, inclusive of today
+    });
+
+    test('"All" with no data falls back to a 30-day window', () async {
+      final emitted = await load(const LoadTrendsEvent(rangeDays: 0));
+      expect((emitted.last as TrendsLoaded).windowDays, 30);
+    });
+
     test('a failing data source surfaces TrendsFailed', () async {
       trackedDay.throws = true;
       final emitted = await load(const LoadTrendsEvent());

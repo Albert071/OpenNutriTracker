@@ -48,20 +48,21 @@ class _TrendsView extends StatelessWidget {
             _StreakCard(
               days: state.days,
               priorWeek: state.priorWeek,
-              rangeDays: state.rangeDays,
+              rangeDays: state.windowDays,
               palette: palette,
             ),
             const SizedBox(height: Dimens.spacing16),
             _RangeSelector(rangeDays: state.rangeDays),
             const SizedBox(height: Dimens.spacing16),
-            _CaloriesTrendCard(days: state.days, rangeDays: state.rangeDays, palette: palette),
+            _CaloriesTrendCard(
+                days: state.days, rangeDays: state.windowDays, palette: palette),
             const SizedBox(height: Dimens.spacing16),
             _MacrosTrendCard(days: state.days, palette: palette),
             const SizedBox(height: Dimens.spacing16),
             _WaterTrendCard(
               waterByDay: state.waterByDay,
               goalMl: state.waterGoalMl,
-              rangeDays: state.rangeDays,
+              rangeDays: state.windowDays,
               palette: palette,
             ),
             const SizedBox(height: Dimens.spacing16),
@@ -69,7 +70,7 @@ class _TrendsView extends StatelessWidget {
               entries: state.weight,
               usesImperialUnits: state.usesImperialUnits,
               targetWeightKg: state.targetWeightKg,
-              rangeDays: state.rangeDays,
+              rangeDays: state.windowDays,
               palette: palette,
             ),
           ],
@@ -91,10 +92,12 @@ class _RangeSelector extends StatelessWidget {
         identifier: 'trends-range-selector',
         child: SegmentedButton<int>(
           showSelectedIcon: false,
-          segments: const [
-            ButtonSegment(value: 7, label: Text('7d')),
-            ButtonSegment(value: 30, label: Text('30d')),
-            ButtonSegment(value: 90, label: Text('90d')),
+          segments: [
+            const ButtonSegment(value: 7, label: Text('7d')),
+            const ButtonSegment(value: 30, label: Text('30d')),
+            const ButtonSegment(value: 90, label: Text('90d')),
+            // 0 is the "All" sentinel; the bloc resolves it to the full span.
+            ButtonSegment(value: 0, label: Text(S.of(context).allItemsLabel)),
           ],
           selected: {rangeDays},
           onSelectionChanged: (s) => context

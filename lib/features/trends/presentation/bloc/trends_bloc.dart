@@ -30,8 +30,12 @@ class TrendsBloc extends Bloc<TrendsEvent, TrendsState> {
       try {
         final now = DateTime.now();
         final today = DateTime(now.year, now.month, now.day);
+        // rangeDays 0 is the "All" chip: pull a wide window and let the actual
+        // span fall out of the earliest data point below.
+        final isAll = event.rangeDays == 0;
+        final fetchDays = isAll ? 3650 : event.rangeDays;
         final days = await _getTrackedDayUsecase.getTrackedDaysByRange(
-          today.subtract(Duration(days: event.rangeDays - 1)),
+          today.subtract(Duration(days: fetchDays - 1)),
           today,
         );
         // The full weight history; the chart windows it for display. This
@@ -55,8 +59,34 @@ class TrendsBloc extends Bloc<TrendsEvent, TrendsState> {
           waterByDay[d] = (waterByDay[d] ?? 0) + e.amountMl;
         }
 
+        // For a fixed chip the window is the chip; for "All" it stretches back
+        // to the earliest data point (across days, weight, and water), with a
+        // 30-day floor so a near-empty history still reads as a chart.
+        int windowDays;
+        if (!isAll) {
+          windowDays = event.rangeDays;
+        } else {
+          DateTime? earliest;
+          void consider(DateTime d) {
+            if (earliest == null || d.isBefore(earliest!)) earliest = d;
+          }
+          for (final d in days) {
+            consider(DateTime(d.day.year, d.day.month, d.day.day));
+          }
+          for (final w in weight) {
+            consider(DateTime(w.date.year, w.date.month, w.date.day));
+          }
+          for (final k in waterByDay.keys) {
+            consider(k);
+          }
+          windowDays = earliest == null
+              ? 30
+              : (today.difference(earliest!).inDays + 1).clamp(30, 3650);
+        }
+
         emit(TrendsLoaded(
           rangeDays: event.rangeDays,
+          windowDays: windowDays,
           days: days,
           priorWeek: priorWeek,
           weight: weight,
