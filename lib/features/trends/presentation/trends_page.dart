@@ -14,6 +14,7 @@ import 'package:opennutritracker/features/profile/presentation/bloc/profile_bloc
 import 'package:opennutritracker/features/profile/presentation/widgets/set_weight_dialog.dart';
 import 'package:opennutritracker/features/profile/presentation/widgets/weight_trend_chart.dart';
 import 'package:opennutritracker/features/trends/presentation/bloc/trends_bloc.dart';
+import 'package:opennutritracker/features/trends/presentation/trends_calc.dart';
 import 'package:opennutritracker/generated/l10n.dart';
 
 class TrendsPage extends StatelessWidget {
@@ -40,15 +41,16 @@ class _TrendsView extends StatelessWidget {
         if (state is! TrendsLoaded) {
           return const Center(child: CircularProgressIndicator());
         }
-        final now = DateTime.now();
-        final today = DateTime(now.year, now.month, now.day);
-        final weekStart = today.subtract(const Duration(days: 6));
-        final week = state.days.where((d) => !d.day.isBefore(weekStart)).toList();
         return ListView(
           padding: const EdgeInsets.fromLTRB(
               Dimens.spacing16, Dimens.spacing8, Dimens.spacing16, Dimens.spacing32),
           children: [
-            _StreakCard(week: week, priorWeek: state.priorWeek, palette: palette),
+            _StreakCard(
+              days: state.days,
+              priorWeek: state.priorWeek,
+              rangeDays: state.rangeDays,
+              palette: palette,
+            ),
             const SizedBox(height: Dimens.spacing16),
             _RangeSelector(rangeDays: state.rangeDays),
             const SizedBox(height: Dimens.spacing16),
@@ -98,43 +100,78 @@ class _RangeSelector extends StatelessWidget {
 }
 
 class _StreakCard extends StatelessWidget {
-  final List<TrackedDayEntity> week;
+  final List<TrackedDayEntity> days;
   final List<TrackedDayEntity> priorWeek;
+  final int rangeDays;
   final AppPalette palette;
-  const _StreakCard({required this.week, required this.priorWeek, required this.palette});
-
-  int _onTrackCount(BuildContext context, List<TrackedDayEntity> days) {
-    final errorColor = Theme.of(context).colorScheme.error;
-    return days.where((d) => d.getCalendarDayRatingColor(context) != errorColor).length;
-  }
+  const _StreakCard({
+    required this.days,
+    required this.priorWeek,
+    required this.rangeDays,
+    required this.palette,
+  });
 
   @override
   Widget build(BuildContext context) {
     final accent = Theme.of(context).colorScheme.primary;
-    final onTrack = _onTrackCount(context, week);
-    final delta = onTrack - _onTrackCount(context, priorWeek);
+    final errorColor = Theme.of(context).colorScheme.error;
     final text = Theme.of(context).textTheme;
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    final windowStart =
+        DateTime(today.year, today.month, today.day - (rangeDays - 1));
+    final weekStart = DateTime(today.year, today.month, today.day - 6);
+
+    bool onTrack(TrackedDayEntity d) =>
+        d.getCalendarDayRatingColor(context) != errorColor;
+
+    final onTrackDays = <DateTime>{
+      for (final d in days)
+        if (onTrack(d)) DateTime(d.day.year, d.day.month, d.day.day),
+    };
+    final stats = streakStats(onTrackDays, windowStart, today);
+
+    // Week-over-week on-track delta (this week vs the prior week).
+    final thisWeek =
+        days.where((d) => !d.day.isBefore(weekStart) && onTrack(d)).length;
+    final delta = thisWeek - priorWeek.where(onTrack).length;
+
     return AppCard(
       padding: const EdgeInsets.all(Dimens.spacing20),
       child: Row(
         children: [
           Container(
             padding: const EdgeInsets.all(Dimens.spacing12),
-            decoration: BoxDecoration(color: accent.withValues(alpha: 0.16), shape: BoxShape.circle),
-            child: Icon(Icons.local_fire_department_rounded, color: accent, size: 28),
+            decoration: BoxDecoration(
+                color: accent.withValues(alpha: 0.16), shape: BoxShape.circle),
+            child: Icon(Icons.local_fire_department_rounded,
+                color: accent, size: 28),
           ),
           const SizedBox(width: Dimens.spacing16),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('$onTrack / 7', style: text.titleLarge),
-                Text(S.of(context).trendsDaysOnTrack,
+                Text('${stats.current}', style: text.headlineSmall),
+                Text(S.of(context).trendsDayStreakLabel,
                     style: text.bodyMedium?.copyWith(color: palette.textMuted)),
               ],
             ),
           ),
-          if (delta != 0) _WeekDeltaChip(delta: delta, palette: palette),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              if (delta != 0) ...[
+                _WeekDeltaChip(delta: delta, palette: palette),
+                const SizedBox(height: 6),
+              ],
+              Text(
+                '${S.of(context).trendsBestStreakLabel} ${stats.longest}',
+                style: text.bodySmall?.copyWith(color: palette.textMuted),
+              ),
+            ],
+          ),
         ],
       ),
     );
@@ -335,6 +372,10 @@ class _WeightCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final text = Theme.of(context).textTheme;
+    final projection = weightProjection(
+      [for (final e in entries) (date: e.date, kg: e.weightKg)],
+      targetWeightKg,
+    );
     return AppCard(
       padding: const EdgeInsets.all(Dimens.spacing20),
       child: Column(
@@ -359,6 +400,11 @@ class _WeightCard extends StatelessWidget {
               ),
             ],
           ),
+          if (projection != null)
+            Text(
+              _projectionLabel(context, projection),
+              style: text.bodySmall?.copyWith(color: palette.textMuted),
+            ),
           const SizedBox(height: Dimens.spacing12),
           WeightTrendChart(
             entries: entries,
@@ -369,6 +415,28 @@ class _WeightCard extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  /// One-line weight outlook: the weekly rate of change (in the user's unit),
+  /// plus a rough number of weeks to the target when one is set and the trend
+  /// is heading toward it.
+  String _projectionLabel(
+    BuildContext context,
+    ({double ratePerWeek, int? weeksToTarget}) projection,
+  ) {
+    final unit =
+        usesImperialUnits ? S.of(context).lbsLabel : S.of(context).kgLabel;
+    final rate = usesImperialUnits
+        ? projection.ratePerWeek * 2.20462
+        : projection.ratePerWeek;
+    final sign = rate >= 0 ? '+' : '';
+    var label = '$sign${rate.toStringAsFixed(1)} $unit'
+        '${S.of(context).trendsPerWeekSuffix}';
+    if (projection.weeksToTarget != null) {
+      label += ' · ~${projection.weeksToTarget} '
+          '${S.of(context).trendsWeeksToGoalLabel}';
+    }
+    return label;
   }
 
   /// Logs a weight entry from the trends view, reusing the same dialog and

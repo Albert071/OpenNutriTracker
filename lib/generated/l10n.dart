@@ -290,6 +290,56 @@ class S {
     );
   }
 
+  /// `day streak`
+  String get trendsDayStreakLabel {
+    return Intl.message(
+      'day streak',
+      name: 'trendsDayStreakLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `best`
+  String get trendsBestStreakLabel {
+    return Intl.message(
+      'best',
+      name: 'trendsBestStreakLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `/week`
+  String get trendsPerWeekSuffix {
+    return Intl.message(
+      '/week',
+      name: 'trendsPerWeekSuffix',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `weeks to goal`
+  String get trendsWeeksToGoalLabel {
+    return Intl.message(
+      'weeks to goal',
+      name: 'trendsWeeksToGoalLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Water`
+  String get trendsWaterLabel {
+    return Intl.message(
+      'Water',
+      name: 'trendsWaterLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Diary`
   String get diaryLabel {
     return Intl.message(
