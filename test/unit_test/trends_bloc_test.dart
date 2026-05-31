@@ -116,6 +116,11 @@ void main() {
   // expected ranges line up with what the bloc computes.
   final now = DateTime.now();
   final today = DateTime(now.year, now.month, now.day);
+  // The bloc ends ranges at the close of the day so a time-stamped tracked
+  // day (today's) isn't excluded.
+  final endOfToday = DateTime(now.year, now.month, now.day, 23, 59, 59);
+  final endOfPriorWeek =
+      DateTime(now.year, now.month, now.day - 7, 23, 59, 59);
 
   group('TrendsBloc', () {
     late _FakeGetTrackedDayUsecase trackedDay;
@@ -163,11 +168,10 @@ void main() {
       // First call is the selected window, second is the prior week.
       expect(trackedDay.rangeCalls.first.start,
           today.subtract(const Duration(days: 6)));
-      expect(trackedDay.rangeCalls.first.end, today);
+      expect(trackedDay.rangeCalls.first.end, endOfToday);
       expect(trackedDay.rangeCalls[1].start,
           today.subtract(const Duration(days: 13)));
-      expect(trackedDay.rangeCalls[1].end,
-          today.subtract(const Duration(days: 7)));
+      expect(trackedDay.rangeCalls[1].end, endOfPriorWeek);
     });
 
     test('a 90-day window pulls 90 days of calories', () async {

@@ -30,13 +30,17 @@ class TrendsBloc extends Bloc<TrendsEvent, TrendsState> {
       try {
         final now = DateTime.now();
         final today = DateTime(now.year, now.month, now.day);
+        // Today's tracked day is stamped with the time it was created, so the
+        // range end must cover the whole day or today drops out of the result
+        // (the range filter is inclusive but compares against this instant).
+        final endOfToday = DateTime(now.year, now.month, now.day, 23, 59, 59);
         // rangeDays 0 is the "All" chip: pull a wide window and let the actual
         // span fall out of the earliest data point below.
         final isAll = event.rangeDays == 0;
         final fetchDays = isAll ? 3650 : event.rangeDays;
         final days = await _getTrackedDayUsecase.getTrackedDaysByRange(
           today.subtract(Duration(days: fetchDays - 1)),
-          today,
+          endOfToday,
         );
         // The full weight history; the chart windows it for display. This
         // mirrors the weight-history screen, so a reading from weeks ago
@@ -46,7 +50,7 @@ class TrendsBloc extends Bloc<TrendsEvent, TrendsState> {
         // The 7 days before this week, for a week-over-week consistency delta.
         final priorWeek = await _getTrackedDayUsecase.getTrackedDaysByRange(
           today.subtract(const Duration(days: 13)),
-          today.subtract(const Duration(days: 7)),
+          DateTime(now.year, now.month, now.day - 7, 23, 59, 59),
         );
         final user = await _getUserUsecase.getUserData();
         final config = await _getConfigUsecase.getConfig();
