@@ -66,16 +66,20 @@ class _RangeSelector extends StatelessWidget {
   Widget build(BuildContext context) {
     return Align(
       alignment: Alignment.centerLeft,
-      child: SegmentedButton<int>(
-        showSelectedIcon: false,
-        segments: const [
-          ButtonSegment(value: 7, label: Text('7d')),
-          ButtonSegment(value: 30, label: Text('30d')),
-          ButtonSegment(value: 90, label: Text('90d')),
-        ],
-        selected: {rangeDays},
-        onSelectionChanged: (s) =>
-            context.read<TrendsBloc>().add(LoadTrendsEvent(rangeDays: s.first)),
+      child: Semantics(
+        identifier: 'trends-range-selector',
+        child: SegmentedButton<int>(
+          showSelectedIcon: false,
+          segments: const [
+            ButtonSegment(value: 7, label: Text('7d')),
+            ButtonSegment(value: 30, label: Text('30d')),
+            ButtonSegment(value: 90, label: Text('90d')),
+          ],
+          selected: {rangeDays},
+          onSelectionChanged: (s) => context
+              .read<TrendsBloc>()
+              .add(LoadTrendsEvent(rangeDays: s.first)),
+        ),
       ),
     );
   }

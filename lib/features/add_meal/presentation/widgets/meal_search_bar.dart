@@ -52,36 +52,40 @@ class _MealSearchBarState extends State<MealSearchBar> {
       children: [
         Flexible(
           flex: 1,
-          child: TextField(
-            controller: _searchTextController,
-            textInputAction: TextInputAction.search,
-            style: Theme.of(context).textTheme.bodyLarge,
-            onChanged: (input) {
-              widget.searchStringListener.value = input;
-              widget.onSearchChanged?.call(input);
-            },
-            onSubmitted: widget.onSearchSubmit,
-            decoration: InputDecoration(
-              hintText: S.of(context).searchLabel,
-              hintStyle: Theme.of(context).textTheme.bodyLarge?.copyWith(color: palette.textMuted),
-              prefixIcon: Icon(Icons.search_rounded, size: 24, color: palette.textMuted),
-              suffixIcon: widget.onBarcodePressed != null
-                  ? Semantics(
-                      identifier: 'meal-search-barcode',
-                      child: IconButton(
-                        icon: Icon(CustomIcons.barcode_scan, size: 22, color: palette.textMuted),
-                        onPressed: widget.onBarcodePressed,
-                      ),
-                    )
-                  : null,
-              filled: true,
-              fillColor: palette.surfaceMuted,
-              contentPadding: const EdgeInsets.symmetric(vertical: Dimens.spacing16, horizontal: Dimens.spacing16),
-              border: border,
-              enabledBorder: border,
-              focusedBorder: OutlineInputBorder(
-                borderRadius: Dimens.borderRadiusL,
-                borderSide: BorderSide(color: accent, width: 1.5),
+          child: Semantics(
+            identifier: 'meal-search-field',
+            child: TextField(
+              controller: _searchTextController,
+              textInputAction: TextInputAction.search,
+              style: Theme.of(context).textTheme.bodyLarge,
+              onChanged: (input) {
+                widget.searchStringListener.value = input;
+                widget.onSearchChanged?.call(input);
+              },
+              onSubmitted: widget.onSearchSubmit,
+              decoration: InputDecoration(
+                hintText: S.of(context).searchLabel,
+                hintStyle: Theme.of(context).textTheme.bodyLarge?.copyWith(color: palette.textMuted),
+                prefixIcon: Icon(Icons.search_rounded, size: 24, color: palette.textMuted),
+                suffixIcon: widget.onBarcodePressed != null
+                    ? Semantics(
+                        identifier: 'meal-search-barcode',
+                        child: IconButton(
+                          icon: Icon(CustomIcons.barcode_scan, size: 22, color: palette.textMuted),
+                          onPressed: widget.onBarcodePressed,
+                        ),
+                      )
+                    : null,
+                filled: true,
+                fillColor: palette.surfaceMuted,
+                contentPadding:
+                    const EdgeInsets.symmetric(vertical: Dimens.spacing16, horizontal: Dimens.spacing16),
+                border: border,
+                enabledBorder: border,
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: Dimens.borderRadiusL,
+                  borderSide: BorderSide(color: accent, width: 1.5),
+                ),
               ),
             ),
           ),

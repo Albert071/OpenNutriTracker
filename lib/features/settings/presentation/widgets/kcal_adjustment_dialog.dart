@@ -134,6 +134,7 @@ class _KcalAdjustmentDialogState extends State<KcalAdjustmentDialog> {
           Expanded(
             child: Text(
               s.settingsKcalAdjustmentLabel,
+              maxLines: 2,
               overflow: TextOverflow.ellipsis,
             ),
           ),
