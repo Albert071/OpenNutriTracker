@@ -35,7 +35,9 @@ class WeightTrendChart extends StatelessWidget {
 
     final now = DateTime.now();
     final today = DateTime(now.year, now.month, now.day);
-    final windowStart = today.subtract(Duration(days: windowDays));
+    // windowDays days ending today (today sits at the right edge), matching
+    // how the calorie/water charts window their range.
+    final windowStart = today.subtract(Duration(days: windowDays - 1));
 
     final inWindow = entries
         .where((e) => !e.date.isBefore(windowStart) && !e.date.isAfter(today))
@@ -101,7 +103,7 @@ class WeightTrendChart extends StatelessWidget {
         child: LineChart(
           LineChartData(
             minX: 0,
-            maxX: windowDays.toDouble(),
+            maxX: (windowDays - 1).toDouble(),
             minY: minY - yPadding,
             maxY: maxY + yPadding,
             gridData: const FlGridData(show: false),

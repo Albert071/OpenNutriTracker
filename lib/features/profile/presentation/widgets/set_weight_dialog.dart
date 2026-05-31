@@ -27,20 +27,24 @@ class SetWeightDialog extends StatefulWidget {
 
 class _SetWeightDialogState extends State<SetWeightDialog> {
   late double selectedWeight;
-  DateTime _selectedDate = DateTime.now();
+  // Date-only (midnight) so it never sits after the date-only lastDate bound.
+  late DateTime _selectedDate;
 
   @override
   void initState() {
     super.initState();
     selectedWeight = widget.userWeight;
+    final now = DateTime.now();
+    _selectedDate = DateTime(now.year, now.month, now.day);
   }
 
   Future<void> _pickDate() async {
+    final now = DateTime.now();
     final picked = await showDatePicker(
       context: context,
       initialDate: _selectedDate,
       firstDate: DateTime(2000),
-      lastDate: DateTime.now(),
+      lastDate: DateTime(now.year, now.month, now.day),
     );
     if (picked != null) {
       setState(() => _selectedDate = picked);
