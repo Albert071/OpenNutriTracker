@@ -58,6 +58,13 @@ class _TrendsView extends StatelessWidget {
             const SizedBox(height: Dimens.spacing16),
             _MacrosTrendCard(days: state.days, palette: palette),
             const SizedBox(height: Dimens.spacing16),
+            _WaterTrendCard(
+              waterByDay: state.waterByDay,
+              goalMl: state.waterGoalMl,
+              rangeDays: state.rangeDays,
+              palette: palette,
+            ),
+            const SizedBox(height: Dimens.spacing16),
             _WeightCard(
               entries: state.weight,
               usesImperialUnits: state.usesImperialUnits,
@@ -291,6 +298,116 @@ class _CaloriesTrendCard extends StatelessWidget {
               ),
             ),
           ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _WaterTrendCard extends StatelessWidget {
+  final Map<DateTime, int> waterByDay;
+  final int goalMl;
+  final int rangeDays;
+  final AppPalette palette;
+  const _WaterTrendCard({
+    required this.waterByDay,
+    required this.goalMl,
+    required this.rangeDays,
+    required this.palette,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final text = Theme.of(context).textTheme;
+    final color = palette.proteinColor;
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    final spots = <FlSpot>[];
+    var sum = 0;
+    var loggedDays = 0;
+    for (int i = 0; i < rangeDays; i++) {
+      final day = today.subtract(Duration(days: rangeDays - 1 - i));
+      final ml = waterByDay[DateTime(day.year, day.month, day.day)] ?? 0;
+      spots.add(FlSpot(i.toDouble(), ml.toDouble()));
+      if (ml > 0) {
+        sum += ml;
+        loggedDays++;
+      }
+    }
+    final avg = loggedDays == 0 ? 0 : (sum / loggedDays).round();
+    final maxWater = spots.fold<double>(0, (m, s) => s.y > m ? s.y : m);
+    final maxY =
+        [maxWater, goalMl.toDouble()].reduce((a, b) => a > b ? a : b) * 1.15 + 1;
+
+    return AppCard(
+      padding: const EdgeInsets.all(Dimens.spacing20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Expanded(
+                child: Text(S.of(context).trendsWaterLabel,
+                    style: text.titleMedium),
+              ),
+              Text(
+                S.of(context).waterChipLabel(avg, goalMl),
+                style: text.bodySmall?.copyWith(
+                    color: palette.textMuted, fontWeight: FontWeight.w700),
+              ),
+            ],
+          ),
+          const SizedBox(height: Dimens.spacing20),
+          Semantics(
+            label: S.of(context).trendsWaterLabel,
+            child: SizedBox(
+              height: 140,
+              child: LineChart(
+                LineChartData(
+                  minX: 0,
+                  maxX: (rangeDays - 1).toDouble(),
+                  minY: 0,
+                  maxY: maxY,
+                  gridData: const FlGridData(show: false),
+                  borderData: FlBorderData(show: false),
+                  titlesData: const FlTitlesData(show: false),
+                  lineTouchData: LineTouchData(
+                    touchTooltipData: LineTouchTooltipData(
+                      getTooltipItems: (spots) => [
+                        for (final s in spots)
+                          LineTooltipItem(
+                            s.y.toInt().toString(),
+                            text.labelMedium ?? const TextStyle(),
+                          ),
+                      ],
+                    ),
+                  ),
+                  extraLinesData: goalMl <= 0
+                      ? const ExtraLinesData()
+                      : ExtraLinesData(horizontalLines: [
+                          HorizontalLine(
+                            y: goalMl.toDouble(),
+                            color: palette.textMuted,
+                            strokeWidth: 1.2,
+                            dashArray: const [6, 4],
+                          ),
+                        ]),
+                  lineBarsData: [
+                    LineChartBarData(
+                      spots: spots,
+                      isCurved: true,
+                      preventCurveOverShooting: true,
+                      color: color,
+                      barWidth: 3,
+                      dotData: FlDotData(show: rangeDays <= 7),
+                      belowBarData: BarAreaData(
+                          show: true, color: color.withValues(alpha: 0.12)),
+                    ),
+                  ],
+                ),
+              ),
+            ),
           ),
         ],
       ),

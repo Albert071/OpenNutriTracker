@@ -197,7 +197,7 @@ Future<void> initLocator() async {
   );
   locator.registerLazySingleton<RecipesBloc>(() => RecipesBloc(locator()));
   locator.registerFactory<TrendsBloc>(
-      () => TrendsBloc(locator(), locator(), locator(), locator()));
+      () => TrendsBloc(locator(), locator(), locator(), locator(), locator()));
   locator.registerFactory<RecipeBuilderBloc>(
     () => RecipeBuilderBloc(locator(), locator()),
   );
