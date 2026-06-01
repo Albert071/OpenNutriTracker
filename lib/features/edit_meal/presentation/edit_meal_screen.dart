@@ -779,6 +779,15 @@ class _EditMealScreenState extends State<EditMealScreen> {
             ? _convertToMetric(
                 _mealQuantityTextController.text, mealUnitForConversion)
             : _mealQuantityTextController.text;
+        // The serving quantity is loaded and edited in imperial too (see the
+        // initial _convertToImperial above), so it has to fold back to metric
+        // on save the same way the meal size does — otherwise an imperial
+        // serving value is stored raw into a metric field and drifts further
+        // on every reopen (#495).
+        final servingQuantity = usesImperialUnits
+            ? _convertToMetric(
+                _servingQuantityTextController.text, mealUnitForConversion)
+            : _servingQuantityTextController.text;
 
         // Convert total → per-base-qty if in total input mode. kcalText
         // uses the already-kcal-folded value so kJ entries are persisted
@@ -832,7 +841,7 @@ class _EditMealScreenState extends State<EditMealScreen> {
           _nameTextController.text,
           _brandsTextController.text,
           mealQuantity,
-          _servingQuantityTextController.text,
+          servingQuantity,
           _baseQuantityTextController.text,
           selectedUnit,
           kcalText,

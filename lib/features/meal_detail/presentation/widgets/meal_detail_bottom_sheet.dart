@@ -372,11 +372,18 @@ class _MealDetailBottomSheetState extends State<MealDetailBottomSheet> {
   }
 
   DropdownMenuItem<String> _getServingDropdownItem(BuildContext context) {
+    // Custom meals are seeded from MealEntity.empty(), which carries an empty
+    // servingSize string rather than null. An empty (or whitespace-only)
+    // description should fall through to the constructed label so the option
+    // doesn't render blank — otherwise '' wins over the ?? fallback (#495).
+    final servingSize = widget.product.servingSize;
+    final servingText = (servingSize != null && servingSize.trim().isNotEmpty)
+        ? servingSize
+        : '${S.of(context).servingLabel} (${widget.product.servingQuantity} ${widget.product.servingUnit})';
     return DropdownMenuItem(
       value: UnitDropdownItem.serving.toString(),
       child: Text(
-        widget.product.servingSize ??
-            '${S.of(context).servingLabel} (${widget.product.servingQuantity} ${widget.product.servingUnit})',
+        servingText,
         overflow: TextOverflow.ellipsis,
         maxLines: 1,
       ),
