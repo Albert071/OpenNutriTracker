@@ -7,6 +7,7 @@ import 'package:opennutritracker/core/domain/entity/tracked_day_entity.dart';
 import 'package:opennutritracker/core/domain/entity/user_activity_entity.dart';
 import 'package:opennutritracker/core/presentation/widgets/edit_activity_dialog.dart';
 import 'package:opennutritracker/core/presentation/widgets/edit_dialog.dart';
+import 'package:opennutritracker/core/styles/dimens.dart';
 import 'package:opennutritracker/core/utils/calc/met_calc.dart';
 import 'package:opennutritracker/core/domain/usecase/get_user_usecase.dart';
 import 'package:opennutritracker/features/activity_detail/presentation/bloc/activity_detail_bloc.dart';
@@ -99,6 +100,7 @@ class _DiaryPageState extends State<DiaryPage> with WidgetsBindingObserver {
     bool showActivityTracking,
   ) {
     return ListView(
+      padding: const EdgeInsets.only(bottom: Dimens.spacing16),
       children: [
         DiaryTableCalendar(
           trackedDaysMap: trackedDaysMap,
@@ -108,16 +110,31 @@ class _DiaryPageState extends State<DiaryPage> with WidgetsBindingObserver {
           selectedDate: _selectedDate,
           focusedDate: _focusedDate,
         ),
-        const SizedBox(height: 16.0),
-        BlocBuilder<CalendarDayBloc, CalendarDayState>(
-          bloc: _calendarDayBloc,
-          builder: (context, state) {
-            if (state is CalendarDayInitial) {
-              _calendarDayBloc.add(LoadCalendarDayEvent(_selectedDate));
-            } else if (state is CalendarDayLoading) {
-              return _getLoadingContent();
-            } else if (state is CalendarDayLoaded) {
-              return DayInfoWidget(
+        if (!DateUtils.isSameDay(_selectedDate, _currentDate))
+          Align(
+            alignment: Alignment.centerRight,
+            child: Padding(
+              padding: const EdgeInsets.only(right: Dimens.spacing8),
+              child: IconButton(
+                icon: const Icon(Icons.today_rounded),
+                onPressed: () => _onDateSelected(_currentDate, trackedDaysMap),
+              ),
+            ),
+          ),
+        const SizedBox(height: Dimens.spacing8),
+        // Swipe horizontally on the day's detail to step a day back / forward.
+        GestureDetector(
+          behavior: HitTestBehavior.opaque,
+          onHorizontalDragEnd: (d) => _onDaySwipe(d, trackedDaysMap),
+          child: BlocBuilder<CalendarDayBloc, CalendarDayState>(
+            bloc: _calendarDayBloc,
+            builder: (context, state) {
+              if (state is CalendarDayInitial) {
+                _calendarDayBloc.add(LoadCalendarDayEvent(_selectedDate));
+              } else if (state is CalendarDayLoading) {
+                return _getLoadingContent();
+              } else if (state is CalendarDayLoaded) {
+                return DayInfoWidget(
                 trackedDayEntity: state.trackedDayEntity,
                 selectedDay: _selectedDate,
                 userActivities: state.userActivityList,
@@ -147,9 +164,30 @@ class _DiaryPageState extends State<DiaryPage> with WidgetsBindingObserver {
             }
             return const SizedBox();
           },
+          ),
         ),
       ],
     );
+  }
+
+  void _onDaySwipe(
+    DragEndDetails details,
+    Map<String, TrackedDayEntity> trackedDaysMap,
+  ) {
+    final velocity = details.primaryVelocity ?? 0;
+    if (velocity == 0) return;
+    final today =
+        DateTime(_currentDate.year, _currentDate.month, _currentDate.day);
+    // Swipe left advances a day, swipe right goes back. Clamp to the calendar's
+    // range (no further back than 5 years, no further forward than today).
+    final delta = velocity < 0 ? 1 : -1;
+    var next = DateUtils.addDaysToDate(_selectedDate, delta);
+    final first = today.subtract(_calendarDurationDays);
+    if (next.isBefore(first)) next = first;
+    if (next.isAfter(today)) next = today;
+    if (!DateUtils.isSameDay(next, _selectedDate)) {
+      _onDateSelected(next, trackedDaysMap);
+    }
   }
 
   void _onDeleteIntakeItem(

@@ -397,6 +397,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "gramMilliliterUnit": MessageLookupByLibrary.simpleMessage("g/ml"),
         "gramUnit": MessageLookupByLibrary.simpleMessage("g"),
         "heightLabel": MessageLookupByLibrary.simpleMessage("Výška"),
+        "homeFirstMealHint": MessageLookupByLibrary.simpleMessage(
+            "Klepnutím na + zaznamenáte své první jídlo nebo aktivitu"),
         "homeLabel": MessageLookupByLibrary.simpleMessage("Domů"),
         "importAction": MessageLookupByLibrary.simpleMessage("Import"),
         "importActivityConfirmContent":
@@ -1193,6 +1195,12 @@ class MessageLookup extends MessageLookupByLibrary {
             "Výzkum energetického výdeje historicky používal pouze binární pohlavní kategorie, takže pro non-binární osoby neexistuje jediný validovaný vzorec TDEE. OpenNutriTracker proto v Nastavení → Výpočty nabízí volbu mezi zprůměrovanou referencí, estrogen-typickou referencí a testosteron-typickou referencí. Pokud na přesné hodnotě skutečně záleží, prosím poraď se s lékařem, který zná tvůj hormonální stav."),
         "sourcesOpenSourceLabel":
             MessageLookupByLibrary.simpleMessage("Otevřít zdroj"),
+        "settingsCategoryAbout": MessageLookupByLibrary.simpleMessage("O aplikaci"),
+        "settingsCategoryAppearance": MessageLookupByLibrary.simpleMessage("Vzhled"),
+        "settingsCategoryData": MessageLookupByLibrary.simpleMessage("Data"),
+        "settingsCategoryDisplay": MessageLookupByLibrary.simpleMessage("Zobrazení"),
+        "settingsCategoryGoals": MessageLookupByLibrary.simpleMessage("Cíle a výživa"),
+        "settingsCategoryUnits": MessageLookupByLibrary.simpleMessage("Jednotky a energie"),
         "settingsDistanceLabel":
             MessageLookupByLibrary.simpleMessage("Vzdálenost"),
         "settingsImperialLabel":
@@ -1280,6 +1288,15 @@ class MessageLookup extends MessageLookupByLibrary {
         "sugarLabel": MessageLookupByLibrary.simpleMessage("cukry"),
         "suppliedLabel": MessageLookupByLibrary.simpleMessage("přijato"),
         "transFatLabel": MessageLookupByLibrary.simpleMessage("trans tuky"),
+        "trendsBestStreakLabel": MessageLookupByLibrary.simpleMessage("rekord"),
+        "trendsCaloriesLabel": MessageLookupByLibrary.simpleMessage("Kalorie"),
+        "trendsDailyAverageLabel": MessageLookupByLibrary.simpleMessage("Denní průměr"),
+        "trendsDayStreakLabel": MessageLookupByLibrary.simpleMessage("dní v řadě"),
+        "trendsDaysOnTrack": MessageLookupByLibrary.simpleMessage("dní v cíli tento týden"),
+        "trendsLabel": MessageLookupByLibrary.simpleMessage("Trendy"),
+        "trendsPerWeekSuffix": MessageLookupByLibrary.simpleMessage("/týden"),
+        "trendsWaterLabel": MessageLookupByLibrary.simpleMessage("Voda"),
+        "trendsWeeksToGoalLabel": MessageLookupByLibrary.simpleMessage("týdnů do cíle"),
         "unitLabel": MessageLookupByLibrary.simpleMessage("Jednotka"),
         "vitaminALabel": MessageLookupByLibrary.simpleMessage("vitamin A"),
         "vitaminB12Label": MessageLookupByLibrary.simpleMessage("vitamin B12"),
@@ -1295,6 +1312,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Nenastaveno"),
         "weightLabel": MessageLookupByLibrary.simpleMessage("Hmotnost"),
         "yearsLabel": m3,
+        "youLabel": MessageLookupByLibrary.simpleMessage("Vy"),
         "zincLabel": MessageLookupByLibrary.simpleMessage("zinek"),
         "profileWeightHistoryTitle":
             MessageLookupByLibrary.simpleMessage("Historie hmotnosti"),

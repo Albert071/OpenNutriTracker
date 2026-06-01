@@ -4,7 +4,9 @@ import 'package:logging/logging.dart';
 import 'package:opennutritracker/core/domain/entity/calories_profile_entity.dart';
 import 'package:opennutritracker/core/domain/entity/intake_entity.dart';
 import 'package:opennutritracker/core/domain/entity/user_gender_entity.dart';
+import 'package:opennutritracker/core/presentation/widgets/empty_hint.dart';
 import 'package:opennutritracker/core/presentation/widgets/low_kcal_warning_card.dart';
+import 'package:opennutritracker/core/styles/dimens.dart';
 import 'package:opennutritracker/core/utils/calc/calorie_goal_calc.dart';
 import 'package:opennutritracker/core/domain/entity/intake_type_entity.dart';
 import 'package:opennutritracker/core/domain/entity/tracked_day_entity.dart';
@@ -161,14 +163,22 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         ListView(
           children: [
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: Row(
+              padding: const EdgeInsets.fromLTRB(
+                Dimens.spacing16,
+                Dimens.spacing16,
+                Dimens.spacing16,
+                Dimens.spacing4,
+              ),
+              // Wrap rather than Row so the two chips drop onto a second line
+              // at large text scale instead of overflowing off the edge.
+              child: Wrap(
+                spacing: Dimens.spacing12,
+                runSpacing: Dimens.spacing8,
                 children: [
                   QuickWeightWidget(
                     weightKg: userWeightKg,
                     usesImperialUnits: usesImperialUnits,
                   ),
-                  const Spacer(),
                   QuickWaterWidget(
                     waterMlToday: waterMlToday,
                     waterGoalMl: waterGoalMl,
@@ -177,7 +187,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
               ),
             ),
             const FastingHomeChip(),
-            const SizedBox(height: 8.0),
+            const SizedBox(height: Dimens.spacing8),
             DashboardWidget(
               totalKcalDaily: totalKcalDaily,
               totalKcalLeft: totalKcalLeft,
@@ -190,6 +200,17 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
               totalFatsGoal: totalFatsGoal,
               totalProteinsGoal: totalProteinsGoal,
             ),
+            // Day-one / empty-day guidance: when nothing is logged yet, point
+            // the way to the centre + rather than leaving a silent dashboard.
+            if (breakfastIntakeList.isEmpty &&
+                lunchIntakeList.isEmpty &&
+                dinnerIntakeList.isEmpty &&
+                snackIntakeList.isEmpty &&
+                userActivities.isEmpty)
+              EmptyHint(
+                icon: Icons.add_circle_outline_rounded,
+                title: S.of(context).homeFirstMealHint,
+              ),
             if (CalorieGoalCalc.isBelowRecommendedDailyKcalFloor(
               goalKcal: totalKcalDaily,
               gender: userGender,
@@ -292,12 +313,21 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                     },
                     builder: (context, candidateData, rejectedData) {
                       return Container(
-                        color: Theme.of(context).colorScheme.error,
-                        child: const Center(
+                        margin: const EdgeInsets.fromLTRB(
+                          Dimens.spacing16,
+                          0,
+                          Dimens.spacing16,
+                          Dimens.spacing12,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).colorScheme.error,
+                          borderRadius: Dimens.borderRadiusL,
+                        ),
+                        child: Center(
                           child: Icon(
-                            Icons.delete_outline,
-                            size: 36,
-                            color: Colors.white,
+                            Icons.delete_rounded,
+                            size: 32,
+                            color: Theme.of(context).colorScheme.onError,
                           ),
                         ),
                       );

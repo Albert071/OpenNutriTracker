@@ -147,6 +147,12 @@ flutter:
       - asset: fonts/Poppins-Thin.ttf
       - asset: fonts/Poppins-ThinItalic.ttf
         style: italic
+    - family: Fredoka
+      fonts:
+      - asset: fonts/Fredoka.ttf
+    - family: Nunito
+      fonts:
+      - asset: fonts/Nunito.ttf
 
 flutter_intl:
   enabled: true

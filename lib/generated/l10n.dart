@@ -150,6 +150,66 @@ class S {
     );
   }
 
+  /// `Units & energy`
+  String get settingsCategoryUnits {
+    return Intl.message(
+      'Units & energy',
+      name: 'settingsCategoryUnits',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Goals & nutrition`
+  String get settingsCategoryGoals {
+    return Intl.message(
+      'Goals & nutrition',
+      name: 'settingsCategoryGoals',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Display`
+  String get settingsCategoryDisplay {
+    return Intl.message(
+      'Display',
+      name: 'settingsCategoryDisplay',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Appearance`
+  String get settingsCategoryAppearance {
+    return Intl.message(
+      'Appearance',
+      name: 'settingsCategoryAppearance',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Data`
+  String get settingsCategoryData {
+    return Intl.message(
+      'Data',
+      name: 'settingsCategoryData',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `About`
+  String get settingsCategoryAbout {
+    return Intl.message(
+      'About',
+      name: 'settingsCategoryAbout',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Settings`
   String get settingsLabel {
     return Intl.message(
@@ -160,11 +220,121 @@ class S {
     );
   }
 
+  /// `Tap + to log your first meal or activity`
+  String get homeFirstMealHint {
+    return Intl.message(
+      'Tap + to log your first meal or activity',
+      name: 'homeFirstMealHint',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Home`
   String get homeLabel {
     return Intl.message(
       'Home',
       name: 'homeLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Trends`
+  String get trendsLabel {
+    return Intl.message(
+      'Trends',
+      name: 'trendsLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `You`
+  String get youLabel {
+    return Intl.message(
+      'You',
+      name: 'youLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Calories`
+  String get trendsCaloriesLabel {
+    return Intl.message(
+      'Calories',
+      name: 'trendsCaloriesLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Daily average`
+  String get trendsDailyAverageLabel {
+    return Intl.message(
+      'Daily average',
+      name: 'trendsDailyAverageLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `days on track this week`
+  String get trendsDaysOnTrack {
+    return Intl.message(
+      'days on track this week',
+      name: 'trendsDaysOnTrack',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `day streak`
+  String get trendsDayStreakLabel {
+    return Intl.message(
+      'day streak',
+      name: 'trendsDayStreakLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `best`
+  String get trendsBestStreakLabel {
+    return Intl.message(
+      'best',
+      name: 'trendsBestStreakLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `/week`
+  String get trendsPerWeekSuffix {
+    return Intl.message(
+      '/week',
+      name: 'trendsPerWeekSuffix',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `weeks to goal`
+  String get trendsWeeksToGoalLabel {
+    return Intl.message(
+      'weeks to goal',
+      name: 'trendsWeeksToGoalLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Water`
+  String get trendsWaterLabel {
+    return Intl.message(
+      'Water',
+      name: 'trendsWaterLabel',
       desc: '',
       args: [],
     );

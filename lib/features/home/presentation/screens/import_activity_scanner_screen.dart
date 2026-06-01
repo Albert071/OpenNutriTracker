@@ -6,6 +6,7 @@ import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:opennutritracker/core/domain/usecase/get_physical_activity_usecase.dart';
 import 'package:opennutritracker/core/domain/usecase/get_user_usecase.dart';
 import 'package:opennutritracker/core/presentation/scanner_orientation_mixin.dart';
+import 'package:opennutritracker/core/styles/dimens.dart';
 import 'package:opennutritracker/core/utils/calc/met_calc.dart';
 import 'package:opennutritracker/core/utils/locator.dart';
 import 'package:opennutritracker/features/activity_detail/presentation/bloc/activity_detail_bloc.dart';
@@ -98,7 +99,7 @@ class _ImportActivityScannerScreenState
         title: Text(S.of(context).importActivityLabel),
         actions: [
           IconButton(
-            icon: const Icon(Icons.keyboard_outlined),
+            icon: const Icon(Icons.keyboard_rounded),
             tooltip: S.of(context).pasteCodeLabel,
             onPressed: _showPasteCodeDialog,
           ),
@@ -131,13 +132,14 @@ class _ImportActivityScannerScreenState
     final code = await showDialog<String>(
       context: context,
       builder: (ctx) => AlertDialog(
+        shape: Dimens.shapeL,
         title: Text(S.of(ctx).pasteCodeLabel),
         content: TextField(
           controller: controller,
           maxLines: 5,
           decoration: InputDecoration(
             hintText: S.of(ctx).pasteCodeHint,
-            border: const OutlineInputBorder(),
+            border: const OutlineInputBorder(borderRadius: Dimens.borderRadiusS),
           ),
           autofocus: true,
         ),
@@ -206,6 +208,7 @@ class _ImportActivityScannerScreenState
     return showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
+        shape: Dimens.shapeL,
         title: Text(
           S.of(ctx).importActivityConfirmTitle(payload.totalCount),
         ),

@@ -43,7 +43,12 @@ class _ProfileEditorScreenState extends State<ProfileEditorScreen> {
     final s = S.of(context);
     return Scaffold(
       appBar: AppBar(
-        title: Text(s.editProfileTitle),
+        toolbarHeight: MediaQuery.textScalerOf(context).scale(kToolbarHeight),
+        title: Text(
+          s.editProfileTitle,
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
+        ),
         actions: [
           Semantics(
             identifier: 'profile-editor-save',

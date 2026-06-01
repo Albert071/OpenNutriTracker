@@ -396,6 +396,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "gramMilliliterUnit": MessageLookupByLibrary.simpleMessage("g/ml"),
         "gramUnit": MessageLookupByLibrary.simpleMessage("g"),
         "heightLabel": MessageLookupByLibrary.simpleMessage("Výška"),
+        "homeFirstMealHint": MessageLookupByLibrary.simpleMessage(
+            "Klepnutím na + zaznamenáte svoje prvé jedlo alebo aktivitu"),
         "homeLabel": MessageLookupByLibrary.simpleMessage("Domov"),
         "importAction": MessageLookupByLibrary.simpleMessage("Importovať"),
         "importActivityConfirmContent":
@@ -1112,6 +1114,12 @@ class MessageLookup extends MessageLookupByLibrary {
             "Výskum energetického výdaja historicky používal binárne pohlavné kategórie, takže pre nebinárne osoby neexistuje jediný validovaný vzorec TDEE. OpenNutriTracker vám preto v Nastavenia → Výpočty ponúka voľbu medzi spriemerovanou referenciou, estrogénovo-typickou referenciou a testosterónovo-typickou referenciou. Ak na presnom čísle pre vašu starostlivosť skutočne záleží, prosím poraďte sa s klinikom, ktorý pozná váš hormonálny stav."),
         "sourcesOpenSourceLabel":
             MessageLookupByLibrary.simpleMessage("Zobraziť zdroj"),
+        "settingsCategoryAbout": MessageLookupByLibrary.simpleMessage("O aplikácii"),
+        "settingsCategoryAppearance": MessageLookupByLibrary.simpleMessage("Vzhľad"),
+        "settingsCategoryData": MessageLookupByLibrary.simpleMessage("Údaje"),
+        "settingsCategoryDisplay": MessageLookupByLibrary.simpleMessage("Zobrazenie"),
+        "settingsCategoryGoals": MessageLookupByLibrary.simpleMessage("Ciele a výživa"),
+        "settingsCategoryUnits": MessageLookupByLibrary.simpleMessage("Jednotky a energia"),
         "settingsDistanceLabel":
             MessageLookupByLibrary.simpleMessage("Vzdialenosť"),
         "settingsImperialLabel":
@@ -1194,6 +1202,15 @@ class MessageLookup extends MessageLookupByLibrary {
         "sugarLabel": MessageLookupByLibrary.simpleMessage("cukor"),
         "suppliedLabel": MessageLookupByLibrary.simpleMessage("prijaté"),
         "transFatLabel": MessageLookupByLibrary.simpleMessage("trans tuky"),
+        "trendsBestStreakLabel": MessageLookupByLibrary.simpleMessage("rekord"),
+        "trendsCaloriesLabel": MessageLookupByLibrary.simpleMessage("Kalórie"),
+        "trendsDailyAverageLabel": MessageLookupByLibrary.simpleMessage("Denný priemer"),
+        "trendsDayStreakLabel": MessageLookupByLibrary.simpleMessage("dní v rade"),
+        "trendsDaysOnTrack": MessageLookupByLibrary.simpleMessage("dní v pláne tento týždeň"),
+        "trendsLabel": MessageLookupByLibrary.simpleMessage("Trendy"),
+        "trendsPerWeekSuffix": MessageLookupByLibrary.simpleMessage("/týždeň"),
+        "trendsWaterLabel": MessageLookupByLibrary.simpleMessage("Voda"),
+        "trendsWeeksToGoalLabel": MessageLookupByLibrary.simpleMessage("týždňov do cieľa"),
         "unitLabel": MessageLookupByLibrary.simpleMessage("Jednotka"),
         "vitaminALabel": MessageLookupByLibrary.simpleMessage("vitamín A"),
         "vitaminB12Label": MessageLookupByLibrary.simpleMessage("vitamín B12"),
@@ -1221,6 +1238,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Hmotnosť"),
         "weightLabel": MessageLookupByLibrary.simpleMessage("Hmotnosť"),
         "yearsLabel": m3,
+        "youLabel": MessageLookupByLibrary.simpleMessage("Ty"),
         "zincLabel": MessageLookupByLibrary.simpleMessage("zinok"),
         "diaryNutrientPanelTitle":
             MessageLookupByLibrary.simpleMessage("Dnešné živiny"),

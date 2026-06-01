@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:opennutritracker/core/domain/entity/weight_log_entity.dart';
 import 'package:opennutritracker/core/domain/usecase/add_weight_log_usecase.dart';
 import 'package:opennutritracker/core/domain/usecase/get_user_usecase.dart';
+import 'package:opennutritracker/core/styles/app_palette.dart';
+import 'package:opennutritracker/core/styles/dimens.dart';
 import 'package:opennutritracker/core/utils/locator.dart';
 import 'package:opennutritracker/features/profile/presentation/bloc/profile_bloc.dart';
 import 'package:opennutritracker/features/profile/presentation/widgets/set_weight_dialog.dart';
@@ -28,26 +30,51 @@ class QuickWeightWidget extends StatelessWidget {
     final unit = usesImperialUnits
         ? S.of(context).lbsLabel
         : S.of(context).kgLabel;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final palette = isDark ? AppPalette.dark : AppPalette.light;
+    final textTheme = Theme.of(context).textTheme;
 
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        const Icon(Icons.monitor_weight_outlined, size: 18),
-        const SizedBox(width: 8),
-        Text(
-          '${displayWeight.toStringAsFixed(1)} $unit',
-          style: Theme.of(context).textTheme.bodyMedium,
+    return Semantics(
+      identifier: 'home-weight-chip',
+      child: Material(
+        color: Colors.transparent,
+        borderRadius: Dimens.borderRadiusM,
+        child: InkWell(
+          borderRadius: Dimens.borderRadiusM,
+          onTap: () => _showWeightDialog(context),
+          child: Container(
+            padding: const EdgeInsets.symmetric(
+              horizontal: Dimens.spacing12,
+              vertical: Dimens.spacing8,
+            ),
+            decoration: BoxDecoration(
+              color: palette.surface,
+              borderRadius: Dimens.borderRadiusM,
+              border: Border.all(color: palette.border, width: Dimens.hairline),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(
+                  Icons.monitor_weight_rounded,
+                  size: 18,
+                  color: Theme.of(context).colorScheme.primary,
+                ),
+                const SizedBox(width: Dimens.spacing8),
+                Text(
+                  '${displayWeight.toStringAsFixed(1)} $unit',
+                  style: textTheme.labelLarge?.copyWith(
+                    color: palette.textStrong,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                const SizedBox(width: Dimens.spacing4),
+                Icon(Icons.edit_rounded, size: 15, color: palette.textMuted),
+              ],
+            ),
+          ),
         ),
-        const SizedBox(width: 4),
-        IconButton(
-          icon: const Icon(Icons.edit_outlined, size: 16),
-          padding: EdgeInsets.zero,
-          constraints: const BoxConstraints(),
-          visualDensity: VisualDensity.compact,
-          tooltip: S.of(context).editMealLabel,
-          onPressed: () => _showWeightDialog(context),
-        ),
-      ],
+      ),
     );
   }
 

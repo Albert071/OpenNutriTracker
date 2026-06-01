@@ -399,6 +399,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "gramMilliliterUnit": MessageLookupByLibrary.simpleMessage("g/ml"),
         "gramUnit": MessageLookupByLibrary.simpleMessage("g"),
         "heightLabel": MessageLookupByLibrary.simpleMessage("Boy"),
+        "homeFirstMealHint": MessageLookupByLibrary.simpleMessage(
+            "İlk öğününü veya aktiviteni eklemek için + simgesine dokun"),
         "homeLabel": MessageLookupByLibrary.simpleMessage("Ana Sayfa"),
         "importAction": MessageLookupByLibrary.simpleMessage("İçe Aktar"),
         "importActivityConfirmContent":
@@ -1181,6 +1183,12 @@ class MessageLookup extends MessageLookupByLibrary {
             "Enerji harcaması üzerine yapılan araştırmalar tarihsel olarak yalnızca ikili cinsiyet kategorilerini kullanmıştır; bu nedenle non-binary kişiler için doğrulanmış tek bir TDEE formülü yoktur. Bu yüzden OpenNutriTracker, Ayarlar → Hesaplamalar bölümünde ortalanmış bir referans, östrojen-tipik bir referans ve testosteron-tipik bir referans arasında seçim yapmanı sağlar. Bakımın için kesin bir değer gerçekten önemliyse lütfen hormon durumunu bilen bir klinisyenle görüş."),
         "sourcesOpenSourceLabel":
             MessageLookupByLibrary.simpleMessage("Kaynağı aç"),
+        "settingsCategoryAbout": MessageLookupByLibrary.simpleMessage("Hakkında"),
+        "settingsCategoryAppearance": MessageLookupByLibrary.simpleMessage("Görünüm"),
+        "settingsCategoryData": MessageLookupByLibrary.simpleMessage("Veriler"),
+        "settingsCategoryDisplay": MessageLookupByLibrary.simpleMessage("Görüntüleme"),
+        "settingsCategoryGoals": MessageLookupByLibrary.simpleMessage("Hedefler ve beslenme"),
+        "settingsCategoryUnits": MessageLookupByLibrary.simpleMessage("Birimler ve enerji"),
         "settingsDistanceLabel": MessageLookupByLibrary.simpleMessage("Mesafe"),
         "settingsImperialLabel":
             MessageLookupByLibrary.simpleMessage("İmperial (lbs, ft, oz)"),
@@ -1266,6 +1274,15 @@ class MessageLookup extends MessageLookupByLibrary {
         "sugarLabel": MessageLookupByLibrary.simpleMessage("şeker"),
         "suppliedLabel": MessageLookupByLibrary.simpleMessage("tüketilen"),
         "transFatLabel": MessageLookupByLibrary.simpleMessage("trans yağ"),
+        "trendsBestStreakLabel": MessageLookupByLibrary.simpleMessage("rekor"),
+        "trendsCaloriesLabel": MessageLookupByLibrary.simpleMessage("Kaloriler"),
+        "trendsDailyAverageLabel": MessageLookupByLibrary.simpleMessage("Günlük ortalama"),
+        "trendsDayStreakLabel": MessageLookupByLibrary.simpleMessage("gün üst üste"),
+        "trendsDaysOnTrack": MessageLookupByLibrary.simpleMessage("bu hafta hedefteki gün"),
+        "trendsLabel": MessageLookupByLibrary.simpleMessage("Eğilimler"),
+        "trendsPerWeekSuffix": MessageLookupByLibrary.simpleMessage("/hafta"),
+        "trendsWaterLabel": MessageLookupByLibrary.simpleMessage("Su"),
+        "trendsWeeksToGoalLabel": MessageLookupByLibrary.simpleMessage("hafta hedefe"),
         "unitLabel": MessageLookupByLibrary.simpleMessage("Birim"),
         "vitaminALabel": MessageLookupByLibrary.simpleMessage("A vitamini"),
         "vitaminB12Label": MessageLookupByLibrary.simpleMessage("B12 vitamini"),
@@ -1281,6 +1298,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Ayarlanmadı"),
         "weightLabel": MessageLookupByLibrary.simpleMessage("Kilo"),
         "yearsLabel": m3,
+        "youLabel": MessageLookupByLibrary.simpleMessage("Siz"),
         "zincLabel": MessageLookupByLibrary.simpleMessage("çinko"),
         "profileWeightHistoryTitle":
             MessageLookupByLibrary.simpleMessage("Kilo geçmişi"),

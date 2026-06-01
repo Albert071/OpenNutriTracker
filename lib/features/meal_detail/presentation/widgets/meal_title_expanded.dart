@@ -1,6 +1,7 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:opennutritracker/core/presentation/widgets/meal_value_unit_text.dart';
+import 'package:opennutritracker/core/styles/app_palette.dart';
 import 'package:opennutritracker/features/add_meal/domain/entity/meal_entity.dart';
 
 class MealTitleExpanded extends StatelessWidget {
@@ -15,6 +16,8 @@ class MealTitleExpanded extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final palette = isDark ? AppPalette.dark : AppPalette.light;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Center(
@@ -27,15 +30,14 @@ class MealTitleExpanded extends StatelessWidget {
               TextSpan(
                 text: meal.name ?? '',
                 style: Theme.of(context).textTheme.displaySmall?.copyWith(
-                      color: Theme.of(context).colorScheme.onSurface,
+                      color: palette.textStrong,
+                      fontWeight: FontWeight.w800,
                     ),
                 children: [
                   TextSpan(
                     text: ' ${meal.brands ?? ''}',
                     style: Theme.of(context).textTheme.displaySmall?.copyWith(
-                          color: Theme.of(
-                            context,
-                          ).colorScheme.onSurface.withValues(alpha: 0.7),
+                          color: palette.textMuted,
                         ),
                   ),
                 ],
@@ -50,13 +52,10 @@ class MealTitleExpanded extends StatelessWidget {
                       value: double.tryParse(meal.mealQuantity ?? '') ?? 0,
                       meal: meal,
                       usesImperialUnits: usesImperialUnits,
-                      textStyle: Theme.of(
-                        context,
-                      ).textTheme.headlineSmall?.copyWith(
-                            color: Theme.of(
-                              context,
-                            ).colorScheme.onSurface.withValues(alpha: 0.8),
-                          ),
+                      textStyle:
+                          Theme.of(context).textTheme.headlineSmall?.copyWith(
+                                color: palette.textMuted,
+                              ),
                       prefix: '',
                     ),
                   )

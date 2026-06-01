@@ -3,6 +3,7 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:opennutritracker/core/styles/dimens.dart';
 import 'package:opennutritracker/generated/l10n.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
@@ -36,6 +37,8 @@ class _ShareQrDialogState extends State<ShareQrDialog> {
 
   final GlobalKey _shareButtonKey = GlobalKey();
 
+  static final ButtonStyle _pillStyle = OutlinedButton.styleFrom(shape: const StadiumBorder());
+
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
@@ -55,14 +58,15 @@ class _ShareQrDialogState extends State<ShareQrDialog> {
                 padding: const EdgeInsets.all(16.0),
               ),
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: Dimens.spacing12),
             Wrap(
-              spacing: 8,
-              runSpacing: 8,
+              spacing: Dimens.spacing8,
+              runSpacing: Dimens.spacing8,
               alignment: WrapAlignment.center,
               children: [
                 OutlinedButton.icon(
-                  icon: const Icon(Icons.copy, size: 18),
+                  style: _pillStyle,
+                  icon: const Icon(Icons.copy_rounded, size: 18),
                   label: Text(S.of(context).copyCodeLabel),
                   onPressed: () {
                     Clipboard.setData(ClipboardData(text: widget.code));
@@ -73,18 +77,20 @@ class _ShareQrDialogState extends State<ShareQrDialog> {
                 ),
                 OutlinedButton.icon(
                   key: _shareButtonKey,
-                  icon: const Icon(Icons.share, size: 18),
+                  style: _pillStyle,
+                  icon: const Icon(Icons.share_rounded, size: 18),
                   label: Text(S.of(context).shareCodeLabel),
                   onPressed: _share,
                 ),
               ],
             ),
             if (widget.onCopyToProfile != null) ...[
-              const SizedBox(height: 8),
+              const SizedBox(height: Dimens.spacing8),
               Semantics(
                 identifier: 'share-copy-to-profile',
                 child: OutlinedButton.icon(
-                  icon: const Icon(Icons.people_alt_outlined, size: 18),
+                  style: _pillStyle,
+                  icon: const Icon(Icons.people_alt_rounded, size: 18),
                   label: Text(S.of(context).copyToProfileLabel),
                   onPressed: () {
                     Navigator.of(context).pop();

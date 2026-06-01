@@ -399,6 +399,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "gramMilliliterUnit": MessageLookupByLibrary.simpleMessage("г/мл"),
         "gramUnit": MessageLookupByLibrary.simpleMessage("г"),
         "heightLabel": MessageLookupByLibrary.simpleMessage("Зріст"),
+        "homeFirstMealHint": MessageLookupByLibrary.simpleMessage("Натисніть +, щоб додати першу їжу чи активність"),
         "homeLabel": MessageLookupByLibrary.simpleMessage("Головна"),
         "importAction": MessageLookupByLibrary.simpleMessage("Імпортувати"),
         "importActivityConfirmContent":
@@ -1203,6 +1204,12 @@ class MessageLookup extends MessageLookupByLibrary {
             "Дослідження енергетичних витрат історично використовували лише бінарні категорії статі, тому для небінарних осіб не існує єдиної підтвердженої формули TDEE. Тому OpenNutriTracker у Налаштування → Розрахунки пропонує вибір між усередненим орієнтиром, орієнтиром, типовим для естрогену, та орієнтиром, типовим для тестостерону. Якщо точне значення є дійсно важливим для тебе, будь ласка, поговори з лікарем, який знає твій гормональний стан."),
         "sourcesOpenSourceLabel":
             MessageLookupByLibrary.simpleMessage("Відкрити джерело"),
+        "settingsCategoryAbout": MessageLookupByLibrary.simpleMessage("Про застосунок"),
+        "settingsCategoryAppearance": MessageLookupByLibrary.simpleMessage("Вигляд"),
+        "settingsCategoryData": MessageLookupByLibrary.simpleMessage("Дані"),
+        "settingsCategoryDisplay": MessageLookupByLibrary.simpleMessage("Відображення"),
+        "settingsCategoryGoals": MessageLookupByLibrary.simpleMessage("Цілі та харчування"),
+        "settingsCategoryUnits": MessageLookupByLibrary.simpleMessage("Одиниці та енергія"),
         "settingsDistanceLabel":
             MessageLookupByLibrary.simpleMessage("Відстань"),
         "settingsImperialLabel": MessageLookupByLibrary.simpleMessage(
@@ -1294,6 +1301,15 @@ class MessageLookup extends MessageLookupByLibrary {
         "sugarLabel": MessageLookupByLibrary.simpleMessage("цукор"),
         "suppliedLabel": MessageLookupByLibrary.simpleMessage("спожито"),
         "transFatLabel": MessageLookupByLibrary.simpleMessage("трансжири"),
+        "trendsBestStreakLabel": MessageLookupByLibrary.simpleMessage("рекорд"),
+        "trendsCaloriesLabel": MessageLookupByLibrary.simpleMessage("Калорії"),
+        "trendsDailyAverageLabel": MessageLookupByLibrary.simpleMessage("Середнє за день"),
+        "trendsDayStreakLabel": MessageLookupByLibrary.simpleMessage("днів поспіль"),
+        "trendsDaysOnTrack": MessageLookupByLibrary.simpleMessage("днів у нормі цього тижня"),
+        "trendsLabel": MessageLookupByLibrary.simpleMessage("Тренди"),
+        "trendsPerWeekSuffix": MessageLookupByLibrary.simpleMessage("/тиждень"),
+        "trendsWaterLabel": MessageLookupByLibrary.simpleMessage("Вода"),
+        "trendsWeeksToGoalLabel": MessageLookupByLibrary.simpleMessage("тижнів до мети"),
         "unitLabel": MessageLookupByLibrary.simpleMessage("Одиниця"),
         "vitaminALabel": MessageLookupByLibrary.simpleMessage("вітамін A"),
         "vitaminB12Label": MessageLookupByLibrary.simpleMessage("вітамін B12"),
@@ -1309,6 +1325,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Не встановлено"),
         "weightLabel": MessageLookupByLibrary.simpleMessage("Вага"),
         "yearsLabel": m3,
+        "youLabel": MessageLookupByLibrary.simpleMessage("Ви"),
         "zincLabel": MessageLookupByLibrary.simpleMessage("цинк"),
         "profileWeightHistoryTitle":
             MessageLookupByLibrary.simpleMessage("Історія ваги"),

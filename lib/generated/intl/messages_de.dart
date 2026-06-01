@@ -405,6 +405,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "gramMilliliterUnit": MessageLookupByLibrary.simpleMessage("g/ml"),
         "gramUnit": MessageLookupByLibrary.simpleMessage("g"),
         "heightLabel": MessageLookupByLibrary.simpleMessage("Größe"),
+        "homeFirstMealHint": MessageLookupByLibrary.simpleMessage(
+            "Tippe auf +, um deine erste Mahlzeit oder Aktivität zu erfassen"),
         "homeLabel": MessageLookupByLibrary.simpleMessage("Startseite"),
         "importAction": MessageLookupByLibrary.simpleMessage("Importieren"),
         "importActivityConfirmContent":
@@ -1214,6 +1216,12 @@ class MessageLookup extends MessageLookupByLibrary {
             "Die Forschung zum Energieverbrauch hat historisch nur binäre Geschlechtskategorien verwendet, sodass es keine validierte TDEE-Formel für non-binäre Personen gibt. OpenNutriTracker bietet daher unter Einstellungen → Berechnungen eine gemittelte Referenz, eine Östrogen-typische Referenz und eine Testosteron-typische Referenz zur Auswahl. Wenn ein genauer Wert für deine Gesundheit wichtig ist, sprich bitte mit einer Ärztin oder einem Arzt, die deinen Hormonstatus kennen."),
         "sourcesOpenSourceLabel":
             MessageLookupByLibrary.simpleMessage("Quelle öffnen"),
+        "settingsCategoryAbout": MessageLookupByLibrary.simpleMessage("Über"),
+        "settingsCategoryAppearance": MessageLookupByLibrary.simpleMessage("Darstellung"),
+        "settingsCategoryData": MessageLookupByLibrary.simpleMessage("Daten"),
+        "settingsCategoryDisplay": MessageLookupByLibrary.simpleMessage("Anzeige"),
+        "settingsCategoryGoals": MessageLookupByLibrary.simpleMessage("Ziele & Ernährung"),
+        "settingsCategoryUnits": MessageLookupByLibrary.simpleMessage("Einheiten & Energie"),
         "settingsDistanceLabel":
             MessageLookupByLibrary.simpleMessage("Entfernung"),
         "settingsImperialLabel":
@@ -1304,6 +1312,15 @@ class MessageLookup extends MessageLookupByLibrary {
         "sugarLabel": MessageLookupByLibrary.simpleMessage("Zucker"),
         "suppliedLabel": MessageLookupByLibrary.simpleMessage("zugeführt"),
         "transFatLabel": MessageLookupByLibrary.simpleMessage("Transfettsäuren"),
+        "trendsBestStreakLabel": MessageLookupByLibrary.simpleMessage("Rekord"),
+        "trendsCaloriesLabel": MessageLookupByLibrary.simpleMessage("Kalorien"),
+        "trendsDailyAverageLabel": MessageLookupByLibrary.simpleMessage("Tagesdurchschnitt"),
+        "trendsDayStreakLabel": MessageLookupByLibrary.simpleMessage("Tage in Folge"),
+        "trendsDaysOnTrack": MessageLookupByLibrary.simpleMessage("Tage im Plan diese Woche"),
+        "trendsLabel": MessageLookupByLibrary.simpleMessage("Trends"),
+        "trendsPerWeekSuffix": MessageLookupByLibrary.simpleMessage("/Woche"),
+        "trendsWaterLabel": MessageLookupByLibrary.simpleMessage("Wasser"),
+        "trendsWeeksToGoalLabel": MessageLookupByLibrary.simpleMessage("Wochen bis zum Ziel"),
         "unitLabel": MessageLookupByLibrary.simpleMessage("Einheit"),
         "vitaminALabel": MessageLookupByLibrary.simpleMessage("Vitamin A"),
         "vitaminB12Label": MessageLookupByLibrary.simpleMessage("Vitamin B12"),
@@ -1319,6 +1336,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Nicht festgelegt"),
         "weightLabel": MessageLookupByLibrary.simpleMessage("Gewicht"),
         "yearsLabel": m3,
+        "youLabel": MessageLookupByLibrary.simpleMessage("Du"),
         "zincLabel": MessageLookupByLibrary.simpleMessage("Zink"),
         "profileWeightHistoryTitle":
             MessageLookupByLibrary.simpleMessage("Gewichtsverlauf"),
