@@ -35,8 +35,12 @@ class UnitCalc {
     return (feet * 30.48).roundToDouble();
   }
 
+  /// Keeps one decimal place. Whole-pound rounding used to drop up to half a
+  /// pound, so the same stored weight read differently across screens (the
+  /// home chip and Trends show one decimal); this keeps every surface
+  /// consistent and loses less precision on the way out.
   static double kgToLbs(double kg) {
-    return (kg * 2.20462).roundToDouble();
+    return double.parse((kg * 2.20462).toStringAsFixed(1));
   }
 
   /// Preserves two decimal places so round-tripping lbs→kg→lbs stays exact.

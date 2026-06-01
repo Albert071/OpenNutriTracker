@@ -29,10 +29,12 @@ void main() {
   });
 
   group('UnitCalc.kgToLbs', () {
-    test('rounds to whole pounds', () {
-      expect(UnitCalc.kgToLbs(50), equals(110));
-      expect(UnitCalc.kgToLbs(70), equals(154));
-      expect(UnitCalc.kgToLbs(100), equals(220));
+    test('keeps one decimal place', () {
+      // Whole-pound rounding used to make the same weight read differently
+      // between the home chip / Trends (one decimal) and the rest of the app.
+      expect(UnitCalc.kgToLbs(50), closeTo(110.2, 1e-9));
+      expect(UnitCalc.kgToLbs(70), closeTo(154.3, 1e-9));
+      expect(UnitCalc.kgToLbs(100), closeTo(220.5, 1e-9));
     });
 
     test('handles zero weight', () {
