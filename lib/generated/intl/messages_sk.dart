@@ -161,7 +161,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "appTitle": MessageLookupByLibrary.simpleMessage("OpenNutriTracker"),
         "appVersionName": m0,
         "baseQuantityLabel":
-            MessageLookupByLibrary.simpleMessage("Základné množstvo (g/ml)"),
+            MessageLookupByLibrary.simpleMessage("Výživové hodnoty na"),
         "betaVersionName": MessageLookupByLibrary.simpleMessage("[Beta]"),
         "bmiInfo": MessageLookupByLibrary.simpleMessage(
             "Index telesnej hmotnosti (BMI) je ukazovateľ na klasifikáciu nadváhy a obezity u dospelých. Vypočíta sa ako hmotnosť v kilogramoch delená druhou mocninou výšky v metroch (kg/m²).\n\nBMI nerozlišuje medzi tukovou a svalovou hmotou a u niektorých jednotlivcov môže byť zavádzajúci."),
@@ -474,9 +474,9 @@ class MessageLookup extends MessageLookupByLibrary {
         "mealProteinLabel":
             MessageLookupByLibrary.simpleMessage("Bielkoviny"),
         "mealSizeLabel":
-            MessageLookupByLibrary.simpleMessage("Veľkosť jedla (g/ml)"),
+            MessageLookupByLibrary.simpleMessage("Veľkosť balenia"),
         "mealSizeLabelImperial":
-            MessageLookupByLibrary.simpleMessage("Veľkosť jedla (oz/fl oz)"),
+            MessageLookupByLibrary.simpleMessage("Veľkosť balenia (oz/fl oz)"),
         "mealUnitLabel": MessageLookupByLibrary.simpleMessage("Jednotka jedla"),
         "micronutrientsLabel": MessageLookupByLibrary.simpleMessage("Mikroživiny"),
         "milliliterUnit": MessageLookupByLibrary.simpleMessage("ml"),
@@ -1074,9 +1074,9 @@ class MessageLookup extends MessageLookupByLibrary {
             "Odosielať anonymné údaje o používaní"),
         "servingLabel": MessageLookupByLibrary.simpleMessage("Porcia"),
         "servingSizeLabelImperial":
-            MessageLookupByLibrary.simpleMessage("Veľkosť porcie (oz/fl oz)"),
+            MessageLookupByLibrary.simpleMessage("Jedna porcia (oz/fl oz)"),
         "servingSizeLabelMetric":
-            MessageLookupByLibrary.simpleMessage("Veľkosť porcie (g/ml)"),
+            MessageLookupByLibrary.simpleMessage("Jedna porcia"),
         "settingAboutLabel": MessageLookupByLibrary.simpleMessage("O aplikácii"),
         "settingFeedbackLabel":
             MessageLookupByLibrary.simpleMessage("Spätná väzba"),
@@ -1379,7 +1379,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "customMealFormAdvanced":
             MessageLookupByLibrary.simpleMessage("Pokročilý"),
         "customMealFormAdvancedHelp":
-            MessageLookupByLibrary.simpleMessage("Nastavte základné množstvo a hodnoty na 100, aby ste mohli presne škálovať."),
+            MessageLookupByLibrary.simpleMessage("Nastavte veľkosti a hodnoty na 100, aby ste mohli presne škálovať."),
         "customMealFormModeLabel":
             MessageLookupByLibrary.simpleMessage("Režim zadávania"),
         "customMealFormSimple":

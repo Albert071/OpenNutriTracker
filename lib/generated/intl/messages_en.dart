@@ -161,7 +161,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "appTitle": MessageLookupByLibrary.simpleMessage("OpenNutriTracker"),
         "appVersionName": m0,
         "baseQuantityLabel":
-            MessageLookupByLibrary.simpleMessage("Base quantity (g/ml)"),
+            MessageLookupByLibrary.simpleMessage("Nutrition is per"),
         "betaVersionName": MessageLookupByLibrary.simpleMessage("[Beta]"),
         "bmiInfo": MessageLookupByLibrary.simpleMessage(
             "Body Mass Index (BMI) is a index to classify overweight and obesity in adults. It is defined as weight in kilograms divided by the square of height in meters (kg/m²).\n\nBMI does not differentiate between fat and muscle mass and can be misleading for some individuals."),
@@ -481,9 +481,9 @@ class MessageLookup extends MessageLookupByLibrary {
         "mealProteinLabel":
             MessageLookupByLibrary.simpleMessage("Protein"),
         "mealSizeLabel":
-            MessageLookupByLibrary.simpleMessage("Meal size (g/ml)"),
+            MessageLookupByLibrary.simpleMessage("Pack size"),
         "mealSizeLabelImperial":
-            MessageLookupByLibrary.simpleMessage("Meal size (oz/fl oz)"),
+            MessageLookupByLibrary.simpleMessage("Pack size (oz/fl oz)"),
         "mealUnitLabel": MessageLookupByLibrary.simpleMessage("Meal unit"),
         "milliliterUnit": MessageLookupByLibrary.simpleMessage("ml"),
         "missingProductInfo": MessageLookupByLibrary.simpleMessage(
@@ -1101,9 +1101,9 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Send anonymous usage data"),
         "servingLabel": MessageLookupByLibrary.simpleMessage("Serving"),
         "servingSizeLabelImperial":
-            MessageLookupByLibrary.simpleMessage("Serving size (oz/fl oz)"),
+            MessageLookupByLibrary.simpleMessage("One serving (oz/fl oz)"),
         "servingSizeLabelMetric":
-            MessageLookupByLibrary.simpleMessage("Serving size (g/ml)"),
+            MessageLookupByLibrary.simpleMessage("One serving"),
         "settingAboutLabel": MessageLookupByLibrary.simpleMessage("About"),
         "settingFeedbackLabel":
             MessageLookupByLibrary.simpleMessage("Feedback"),
@@ -1361,7 +1361,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "customMealFormAdvanced":
             MessageLookupByLibrary.simpleMessage("Advanced"),
         "customMealFormAdvancedHelp": MessageLookupByLibrary.simpleMessage(
-            "Set base quantity and per-100 values for precise scaling."),
+            "Set the sizes and per-100 values for precise scaling."),
         "customMealFormModeLabel":
             MessageLookupByLibrary.simpleMessage("Form view"),
         "customMealFormSimple":

@@ -163,7 +163,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "appTitle": MessageLookupByLibrary.simpleMessage("OpenNutriTracker"),
         "appVersionName": m0,
         "baseQuantityLabel":
-            MessageLookupByLibrary.simpleMessage("Базова кількість (г/мл)"),
+            MessageLookupByLibrary.simpleMessage("Поживність на"),
         "betaVersionName": MessageLookupByLibrary.simpleMessage("[Бета]"),
         "bmiInfo": MessageLookupByLibrary.simpleMessage(
             "Індекс маси тіла (ІМТ) — це індекс для класифікації надмірної ваги та ожиріння у дорослих. Визначається як вага в кілограмах, поділена на квадрат зросту в метрах (кг/м²). ІМТ не розрізняє жирову і м\'язову масу і може бути неточним для деяких людей."),
@@ -491,9 +491,9 @@ class MessageLookup extends MessageLookupByLibrary {
         "mealProteinLabel":
             MessageLookupByLibrary.simpleMessage("Білки"),
         "mealSizeLabel":
-            MessageLookupByLibrary.simpleMessage("Розмір страви (г/мл)"),
+            MessageLookupByLibrary.simpleMessage("Розмір упаковки"),
         "mealSizeLabelImperial": MessageLookupByLibrary.simpleMessage(
-            "Розмір страви (унція/рідка унція)"),
+            "Розмір упаковки (унція/рідка унція)"),
         "mealUnitLabel": MessageLookupByLibrary.simpleMessage("Одиниця страви"),
         "micronutrientsLabel": MessageLookupByLibrary.simpleMessage("Мікроелементи"),
         "milliliterUnit": MessageLookupByLibrary.simpleMessage("мл"),
@@ -1119,9 +1119,9 @@ class MessageLookup extends MessageLookupByLibrary {
             "Надсилати анонімні дані про використання"),
         "servingLabel": MessageLookupByLibrary.simpleMessage("Порція"),
         "servingSizeLabelImperial": MessageLookupByLibrary.simpleMessage(
-            "Розмір порції (унція/рідка унція)"),
+            "Одна порція (унція/рідка унція)"),
         "servingSizeLabelMetric":
-            MessageLookupByLibrary.simpleMessage("Розмір порції (г/мл)"),
+            MessageLookupByLibrary.simpleMessage("Одна порція"),
         "settingAboutLabel":
             MessageLookupByLibrary.simpleMessage("Про додаток"),
         "settingFeedbackLabel": MessageLookupByLibrary.simpleMessage("Відгук"),
@@ -1389,7 +1389,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "customMealFormAdvanced":
             MessageLookupByLibrary.simpleMessage("Розширений"),
         "customMealFormAdvancedHelp": MessageLookupByLibrary.simpleMessage(
-            "Вкажіть базову кількість і значення на 100 г/мл для точного перерахунку."),
+            "Вкажіть розміри і значення на 100 г/мл для точного перерахунку."),
         "customMealFormModeLabel":
             MessageLookupByLibrary.simpleMessage("Вигляд форми"),
         "customMealFormSimple":

@@ -2866,10 +2866,10 @@ class S {
     );
   }
 
-  /// `Set base quantity and per-100 values for precise scaling.`
+  /// `Set the sizes and per-100 values for precise scaling.`
   String get customMealFormAdvancedHelp {
     return Intl.message(
-      'Set base quantity and per-100 values for precise scaling.',
+      'Set the sizes and per-100 values for precise scaling.',
       name: 'customMealFormAdvancedHelp',
       desc: '',
       args: [],
@@ -4349,10 +4349,10 @@ class S {
     );
   }
 
-  /// `Base quantity (g/ml)`
+  /// `Nutrition is per`
   String get baseQuantityLabel {
     return Intl.message(
-      'Base quantity (g/ml)',
+      'Nutrition is per',
       name: 'baseQuantityLabel',
       desc: '',
       args: [],
@@ -4629,20 +4629,20 @@ class S {
     );
   }
 
-  /// `Meal size (g/ml)`
+  /// `Pack size`
   String get mealSizeLabel {
     return Intl.message(
-      'Meal size (g/ml)',
+      'Pack size',
       name: 'mealSizeLabel',
       desc: '',
       args: [],
     );
   }
 
-  /// `Meal size (oz/fl oz)`
+  /// `Pack size (oz/fl oz)`
   String get mealSizeLabelImperial {
     return Intl.message(
-      'Meal size (oz/fl oz)',
+      'Pack size (oz/fl oz)',
       name: 'mealSizeLabelImperial',
       desc: '',
       args: [],
@@ -4669,20 +4669,20 @@ class S {
     );
   }
 
-  /// `Serving size (g/ml)`
+  /// `One serving`
   String get servingSizeLabelMetric {
     return Intl.message(
-      'Serving size (g/ml)',
+      'One serving',
       name: 'servingSizeLabelMetric',
       desc: '',
       args: [],
     );
   }
 
-  /// `Serving size (oz/fl oz)`
+  /// `One serving (oz/fl oz)`
   String get servingSizeLabelImperial {
     return Intl.message(
-      'Serving size (oz/fl oz)',
+      'One serving (oz/fl oz)',
       name: 'servingSizeLabelImperial',
       desc: '',
       args: [],

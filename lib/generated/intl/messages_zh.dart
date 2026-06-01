@@ -158,7 +158,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "appTitle": MessageLookupByLibrary.simpleMessage("OpenNutriTracker"),
         "appVersionName": m0,
         "baseQuantityLabel":
-            MessageLookupByLibrary.simpleMessage("基础数量 (克/毫升)"),
+            MessageLookupByLibrary.simpleMessage("营养基准"),
         "betaVersionName": MessageLookupByLibrary.simpleMessage("[Beta]"),
         "bmiInfo": MessageLookupByLibrary.simpleMessage(
             "体重指数（BMI）是用于分类成人超重和肥胖的指标。它定义为体重（千克）除以身高（米）的平方（kg/m²）。\n\nBMI不区分脂肪和肌肉质量，对某些人可能有误导性。"),
@@ -453,9 +453,9 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("总量"),
         "mealProteinLabel":
             MessageLookupByLibrary.simpleMessage("蛋白质"),
-        "mealSizeLabel": MessageLookupByLibrary.simpleMessage("餐食大小 (克/毫升)"),
+        "mealSizeLabel": MessageLookupByLibrary.simpleMessage("包装大小"),
         "mealSizeLabelImperial":
-            MessageLookupByLibrary.simpleMessage("餐食大小 (盎司/液量盎司)"),
+            MessageLookupByLibrary.simpleMessage("包装大小 (盎司/液量盎司)"),
         "mealUnitLabel": MessageLookupByLibrary.simpleMessage("餐食单位"),
         "micronutrientsLabel": MessageLookupByLibrary.simpleMessage("微量营养素"),
         "milliliterUnit": MessageLookupByLibrary.simpleMessage("ml"),
@@ -972,9 +972,9 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("发送匿名使用数据"),
         "servingLabel": MessageLookupByLibrary.simpleMessage("份量"),
         "servingSizeLabelImperial":
-            MessageLookupByLibrary.simpleMessage("份量大小 (盎司/液量盎司)"),
+            MessageLookupByLibrary.simpleMessage("单份分量 (盎司/液量盎司)"),
         "servingSizeLabelMetric":
-            MessageLookupByLibrary.simpleMessage("份量大小 (克/毫升)"),
+            MessageLookupByLibrary.simpleMessage("单份分量"),
         "settingAboutLabel": MessageLookupByLibrary.simpleMessage("关于"),
         "settingFeedbackLabel": MessageLookupByLibrary.simpleMessage("反馈"),
         "settingsCustomMealsLabel":
@@ -1224,7 +1224,7 @@ class MessageLookup extends MessageLookupByLibrary {
             "你还没有保存任何模板。勾选「保存为模板以便下次使用」以便日后记住自定义活动。"),
         "customMealFormAdvanced": MessageLookupByLibrary.simpleMessage("高级"),
         "customMealFormAdvancedHelp": MessageLookupByLibrary.simpleMessage(
-            "设置基准量和每 100 克/毫升的数值以进行精确换算。"),
+            "设置份量和每 100 克/毫升的数值以进行精确换算。"),
         "customMealFormModeLabel":
             MessageLookupByLibrary.simpleMessage("表单视图"),
         "customMealFormSimple": MessageLookupByLibrary.simpleMessage("简单"),

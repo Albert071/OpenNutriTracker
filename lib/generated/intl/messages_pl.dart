@@ -162,7 +162,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "appTitle": MessageLookupByLibrary.simpleMessage("OpenNutriTracker"),
         "appVersionName": m0,
         "baseQuantityLabel":
-            MessageLookupByLibrary.simpleMessage("Podstawowa ilość (g/ml)"),
+            MessageLookupByLibrary.simpleMessage("Wartości odżywcze na"),
         "betaVersionName": MessageLookupByLibrary.simpleMessage("[Beta]"),
         "bmiInfo": MessageLookupByLibrary.simpleMessage(
             "Wskaźnik Masy Ciała (BMI) to wskaźnik służący do klasyfikacji nadwagi i otyłości u dorosłych. Jest definiowany jako waga w kilogramach podzielona przez kwadrat wzrostu w metrach (kg/m²).\n\nBMI nie rozróżnia między tkanką tłuszczową a mięśniową i może być mylący dla niektórych osób."),
@@ -490,9 +490,9 @@ class MessageLookup extends MessageLookupByLibrary {
         "mealProteinLabel":
             MessageLookupByLibrary.simpleMessage("Białko"),
         "mealSizeLabel":
-            MessageLookupByLibrary.simpleMessage("Rozmiar posiłku (g/ml)"),
+            MessageLookupByLibrary.simpleMessage("Rozmiar opakowania"),
         "mealSizeLabelImperial":
-            MessageLookupByLibrary.simpleMessage("Rozmiar posiłku (oz/fl oz)"),
+            MessageLookupByLibrary.simpleMessage("Rozmiar opakowania (oz/fl oz)"),
         "mealUnitLabel":
             MessageLookupByLibrary.simpleMessage("Jednostka posiłku"),
         "micronutrientsLabel": MessageLookupByLibrary.simpleMessage("Mikroskładniki"),
@@ -1116,9 +1116,9 @@ class MessageLookup extends MessageLookupByLibrary {
             "Wyślij anonimowe dane użytkowania"),
         "servingLabel": MessageLookupByLibrary.simpleMessage("Porcja"),
         "servingSizeLabelImperial":
-            MessageLookupByLibrary.simpleMessage("Rozmiar porcji (oz/fl oz)"),
+            MessageLookupByLibrary.simpleMessage("Jedna porcja (oz/fl oz)"),
         "servingSizeLabelMetric":
-            MessageLookupByLibrary.simpleMessage("Rozmiar porcji (g/ml)"),
+            MessageLookupByLibrary.simpleMessage("Jedna porcja"),
         "settingAboutLabel":
             MessageLookupByLibrary.simpleMessage("O aplikacji"),
         "settingFeedbackLabel": MessageLookupByLibrary.simpleMessage("Opinia"),
@@ -1386,7 +1386,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "customMealFormAdvanced":
             MessageLookupByLibrary.simpleMessage("Zaawansowany"),
         "customMealFormAdvancedHelp": MessageLookupByLibrary.simpleMessage(
-            "Ustaw ilość bazową i wartości na 100 g/ml dla dokładnego przeliczenia."),
+            "Ustaw rozmiary i wartości na 100 g/ml dla dokładnego przeliczenia."),
         "customMealFormModeLabel":
             MessageLookupByLibrary.simpleMessage("Widok formularza"),
         "customMealFormSimple":
