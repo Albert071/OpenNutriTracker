@@ -429,6 +429,7 @@
   "onboardingWeightExampleHintKg": "np. 60",
   "onboardingWeightExampleHintLbs": "np. 132",
   "onboardingWeightQuestionSubtitle": "Jaka jest Twoja aktualna waga?",
+  "onboardingFoodUnitsSubtitle": "Jak rejestrujesz jedzenie i napoje",
   "onboardingWelcomeLabel": "Witaj w",
   "onboardingWrongHeightLabel": "Wprowadź poprawny wzrost",
   "onboardingWrongWeightLabel": "Wprowadź poprawną wagę",

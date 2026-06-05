@@ -32,6 +32,7 @@ class OnboardingBloc extends Bloc<OnboardingEvent, OnboardingState> {
     bool hasAcceptedDataCollection,
     bool heightImperial,
     BodyWeightUnit bodyWeightUnit,
+    bool foodImperial,
   ) async {
     await _addUserUsecase.addUser(userEntity);
     await _addConfigUsecase.setConfigHasAcceptedAnonymousData(
@@ -39,9 +40,9 @@ class OnboardingBloc extends Bloc<OnboardingEvent, OnboardingState> {
     );
     await _addConfigUsecase.setConfigUsesImperialHeightUnits(heightImperial);
     await _addConfigUsecase.setConfigBodyWeightUnit(bodyWeightUnit);
-    // Food units follow height in onboarding, preserving the feel that an
-    // imperial user gets oz on food servings without requiring a separate choice.
-    await _addConfigUsecase.setConfigUsesImperialFoodUnits(heightImperial);
+    // Food units are chosen explicitly during onboarding, so someone on feet
+    // and stones can still log food in grams.
+    await _addConfigUsecase.setConfigUsesImperialFoodUnits(foodImperial);
   }
 
   double? getOverviewCalorieGoal() {

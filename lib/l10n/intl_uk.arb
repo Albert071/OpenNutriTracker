@@ -429,6 +429,7 @@
   "onboardingWeightExampleHintKg": "наприклад, 60",
   "onboardingWeightExampleHintLbs": "наприклад, 132",
   "onboardingWeightQuestionSubtitle": "Яка ваша поточна вага?",
+  "onboardingFoodUnitsSubtitle": "Як ви записуєте їжу та напої",
   "onboardingWelcomeLabel": "Ласкаво просимо до",
   "onboardingWrongHeightLabel": "Введіть коректний зріст",
   "onboardingWrongWeightLabel": "Введіть коректну вагу",

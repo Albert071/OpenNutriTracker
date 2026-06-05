@@ -460,6 +460,7 @@
   "onboardingWeightExampleHintKg": "ör. 60",
   "onboardingWeightExampleHintLbs": "ör. 132",
   "onboardingWeightQuestionSubtitle": "Mevcut kilonuz nedir?",
+  "onboardingFoodUnitsSubtitle": "Yiyecek ve içecekleri nasıl kaydedersiniz",
   "onboardingWelcomeLabel": "Hoş geldiniz",
   "onboardingWrongHeightLabel": "Doğru boy girin",
   "onboardingWrongWeightLabel": "Doğru kilo girin",

@@ -584,6 +584,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("ör. 132"),
         "onboardingWeightQuestionSubtitle":
             MessageLookupByLibrary.simpleMessage("Mevcut kilonuz nedir?"),
+        "onboardingFoodUnitsSubtitle": MessageLookupByLibrary.simpleMessage("Yiyecek ve içecekleri nasıl kaydedersiniz"),
         "onboardingTargetWeightSubtitle":
             MessageLookupByLibrary.simpleMessage("Ulaşmak istediğin bir kilo var mı? Bu alanı boş bırakabilir veya daha sonra Profil\'den değiştirebilirsin."),
         "onboardingTargetWeightHintOptional":

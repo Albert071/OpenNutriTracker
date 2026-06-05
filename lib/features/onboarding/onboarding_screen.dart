@@ -195,6 +195,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             initialTargetWeightKg: selection.targetWeight,
             initialHeightImperial: selection.heightUsesImperial,
             initialBodyWeightUnit: selection.bodyWeightUnit,
+            initialFoodImperial: selection.foodUsesImperial,
           ),
           footer: HighlightButton(
             buttonLabel: S.of(context).buttonNextLabel,
@@ -302,6 +303,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     double? selectedTargetWeight,
     bool heightImperial,
     BodyWeightUnit bodyWeightUnit,
+    bool foodImperial,
   ) {
     setState(() {
       _onboardingBloc.userSelection.height = selectedHeight;
@@ -309,6 +311,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       _onboardingBloc.userSelection.targetWeight = selectedTargetWeight;
       _onboardingBloc.userSelection.heightUsesImperial = heightImperial;
       _onboardingBloc.userSelection.bodyWeightUnit = bodyWeightUnit;
+      _onboardingBloc.userSelection.foodUsesImperial = foodImperial;
 
       _secondPageButtonActive = active;
     });
@@ -358,12 +361,14 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         _onboardingBloc.userSelection.acceptDataCollection;
     final heightImperial = _onboardingBloc.userSelection.heightUsesImperial;
     final bodyWeightUnit = _onboardingBloc.userSelection.bodyWeightUnit;
+    final foodImperial = _onboardingBloc.userSelection.foodUsesImperial;
     if (userEntity != null) {
       await _onboardingBloc.saveOnboardingData(
         userEntity,
         hasAcceptedDataCollection,
         heightImperial,
         bodyWeightUnit,
+        foodImperial,
       );
       if (!context.mounted) return;
       // Onboarding can run for a profile added after the app has been in

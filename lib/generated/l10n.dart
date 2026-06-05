@@ -1468,6 +1468,16 @@ class S {
     );
   }
 
+  /// `How you log food and drinks`
+  String get onboardingFoodUnitsSubtitle {
+    return Intl.message(
+      'How you log food and drinks',
+      name: 'onboardingFoodUnitsSubtitle',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Is there a weight you're working towards? You can leave this blank or change it later in Profile.`
   String get onboardingTargetWeightSubtitle {
     return Intl.message(

@@ -430,6 +430,7 @@
   "onboardingWeightExampleHintKg": "例如：60",
   "onboardingWeightExampleHintLbs": "例如：132",
   "onboardingWeightQuestionSubtitle": "您当前的体重是多少？",
+  "onboardingFoodUnitsSubtitle": "您如何记录食物和饮品",
   "onboardingWelcomeLabel": "欢迎使用",
   "onboardingWrongHeightLabel": "请输入正确的身高",
   "onboardingWrongWeightLabel": "请输入正确的体重",

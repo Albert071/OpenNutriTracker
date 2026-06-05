@@ -14,6 +14,7 @@ class OnboardingSecondPageBody extends StatefulWidget {
     double? selectedTargetWeight,
     bool heightImperial,
     BodyWeightUnit bodyWeightUnit,
+    bool foodImperial,
   ) setButtonContent;
 
   /// Already-stored height in centimetres (always metric in the parent's
@@ -32,6 +33,7 @@ class OnboardingSecondPageBody extends StatefulWidget {
 
   final bool initialHeightImperial;
   final BodyWeightUnit initialBodyWeightUnit;
+  final bool initialFoodImperial;
 
   const OnboardingSecondPageBody({
     super.key,
@@ -41,6 +43,7 @@ class OnboardingSecondPageBody extends StatefulWidget {
     this.initialTargetWeightKg,
     this.initialHeightImperial = false,
     this.initialBodyWeightUnit = BodyWeightUnit.kg,
+    this.initialFoodImperial = false,
   });
 
   @override
@@ -61,6 +64,7 @@ class _OnboardingSecondPageBodyState extends State<OnboardingSecondPageBody> {
 
   late bool _isHeightImperial;
   late BodyWeightUnit _bodyWeightUnit;
+  late bool _isFoodImperial;
 
   double? _parsedHeight;
   double? _parsedWeight;
@@ -77,6 +81,7 @@ class _OnboardingSecondPageBodyState extends State<OnboardingSecondPageBody> {
     super.initState();
     _isHeightImperial = widget.initialHeightImperial;
     _bodyWeightUnit = widget.initialBodyWeightUnit;
+    _isFoodImperial = widget.initialFoodImperial;
     _heightFocusNode.attach(context);
     _weightFocusNode.attach(context);
 
@@ -397,6 +402,42 @@ class _OnboardingSecondPageBodyState extends State<OnboardingSecondPageBody> {
                       ),
                     ),
                   ),
+            const SizedBox(height: 32.0),
+            // Food units are chosen explicitly rather than inferred from the
+            // height toggle, so a UK user on feet and stones can still log
+            // food in grams.
+            Text(
+              S.of(context).settingsFoodUnitsLabel,
+              style: Theme.of(context).textTheme.headlineSmall,
+            ),
+            Text(
+              S.of(context).onboardingFoodUnitsSubtitle,
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
+            const SizedBox(height: 8.0),
+            Semantics(
+              identifier: 'onboarding-food-units',
+              child: ToggleButtons(
+                borderRadius: const BorderRadius.all(Radius.circular(8)),
+                isSelected: [!_isFoodImperial, _isFoodImperial],
+                onPressed: (int index) {
+                  setState(() {
+                    _isFoodImperial = index == 1;
+                    checkCorrectInput();
+                  });
+                },
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    child: Text(S.of(context).gramUnit),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    child: Text(S.of(context).ozUnit),
+                  ),
+                ],
+              ),
+            ),
           ],
         ),
       ),
@@ -480,6 +521,7 @@ class _OnboardingSecondPageBodyState extends State<OnboardingSecondPageBody> {
         _parsedTargetWeight,
         _isHeightImperial,
         _bodyWeightUnit,
+        _isFoodImperial,
       );
     } else {
       widget.setButtonContent(
@@ -489,6 +531,7 @@ class _OnboardingSecondPageBodyState extends State<OnboardingSecondPageBody> {
         null,
         _isHeightImperial,
         _bodyWeightUnit,
+        _isFoodImperial,
       );
     }
   }

@@ -31,6 +31,10 @@ class UserDataMaskEntity {
   /// The unit chosen for current weight and target weight display.
   BodyWeightUnit bodyWeightUnit = BodyWeightUnit.kg;
 
+  /// Whether the user chose to measure food and drinks in imperial units.
+  /// Chosen explicitly rather than inferred from the height toggle.
+  bool foodUsesImperial = false;
+
   UserDataMaskEntity({
     this.gender,
     this.caloriesProfile,
@@ -43,6 +47,7 @@ class UserDataMaskEntity {
     this.acceptDataCollection = false,
     this.heightUsesImperial = false,
     this.bodyWeightUnit = BodyWeightUnit.kg,
+    this.foodUsesImperial = false,
   });
 
   bool checkDataProvided() {

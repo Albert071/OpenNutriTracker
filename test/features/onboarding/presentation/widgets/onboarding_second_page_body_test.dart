@@ -11,7 +11,7 @@ void main() {
       ],
       home: Scaffold(
         body: OnboardingSecondPageBody(
-          setButtonContent: (_, _, _, _, _, _) {},
+          setButtonContent: (_, _, _, _, _, _, _) {},
         ),
       ),
     ));
@@ -31,7 +31,7 @@ void main() {
       ],
       home: Scaffold(
         body: OnboardingSecondPageBody(
-          setButtonContent: (_, _, _, _, _, _) {},
+          setButtonContent: (_, _, _, _, _, _, _) {},
         ),
       ),
     ));
@@ -62,7 +62,7 @@ void main() {
       ],
       home: Scaffold(
         body: OnboardingSecondPageBody(
-          setButtonContent: (_, _, _, _, _, _) {},
+          setButtonContent: (_, _, _, _, _, _, _) {},
         ),
       ),
     ));
@@ -93,7 +93,7 @@ void main() {
       ],
       home: Scaffold(
         body: OnboardingSecondPageBody(
-          setButtonContent: (_, _, _, _, _, _) {},
+          setButtonContent: (_, _, _, _, _, _, _) {},
         ),
       ),
     ));
@@ -127,7 +127,7 @@ void main() {
       ],
       home: Scaffold(
         body: OnboardingSecondPageBody(
-          setButtonContent: (_, _, _, _, _, _) {},
+          setButtonContent: (_, _, _, _, _, _, _) {},
         ),
       ),
     ));
@@ -158,7 +158,7 @@ void main() {
       ],
       home: Scaffold(
         body: OnboardingSecondPageBody(
-          setButtonContent: (_, _, _, _, _, _) {},
+          setButtonContent: (_, _, _, _, _, _, _) {},
         ),
       ),
     ));
@@ -194,7 +194,7 @@ void main() {
       ],
       home: Scaffold(
         body: OnboardingSecondPageBody(
-          setButtonContent: (_, _, _, _, _, _) {},
+          setButtonContent: (_, _, _, _, _, _, _) {},
         ),
       ),
     ));
@@ -233,7 +233,7 @@ void main() {
       localizationsDelegates: const [S.delegate],
       home: Scaffold(
         body: OnboardingSecondPageBody(
-          setButtonContent: (_, _, _, _, _, _) {},
+          setButtonContent: (_, _, _, _, _, _, _) {},
         ),
       ),
     ));
@@ -259,7 +259,7 @@ void main() {
       localizationsDelegates: const [S.delegate],
       home: Scaffold(
         body: OnboardingSecondPageBody(
-          setButtonContent: (_, _, _, _, _, _) {},
+          setButtonContent: (_, _, _, _, _, _, _) {},
         ),
       ),
     ));
@@ -283,7 +283,7 @@ void main() {
       localizationsDelegates: const [S.delegate],
       home: Scaffold(
         body: OnboardingSecondPageBody(
-          setButtonContent: (_, _, _, _, _, _) {},
+          setButtonContent: (_, _, _, _, _, _, _) {},
         ),
       ),
     ));

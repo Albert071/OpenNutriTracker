@@ -584,6 +584,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("наприклад, 132"),
         "onboardingWeightQuestionSubtitle":
             MessageLookupByLibrary.simpleMessage("Яка ваша поточна вага?"),
+        "onboardingFoodUnitsSubtitle": MessageLookupByLibrary.simpleMessage("Як ви записуєте їжу та напої"),
         "onboardingTargetWeightSubtitle":
             MessageLookupByLibrary.simpleMessage("Чи є вага, до якої ти прагнеш? Це поле можна залишити порожнім або змінити пізніше у Профілі."),
         "onboardingTargetWeightHintOptional":

@@ -460,6 +460,7 @@
   "onboardingWeightExampleHintKg": "z. B. 60",
   "onboardingWeightExampleHintLbs": "z. B. 132",
   "onboardingWeightQuestionSubtitle": "Wie viel wiegen Sie derzeit?",
+  "onboardingFoodUnitsSubtitle": "Wie du Essen und Getränke erfasst",
   "onboardingWelcomeLabel": "Willkommen bei",
   "onboardingWrongHeightLabel": "Geben Sie eine korrekte Größe ein",
   "onboardingWrongWeightLabel": "Geben Sie ein korrekte Gewicht ein",

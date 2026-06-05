@@ -84,7 +84,7 @@ void main() {
     testWidgets('metric: shows the stored cm/kg values in the text fields',
         (tester) async {
       await tester.pumpWidget(wrap(OnboardingSecondPageBody(
-        setButtonContent: (_, _, _, _, _, _) {},
+        setButtonContent: (_, _, _, _, _, _, _) {},
         initialHeightCm: 178,
         initialWeightKg: 72.5,
       )));
@@ -97,7 +97,7 @@ void main() {
     testWidgets('imperial: stored cm/kg are converted to ft/lbs for display',
         (tester) async {
       await tester.pumpWidget(wrap(OnboardingSecondPageBody(
-        setButtonContent: (_, _, _, _, _, _) {},
+        setButtonContent: (_, _, _, _, _, _, _) {},
         initialHeightCm: 180,
         initialWeightKg: 80,
         initialHeightImperial: true,
@@ -182,7 +182,7 @@ void main() {
     testWidgets('second page: text fields empty when no initial values given',
         (tester) async {
       await tester.pumpWidget(wrap(OnboardingSecondPageBody(
-        setButtonContent: (_, _, _, _, _, _) {},
+        setButtonContent: (_, _, _, _, _, _, _) {},
       )));
       await tester.pumpAndSettle();
 

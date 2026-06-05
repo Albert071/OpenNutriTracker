@@ -539,6 +539,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("例如：132"),
         "onboardingWeightQuestionSubtitle":
             MessageLookupByLibrary.simpleMessage("您当前的体重是多少？"),
+        "onboardingFoodUnitsSubtitle": MessageLookupByLibrary.simpleMessage("您如何记录食物和饮品"),
         "onboardingTargetWeightSubtitle":
             MessageLookupByLibrary.simpleMessage("你有想要达到的目标体重吗？可以留空，也可以稍后在“个人资料”中修改。"),
         "onboardingTargetWeightHintOptional":

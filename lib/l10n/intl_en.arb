@@ -518,6 +518,7 @@
   "onboardingWeightExampleHintKg": "e.g. 60",
   "onboardingWeightExampleHintLbs": "e.g. 132",
   "onboardingWeightQuestionSubtitle": "What's your current weight?",
+  "onboardingFoodUnitsSubtitle": "How you log food and drinks",
   "onboardingWelcomeLabel": "Welcome to",
   "onboardingWrongHeightLabel": "Enter correct height",
   "onboardingWrongWeightLabel": "Enter correct weight",

@@ -91,7 +91,8 @@ void main() {
       // home screen recomputed kcal against the dummy default user.
 
       final saveFuture =
-          bloc.saveOnboardingData(makeUser(), false, false, BodyWeightUnit.kg);
+          bloc.saveOnboardingData(
+              makeUser(), false, false, BodyWeightUnit.kg, false);
 
       // Yield once so the bloc has a chance to start the inner write.
       await Future<void>.delayed(Duration.zero);
