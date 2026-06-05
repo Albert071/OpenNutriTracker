@@ -390,6 +390,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "fiberLabel": MessageLookupByLibrary.simpleMessage("Ballaststoffe"),
         "flOzUnit": MessageLookupByLibrary.simpleMessage("fl.oz"),
         "ftLabel": MessageLookupByLibrary.simpleMessage("ft"),
+        "inLabel": MessageLookupByLibrary.simpleMessage("in"),
         "genderFemaleLabel": MessageLookupByLibrary.simpleMessage("weiblich"),
         "genderLabel": MessageLookupByLibrary.simpleMessage("Geschlecht"),
         "genderMaleLabel": MessageLookupByLibrary.simpleMessage("männlich"),

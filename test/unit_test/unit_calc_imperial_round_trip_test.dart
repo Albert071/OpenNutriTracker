@@ -197,4 +197,28 @@ void main() {
           reason: 'pounds should never reach 14.0 after rollover guard');
     });
   });
+
+  group('UnitCalc.cmToFeetInches / feetInchesToCm', () {
+    test('175 cm is about 5 ft 9 in', () {
+      final (feet, inches) = UnitCalc.cmToFeetInches(175);
+      expect(feet, 5);
+      expect(inches, 9);
+    });
+
+    test('round-trip cm -> ft+in -> cm stays within ~1.5 cm', () {
+      for (final cm in [150.0, 160.0, 172.0, 183.0, 198.0]) {
+        final (feet, inches) = UnitCalc.cmToFeetInches(cm);
+        final back = UnitCalc.feetInchesToCm(feet, inches);
+        expect((back - cm).abs(), lessThanOrEqualTo(1.5), reason: 'cm=$cm');
+      }
+    });
+
+    test('inches never reach 12 — they roll into the next foot', () {
+      // 182 cm sits just under a whole-foot boundary in inches.
+      final (feet, inches) = UnitCalc.cmToFeetInches(182);
+      expect(inches, lessThan(12));
+      expect(feet, 6);
+      expect(inches, 0);
+    });
+  });
 }

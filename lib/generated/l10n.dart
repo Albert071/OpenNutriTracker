@@ -5159,6 +5159,16 @@ class S {
     );
   }
 
+  /// `in`
+  String get inLabel {
+    return Intl.message(
+      'in',
+      name: 'inLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Select Weight`
   String get selectWeightDialogLabel {
     return Intl.message(

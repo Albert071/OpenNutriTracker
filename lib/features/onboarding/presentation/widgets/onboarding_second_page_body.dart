@@ -4,6 +4,7 @@ import 'package:opennutritracker/core/domain/entity/body_weight_unit_entity.dart
 import 'package:opennutritracker/core/utils/bounds/validator.dart';
 import 'package:opennutritracker/core/utils/calc/unit_calc.dart';
 import 'package:opennutritracker/features/profile/presentation/widgets/body_weight_input.dart';
+import 'package:opennutritracker/features/profile/presentation/widgets/feet_inches_input.dart';
 import 'package:opennutritracker/generated/l10n.dart';
 
 class OnboardingSecondPageBody extends StatefulWidget {
@@ -90,11 +91,12 @@ class _OnboardingSecondPageBodyState extends State<OnboardingSecondPageBody> {
     // metric units; convert to the chosen display unit when restoring.
     final initialHeightCm = widget.initialHeightCm;
     if (initialHeightCm != null) {
-      final displayHeight = _isHeightImperial
-          ? UnitCalc.cmToFeet(initialHeightCm)
-          : initialHeightCm;
       _parsedHeight = initialHeightCm;
-      _heightController.text = _formatRestoredNumber(displayHeight);
+      // The imperial path seeds the FeetInchesInput from initialCm; only the
+      // metric cm field needs its controller primed here.
+      if (!_isHeightImperial) {
+        _heightController.text = _formatRestoredNumber(initialHeightCm);
+      }
     }
 
     final initialWeightKg = widget.initialWeightKg;
@@ -159,51 +161,61 @@ class _OnboardingSecondPageBodyState extends State<OnboardingSecondPageBody> {
               style: Theme.of(context).textTheme.titleMedium,
             ),
             const SizedBox(height: 16.0),
-            Form(
-              key: _heightFormKey,
-              child: Semantics(
-                identifier: 'onboarding-height-field',
-                child: TextFormField(
-                  controller: _heightController,
-                  focusNode: _heightFocusNode,
-                  onChanged: (text) {
-                    if (_heightFormKey.currentState!.validate()) {
-                      _parsedHeight = ValueValidator.parseHeightInCm(
-                        double.tryParse(text.replaceAll(',', '.')),
-                        isImperial: _isHeightImperial,
-                      );
-                      checkCorrectInput();
-                    } else {
-                      _parsedHeight = null;
-                      checkCorrectInput();
-                    }
-                  },
-                  onFieldSubmitted: (_) {
-                    FocusScope.of(context).requestFocus(_weightFocusNode);
-                  },
-                  validator: validateHeight,
-                  decoration: InputDecoration(
-                    labelText: _isHeightImperial ? 'ft' : 'cm',
-                    hintText: _isHeightImperial
-                        ? S.of(context).onboardingHeightExampleHintFt
-                        : S.of(context).onboardingHeightExampleHintCm,
-                    filled: true,
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
+            // Imperial height is two coupled fields (feet + inches) rather than
+            // decimal feet, the way height is actually read. Metric stays a
+            // single validated cm field.
+            _isHeightImperial
+                ? Semantics(
+                    identifier: 'onboarding-height-field',
+                    child: FeetInchesInput(
+                      initialCm: _parsedHeight ?? widget.initialHeightCm,
+                      identifierPrefix: 'onboarding-height',
+                      onChangedCm: (cm) {
+                        _parsedHeight = cm;
+                        checkCorrectInput();
+                      },
+                    ),
+                  )
+                : Form(
+                    key: _heightFormKey,
+                    child: Semantics(
+                      identifier: 'onboarding-height-field',
+                      child: TextFormField(
+                        controller: _heightController,
+                        focusNode: _heightFocusNode,
+                        onChanged: (text) {
+                          if (_heightFormKey.currentState!.validate()) {
+                            _parsedHeight = ValueValidator.parseHeightInCm(
+                              double.tryParse(text.replaceAll(',', '.')),
+                              isImperial: false,
+                            );
+                            checkCorrectInput();
+                          } else {
+                            _parsedHeight = null;
+                            checkCorrectInput();
+                          }
+                        },
+                        onFieldSubmitted: (_) {
+                          FocusScope.of(context)
+                              .requestFocus(_weightFocusNode);
+                        },
+                        validator: validateHeight,
+                        decoration: InputDecoration(
+                          labelText: S.of(context).cmLabel,
+                          hintText:
+                              S.of(context).onboardingHeightExampleHintCm,
+                          filled: true,
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
+                        keyboardType: TextInputType.number,
+                        inputFormatters: [
+                          FilteringTextInputFormatter.digitsOnly,
+                        ],
+                      ),
                     ),
                   ),
-                  keyboardType:
-                      const TextInputType.numberWithOptions(decimal: true),
-                  inputFormatters: [
-                    !_isHeightImperial
-                        ? FilteringTextInputFormatter.digitsOnly
-                        : FilteringTextInputFormatter.allow(
-                            RegExp(r'^\d+([.,]\d{0,1})?$'),
-                          ),
-                  ],
-                ),
-              ),
-            ),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 8.0),
               child: ToggleButtons(
@@ -212,7 +224,7 @@ class _OnboardingSecondPageBodyState extends State<OnboardingSecondPageBody> {
                 onPressed: (int index) {
                   setState(() {
                     _isHeightImperial = index == 1;
-                    _heightFormKey.currentState!.validate();
+                    _heightFormKey.currentState?.validate();
                     checkCorrectInput();
                   });
                 },
@@ -415,28 +427,47 @@ class _OnboardingSecondPageBodyState extends State<OnboardingSecondPageBody> {
               style: Theme.of(context).textTheme.titleMedium,
             ),
             const SizedBox(height: 8.0),
-            Semantics(
-              identifier: 'onboarding-food-units',
-              child: ToggleButtons(
-                borderRadius: const BorderRadius.all(Radius.circular(8)),
-                isSelected: [!_isFoodImperial, _isFoodImperial],
-                onPressed: (int index) {
-                  setState(() {
-                    _isFoodImperial = index == 1;
-                    checkCorrectInput();
-                  });
-                },
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                    child: Text(S.of(context).gramUnit),
+            Builder(
+              builder: (context) {
+                // Two equal-width buttons filling the row so each can show the
+                // full metric / imperial unit list rather than one example.
+                final buttonWidth =
+                    (MediaQuery.of(context).size.width - 48) / 2;
+                return Semantics(
+                  identifier: 'onboarding-food-units',
+                  child: ToggleButtons(
+                    borderRadius: const BorderRadius.all(Radius.circular(8)),
+                    constraints: BoxConstraints(
+                      minHeight: 48,
+                      minWidth: buttonWidth,
+                      maxWidth: buttonWidth,
+                    ),
+                    isSelected: [!_isFoodImperial, _isFoodImperial],
+                    onPressed: (int index) {
+                      setState(() {
+                        _isFoodImperial = index == 1;
+                        checkCorrectInput();
+                      });
+                    },
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                        child: Text(
+                          S.of(context).settingsFoodUnitsMetric,
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                        child: Text(
+                          S.of(context).settingsFoodUnitsImperial,
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ],
                   ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                    child: Text(S.of(context).ozUnit),
-                  ),
-                ],
-              ),
+                );
+              },
             ),
           ],
         ),
@@ -483,7 +514,15 @@ class _OnboardingSecondPageBodyState extends State<OnboardingSecondPageBody> {
   }
 
   void checkCorrectInput() {
-    final isHeightValid = _heightFormKey.currentState?.validate() ?? false;
+    // Imperial height uses the FeetInchesInput, which reports cm via its
+    // callback, so gate on _parsedHeight rather than a form validator (the
+    // form only exists in metric mode).
+    final bool isHeightValid;
+    if (_isHeightImperial) {
+      isHeightValid = _parsedHeight != null;
+    } else {
+      isHeightValid = _heightFormKey.currentState?.validate() ?? false;
+    }
 
     // For the stones unit, the BodyWeightInput widget manages its own
     // validation and reports via onChangedKg. We gate on _parsedWeight

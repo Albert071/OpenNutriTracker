@@ -101,4 +101,29 @@ void main() {
       }
     });
   });
+
+  group('formatHeight', () {
+    test('metric shows whole cm with the cm label', () {
+      expect(
+        formatHeight(170, false, cmLabel: 'cm', ftLabel: 'ft', inLabel: 'in'),
+        '170 cm',
+      );
+    });
+
+    test('imperial shows feet and inches, not decimal feet', () {
+      // 175 cm -> 5 ft 9 in.
+      expect(
+        formatHeight(175, true, cmLabel: 'cm', ftLabel: 'ft', inLabel: 'in'),
+        '5 ft 9 in',
+      );
+    });
+
+    test('imperial rolls 12 inches into the next foot', () {
+      // 182 cm rounds to 6 ft 0 in rather than 5 ft 12 in.
+      expect(
+        formatHeight(182, true, cmLabel: 'cm', ftLabel: 'ft', inLabel: 'in'),
+        '6 ft 0 in',
+      );
+    });
+  });
 }

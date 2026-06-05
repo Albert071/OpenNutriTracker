@@ -266,9 +266,13 @@ class _ProfilePageState extends State<ProfilePage> {
               palette: palette,
               icon: Icons.height_rounded,
               title: S.of(context).heightLabel,
-              subtitle:
-                  '${_profileBloc.getDisplayHeight(user, usesImperialHeightUnits)} '
-                  '${usesImperialHeightUnits ? S.of(context).ftLabel : S.of(context).cmLabel}',
+              subtitle: formatHeight(
+                user.heightCM,
+                usesImperialHeightUnits,
+                cmLabel: S.of(context).cmLabel,
+                ftLabel: S.of(context).ftLabel,
+                inLabel: S.of(context).inLabel,
+              ),
               onTap: () {
                 _showSetHeightDialog(context, user, usesImperialHeightUnits);
               },
@@ -437,22 +441,15 @@ class _ProfilePageState extends State<ProfilePage> {
     UserEntity userEntity,
     bool usesImperialUnits,
   ) async {
-    final selectedHeight = await showDialog<double>(
+    final selectedHeightCm = await showDialog<double>(
       context: context,
       builder: (context) => SetHeightDialog(
-        userHeight: usesImperialUnits
-            ? UnitCalc.cmToFeet(userEntity.heightCM)
-            : userEntity.heightCM,
+        userHeightCm: userEntity.heightCM,
         usesImperialUnits: usesImperialUnits,
       ),
     );
-    if (selectedHeight != null) {
-      if (usesImperialUnits) {
-        userEntity.heightCM = UnitCalc.feetToCm(selectedHeight);
-      } else {
-        userEntity.heightCM = selectedHeight;
-      }
-
+    if (selectedHeightCm != null) {
+      userEntity.heightCM = selectedHeightCm;
       _profileBloc.updateUser(userEntity);
     }
   }

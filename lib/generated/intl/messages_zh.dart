@@ -367,6 +367,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "fiberLabel": MessageLookupByLibrary.simpleMessage("膳食纤维"),
         "flOzUnit": MessageLookupByLibrary.simpleMessage("fl.oz"),
         "ftLabel": MessageLookupByLibrary.simpleMessage("英尺"),
+        "inLabel": MessageLookupByLibrary.simpleMessage("英寸"),
         "genderFemaleLabel": MessageLookupByLibrary.simpleMessage("女性"),
         "genderLabel": MessageLookupByLibrary.simpleMessage("性别"),
         "genderMaleLabel": MessageLookupByLibrary.simpleMessage("男性"),

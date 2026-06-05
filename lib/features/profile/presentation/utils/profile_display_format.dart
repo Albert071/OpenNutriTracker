@@ -9,6 +9,23 @@ String formatProfileWeight(double weight) {
   return roundedToOneDecimal.toStringAsFixed(1);
 }
 
+/// Formats a stored centimetre height for display. Imperial reads as
+/// "5 ft 9 in" rather than decimal feet, the way people actually say it.
+/// Labels are passed in so this stays a pure, testable function.
+String formatHeight(
+  double cm,
+  bool imperial, {
+  required String cmLabel,
+  required String ftLabel,
+  required String inLabel,
+}) {
+  if (!imperial) {
+    return '${cm.round()} $cmLabel';
+  }
+  final (feet, inches) = UnitCalc.cmToFeetInches(cm);
+  return '$feet $ftLabel $inches $inLabel';
+}
+
 /// Formats a stored kilogram weight for display in the user's chosen body
 /// weight unit, returning the full unit-suffixed string so callers don't have
 /// to hand-assemble `'$value $unit'`. Stones are shown as "11 st 5.2 lb".

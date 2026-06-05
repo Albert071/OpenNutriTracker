@@ -35,6 +35,27 @@ class UnitCalc {
     return (feet * 30.48).roundToDouble();
   }
 
+  /// Splits a centimetre height into whole feet and whole inches, the way
+  /// people actually read height ("5 ft 9 in") rather than decimal feet.
+  /// Inches are rounded to the nearest whole inch and roll into the next foot
+  /// at 12 so we never show "5 ft 12 in".
+  static (int feet, int inches) cmToFeetInches(double cm) {
+    final totalInches = cm / 2.54;
+    var feet = totalInches ~/ 12;
+    var inches = (totalInches - feet * 12).round();
+    if (inches >= 12) {
+      feet += 1;
+      inches = 0;
+    }
+    return (feet, inches);
+  }
+
+  /// Combines feet and inches back into centimetres, rounded to a whole
+  /// centimetre to match how metric heights are stored and entered.
+  static double feetInchesToCm(int feet, int inches) {
+    return ((feet * 12 + inches) * 2.54).roundToDouble();
+  }
+
   /// Keeps one decimal place. Whole-pound rounding used to drop up to half a
   /// pound, so the same stored weight read differently across screens (the
   /// home chip and Trends show one decimal); this keeps every surface

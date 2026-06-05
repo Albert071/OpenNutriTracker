@@ -94,7 +94,7 @@ void main() {
       expect(find.text('72.5'), findsOneWidget);
     });
 
-    testWidgets('imperial: stored cm/kg are converted to ft/lbs for display',
+    testWidgets('imperial: stored cm restores to feet+inches, kg to lbs',
         (tester) async {
       await tester.pumpWidget(wrap(OnboardingSecondPageBody(
         setButtonContent: (_, _, _, _, _, _, _) {},
@@ -105,13 +105,17 @@ void main() {
       )));
       await tester.pumpAndSettle();
 
-      // 180 cm ≈ 5.9 ft; 80 kg ≈ 176.4 lbs (one decimal place).
-      // Just verify the fields are non-empty and contain the leading digit.
-      final fields =
-          tester.widgetList<TextFormField>(find.byType(TextFormField)).toList();
-      expect(fields[0].controller?.text, isNotEmpty);
-      expect(fields[1].controller?.text, isNotEmpty);
-      expect(fields[1].controller?.text, startsWith('17'));
+      // 180 cm restores into the feet + inches fields (5 ft 11 in). These are
+      // raw TextFields; the first two in the tree are feet then inches.
+      final raw =
+          tester.widgetList<TextField>(find.byType(TextField)).toList();
+      expect(raw[0].controller?.text, '5');
+      expect(raw[1].controller?.text, isNotEmpty);
+
+      // 80 kg ≈ 176.4 lbs in the first weight TextFormField.
+      final weightField =
+          tester.widget<TextFormField>(find.byType(TextFormField).first);
+      expect(weightField.controller?.text, startsWith('17'));
     });
   });
 

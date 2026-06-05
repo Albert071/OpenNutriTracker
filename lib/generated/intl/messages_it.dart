@@ -386,6 +386,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "fiberLabel": MessageLookupByLibrary.simpleMessage("fibre"),
         "flOzUnit": MessageLookupByLibrary.simpleMessage("fl.oz"),
         "ftLabel": MessageLookupByLibrary.simpleMessage("ft"),
+        "inLabel": MessageLookupByLibrary.simpleMessage("in"),
         "genderFemaleLabel": MessageLookupByLibrary.simpleMessage("femmina"),
         "genderLabel": MessageLookupByLibrary.simpleMessage("Sesso"),
         "genderMaleLabel": MessageLookupByLibrary.simpleMessage("maschio"),

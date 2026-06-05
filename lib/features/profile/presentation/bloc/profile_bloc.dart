@@ -9,7 +9,6 @@ import 'package:opennutritracker/core/domain/usecase/get_config_usecase.dart';
 import 'package:opennutritracker/core/domain/usecase/get_kcal_goal_usecase.dart';
 import 'package:opennutritracker/core/domain/usecase/get_user_usecase.dart';
 import 'package:opennutritracker/core/utils/calc/bmi_calc.dart';
-import 'package:opennutritracker/core/utils/calc/unit_calc.dart';
 import 'package:opennutritracker/core/utils/locator.dart';
 import 'package:opennutritracker/features/diary/presentation/bloc/calendar_day_bloc.dart';
 import 'package:opennutritracker/features/diary/presentation/bloc/diary_bloc.dart';
@@ -97,15 +96,6 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       );
 
       await _addTrackedDayUsecase.updateDayCalorieGoal(day, totalKcalGoal);
-    }
-  }
-
-  /// Returns the user's height in cm or ft based on the user's height unit config.
-  String getDisplayHeight(UserEntity user, bool usesImperialHeightUnits) {
-    if (usesImperialHeightUnits) {
-      return UnitCalc.cmToFeet(user.heightCM).toStringAsFixed(1);
-    } else {
-      return user.heightCM.roundToDouble().toStringAsFixed(0);
     }
   }
 }
