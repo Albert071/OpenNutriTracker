@@ -77,7 +77,7 @@ class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
       emit(
         ProductsLoadedState(
           products: result.meals,
-          usesImperialUnits: config.usesImperialUnits,
+          usesImperialUnits: config.usesImperialFoodUnits,
           remoteSourceEmpty: result.remoteSourceEmpty,
         ),
       );

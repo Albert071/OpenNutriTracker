@@ -386,6 +386,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "fiberLabel": MessageLookupByLibrary.simpleMessage("клітковина"),
         "flOzUnit": MessageLookupByLibrary.simpleMessage("рідка унція"),
         "ftLabel": MessageLookupByLibrary.simpleMessage("фут"),
+        "inLabel": MessageLookupByLibrary.simpleMessage("дюйм"),
         "genderFemaleLabel": MessageLookupByLibrary.simpleMessage("жінка"),
         "genderLabel": MessageLookupByLibrary.simpleMessage("Стать"),
         "genderMaleLabel": MessageLookupByLibrary.simpleMessage("чоловік"),
@@ -469,6 +470,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("кДж на день"),
         "kgLabel": MessageLookupByLibrary.simpleMessage("кг"),
         "lbsLabel": MessageLookupByLibrary.simpleMessage("фунт"),
+        "stLabel": MessageLookupByLibrary.simpleMessage("стоун"),
         "lunchExample": MessageLookupByLibrary.simpleMessage(
             "наприклад, піца, салат, рис ..."),
         "lunchLabel": MessageLookupByLibrary.simpleMessage("Обід"),
@@ -583,6 +585,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("наприклад, 132"),
         "onboardingWeightQuestionSubtitle":
             MessageLookupByLibrary.simpleMessage("Яка ваша поточна вага?"),
+        "onboardingFoodUnitsSubtitle": MessageLookupByLibrary.simpleMessage("Як ви записуєте їжу та напої"),
         "onboardingTargetWeightSubtitle":
             MessageLookupByLibrary.simpleMessage("Чи є вага, до якої ти прагнеш? Це поле можна залишити порожнім або змінити пізніше у Профілі."),
         "onboardingTargetWeightHintOptional":
@@ -1286,6 +1289,13 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Системна за замовчуванням"),
         "settingsUnitsLabel":
             MessageLookupByLibrary.simpleMessage("Одиниці вимірювання"),
+        "settingsFoodUnitsLabel": MessageLookupByLibrary.simpleMessage("Одиниці їжі"),
+        "settingsHeightUnitsLabel": MessageLookupByLibrary.simpleMessage("Одиниці зросту"),
+        "settingsBodyWeightUnitLabel": MessageLookupByLibrary.simpleMessage("Одиниця ваги тіла"),
+        "settingsFoodUnitsMetric": MessageLookupByLibrary.simpleMessage("Метрична (г, кг, мл, л)"),
+        "settingsFoodUnitsImperial": MessageLookupByLibrary.simpleMessage("Імперська (фунти, унції, рідкі унції)"),
+        "settingsHeightUnitsMetric": MessageLookupByLibrary.simpleMessage("Метрична (мм, см, м)"),
+        "settingsHeightUnitsImperial": MessageLookupByLibrary.simpleMessage("Імперська (фут, дюйми)"),
         "settingsVolumeLabel": MessageLookupByLibrary.simpleMessage("Об\'єм"),
         "shareActivityLabel":
             MessageLookupByLibrary.simpleMessage("Поділитися тренуванням"),

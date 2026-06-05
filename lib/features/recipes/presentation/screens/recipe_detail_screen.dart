@@ -250,7 +250,7 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
         recipe.toMealEntity(),
         intakeType,
         DateTime.now(),
-        config.usesImperialUnits,
+        config.usesImperialFoodUnits,
       ),
     );
   }

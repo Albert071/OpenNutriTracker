@@ -383,6 +383,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "fiberLabel": MessageLookupByLibrary.simpleMessage("vláknina"),
         "flOzUnit": MessageLookupByLibrary.simpleMessage("fl.oz"),
         "ftLabel": MessageLookupByLibrary.simpleMessage("ft"),
+        "inLabel": MessageLookupByLibrary.simpleMessage("in"),
         "genderFemaleLabel": MessageLookupByLibrary.simpleMessage("žena"),
         "genderLabel": MessageLookupByLibrary.simpleMessage("Pohlavie"),
         "genderMaleLabel": MessageLookupByLibrary.simpleMessage("muž"),
@@ -453,6 +454,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "kcalTooMuchLabel": MessageLookupByLibrary.simpleMessage("kcal navyše"),
         "kgLabel": MessageLookupByLibrary.simpleMessage("kg"),
         "lbsLabel": MessageLookupByLibrary.simpleMessage("lbs"),
+        "stLabel": MessageLookupByLibrary.simpleMessage("st"),
         "lunchExample":
             MessageLookupByLibrary.simpleMessage("napr. pizza, šalát, ryža ..."),
         "lunchLabel": MessageLookupByLibrary.simpleMessage("Obed"),
@@ -559,6 +561,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("napr. 132"),
         "onboardingWeightQuestionSubtitle":
             MessageLookupByLibrary.simpleMessage("Aká je vaša aktuálna hmotnosť?"),
+        "onboardingFoodUnitsSubtitle": MessageLookupByLibrary.simpleMessage("Ako zaznamenávate jedlo a nápoje"),
         "onboardingTargetWeightSubtitle":
             MessageLookupByLibrary.simpleMessage("Máš hmotnosť, ku ktorej smeruješ? Pole môžeš nechať prázdne alebo ho neskôr zmeniť v Profile."),
         "onboardingTargetWeightHintOptional":
@@ -1188,6 +1191,13 @@ class MessageLookup extends MessageLookupByLibrary {
         "settingsThemeSystemDefaultLabel":
             MessageLookupByLibrary.simpleMessage("Podľa systému"),
         "settingsUnitsLabel": MessageLookupByLibrary.simpleMessage("Jednotky"),
+        "settingsFoodUnitsLabel": MessageLookupByLibrary.simpleMessage("Jednotky potravín"),
+        "settingsHeightUnitsLabel": MessageLookupByLibrary.simpleMessage("Jednotky výšky"),
+        "settingsBodyWeightUnitLabel": MessageLookupByLibrary.simpleMessage("Jednotka telesnej hmotnosti"),
+        "settingsFoodUnitsMetric": MessageLookupByLibrary.simpleMessage("Metrické (g, kg, ml, l)"),
+        "settingsFoodUnitsImperial": MessageLookupByLibrary.simpleMessage("Imperiálne (lbs, oz, fl oz)"),
+        "settingsHeightUnitsMetric": MessageLookupByLibrary.simpleMessage("Metrické (mm, cm, m)"),
+        "settingsHeightUnitsImperial": MessageLookupByLibrary.simpleMessage("Imperiálne (ft, in)"),
         "settingsVolumeLabel": MessageLookupByLibrary.simpleMessage("Objem"),
         "shareActivityLabel":
             MessageLookupByLibrary.simpleMessage("Zdieľať tréning"),

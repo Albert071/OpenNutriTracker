@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:opennutritracker/core/domain/entity/body_weight_unit_entity.dart';
 import 'package:opennutritracker/core/domain/entity/user_entity.dart';
 import 'package:opennutritracker/core/domain/usecase/add_config_usecase.dart';
 import 'package:opennutritracker/core/domain/usecase/add_user_usecase.dart';
@@ -29,13 +30,19 @@ class OnboardingBloc extends Bloc<OnboardingEvent, OnboardingState> {
   Future<void> saveOnboardingData(
     UserEntity userEntity,
     bool hasAcceptedDataCollection,
-    bool usesImperialUnits,
+    bool heightImperial,
+    BodyWeightUnit bodyWeightUnit,
+    bool foodImperial,
   ) async {
     await _addUserUsecase.addUser(userEntity);
     await _addConfigUsecase.setConfigHasAcceptedAnonymousData(
       hasAcceptedDataCollection,
     );
-    await _addConfigUsecase.setConfigUsesImperialUnits(usesImperialUnits);
+    await _addConfigUsecase.setConfigUsesImperialHeightUnits(heightImperial);
+    await _addConfigUsecase.setConfigBodyWeightUnit(bodyWeightUnit);
+    // Food units are chosen explicitly during onboarding, so someone on feet
+    // and stones can still log food in grams.
+    await _addConfigUsecase.setConfigUsesImperialFoodUnits(foodImperial);
   }
 
   double? getOverviewCalorieGoal() {

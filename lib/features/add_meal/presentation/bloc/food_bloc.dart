@@ -72,7 +72,7 @@ class FoodBloc extends Bloc<FoodEvent, FoodState> {
       emit(
         FoodLoadedState(
           food: result.meals,
-          usesImperialUnits: config.usesImperialUnits,
+          usesImperialUnits: config.usesImperialFoodUnits,
           remoteSourceEmpty: result.remoteSourceEmpty,
         ),
       );

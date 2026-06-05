@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:opennutritracker/core/data/repository/config_repository.dart';
 import 'package:opennutritracker/core/data/repository/user_repository.dart';
+import 'package:opennutritracker/core/domain/entity/body_weight_unit_entity.dart';
 import 'package:opennutritracker/core/domain/entity/user_entity.dart';
 import 'package:opennutritracker/core/domain/entity/user_gender_entity.dart';
 import 'package:opennutritracker/core/domain/entity/user_pal_entity.dart';
@@ -31,17 +32,22 @@ class _FakeUserRepository implements UserRepository {
 
 class _FakeConfigRepository implements ConfigRepository {
   final Completer<void> anonCompleter = Completer<void>();
-  final Completer<void> imperialCompleter = Completer<void>();
 
   @override
   Future<void> setConfigHasAcceptedAnonymousData(bool _) async {
     await anonCompleter.future;
   }
 
+  // The split unit preferences are written after the user and anon writes;
+  // they're not part of the race under test, so they resolve immediately.
   @override
-  Future<void> setConfigUsesImperialUnits(bool _) async {
-    await imperialCompleter.future;
-  }
+  Future<void> setConfigUsesImperialHeightUnits(bool _) async {}
+
+  @override
+  Future<void> setConfigUsesImperialFoodUnits(bool _) async {}
+
+  @override
+  Future<void> setConfigBodyWeightUnit(BodyWeightUnit _) async {}
 
   @override
   noSuchMethod(Invocation invocation) =>
@@ -85,7 +91,8 @@ void main() {
       // home screen recomputed kcal against the dummy default user.
 
       final saveFuture =
-          bloc.saveOnboardingData(makeUser(), false, false);
+          bloc.saveOnboardingData(
+              makeUser(), false, false, BodyWeightUnit.kg, false);
 
       // Yield once so the bloc has a chance to start the inner write.
       await Future<void>.delayed(Duration.zero);
@@ -105,7 +112,6 @@ void main() {
       // Complete the writes in order; saveOnboardingData should now resolve.
       userRepo.writeCompleter.complete();
       configRepo.anonCompleter.complete();
-      configRepo.imperialCompleter.complete();
       await saveFuture;
       expect(resolved, isTrue);
     });

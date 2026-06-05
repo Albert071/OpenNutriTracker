@@ -56,7 +56,7 @@ class EditMealBloc extends Bloc<EditMealEvent, EditMealState> {
         await _configRepository.getCustomMealFormMode(),
       );
       emit(EditMealLoadedState(
-        usesImperialUnits: config.usesImperialUnits,
+        usesImperialUnits: config.usesImperialFoodUnits,
         formMode: mode,
       ));
     });

@@ -42,6 +42,9 @@ class ConfigDBOAdapter extends TypeAdapter<ConfigDBO> {
         useMaterialYou: fields[20] as bool?,
         accentColor: (fields[26] as num?)?.toInt(),
         scannerPortraitLock: fields[27] as bool?,
+        usesImperialFoodUnits: fields[28] as bool?,
+        usesImperialHeightUnits: fields[29] as bool?,
+        bodyWeightUnitIndex: (fields[30] as num?)?.toInt(),
       )
       ..userCarbGoalPct = (fields[6] as num?)?.toDouble()
       ..userProteinGoalPct = (fields[7] as num?)?.toDouble()
@@ -51,7 +54,7 @@ class ConfigDBOAdapter extends TypeAdapter<ConfigDBO> {
   @override
   void write(BinaryWriter writer, ConfigDBO obj) {
     writer
-      ..writeByte(28)
+      ..writeByte(31)
       ..writeByte(0)
       ..write(obj.hasAcceptedDisclaimer)
       ..writeByte(1)
@@ -107,7 +110,13 @@ class ConfigDBOAdapter extends TypeAdapter<ConfigDBO> {
       ..writeByte(26)
       ..write(obj.accentColor)
       ..writeByte(27)
-      ..write(obj.scannerPortraitLock);
+      ..write(obj.scannerPortraitLock)
+      ..writeByte(28)
+      ..write(obj.usesImperialFoodUnits)
+      ..writeByte(29)
+      ..write(obj.usesImperialHeightUnits)
+      ..writeByte(30)
+      ..write(obj.bodyWeightUnitIndex);
   }
 
   @override
@@ -159,6 +168,9 @@ ConfigDBO _$ConfigDBOFromJson(Map<String, dynamic> json) =>
         useMaterialYou: json['useMaterialYou'] as bool?,
         accentColor: (json['accentColor'] as num?)?.toInt(),
         scannerPortraitLock: json['scannerPortraitLock'] as bool?,
+        usesImperialFoodUnits: json['usesImperialFoodUnits'] as bool?,
+        usesImperialHeightUnits: json['usesImperialHeightUnits'] as bool?,
+        bodyWeightUnitIndex: (json['bodyWeightUnitIndex'] as num?)?.toInt(),
       )
       ..userCarbGoalPct = (json['userCarbGoalPct'] as num?)?.toDouble()
       ..userProteinGoalPct = (json['userProteinGoalPct'] as num?)?.toDouble()
@@ -193,6 +205,9 @@ Map<String, dynamic> _$ConfigDBOToJson(ConfigDBO instance) => <String, dynamic>{
   'useMaterialYou': instance.useMaterialYou,
   'accentColor': instance.accentColor,
   'scannerPortraitLock': instance.scannerPortraitLock,
+  'usesImperialFoodUnits': instance.usesImperialFoodUnits,
+  'usesImperialHeightUnits': instance.usesImperialHeightUnits,
+  'bodyWeightUnitIndex': instance.bodyWeightUnitIndex,
 };
 
 const _$AppThemeDBOEnumMap = {

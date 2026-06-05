@@ -390,6 +390,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "fiberLabel": MessageLookupByLibrary.simpleMessage("Ballaststoffe"),
         "flOzUnit": MessageLookupByLibrary.simpleMessage("fl.oz"),
         "ftLabel": MessageLookupByLibrary.simpleMessage("ft"),
+        "inLabel": MessageLookupByLibrary.simpleMessage("in"),
         "genderFemaleLabel": MessageLookupByLibrary.simpleMessage("weiblich"),
         "genderLabel": MessageLookupByLibrary.simpleMessage("Geschlecht"),
         "genderMaleLabel": MessageLookupByLibrary.simpleMessage("männlich"),
@@ -476,6 +477,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("kJ pro Tag"),
         "kgLabel": MessageLookupByLibrary.simpleMessage("kg"),
         "lbsLabel": MessageLookupByLibrary.simpleMessage("lbs"),
+        "stLabel": MessageLookupByLibrary.simpleMessage("st"),
         "lunchExample": MessageLookupByLibrary.simpleMessage(
             "z. B. Pizza, Salat, Reis ..."),
         "lunchLabel": MessageLookupByLibrary.simpleMessage("Mittagessen"),
@@ -594,6 +596,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "onboardingWeightQuestionSubtitle":
             MessageLookupByLibrary.simpleMessage(
                 "Wie viel wiegen Sie derzeit?"),
+        "onboardingFoodUnitsSubtitle": MessageLookupByLibrary.simpleMessage("Wie du Essen und Getränke erfasst"),
         "onboardingTargetWeightSubtitle":
             MessageLookupByLibrary.simpleMessage(
                 "Gibt es ein Gewicht, auf das du hinarbeitest? Du kannst das Feld leer lassen oder es später im Profil ändern."),
@@ -1297,6 +1300,13 @@ class MessageLookup extends MessageLookupByLibrary {
         "settingsThemeSystemDefaultLabel":
             MessageLookupByLibrary.simpleMessage("Systemstandard"),
         "settingsUnitsLabel": MessageLookupByLibrary.simpleMessage("Einheiten"),
+        "settingsFoodUnitsLabel": MessageLookupByLibrary.simpleMessage("Lebensmitteleinheiten"),
+        "settingsHeightUnitsLabel": MessageLookupByLibrary.simpleMessage("Größeneinheit"),
+        "settingsBodyWeightUnitLabel": MessageLookupByLibrary.simpleMessage("Einheit für Körpergewicht"),
+        "settingsFoodUnitsMetric": MessageLookupByLibrary.simpleMessage("Metrisch (g, kg, ml, l)"),
+        "settingsFoodUnitsImperial": MessageLookupByLibrary.simpleMessage("Imperial (lbs, oz, fl oz)"),
+        "settingsHeightUnitsMetric": MessageLookupByLibrary.simpleMessage("Metrisch (mm, cm, m)"),
+        "settingsHeightUnitsImperial": MessageLookupByLibrary.simpleMessage("Imperial (ft, in)"),
         "settingsVolumeLabel": MessageLookupByLibrary.simpleMessage("Volumen"),
         "shareActivityLabel":
             MessageLookupByLibrary.simpleMessage("Training teilen"),

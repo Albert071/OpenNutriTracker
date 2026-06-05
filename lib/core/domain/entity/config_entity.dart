@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:opennutritracker/core/data/dbo/config_dbo.dart';
 import 'package:opennutritracker/core/domain/entity/app_theme_entity.dart';
+import 'package:opennutritracker/core/domain/entity/body_weight_unit_entity.dart';
 import 'package:opennutritracker/core/domain/entity/calories_profile_entity.dart';
 import 'package:opennutritracker/core/domain/entity/user_gender_entity.dart';
 
@@ -27,7 +28,14 @@ class ConfigEntity extends Equatable {
   final bool hasAcceptedPolicy;
   final bool hasAcceptedSendAnonymousData;
   final AppThemeEntity appTheme;
+  // Legacy single switch, kept as the fallback the three split preferences
+  // derive from when the user has never touched them (see [fromConfigDBO]).
   final bool usesImperialUnits;
+  // Three independent unit preferences. Food covers serving (g/oz) and volume
+  // (ml/fl oz); height covers cm/ft; body weight is a three-way kg/lb/st.
+  final bool usesImperialFoodUnits;
+  final bool usesImperialHeightUnits;
+  final BodyWeightUnit bodyWeightUnit;
   final double? userKcalAdjustment;
   final double? userCarbGoalPct;
   final double? userProteinGoalPct;
@@ -119,6 +127,9 @@ class ConfigEntity extends Equatable {
     this.hasAcceptedSendAnonymousData,
     this.appTheme, {
     this.usesImperialUnits = false,
+    this.usesImperialFoodUnits = false,
+    this.usesImperialHeightUnits = false,
+    this.bodyWeightUnit = BodyWeightUnit.kg,
     this.userKcalAdjustment,
     this.userCarbGoalPct,
     this.userProteinGoalPct,
@@ -200,6 +211,15 @@ class ConfigEntity extends Equatable {
     dbo.hasAcceptedSendAnonymousData,
     AppThemeEntity.fromAppThemeDBO(dbo.selectedAppTheme),
     usesImperialUnits: dbo.usesImperialUnits ?? false,
+    usesImperialFoodUnits:
+        dbo.usesImperialFoodUnits ?? (dbo.usesImperialUnits ?? false),
+    usesImperialHeightUnits:
+        dbo.usesImperialHeightUnits ?? (dbo.usesImperialUnits ?? false),
+    bodyWeightUnit: dbo.bodyWeightUnitIndex != null
+        ? BodyWeightUnit.fromIndex(dbo.bodyWeightUnitIndex!)
+        : ((dbo.usesImperialUnits ?? false)
+            ? BodyWeightUnit.lb
+            : BodyWeightUnit.kg),
     userKcalAdjustment: dbo.userKcalAdjustment,
     userCarbGoalPct: dbo.userCarbGoalPct,
     userProteinGoalPct: dbo.userProteinGoalPct,
@@ -281,6 +301,9 @@ class ConfigEntity extends Equatable {
     hasAcceptedPolicy,
     hasAcceptedSendAnonymousData,
     usesImperialUnits,
+    usesImperialFoodUnits,
+    usesImperialHeightUnits,
+    bodyWeightUnit,
     userKcalAdjustment,
     userCarbGoalPct,
     userProteinGoalPct,

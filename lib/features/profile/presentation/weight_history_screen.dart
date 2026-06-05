@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:opennutritracker/core/data/repository/config_repository.dart';
+import 'package:opennutritracker/core/domain/entity/body_weight_unit_entity.dart';
 import 'package:opennutritracker/core/domain/entity/weight_log_entity.dart';
 import 'package:opennutritracker/core/domain/usecase/add_weight_log_usecase.dart';
 import 'package:opennutritracker/core/domain/usecase/delete_weight_log_usecase.dart';
 import 'package:opennutritracker/core/domain/usecase/get_user_usecase.dart';
 import 'package:opennutritracker/core/domain/usecase/get_weight_log_usecase.dart';
-import 'package:opennutritracker/core/utils/calc/unit_calc.dart';
 import 'package:opennutritracker/core/utils/locator.dart';
+import 'package:opennutritracker/features/profile/presentation/utils/profile_display_format.dart';
+import 'package:opennutritracker/features/profile/presentation/widgets/body_weight_input.dart';
 import 'package:opennutritracker/features/profile/presentation/widgets/weight_trend_chart.dart';
 import 'package:opennutritracker/generated/l10n.dart';
 
@@ -59,7 +61,7 @@ class _WeightHistoryScreenState extends State<WeightHistoryScreen> {
           : null);
 
   bool _loading = true;
-  bool _usesImperialUnits = false;
+  BodyWeightUnit _bodyWeightUnit = BodyWeightUnit.kg;
   List<WeightLogEntity> _entries = const [];
   // Loaded once at mount time so the chart can draw a dashed reference
   // line for the user's #119 target weight. Null when unset.
@@ -73,14 +75,14 @@ class _WeightHistoryScreenState extends State<WeightHistoryScreen> {
 
   Future<void> _load() async {
     final config = await _configRepository.getConfig();
-    final imperial = config.usesImperialUnits;
+    final unit = config.bodyWeightUnit;
     final entries = await _getUsecase.getAllEntries();
     // Newest first so the most recent reading sits at the top.
     entries.sort((a, b) => b.date.compareTo(a.date));
     final user = await _getUserUsecase?.getUserData();
     if (!mounted) return;
     setState(() {
-      _usesImperialUnits = imperial;
+      _bodyWeightUnit = unit;
       _entries = entries;
       _targetWeightKg = user?.targetWeightKg;
       _loading = false;
@@ -126,7 +128,7 @@ class _WeightHistoryScreenState extends State<WeightHistoryScreen> {
                     if (index == 0) {
                       return WeightTrendChart(
                         entries: _entries,
-                        usesImperialUnits: _usesImperialUnits,
+                        bodyWeightUnit: _bodyWeightUnit,
                         targetWeightKg: _targetWeightKg,
                       );
                     }
@@ -137,18 +139,19 @@ class _WeightHistoryScreenState extends State<WeightHistoryScreen> {
   }
 
   Widget _buildEntryTile(WeightLogEntity entry) {
-    final displayWeight = _usesImperialUnits
-        ? UnitCalc.kgToLbs(entry.weightKg)
-        : entry.weightKg;
-    final unit = _usesImperialUnits
-        ? S.of(context).lbsLabel
-        : S.of(context).kgLabel;
+    final displayStr = formatBodyWeight(
+      entry.weightKg,
+      _bodyWeightUnit,
+      kgLabel: S.of(context).kgLabel,
+      lbLabel: S.of(context).lbsLabel,
+      stLabel: S.of(context).stLabel,
+    );
     final dateLabel = DateFormat.yMMMd(
       Localizations.localeOf(context).toLanguageTag(),
     ).format(entry.date);
 
     return ListTile(
-      title: Text('${displayWeight.toStringAsFixed(1)} $unit'),
+      title: Text(displayStr),
       subtitle: Text(
         entry.note?.isNotEmpty == true ? '$dateLabel  •  ${entry.note}' : dateLabel,
       ),
@@ -160,13 +163,13 @@ class _WeightHistoryScreenState extends State<WeightHistoryScreen> {
   }
 
   Future<void> _onAddEntry() async {
-    final initialWeight = _entries.isNotEmpty ? _entries.first.weightKg : 70.0;
+    final initialWeightKg = _entries.isNotEmpty ? _entries.first.weightKg : 70.0;
     final result = await showDialog<_NewWeightEntry>(
       context: context,
       builder: (context) => _AddWeightEntryDialog(
         initialDate: DateTime.now(),
-        initialWeightKg: initialWeight,
-        usesImperialUnits: _usesImperialUnits,
+        initialWeightKg: initialWeightKg,
+        bodyWeightUnit: _bodyWeightUnit,
       ),
     );
     if (result == null) return;
@@ -198,12 +201,12 @@ class _NewWeightEntry {
 class _AddWeightEntryDialog extends StatefulWidget {
   final DateTime initialDate;
   final double initialWeightKg;
-  final bool usesImperialUnits;
+  final BodyWeightUnit bodyWeightUnit;
 
   const _AddWeightEntryDialog({
     required this.initialDate,
     required this.initialWeightKg,
-    required this.usesImperialUnits,
+    required this.bodyWeightUnit,
   });
 
   @override
@@ -212,24 +215,21 @@ class _AddWeightEntryDialog extends StatefulWidget {
 
 class _AddWeightEntryDialogState extends State<_AddWeightEntryDialog> {
   late DateTime _date;
-  late TextEditingController _weightController;
   late TextEditingController _noteController;
+
+  // The kg value from BodyWeightInput; null means invalid / empty.
+  double? _weightKg;
 
   @override
   void initState() {
     super.initState();
     _date = widget.initialDate;
-    final initialDisplay = widget.usesImperialUnits
-        ? UnitCalc.kgToLbs(widget.initialWeightKg)
-        : widget.initialWeightKg;
-    _weightController =
-        TextEditingController(text: initialDisplay.toStringAsFixed(1));
+    _weightKg = widget.initialWeightKg;
     _noteController = TextEditingController();
   }
 
   @override
   void dispose() {
-    _weightController.dispose();
     _noteController.dispose();
     super.dispose();
   }
@@ -247,12 +247,11 @@ class _AddWeightEntryDialogState extends State<_AddWeightEntryDialog> {
   }
 
   void _submit() {
-    final raw = double.tryParse(_weightController.text.replaceAll(',', '.'));
-    if (raw == null || raw <= 0) {
+    final kg = _weightKg;
+    if (kg == null || kg <= 0) {
       Navigator.of(context).pop();
       return;
     }
-    final kg = widget.usesImperialUnits ? UnitCalc.lbsToKg(raw) : raw;
     final note = _noteController.text.trim();
     Navigator.of(context).pop(
       _NewWeightEntry(
@@ -265,9 +264,6 @@ class _AddWeightEntryDialogState extends State<_AddWeightEntryDialog> {
 
   @override
   Widget build(BuildContext context) {
-    final unit = widget.usesImperialUnits
-        ? S.of(context).lbsLabel
-        : S.of(context).kgLabel;
     final dateLabel = DateFormat.yMMMd(
       Localizations.localeOf(context).toLanguageTag(),
     ).format(_date);
@@ -286,17 +282,12 @@ class _AddWeightEntryDialogState extends State<_AddWeightEntryDialog> {
               subtitle: Text(dateLabel),
               onTap: _pickDate,
             ),
-            Semantics(
-              identifier: 'weight-history-weight-input',
-              child: TextField(
-                controller: _weightController,
-                keyboardType:
-                    const TextInputType.numberWithOptions(decimal: true),
-                decoration: InputDecoration(
-                  labelText:
-                      '${S.of(context).weightHistoryWeightLabel} ($unit)',
-                ),
-              ),
+            BodyWeightInput(
+              initialKg: widget.initialWeightKg,
+              unit: widget.bodyWeightUnit,
+              identifierPrefix: 'weight-history',
+              autofocus: true,
+              onChangedKg: (kg) => setState(() => _weightKg = kg),
             ),
             const SizedBox(height: 8),
             TextField(

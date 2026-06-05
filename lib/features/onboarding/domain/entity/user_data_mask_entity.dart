@@ -1,3 +1,4 @@
+import 'package:opennutritracker/core/domain/entity/body_weight_unit_entity.dart';
 import 'package:opennutritracker/core/domain/entity/calories_profile_entity.dart';
 import 'package:opennutritracker/core/domain/entity/user_entity.dart';
 import 'package:opennutritracker/core/domain/entity/user_gender_entity.dart';
@@ -24,7 +25,15 @@ class UserDataMaskEntity {
 
   bool acceptDataCollection = false;
 
-  bool usesImperialUnits = false;
+  /// Whether the user chose to display and enter height in imperial feet.
+  bool heightUsesImperial = false;
+
+  /// The unit chosen for current weight and target weight display.
+  BodyWeightUnit bodyWeightUnit = BodyWeightUnit.kg;
+
+  /// Whether the user chose to measure food and drinks in imperial units.
+  /// Chosen explicitly rather than inferred from the height toggle.
+  bool foodUsesImperial = false;
 
   UserDataMaskEntity({
     this.gender,
@@ -36,7 +45,9 @@ class UserDataMaskEntity {
     this.goal,
     this.targetWeight,
     this.acceptDataCollection = false,
-    this.usesImperialUnits = false,
+    this.heightUsesImperial = false,
+    this.bodyWeightUnit = BodyWeightUnit.kg,
+    this.foodUsesImperial = false,
   });
 
   bool checkDataProvided() {

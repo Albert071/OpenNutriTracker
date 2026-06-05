@@ -1,10 +1,10 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:opennutritracker/core/domain/entity/body_weight_unit_entity.dart';
 import 'package:opennutritracker/core/domain/entity/tracked_day_entity.dart';
 import 'package:opennutritracker/core/domain/entity/weight_log_entity.dart';
 import 'package:opennutritracker/core/domain/usecase/add_weight_log_usecase.dart';
-import 'package:opennutritracker/core/domain/usecase/get_config_usecase.dart';
 import 'package:opennutritracker/core/domain/usecase/get_user_usecase.dart';
 import 'package:opennutritracker/core/presentation/widgets/app_card.dart';
 import 'package:opennutritracker/core/styles/app_palette.dart';
@@ -17,13 +17,29 @@ import 'package:opennutritracker/features/trends/presentation/bloc/trends_bloc.d
 import 'package:opennutritracker/features/trends/presentation/trends_calc.dart';
 import 'package:opennutritracker/generated/l10n.dart';
 
-class TrendsPage extends StatelessWidget {
+class TrendsPage extends StatefulWidget {
   const TrendsPage({super.key});
 
   @override
+  State<TrendsPage> createState() => _TrendsPageState();
+}
+
+class _TrendsPageState extends State<TrendsPage> {
+  // The bloc is a GetIt singleton, so provide it by value rather than letting
+  // BlocProvider close it on dispose. Settings holds the same instance and
+  // pokes it with LoadTrendsEvent when the body-weight unit changes.
+  final TrendsBloc _trendsBloc = locator<TrendsBloc>();
+
+  @override
+  void initState() {
+    super.initState();
+    _trendsBloc.add(const LoadTrendsEvent());
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return BlocProvider<TrendsBloc>(
-      create: (_) => locator<TrendsBloc>()..add(const LoadTrendsEvent()),
+    return BlocProvider<TrendsBloc>.value(
+      value: _trendsBloc,
       child: const _TrendsView(),
     );
   }
@@ -68,7 +84,7 @@ class _TrendsView extends StatelessWidget {
             const SizedBox(height: Dimens.spacing16),
             _WeightCard(
               entries: state.weight,
-              usesImperialUnits: state.usesImperialUnits,
+              bodyWeightUnit: state.bodyWeightUnit,
               targetWeightKg: state.targetWeightKg,
               rangeDays: state.windowDays,
               palette: palette,
@@ -477,13 +493,13 @@ class _MacrosTrendCard extends StatelessWidget {
 
 class _WeightCard extends StatelessWidget {
   final List<WeightLogEntity> entries;
-  final bool usesImperialUnits;
+  final BodyWeightUnit bodyWeightUnit;
   final double? targetWeightKg;
   final int rangeDays;
   final AppPalette palette;
   const _WeightCard({
     required this.entries,
-    required this.usesImperialUnits,
+    required this.bodyWeightUnit,
     required this.targetWeightKg,
     required this.rangeDays,
     required this.palette,
@@ -528,7 +544,7 @@ class _WeightCard extends StatelessWidget {
           const SizedBox(height: Dimens.spacing12),
           WeightTrendChart(
             entries: entries,
-            usesImperialUnits: usesImperialUnits,
+            bodyWeightUnit: bodyWeightUnit,
             targetWeightKg: targetWeightKg,
             windowDays: rangeDays < 30 ? 30 : rangeDays,
           ),
@@ -544,14 +560,23 @@ class _WeightCard extends StatelessWidget {
     BuildContext context,
     ({double ratePerWeek, int? weeksToTarget}) projection,
   ) {
-    final unit =
-        usesImperialUnits ? S.of(context).lbsLabel : S.of(context).kgLabel;
-    final rate = usesImperialUnits
-        ? projection.ratePerWeek * 2.20462
-        : projection.ratePerWeek;
-    final sign = rate >= 0 ? '+' : '';
-    var label = '$sign${rate.toStringAsFixed(1)} $unit'
-        '${S.of(context).trendsPerWeekSuffix}';
+    final String rateStr;
+    switch (bodyWeightUnit) {
+      case BodyWeightUnit.kg:
+        final rate = projection.ratePerWeek;
+        final sign = rate >= 0 ? '+' : '';
+        rateStr = '$sign${rate.toStringAsFixed(1)} ${S.of(context).kgLabel}';
+      case BodyWeightUnit.lb:
+        final rate = projection.ratePerWeek * 2.20462;
+        final sign = rate >= 0 ? '+' : '';
+        rateStr = '$sign${rate.toStringAsFixed(1)} ${S.of(context).lbsLabel}';
+      case BodyWeightUnit.st:
+        // Decimal stones for rate display.
+        final rate = projection.ratePerWeek * 2.20462 / 14;
+        final sign = rate >= 0 ? '+' : '';
+        rateStr = '$sign${rate.toStringAsFixed(2)} ${S.of(context).stLabel}';
+    }
+    var label = '$rateStr${S.of(context).trendsPerWeekSuffix}';
     if (projection.weeksToTarget != null) {
       label += ' · ~${projection.weeksToTarget} '
           '${S.of(context).trendsWeeksToGoalLabel}';
@@ -569,20 +594,18 @@ class _WeightCard extends StatelessWidget {
         ? (trendsBloc.state as TrendsLoaded).rangeDays
         : 7;
     final user = await locator<GetUserUsecase>().getUserData();
-    final config = await locator<GetConfigUsecase>().getConfig();
-    final usesImperial = config.usesImperialUnits;
-    final current = usesImperial ? user.weightKG * 2.20462 : user.weightKG;
     if (!context.mounted) return;
     final entered = await showDialog<({double weight, DateTime date})>(
       context: context,
       builder: (_) => SetWeightDialog(
-        userWeight: current,
-        usesImperialUnits: usesImperial,
+        initialKg: user.weightKG,
+        unit: bodyWeightUnit,
         allowDateSelection: true,
       ),
     );
     if (entered == null) return;
-    final kg = usesImperial ? entered.weight / 2.20462 : entered.weight;
+    // The dialog now always returns kg in the weight slot.
+    final kg = entered.weight;
     final d = entered.date;
     await locator<AddWeightLogUsecase>().addEntry(
       WeightLogEntity(

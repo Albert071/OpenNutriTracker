@@ -21,7 +21,7 @@ class TrendsLoaded extends TrendsState {
   final List<TrackedDayEntity> days; // tracked days over the selected window
   final List<TrackedDayEntity> priorWeek; // the 7 days before this week
   final List<WeightLogEntity> weight; // full weight history, windowed in the UI
-  final bool usesImperialUnits;
+  final BodyWeightUnit bodyWeightUnit;
   final double? targetWeightKg; // user's #119 target, for the chart reference
   final Map<DateTime, int> waterByDay; // ml logged per calendar day
   final int waterGoalMl;
@@ -32,7 +32,7 @@ class TrendsLoaded extends TrendsState {
     required this.days,
     required this.priorWeek,
     required this.weight,
-    required this.usesImperialUnits,
+    required this.bodyWeightUnit,
     required this.targetWeightKg,
     required this.waterByDay,
     required this.waterGoalMl,
@@ -45,7 +45,7 @@ class TrendsLoaded extends TrendsState {
         days,
         priorWeek,
         weight,
-        usesImperialUnits,
+        bodyWeightUnit,
         targetWeightKg,
         waterByDay,
         waterGoalMl,

@@ -367,6 +367,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "fiberLabel": MessageLookupByLibrary.simpleMessage("膳食纤维"),
         "flOzUnit": MessageLookupByLibrary.simpleMessage("fl.oz"),
         "ftLabel": MessageLookupByLibrary.simpleMessage("英尺"),
+        "inLabel": MessageLookupByLibrary.simpleMessage("英寸"),
         "genderFemaleLabel": MessageLookupByLibrary.simpleMessage("女性"),
         "genderLabel": MessageLookupByLibrary.simpleMessage("性别"),
         "genderMaleLabel": MessageLookupByLibrary.simpleMessage("男性"),
@@ -433,6 +434,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "onboardingKjPerDayLabel": MessageLookupByLibrary.simpleMessage("每日千焦"),
         "kgLabel": MessageLookupByLibrary.simpleMessage("千克"),
         "lbsLabel": MessageLookupByLibrary.simpleMessage("磅"),
+        "stLabel": MessageLookupByLibrary.simpleMessage("英石"),
         "lunchExample": MessageLookupByLibrary.simpleMessage("例如：披萨、沙拉、米饭..."),
         "lunchLabel": MessageLookupByLibrary.simpleMessage("午餐"),
         "macroDistributionLabel":
@@ -538,6 +540,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("例如：132"),
         "onboardingWeightQuestionSubtitle":
             MessageLookupByLibrary.simpleMessage("您当前的体重是多少？"),
+        "onboardingFoodUnitsSubtitle": MessageLookupByLibrary.simpleMessage("您如何记录食物和饮品"),
         "onboardingTargetWeightSubtitle":
             MessageLookupByLibrary.simpleMessage("你有想要达到的目标体重吗？可以留空，也可以稍后在“个人资料”中修改。"),
         "onboardingTargetWeightHintOptional":
@@ -1128,6 +1131,13 @@ class MessageLookup extends MessageLookupByLibrary {
         "settingsThemeSystemDefaultLabel":
             MessageLookupByLibrary.simpleMessage("系统默认"),
         "settingsUnitsLabel": MessageLookupByLibrary.simpleMessage("单位"),
+        "settingsFoodUnitsLabel": MessageLookupByLibrary.simpleMessage("食物单位"),
+        "settingsHeightUnitsLabel": MessageLookupByLibrary.simpleMessage("身高单位"),
+        "settingsBodyWeightUnitLabel": MessageLookupByLibrary.simpleMessage("体重单位"),
+        "settingsFoodUnitsMetric": MessageLookupByLibrary.simpleMessage("公制（克、千克、毫升、升）"),
+        "settingsFoodUnitsImperial": MessageLookupByLibrary.simpleMessage("英制（磅、盎司、液量盎司）"),
+        "settingsHeightUnitsMetric": MessageLookupByLibrary.simpleMessage("公制（毫米、厘米、米）"),
+        "settingsHeightUnitsImperial": MessageLookupByLibrary.simpleMessage("英制（英尺、英寸）"),
         "settingsVolumeLabel": MessageLookupByLibrary.simpleMessage("体积"),
         "shareActivityLabel": MessageLookupByLibrary.simpleMessage("分享运动"),
         "shareCodeLabel": MessageLookupByLibrary.simpleMessage("分享代码"),

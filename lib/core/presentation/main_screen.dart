@@ -130,7 +130,7 @@ class _MainScreenState extends State<MainScreen> {
         return AddItemBottomSheet(
           day: DateTime.now(),
           showActivityTracking: config.showActivityTracking,
-          usesImperialUnits: config.usesImperialUnits,
+          usesImperialUnits: config.usesImperialFoodUnits,
         );
       },
     );

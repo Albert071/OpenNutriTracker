@@ -11,7 +11,7 @@ void main() {
       ],
       home: Scaffold(
         body: OnboardingSecondPageBody(
-          setButtonContent: (_, _, _, _, _) {},
+          setButtonContent: (_, _, _, _, _, _, _) {},
         ),
       ),
     ));
@@ -24,14 +24,16 @@ void main() {
     expect(find.text(S.current.onboardingWrongHeightLabel), findsOneWidget);
   });
 
-  testWidgets('Case 2: Value is empty string with imperial units', (WidgetTester tester) async {
+  testWidgets('Case 2: imperial height shows feet and inches fields, empty is not ready',
+      (WidgetTester tester) async {
+    bool? lastActive;
     await tester.pumpWidget(MaterialApp(
       localizationsDelegates: const [
         S.delegate,
       ],
       home: Scaffold(
         body: OnboardingSecondPageBody(
-          setButtonContent: (_, _, _, _, _) {},
+          setButtonContent: (active, _, _, _, _, _, _) => lastActive = active,
         ),
       ),
     ));
@@ -43,47 +45,39 @@ void main() {
     ));
     await tester.pump();
 
-    final heightField = find.byType(TextFormField).first;
-    await tester.enterText(heightField, '');
-    await tester.pump();
-
-    final form = find.byType(Form).first;
-    final state = tester.state<FormState>(form);
-    state.validate();
-    await tester.pump();
-
-    expect(find.text(S.current.onboardingWrongHeightLabel), findsOneWidget);
+    // Two coupled fields appear: feet (also matched by the toggle) and inches.
+    expect(find.text(S.current.ftLabel), findsWidgets);
+    expect(find.text(S.current.inLabel), findsOneWidget);
+    // Nothing entered yet, so the page is not ready to proceed.
+    expect(lastActive ?? false, isFalse);
   });
 
-  testWidgets('Case 3: Value is different than real numbers with imperial units', (WidgetTester tester) async {
+  testWidgets('Case 3: imperial feet field strips non-digits',
+      (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(
       localizationsDelegates: const [
         S.delegate,
       ],
       home: Scaffold(
         body: OnboardingSecondPageBody(
-          setButtonContent: (_, _, _, _, _) {},
+          setButtonContent: (_, _, _, _, _, _, _) {},
         ),
       ),
     ));
 
-    final imperialButton = find.byType(ToggleButtons).first;
     await tester.tap(find.descendant(
-      of: imperialButton,
+      of: find.byType(ToggleButtons).first,
       matching: find.text(S.current.ftLabel),
     ));
     await tester.pump();
 
-    final heightField = find.byType(TextFormField).first;
-    await tester.enterText(heightField, '-9@');
+    // The feet field is the first raw TextField (the inches field is second).
+    final feetField = find.byType(TextField).at(0);
+    await tester.enterText(feetField, '5a-9@');
     await tester.pump();
 
-    final form = find.byType(Form).first;
-    final state = tester.state<FormState>(form);
-    state.validate();
-    await tester.pump();
-
-    expect(find.text(S.current.onboardingWrongHeightLabel), findsOneWidget);
+    // digitsOnly leaves just the digits.
+    expect(find.text('59'), findsOneWidget);
   });
 
   testWidgets('Case 5: Value is empty string with decimal units', (WidgetTester tester) async {
@@ -93,7 +87,7 @@ void main() {
       ],
       home: Scaffold(
         body: OnboardingSecondPageBody(
-          setButtonContent: (_, _, _, _, _) {},
+          setButtonContent: (_, _, _, _, _, _, _) {},
         ),
       ),
     ));
@@ -127,7 +121,7 @@ void main() {
       ],
       home: Scaffold(
         body: OnboardingSecondPageBody(
-          setButtonContent: (_, _, _, _, _) {},
+          setButtonContent: (_, _, _, _, _, _, _) {},
         ),
       ),
     ));
@@ -151,40 +145,35 @@ void main() {
     expect(find.text(S.current.onboardingWrongHeightLabel), findsOneWidget);
   });
 
-  testWidgets('Case 4: Imperial selected and value is 6.7 (should be valid)', (WidgetTester tester) async {
+  testWidgets('Case 4: imperial feet + inches with a weight is accepted',
+      (WidgetTester tester) async {
+    bool? lastActive;
     await tester.pumpWidget(MaterialApp(
       localizationsDelegates: const [
         S.delegate,
       ],
       home: Scaffold(
         body: OnboardingSecondPageBody(
-          setButtonContent: (_, _, _, _, _) {},
+          setButtonContent: (active, _, _, _, _, _, _) => lastActive = active,
         ),
       ),
     ));
 
-    final imperialButton = find.byType(ToggleButtons).first;
     await tester.tap(find.descendant(
-      of: imperialButton,
+      of: find.byType(ToggleButtons).first,
       matching: find.text(S.current.ftLabel),
     ));
     await tester.pump();
 
-    final heightField = find.byType(TextFormField).first;
-    await tester.enterText(heightField, '6.7');
+    // Feet and inches are the first two raw TextFields; weight stays a kg
+    // TextFormField.
+    await tester.enterText(find.byType(TextField).at(0), '5'); // feet
+    await tester.enterText(find.byType(TextField).at(1), '9'); // inches
+    await tester.pump();
+    await tester.enterText(find.byType(TextFormField).at(0), '70'); // weight kg
     await tester.pump();
 
-    final weightField = find.byType(TextFormField).at(1);
-    await tester.enterText(weightField, '150');
-    await tester.pump();
-
-    final form = find.byType(Form).first;
-    final state = tester.state<FormState>(form);
-    final isValid = state.validate();
-    await tester.pump();
-
-    expect(isValid, isTrue);
-    expect(find.text(S.current.onboardingWrongHeightLabel), findsNothing);
+    expect(lastActive, isTrue);
   });
 
   testWidgets('Case 7: Metric selected and value is 6.7 (should be valid)', (WidgetTester tester) async {
@@ -194,7 +183,7 @@ void main() {
       ],
       home: Scaffold(
         body: OnboardingSecondPageBody(
-          setButtonContent: (_, _, _, _, _) {},
+          setButtonContent: (_, _, _, _, _, _, _) {},
         ),
       ),
     ));
@@ -233,7 +222,7 @@ void main() {
       localizationsDelegates: const [S.delegate],
       home: Scaffold(
         body: OnboardingSecondPageBody(
-          setButtonContent: (_, _, _, _, _) {},
+          setButtonContent: (_, _, _, _, _, _, _) {},
         ),
       ),
     ));
@@ -259,7 +248,7 @@ void main() {
       localizationsDelegates: const [S.delegate],
       home: Scaffold(
         body: OnboardingSecondPageBody(
-          setButtonContent: (_, _, _, _, _) {},
+          setButtonContent: (_, _, _, _, _, _, _) {},
         ),
       ),
     ));
@@ -283,7 +272,7 @@ void main() {
       localizationsDelegates: const [S.delegate],
       home: Scaffold(
         body: OnboardingSecondPageBody(
-          setButtonContent: (_, _, _, _, _) {},
+          setButtonContent: (_, _, _, _, _, _, _) {},
         ),
       ),
     ));

@@ -1,6 +1,7 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:opennutritracker/core/domain/entity/body_weight_unit_entity.dart';
 import 'package:opennutritracker/core/domain/entity/weight_log_entity.dart';
 import 'package:opennutritracker/core/utils/calc/unit_calc.dart';
 import 'package:opennutritracker/generated/l10n.dart';
@@ -14,7 +15,7 @@ import 'package:opennutritracker/generated/l10n.dart';
 /// far-away target weight never squashes the trend.
 class WeightTrendChart extends StatelessWidget {
   final List<WeightLogEntity> entries;
-  final bool usesImperialUnits;
+  final BodyWeightUnit bodyWeightUnit;
   final double? targetWeightKg;
   final int windowDays;
   final double chartHeight;
@@ -22,11 +23,24 @@ class WeightTrendChart extends StatelessWidget {
   const WeightTrendChart({
     super.key,
     required this.entries,
-    required this.usesImperialUnits,
+    required this.bodyWeightUnit,
     required this.targetWeightKg,
     this.windowDays = 30,
     this.chartHeight = 220,
   });
+
+  /// Converts a stored kg value to the chart's y-axis unit.
+  double _toChartY(double kg) {
+    switch (bodyWeightUnit) {
+      case BodyWeightUnit.kg:
+        return kg;
+      case BodyWeightUnit.lb:
+        return UnitCalc.kgToLbs(kg);
+      case BodyWeightUnit.st:
+        // Decimal stones: total lbs / 14. One decimal is enough for the axis.
+        return kg * 2.20462 / 14;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -68,7 +82,7 @@ class WeightTrendChart extends StatelessWidget {
         FlSpot(
           // x = days since the window start, so today sits at x = windowDays.
           entry.date.difference(windowStart).inDays.toDouble(),
-          usesImperialUnits ? UnitCalc.kgToLbs(entry.weightKg) : entry.weightKg,
+          _toChartY(entry.weightKg),
         ),
     ];
 
@@ -78,11 +92,7 @@ class WeightTrendChart extends StatelessWidget {
     // still need a non-zero range or fl_chart throws.
     final yPadding = ((maxY - minY) * 0.15).clamp(0.5, 5.0);
 
-    final targetY = targetWeightKg == null
-        ? null
-        : (usesImperialUnits
-            ? UnitCalc.kgToLbs(targetWeightKg!)
-            : targetWeightKg!);
+    final targetY = targetWeightKg == null ? null : _toChartY(targetWeightKg!);
     // Only draw the dashed reference when the target sits within (or just
     // adjacent to) the auto y-range, so a far-off target doesn't autoscale
     // the chart away from the recorded weights.
@@ -120,7 +130,7 @@ class WeightTrendChart extends StatelessWidget {
                   showTitles: true,
                   reservedSize: 40,
                   getTitlesWidget: (value, meta) => Text(
-                    value.toStringAsFixed(0),
+                    value.toStringAsFixed(bodyWeightUnit == BodyWeightUnit.st ? 1 : 0),
                     style: theme.textTheme.labelSmall,
                   ),
                 ),

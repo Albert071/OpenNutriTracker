@@ -51,7 +51,7 @@ class _RecipesPageState extends State<RecipesPage>
   Future<void> _loadConfig() async {
     final config = await locator<GetConfigUsecase>().getConfig();
     if (mounted) {
-      setState(() => _usesImperialUnits = config.usesImperialUnits);
+      setState(() => _usesImperialUnits = config.usesImperialFoodUnits);
     }
   }
 

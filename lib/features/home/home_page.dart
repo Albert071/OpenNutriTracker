@@ -23,6 +23,7 @@ import 'package:opennutritracker/features/home/presentation/widgets/dashboard_wi
 import 'package:opennutritracker/features/home/presentation/widgets/intake_vertical_list.dart';
 import 'package:opennutritracker/features/home/presentation/widgets/fasting_home_chip.dart';
 import 'package:opennutritracker/features/home/presentation/widgets/quick_water_widget.dart';
+import 'package:opennutritracker/core/domain/entity/body_weight_unit_entity.dart';
 import 'package:opennutritracker/features/home/presentation/widgets/quick_weight_widget.dart';
 import 'package:opennutritracker/generated/l10n.dart';
 
@@ -86,6 +87,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
             state.snackIntakeList,
             state.userActivityList,
             state.usesImperialUnits,
+            state.bodyWeightUnit,
             state.showActivityTracking,
             state.showMealMacros,
             state.userWeightKg,
@@ -141,6 +143,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     List<IntakeEntity> snackIntakeList,
     List<UserActivityEntity> userActivities,
     bool usesImperialUnits,
+    BodyWeightUnit bodyWeightUnit,
     bool showActivityTracking,
     bool showMealMacros,
     double userWeightKg,
@@ -177,7 +180,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                 children: [
                   QuickWeightWidget(
                     weightKg: userWeightKg,
-                    usesImperialUnits: usesImperialUnits,
+                    bodyWeightUnit: bodyWeightUnit,
                   ),
                   QuickWaterWidget(
                     waterMlToday: waterMlToday,

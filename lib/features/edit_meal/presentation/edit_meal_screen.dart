@@ -470,6 +470,7 @@ class _EditMealScreenState extends State<EditMealScreen> {
           const SizedBox(height: 24),
           TextFormField(
             controller: _mealQuantityTextController,
+            inputFormatters: CustomTextInputFormatter.doubleOnly(),
             decoration: InputDecoration(
               labelText: '${S.of(context).mealSizeLabel} ($unitSuffix)',
               border: const OutlineInputBorder(borderRadius: Dimens.borderRadiusM),

@@ -115,6 +115,25 @@ class ConfigDataSource {
     await _update((c) => c.usesImperialUnits = usesImperialUnits);
   }
 
+  Future<void> setConfigUsesImperialFoodUnits(bool usesImperial) async {
+    // Mirror the legacy single flag to the food choice so a downgrade to an
+    // older build (which only knows usesImperialUnits) still reads a coherent
+    // value. Height and body weight can't be expressed by one bool, so they
+    // don't mirror.
+    await _update((c) {
+      c.usesImperialFoodUnits = usesImperial;
+      c.usesImperialUnits = usesImperial;
+    });
+  }
+
+  Future<void> setConfigUsesImperialHeightUnits(bool usesImperial) async {
+    await _update((c) => c.usesImperialHeightUnits = usesImperial);
+  }
+
+  Future<void> setConfigBodyWeightUnitIndex(int index) async {
+    await _update((c) => c.bodyWeightUnitIndex = index);
+  }
+
   Future<double> getKcalAdjustment() async =>
       _readMerged().userKcalAdjustment ?? 0;
 

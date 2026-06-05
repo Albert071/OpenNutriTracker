@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:opennutritracker/core/domain/entity/app_theme_entity.dart';
+import 'package:opennutritracker/core/domain/entity/body_weight_unit_entity.dart';
 import 'package:opennutritracker/core/domain/entity/config_entity.dart';
 import 'package:opennutritracker/core/domain/entity/tracked_day_entity.dart';
 import 'package:opennutritracker/core/domain/entity/user_entity.dart';
@@ -90,6 +91,8 @@ class _FakeGetConfigUsecase implements GetConfigUsecase {
         false,
         AppThemeEntity.system,
         usesImperialUnits: usesImperialUnits,
+        bodyWeightUnit:
+            usesImperialUnits ? BodyWeightUnit.lb : BodyWeightUnit.kg,
       );
 
   @override
@@ -210,7 +213,7 @@ void main() {
       user.targetWeightKg = 68;
       final emitted = await load(const LoadTrendsEvent());
       final loaded = emitted.last as TrendsLoaded;
-      expect(loaded.usesImperialUnits, isTrue);
+      expect(loaded.bodyWeightUnit, BodyWeightUnit.lb);
       expect(loaded.targetWeightKg, 68);
     });
 

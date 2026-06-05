@@ -387,6 +387,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "fiberLabel": MessageLookupByLibrary.simpleMessage("lif"),
         "flOzUnit": MessageLookupByLibrary.simpleMessage("fl.oz"),
         "ftLabel": MessageLookupByLibrary.simpleMessage("ft"),
+        "inLabel": MessageLookupByLibrary.simpleMessage("in"),
         "genderFemaleLabel": MessageLookupByLibrary.simpleMessage("kadın"),
         "genderLabel": MessageLookupByLibrary.simpleMessage("Cinsiyet"),
         "genderMaleLabel": MessageLookupByLibrary.simpleMessage("erkek"),
@@ -468,6 +469,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("günlük kJ"),
         "kgLabel": MessageLookupByLibrary.simpleMessage("kg"),
         "lbsLabel": MessageLookupByLibrary.simpleMessage("lbs"),
+        "stLabel": MessageLookupByLibrary.simpleMessage("st"),
         "lunchExample": MessageLookupByLibrary.simpleMessage(
             "ör. pizza, salata, pirinç ..."),
         "lunchLabel": MessageLookupByLibrary.simpleMessage("Öğle Yemeği"),
@@ -583,6 +585,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("ör. 132"),
         "onboardingWeightQuestionSubtitle":
             MessageLookupByLibrary.simpleMessage("Mevcut kilonuz nedir?"),
+        "onboardingFoodUnitsSubtitle": MessageLookupByLibrary.simpleMessage("Yiyecek ve içecekleri nasıl kaydedersiniz"),
         "onboardingTargetWeightSubtitle":
             MessageLookupByLibrary.simpleMessage("Ulaşmak istediğin bir kilo var mı? Bu alanı boş bırakabilir veya daha sonra Profil\'den değiştirebilirsin."),
         "onboardingTargetWeightHintOptional":
@@ -1260,6 +1263,13 @@ class MessageLookup extends MessageLookupByLibrary {
         "settingsThemeSystemDefaultLabel":
             MessageLookupByLibrary.simpleMessage("Sistem varsayılanı"),
         "settingsUnitsLabel": MessageLookupByLibrary.simpleMessage("Birimler"),
+        "settingsFoodUnitsLabel": MessageLookupByLibrary.simpleMessage("Besin birimleri"),
+        "settingsHeightUnitsLabel": MessageLookupByLibrary.simpleMessage("Boy birimi"),
+        "settingsBodyWeightUnitLabel": MessageLookupByLibrary.simpleMessage("Vücut ağırlığı birimi"),
+        "settingsFoodUnitsMetric": MessageLookupByLibrary.simpleMessage("Metrik (g, kg, ml, l)"),
+        "settingsFoodUnitsImperial": MessageLookupByLibrary.simpleMessage("İmperial (lbs, oz, fl oz)"),
+        "settingsHeightUnitsMetric": MessageLookupByLibrary.simpleMessage("Metrik (mm, cm, m)"),
+        "settingsHeightUnitsImperial": MessageLookupByLibrary.simpleMessage("İmperial (ft, in)"),
         "settingsVolumeLabel": MessageLookupByLibrary.simpleMessage("Hacim"),
         "shareActivityLabel":
             MessageLookupByLibrary.simpleMessage("Antrenmanı paylaş"),

@@ -384,6 +384,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "fiberLabel": MessageLookupByLibrary.simpleMessage("błonnik"),
         "flOzUnit": MessageLookupByLibrary.simpleMessage("fl.oz"),
         "ftLabel": MessageLookupByLibrary.simpleMessage("ft"),
+        "inLabel": MessageLookupByLibrary.simpleMessage("in"),
         "genderFemaleLabel": MessageLookupByLibrary.simpleMessage("kobieta"),
         "genderLabel": MessageLookupByLibrary.simpleMessage("Płeć"),
         "genderMaleLabel": MessageLookupByLibrary.simpleMessage("mężczyzna"),
@@ -467,6 +468,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("kJ dziennie"),
         "kgLabel": MessageLookupByLibrary.simpleMessage("kg"),
         "lbsLabel": MessageLookupByLibrary.simpleMessage("lbs"),
+        "stLabel": MessageLookupByLibrary.simpleMessage("st"),
         "lunchExample":
             MessageLookupByLibrary.simpleMessage("np. pizza, sałatka, ryż ..."),
         "lunchLabel": MessageLookupByLibrary.simpleMessage("Obiad"),
@@ -585,6 +587,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "onboardingWeightQuestionSubtitle":
             MessageLookupByLibrary.simpleMessage(
                 "Jaka jest Twoja aktualna waga?"),
+        "onboardingFoodUnitsSubtitle": MessageLookupByLibrary.simpleMessage("Jak rejestrujesz jedzenie i napoje"),
         "onboardingTargetWeightSubtitle":
             MessageLookupByLibrary.simpleMessage(
                 "Czy masz wagę, do której dążysz? Możesz zostawić to pole puste lub zmienić je później w Profilu."),
@@ -1282,6 +1285,13 @@ class MessageLookup extends MessageLookupByLibrary {
         "settingsThemeSystemDefaultLabel":
             MessageLookupByLibrary.simpleMessage("Domyślny systemu"),
         "settingsUnitsLabel": MessageLookupByLibrary.simpleMessage("Jednostki"),
+        "settingsFoodUnitsLabel": MessageLookupByLibrary.simpleMessage("Jednostki żywności"),
+        "settingsHeightUnitsLabel": MessageLookupByLibrary.simpleMessage("Jednostki wzrostu"),
+        "settingsBodyWeightUnitLabel": MessageLookupByLibrary.simpleMessage("Jednostka masy ciała"),
+        "settingsFoodUnitsMetric": MessageLookupByLibrary.simpleMessage("Metryczny (g, kg, ml, l)"),
+        "settingsFoodUnitsImperial": MessageLookupByLibrary.simpleMessage("Imperialny (lbs, oz, fl oz)"),
+        "settingsHeightUnitsMetric": MessageLookupByLibrary.simpleMessage("Metryczny (mm, cm, m)"),
+        "settingsHeightUnitsImperial": MessageLookupByLibrary.simpleMessage("Imperialny (ft, in)"),
         "settingsVolumeLabel": MessageLookupByLibrary.simpleMessage("Objętość"),
         "shareActivityLabel":
             MessageLookupByLibrary.simpleMessage("Udostępnij trening"),
