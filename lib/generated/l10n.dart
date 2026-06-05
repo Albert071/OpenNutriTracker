@@ -1618,6 +1618,46 @@ class S {
     );
   }
 
+  /// `Metric (g, kg)`
+  String get settingsFoodUnitsMetric {
+    return Intl.message(
+      'Metric (g, kg)',
+      name: 'settingsFoodUnitsMetric',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Imperial (lbs, oz)`
+  String get settingsFoodUnitsImperial {
+    return Intl.message(
+      'Imperial (lbs, oz)',
+      name: 'settingsFoodUnitsImperial',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Metric (mm, cm, m)`
+  String get settingsHeightUnitsMetric {
+    return Intl.message(
+      'Metric (mm, cm, m)',
+      name: 'settingsHeightUnitsMetric',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Imperial (ft, in)`
+  String get settingsHeightUnitsImperial {
+    return Intl.message(
+      'Imperial (ft, in)',
+      name: 'settingsHeightUnitsImperial',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Daily kcal adjustment`
   String get settingsKcalAdjustmentLabel {
     return Intl.message(

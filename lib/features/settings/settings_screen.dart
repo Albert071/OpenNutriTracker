@@ -22,6 +22,7 @@ import 'package:opennutritracker/features/diary/presentation/bloc/diary_bloc.dar
 import 'package:opennutritracker/features/home/presentation/bloc/home_bloc.dart';
 import 'package:opennutritracker/features/profile/presentation/bloc/profile_bloc.dart';
 import 'package:opennutritracker/features/settings/presentation/bloc/settings_bloc.dart';
+import 'package:opennutritracker/features/trends/presentation/bloc/trends_bloc.dart';
 import 'package:opennutritracker/features/settings/presentation/widgets/export_import_dialog.dart';
 import 'package:opennutritracker/features/settings/presentation/widgets/import_custom_food_data_dialog.dart';
 import 'package:opennutritracker/features/settings/presentation/widgets/nutrient_visibility_screen.dart';
@@ -54,6 +55,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   late HomeBloc _homeBloc;
   late DiaryBloc _diaryBloc;
   late CalendarDayBloc _calendarDayBloc;
+  late TrendsBloc _trendsBloc;
 
   @override
   void initState() {
@@ -62,6 +64,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     _homeBloc = locator<HomeBloc>();
     _diaryBloc = locator<DiaryBloc>();
     _calendarDayBloc = locator<CalendarDayBloc>();
+    _trendsBloc = locator<TrendsBloc>();
     super.initState();
     // SettingsBloc is registered as a singleton so the previous
     // SettingsLoadedState survives across screen visits. The cache
@@ -110,8 +113,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       icon: Icons.kitchen_rounded,
                       title: S.of(context).settingsFoodUnitsLabel,
                       subtitle: state.usesImperialFoodUnits
-                          ? S.of(context).settingsImperialLabel
-                          : S.of(context).settingsMetricLabel,
+                          ? S.of(context).settingsFoodUnitsImperial
+                          : S.of(context).settingsFoodUnitsMetric,
                       onTap: () => _showFoodUnitsDialog(
                           context, state.usesImperialFoodUnits),
                     ),
@@ -121,8 +124,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       icon: Icons.height_rounded,
                       title: S.of(context).settingsHeightUnitsLabel,
                       subtitle: state.usesImperialHeightUnits
-                          ? S.of(context).settingsImperialLabel
-                          : S.of(context).settingsMetricLabel,
+                          ? S.of(context).settingsHeightUnitsImperial
+                          : S.of(context).settingsHeightUnitsMetric,
                       onTap: () => _showHeightUnitsDialog(
                           context, state.usesImperialHeightUnits),
                     ),
@@ -535,11 +538,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     RadioListTile<bool>(
-                      title: Text(S.of(context).settingsMetricLabel),
+                      title: Text(S.of(context).settingsFoodUnitsMetric),
                       value: false,
                     ),
                     RadioListTile<bool>(
-                      title: Text(S.of(context).settingsImperialLabel),
+                      title: Text(S.of(context).settingsFoodUnitsImperial),
                       value: true,
                     ),
                   ],
@@ -589,11 +592,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     RadioListTile<bool>(
-                      title: Text(S.of(context).settingsMetricLabel),
+                      title: Text(S.of(context).settingsHeightUnitsMetric),
                       value: false,
                     ),
                     RadioListTile<bool>(
-                      title: Text(S.of(context).settingsImperialLabel),
+                      title: Text(S.of(context).settingsHeightUnitsImperial),
                       value: true,
                     ),
                   ],
@@ -674,7 +677,17 @@ class _SettingsScreenState extends State<SettingsScreen> {
     if (shouldUpdate == true) {
       _settingsBloc.setBodyWeightUnit(selectedUnit);
       _settingsBloc.add(LoadSettingsEvent());
+      // Body weight shows on the profile card, the home weight chip, and the
+      // Trends weight chart, so all three need to re-read the new unit. Keep
+      // the Trends range the user had picked rather than snapping back to the
+      // default.
       _profileBloc.add(LoadProfileEvent());
+      _homeBloc.add(const LoadItemsEvent());
+      final trendsState = _trendsBloc.state;
+      _trendsBloc.add(LoadTrendsEvent(
+        rangeDays:
+            trendsState is TrendsLoaded ? trendsState.rangeDays : 7,
+      ));
     }
   }
 

@@ -1264,6 +1264,10 @@ class MessageLookup extends MessageLookupByLibrary {
         "settingsFoodUnitsLabel": MessageLookupByLibrary.simpleMessage("Besin birimleri"),
         "settingsHeightUnitsLabel": MessageLookupByLibrary.simpleMessage("Boy birimi"),
         "settingsBodyWeightUnitLabel": MessageLookupByLibrary.simpleMessage("Vücut ağırlığı birimi"),
+        "settingsFoodUnitsMetric": MessageLookupByLibrary.simpleMessage("Metrik (g, kg)"),
+        "settingsFoodUnitsImperial": MessageLookupByLibrary.simpleMessage("İmperial (lbs, oz)"),
+        "settingsHeightUnitsMetric": MessageLookupByLibrary.simpleMessage("Metrik (mm, cm, m)"),
+        "settingsHeightUnitsImperial": MessageLookupByLibrary.simpleMessage("İmperial (ft, in)"),
         "settingsVolumeLabel": MessageLookupByLibrary.simpleMessage("Hacim"),
         "shareActivityLabel":
             MessageLookupByLibrary.simpleMessage("Antrenmanı paylaş"),

@@ -17,13 +17,29 @@ import 'package:opennutritracker/features/trends/presentation/bloc/trends_bloc.d
 import 'package:opennutritracker/features/trends/presentation/trends_calc.dart';
 import 'package:opennutritracker/generated/l10n.dart';
 
-class TrendsPage extends StatelessWidget {
+class TrendsPage extends StatefulWidget {
   const TrendsPage({super.key});
 
   @override
+  State<TrendsPage> createState() => _TrendsPageState();
+}
+
+class _TrendsPageState extends State<TrendsPage> {
+  // The bloc is a GetIt singleton, so provide it by value rather than letting
+  // BlocProvider close it on dispose. Settings holds the same instance and
+  // pokes it with LoadTrendsEvent when the body-weight unit changes.
+  final TrendsBloc _trendsBloc = locator<TrendsBloc>();
+
+  @override
+  void initState() {
+    super.initState();
+    _trendsBloc.add(const LoadTrendsEvent());
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return BlocProvider<TrendsBloc>(
-      create: (_) => locator<TrendsBloc>()..add(const LoadTrendsEvent()),
+    return BlocProvider<TrendsBloc>.value(
+      value: _trendsBloc,
       child: const _TrendsView(),
     );
   }

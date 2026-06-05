@@ -1192,6 +1192,10 @@ class MessageLookup extends MessageLookupByLibrary {
         "settingsFoodUnitsLabel": MessageLookupByLibrary.simpleMessage("Jednotky potravín"),
         "settingsHeightUnitsLabel": MessageLookupByLibrary.simpleMessage("Jednotky výšky"),
         "settingsBodyWeightUnitLabel": MessageLookupByLibrary.simpleMessage("Jednotka telesnej hmotnosti"),
+        "settingsFoodUnitsMetric": MessageLookupByLibrary.simpleMessage("Metrické (g, kg)"),
+        "settingsFoodUnitsImperial": MessageLookupByLibrary.simpleMessage("Imperiálne (lbs, oz)"),
+        "settingsHeightUnitsMetric": MessageLookupByLibrary.simpleMessage("Metrické (mm, cm, m)"),
+        "settingsHeightUnitsImperial": MessageLookupByLibrary.simpleMessage("Imperiálne (ft, in)"),
         "settingsVolumeLabel": MessageLookupByLibrary.simpleMessage("Objem"),
         "shareActivityLabel":
             MessageLookupByLibrary.simpleMessage("Zdieľať tréning"),

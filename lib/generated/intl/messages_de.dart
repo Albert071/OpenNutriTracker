@@ -1301,6 +1301,10 @@ class MessageLookup extends MessageLookupByLibrary {
         "settingsFoodUnitsLabel": MessageLookupByLibrary.simpleMessage("Lebensmitteleinheiten"),
         "settingsHeightUnitsLabel": MessageLookupByLibrary.simpleMessage("Größeneinheit"),
         "settingsBodyWeightUnitLabel": MessageLookupByLibrary.simpleMessage("Einheit für Körpergewicht"),
+        "settingsFoodUnitsMetric": MessageLookupByLibrary.simpleMessage("Metrisch (g, kg)"),
+        "settingsFoodUnitsImperial": MessageLookupByLibrary.simpleMessage("Imperial (lbs, oz)"),
+        "settingsHeightUnitsMetric": MessageLookupByLibrary.simpleMessage("Metrisch (mm, cm, m)"),
+        "settingsHeightUnitsImperial": MessageLookupByLibrary.simpleMessage("Imperial (ft, in)"),
         "settingsVolumeLabel": MessageLookupByLibrary.simpleMessage("Volumen"),
         "shareActivityLabel":
             MessageLookupByLibrary.simpleMessage("Training teilen"),

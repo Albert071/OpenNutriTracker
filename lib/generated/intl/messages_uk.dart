@@ -1290,6 +1290,10 @@ class MessageLookup extends MessageLookupByLibrary {
         "settingsFoodUnitsLabel": MessageLookupByLibrary.simpleMessage("Одиниці їжі"),
         "settingsHeightUnitsLabel": MessageLookupByLibrary.simpleMessage("Одиниці зросту"),
         "settingsBodyWeightUnitLabel": MessageLookupByLibrary.simpleMessage("Одиниця ваги тіла"),
+        "settingsFoodUnitsMetric": MessageLookupByLibrary.simpleMessage("Метрична (г, кг)"),
+        "settingsFoodUnitsImperial": MessageLookupByLibrary.simpleMessage("Імперська (фунти, унції)"),
+        "settingsHeightUnitsMetric": MessageLookupByLibrary.simpleMessage("Метрична (мм, см, м)"),
+        "settingsHeightUnitsImperial": MessageLookupByLibrary.simpleMessage("Імперська (фут, дюйми)"),
         "settingsVolumeLabel": MessageLookupByLibrary.simpleMessage("Об\'єм"),
         "shareActivityLabel":
             MessageLookupByLibrary.simpleMessage("Поділитися тренуванням"),
