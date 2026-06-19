@@ -13,8 +13,11 @@ import 'package:opennutritracker/core/presentation/main_screen.dart';
 import 'package:opennutritracker/core/presentation/widgets/image_full_screen.dart';
 import 'package:opennutritracker/core/styles/color_schemes.dart';
 import 'package:opennutritracker/core/styles/fonts.dart';
+import 'package:opennutritracker/core/services/background_export_service.dart';
+import 'package:opennutritracker/core/services/drive_upload_service.dart';
 import 'package:opennutritracker/core/utils/env.dart';
 import 'package:opennutritracker/core/utils/locator.dart';
+import 'package:workmanager/workmanager.dart';
 import 'package:opennutritracker/core/utils/logger_config.dart';
 import 'package:opennutritracker/core/utils/notification_service.dart';
 import 'package:opennutritracker/core/utils/navigation_options.dart';
@@ -46,6 +49,18 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   LoggerConfig.intiLogger();
   await initLocator();
+
+  await Workmanager().initialize(backgroundExportCallback, isInDebugMode: false);
+  if (await DriveUploadService.hasServiceAccountKey()) {
+    await Workmanager().registerPeriodicTask(
+      driveExportUniqueTaskName,
+      driveExportTaskName,
+      frequency: const Duration(hours: 24),
+      initialDelay: const Duration(minutes: 5),
+      constraints: Constraints(networkType: NetworkType.connected),
+      existingWorkPolicy: ExistingWorkPolicy.keep,
+    );
+  }
 
   // Drop cached remote-search results that haven't been touched in 90
   // days. Done once per app start; no need to schedule a recurring task.

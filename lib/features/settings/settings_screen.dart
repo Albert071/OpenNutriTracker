@@ -18,6 +18,7 @@ import 'package:opennutritracker/features/diary/presentation/bloc/diary_bloc.dar
 import 'package:opennutritracker/features/home/presentation/bloc/home_bloc.dart';
 import 'package:opennutritracker/features/profile/presentation/bloc/profile_bloc.dart';
 import 'package:opennutritracker/features/settings/presentation/bloc/settings_bloc.dart';
+import 'package:opennutritracker/features/settings/presentation/widgets/auto_export_dialog.dart';
 import 'package:opennutritracker/features/settings/presentation/widgets/export_import_dialog.dart';
 import 'package:opennutritracker/features/settings/presentation/widgets/import_custom_food_data_dialog.dart';
 import 'package:opennutritracker/features/settings/presentation/widgets/nutrient_visibility_screen.dart';
@@ -284,6 +285,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   leading: const Icon(Icons.import_export),
                   title: Text(S.of(context).exportImportAppDataLabel),
                   onTap: () => _showExportImportDialog(context),
+                ),
+                ListTile(
+                  leading: const Icon(Icons.cloud_upload_outlined),
+                  title: const Text('Auto-export to Drive'),
+                  subtitle: const Text('Daily background upload to Google Drive'),
+                  onTap: () => _showAutoExportDialog(context),
                 ),
                 ListTile(
                   leading: const Icon(Icons.cached_outlined),
@@ -604,6 +611,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   void _showExportImportDialog(BuildContext context) {
     showDialog(context: context, builder: (context) => ExportImportDialog());
+  }
+
+  void _showAutoExportDialog(BuildContext context) {
+    showDialog(context: context, builder: (context) => const AutoExportDialog());
   }
 
   void _showImportCustomFoodDataDialog(BuildContext context) {

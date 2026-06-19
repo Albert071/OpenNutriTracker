@@ -14,6 +14,13 @@ import 'package:opennutritracker/core/data/repository/weight_log_repository.dart
 import 'package:opennutritracker/core/utils/csv_data_exporter.dart';
 import 'package:opennutritracker/core/utils/user_image_storage.dart';
 
+const _defaultActivityJson = 'user_activity.json';
+const _defaultIntakeJson = 'user_intake.json';
+const _defaultTrackedDayJson = 'user_tracked_day.json';
+const _defaultRecipeJson = 'user_recipes.json';
+const _defaultWeightLogJson = 'weight_log.json';
+const _defaultTemplatesJson = 'custom_activity_templates.json';
+
 /// The two export shapes available from Settings → Export / Import App Data.
 /// JSON is the canonical backup-and-restore format the app re-imports from;
 /// CSV is a one-way spreadsheet-friendly view for analysis / sharing.
@@ -38,16 +45,7 @@ class ExportDataUsecase {
     this._customActivityTemplateRepository,
   );
 
-  /// Exports user activity, intake, tracked day, recipe, weight-log and
-  /// Custom activity template data to a zip at a user-specified location,
-  /// in the [format] the user picked.
-  ///
-  /// JSON export contains JSON files only and is what the app re-imports
-  /// from. CSV export contains CSV files only and is intended for
-  /// opening in a spreadsheet — recipes, photos, the weight log and
-  /// Custom activity templates are omitted from CSV because their shape
-  /// doesn't flatten cleanly. A user who wants both can run the export
-  /// twice. See `docs/export-format.md` for the schema.
+  /// Exports all data to a zip at a user-specified location (interactive).
   Future<bool> exportData(
     String exportZipFileName,
     String userActivityJsonFileName,
@@ -56,6 +54,55 @@ class ExportDataUsecase {
     String recipeJsonFileName,
     String weightLogJsonFileName,
     String customActivityTemplateJsonFileName, {
+    ExportFormat format = ExportFormat.json,
+    String userActivityCsvFileName = 'user_activity.csv',
+    String userIntakeCsvFileName = 'user_intake.csv',
+    String trackedDayCsvFileName = 'user_tracked_day.csv',
+  }) async {
+    final zipBytes = await _buildArchiveBytes(
+      userActivityJsonFileName: userActivityJsonFileName,
+      userIntakeJsonFileName: userIntakeJsonFileName,
+      trackedDayJsonFileName: trackedDayJsonFileName,
+      recipeJsonFileName: recipeJsonFileName,
+      weightLogJsonFileName: weightLogJsonFileName,
+      customActivityTemplateJsonFileName: customActivityTemplateJsonFileName,
+      format: format,
+      userActivityCsvFileName: userActivityCsvFileName,
+      userIntakeCsvFileName: userIntakeCsvFileName,
+      trackedDayCsvFileName: trackedDayCsvFileName,
+    );
+
+    final result = await FilePicker.saveFile(
+      fileName: exportZipFileName,
+      type: FileType.custom,
+      allowedExtensions: ['zip'],
+      bytes: Uint8List.fromList(zipBytes),
+    );
+
+    return result != null && result.isNotEmpty;
+  }
+
+  /// Returns the JSON export zip as raw bytes — used by the background Drive
+  /// upload job so no file picker dialog is shown.
+  Future<Uint8List> exportDataAsBytes() async {
+    final bytes = await _buildArchiveBytes(
+      userActivityJsonFileName: _defaultActivityJson,
+      userIntakeJsonFileName: _defaultIntakeJson,
+      trackedDayJsonFileName: _defaultTrackedDayJson,
+      recipeJsonFileName: _defaultRecipeJson,
+      weightLogJsonFileName: _defaultWeightLogJson,
+      customActivityTemplateJsonFileName: _defaultTemplatesJson,
+    );
+    return Uint8List.fromList(bytes);
+  }
+
+  Future<List<int>> _buildArchiveBytes({
+    required String userActivityJsonFileName,
+    required String userIntakeJsonFileName,
+    required String trackedDayJsonFileName,
+    required String recipeJsonFileName,
+    required String weightLogJsonFileName,
+    required String customActivityTemplateJsonFileName,
     ExportFormat format = ExportFormat.json,
     String userActivityCsvFileName = 'user_activity.csv',
     String userIntakeCsvFileName = 'user_intake.csv',
@@ -116,13 +163,7 @@ class ExportDataUsecase {
       );
     }
 
-    // Recipes, photos, weight log and Custom activity templates — JSON
-    // only. The recipe shape doesn't flatten to CSV without lossy
-    // denormalisation; meal / recipe photos are binary blobs; the
-    // weight log is a JSON-only dataset for now; templates are a small
-    // JSON-only convenience. A user who needs spreadsheet-shaped
-    // recipes can fall back to the dedicated Sample / Import recipes
-    // CSV path under Import Custom Food Data.
+    // Recipes, photos, weight log and Custom activity templates — JSON only.
     if (format == ExportFormat.json) {
       final fullRecipes = _recipeRepository.getAllRecipesDBO();
       final recipeBytes = utf8.encode(jsonEncode(
@@ -132,22 +173,15 @@ class ExportDataUsecase {
         ArchiveFile(recipeJsonFileName, recipeBytes.length, recipeBytes),
       );
 
-      // Include any user-attached recipe photos under their relative
-      // slug (e.g. `recipe_images/<id>.webp`). The slug matches what
-      // we persist on RecipeDBO.imagePath, so import can drop the
-      // bytes back into place without translating filenames.
       for (final recipe in fullRecipes) {
         await _addUserImageIfPresent(archive, recipe.imagePath);
       }
 
-      // Custom-meal photos travel through the same `meal_images/`
-      // subdirectory their relative slug names.
       final customMeals = _customMealDataSource.getAllCustomMeals();
       for (final meal in customMeals) {
         await _addUserImageIfPresent(archive, meal.localImagePath);
       }
 
-      // Weight-log dataset
       final fullWeightLog = await _weightLogRepository.getAllEntriesDBO();
       final weightLogBytes = utf8.encode(jsonEncode(
         fullWeightLog.map((entry) => entry.toJson()).toList(),
@@ -160,7 +194,6 @@ class ExportDataUsecase {
         ),
       );
 
-      // Custom activity templates (#70 follow-up)
       final fullTemplates =
           await _customActivityTemplateRepository.allTemplateDBOs();
       final templatesBytes = utf8.encode(jsonEncode(
@@ -175,16 +208,7 @@ class ExportDataUsecase {
       );
     }
 
-    // Save the zip file to the user-specified location
-    final zipBytes = ZipEncoder().encode(archive);
-    final result = await FilePicker.saveFile(
-      fileName: exportZipFileName,
-      type: FileType.custom,
-      allowedExtensions: ['zip'],
-      bytes: Uint8List.fromList(zipBytes),
-    );
-
-    return result != null && result.isNotEmpty;
+    return ZipEncoder().encode(archive);
   }
 
   Future<void> _addUserImageIfPresent(
