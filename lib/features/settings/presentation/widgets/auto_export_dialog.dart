@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:opennutritracker/core/services/background_export_service.dart';
 import 'package:opennutritracker/core/services/drive_upload_service.dart';
+import 'package:opennutritracker/core/utils/locator.dart';
+import 'package:opennutritracker/features/settings/domain/usecase/export_data_usecase.dart';
 import 'package:workmanager/workmanager.dart';
+
+const _exportFileName = 'opennutritracker-export.zip';
+const _driveFolderNutrition = '1hprY3j4kpZAnAUcfL93eAHyBJdLKOFnZ';
 
 class AutoExportDialog extends StatefulWidget {
   const AutoExportDialog({super.key});
@@ -14,7 +19,9 @@ class _AutoExportDialogState extends State<AutoExportDialog> {
   final _keyController = TextEditingController();
   bool _hasKey = false;
   bool _saving = false;
+  bool _testing = false;
   String? _error;
+  String? _testResult;
 
   @override
   void initState() {
@@ -64,6 +71,27 @@ class _AutoExportDialogState extends State<AutoExportDialog> {
     if (mounted) setState(() => _hasKey = false);
   }
 
+  Future<void> _testNow() async {
+    setState(() {
+      _testing = true;
+      _testResult = null;
+      _error = null;
+    });
+    try {
+      final zipBytes = await locator<ExportDataUsecase>().exportDataAsBytes();
+      await DriveUploadService().uploadFile(
+        fileBytes: zipBytes,
+        fileName: _exportFileName,
+        driveFolderId: _driveFolderNutrition,
+      );
+      if (mounted) setState(() => _testResult = 'Upload successful! Check your Drive folder.');
+    } catch (e) {
+      if (mounted) setState(() => _error = 'Upload failed: $e');
+    } finally {
+      if (mounted) setState(() => _testing = false);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
@@ -87,6 +115,15 @@ class _AutoExportDialogState extends State<AutoExportDialog> {
                   ),
                 ],
               ),
+              if (_testResult != null) ...[
+                const SizedBox(height: 8),
+                Text(
+                  _testResult!,
+                  style: TextStyle(
+                      color: Theme.of(context).colorScheme.primary,
+                      fontSize: 12),
+                ),
+              ],
             ] else ...[
               const Text(
                 'Paste the service account JSON key below. The key is stored '
@@ -102,15 +139,14 @@ class _AutoExportDialogState extends State<AutoExportDialog> {
                   hintText: '{ "type": "service_account", ... }',
                 ),
               ),
-              if (_error != null) ...[
-                const SizedBox(height: 8),
-                Text(
-                  _error!,
-                  style: TextStyle(
-                      color: Theme.of(context).colorScheme.error,
-                      fontSize: 12),
-                ),
-              ],
+            ],
+            if (_error != null) ...[
+              const SizedBox(height: 8),
+              Text(
+                _error!,
+                style: TextStyle(
+                    color: Theme.of(context).colorScheme.error, fontSize: 12),
+              ),
             ],
           ],
         ),
@@ -120,15 +156,25 @@ class _AutoExportDialogState extends State<AutoExportDialog> {
           onPressed: () => Navigator.of(context).pop(),
           child: const Text('Close'),
         ),
-        if (_hasKey)
+        if (_hasKey) ...[
+          TextButton(
+            onPressed: _testing ? null : _testNow,
+            child: _testing
+                ? const SizedBox(
+                    width: 16,
+                    height: 16,
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  )
+                : const Text('Export now'),
+          ),
           TextButton(
             onPressed: _disable,
             child: Text(
               'Disable',
               style: TextStyle(color: Theme.of(context).colorScheme.error),
             ),
-          )
-        else
+          ),
+        ] else
           TextButton(
             onPressed: _saving ? null : _save,
             child: _saving
