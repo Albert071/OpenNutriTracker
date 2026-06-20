@@ -37,13 +37,13 @@ jobs:
       - name: Generate code (envied + hive)
         run: flutter pub run build_runner build --delete-conflicting-outputs
 
-      - name: Build release APK
-        run: flutter build apk --release
+      - name: Build APK
+        run: flutter build apk --debug
 
       - name: Upload APK to release
         uses: softprops/action-gh-release@v2
         with:
-          files: build/app/outputs/flutter-apk/app-release.apk
+          files: build/app/outputs/flutter-apk/app-debug.apk
           name: Release ${{ github.ref_name }}
           body: |
             Auto-built release APK.
