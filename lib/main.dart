@@ -58,7 +58,7 @@ Future<void> main() async {
       frequency: const Duration(hours: 24),
       initialDelay: const Duration(minutes: 5),
       constraints: Constraints(networkType: NetworkType.connected),
-      existingWorkPolicy: ExistingWorkPolicy.keep,
+      existingWorkPolicy: ExistingPeriodicWorkPolicy.keep,
     );
   }
 
