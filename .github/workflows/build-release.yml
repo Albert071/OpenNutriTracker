@@ -5,6 +5,9 @@ on:
     tags:
       - 'v*'
 
+permissions:
+  contents: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -40,14 +43,17 @@ jobs:
       - name: Build APK
         run: flutter build apk --debug --flavor full
 
+      - name: Find APK
+        run: find build/app/outputs -name "*.apk" | tee /tmp/apk_path.txt
+
       - name: Upload APK to release
         uses: softprops/action-gh-release@v2
         with:
-          files: build/app/outputs/flutter-apk/app-debug.apk
+          files: build/app/outputs/**/*.apk
           name: Release ${{ github.ref_name }}
           body: |
-            Auto-built release APK.
+            Auto-built APK (debug build, safe to sideload for personal use).
 
-            **Install:** download `app-release.apk`, transfer to your phone,
+            **Install:** download the `.apk`, transfer to your phone,
             and install (you may need to allow "Install from unknown sources"
-            in your phone's settings).
+            in Settings → Apps → Special app access).
