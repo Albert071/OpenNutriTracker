@@ -86,7 +86,7 @@ dependencies:
 
   workmanager: ^0.5.2
   googleapis: ^13.0.0
-  google_auth_io: ^1.1.1
+  googleapis_auth: ^1.6.0
 
 dev_dependencies:
   flutter_test:
