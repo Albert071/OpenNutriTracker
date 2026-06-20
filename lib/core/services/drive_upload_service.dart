@@ -7,6 +7,7 @@ import 'package:googleapis/drive/v3.dart' as drive;
 import 'package:http/http.dart' as http;
 
 const _saKeyStorageKey = 'drive_service_account_key';
+const _folderIdStorageKey = 'drive_folder_id';
 
 // drive.file scope: access only to files created by this app and files
 // explicitly shared with the service account. Does not touch the user's
@@ -31,6 +32,18 @@ class DriveUploadService {
 
   static Future<void> deleteServiceAccountKey() async {
     await _storage.delete(key: _saKeyStorageKey);
+  }
+
+  static Future<void> saveFolderId(String folderId) async {
+    await _storage.write(key: _folderIdStorageKey, value: folderId);
+  }
+
+  static Future<String?> loadFolderId() async {
+    return await _storage.read(key: _folderIdStorageKey);
+  }
+
+  static Future<void> deleteFolderId() async {
+    await _storage.delete(key: _folderIdStorageKey);
   }
 
   /// Uploads [fileBytes] to [driveFolderId] as [fileName], replacing any

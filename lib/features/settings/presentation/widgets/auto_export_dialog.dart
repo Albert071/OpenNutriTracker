@@ -6,7 +6,6 @@ import 'package:opennutritracker/features/settings/domain/usecase/export_data_us
 import 'package:workmanager/workmanager.dart';
 
 const _exportFileName = 'opennutritracker-export.zip';
-const _driveFolderNutrition = '1hprY3j4kpZAnAUcfL93eAHyBJdLKOFnZ';
 
 class AutoExportDialog extends StatefulWidget {
   const AutoExportDialog({super.key});
@@ -17,30 +16,47 @@ class AutoExportDialog extends StatefulWidget {
 
 class _AutoExportDialogState extends State<AutoExportDialog> {
   final _keyController = TextEditingController();
+  final _folderController = TextEditingController();
   bool _hasKey = false;
   bool _saving = false;
   bool _testing = false;
   String? _error;
   String? _testResult;
+  String? _currentFolderId;
 
   @override
   void initState() {
     super.initState();
-    DriveUploadService.hasServiceAccountKey().then((v) {
-      if (mounted) setState(() => _hasKey = v);
-    });
+    _loadState();
+  }
+
+  Future<void> _loadState() async {
+    final hasKey = await DriveUploadService.hasServiceAccountKey();
+    final folderId = await DriveUploadService.loadFolderId();
+    if (mounted) {
+      setState(() {
+        _hasKey = hasKey;
+        _currentFolderId = folderId;
+      });
+    }
   }
 
   @override
   void dispose() {
     _keyController.dispose();
+    _folderController.dispose();
     super.dispose();
   }
 
   Future<void> _save() async {
     final json = _keyController.text.trim();
+    final folderId = _folderController.text.trim();
     if (json.isEmpty) {
       setState(() => _error = 'Paste the service account JSON key first.');
+      return;
+    }
+    if (folderId.isEmpty) {
+      setState(() => _error = 'Enter the Shared Drive folder ID.');
       return;
     }
     setState(() {
@@ -49,6 +65,7 @@ class _AutoExportDialogState extends State<AutoExportDialog> {
     });
     try {
       await DriveUploadService.saveServiceAccountKey(json);
+      await DriveUploadService.saveFolderId(folderId);
       await Workmanager().registerPeriodicTask(
         driveExportUniqueTaskName,
         driveExportTaskName,
@@ -57,9 +74,14 @@ class _AutoExportDialogState extends State<AutoExportDialog> {
         constraints: Constraints(networkType: NetworkType.connected),
         existingWorkPolicy: ExistingPeriodicWorkPolicy.replace,
       );
-      if (mounted) setState(() => _hasKey = true);
+      if (mounted) {
+        setState(() {
+          _hasKey = true;
+          _currentFolderId = folderId;
+        });
+      }
     } catch (e) {
-      if (mounted) setState(() => _error = 'Failed to save key: $e');
+      if (mounted) setState(() => _error = 'Failed to save: $e');
     } finally {
       if (mounted) setState(() => _saving = false);
     }
@@ -68,10 +90,16 @@ class _AutoExportDialogState extends State<AutoExportDialog> {
   Future<void> _disable() async {
     await Workmanager().cancelByUniqueName(driveExportUniqueTaskName);
     await DriveUploadService.deleteServiceAccountKey();
+    await DriveUploadService.deleteFolderId();
     if (mounted) setState(() => _hasKey = false);
   }
 
   Future<void> _testNow() async {
+    final folderId = _currentFolderId;
+    if (folderId == null) {
+      setState(() => _error = 'No folder ID saved.');
+      return;
+    }
     setState(() {
       _testing = true;
       _testResult = null;
@@ -82,9 +110,11 @@ class _AutoExportDialogState extends State<AutoExportDialog> {
       await DriveUploadService().uploadFile(
         fileBytes: zipBytes,
         fileName: _exportFileName,
-        driveFolderId: _driveFolderNutrition,
+        driveFolderId: folderId,
       );
-      if (mounted) setState(() => _testResult = 'Upload successful! Check your Drive folder.');
+      if (mounted) {
+        setState(() => _testResult = 'Upload successful! Check your Drive folder.');
+      }
     } catch (e) {
       if (mounted) setState(() => _error = 'Upload failed: $e');
     } finally {
@@ -107,10 +137,9 @@ class _AutoExportDialogState extends State<AutoExportDialog> {
                   Icon(Icons.check_circle,
                       color: Theme.of(context).colorScheme.primary),
                   const SizedBox(width: 8),
-                  const Expanded(
+                  Expanded(
                     child: Text(
-                      'Daily export enabled. Your nutrition data is uploaded to '
-                      'Google Drive each night automatically.',
+                      'Daily export enabled.\nFolder: ${_currentFolderId ?? "—"}',
                     ),
                   ),
                 ],
@@ -126,17 +155,27 @@ class _AutoExportDialogState extends State<AutoExportDialog> {
               ],
             ] else ...[
               const Text(
-                'Paste the service account JSON key below. The key is stored '
-                'securely on this device and used to upload your daily export '
-                'to Google Drive.',
+                'Paste the service account JSON key and your Shared Drive '
+                'folder ID below.',
               ),
               const SizedBox(height: 12),
               TextField(
                 controller: _keyController,
-                maxLines: 6,
+                maxLines: 5,
                 decoration: const InputDecoration(
                   border: OutlineInputBorder(),
+                  labelText: 'Service account JSON key',
                   hintText: '{ "type": "service_account", ... }',
+                ),
+              ),
+              const SizedBox(height: 8),
+              TextField(
+                controller: _folderController,
+                maxLines: 1,
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: 'Shared Drive folder ID',
+                  hintText: 'e.g. 1ABC123xyz...',
                 ),
               ),
             ],

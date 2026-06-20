@@ -8,8 +8,6 @@ import 'package:workmanager/workmanager.dart';
 const driveExportTaskName = 'driveExport';
 const driveExportUniqueTaskName = 'ont-drive-export';
 
-// The Drive folder that the ICARUS pipeline reads from.
-const _driveFolderNutrition = '1hprY3j4kpZAnAUcfL93eAHyBJdLKOFnZ';
 const _exportFileName = 'opennutritracker-export.zip';
 
 final _log = Logger('BackgroundExportService');
@@ -25,6 +23,12 @@ void backgroundExportCallback() {
       // Re-init the GetIt locator — fresh isolate has no state.
       await initLocator();
 
+      final folderId = await DriveUploadService.loadFolderId();
+      if (folderId == null) {
+        _log.warning('No Drive folder ID configured — skipping export');
+        return Future.value(true);
+      }
+
       final exportUsecase = locator<ExportDataUsecase>();
       final zipBytes = await exportUsecase.exportDataAsBytes();
 
@@ -32,7 +36,7 @@ void backgroundExportCallback() {
       await uploadService.uploadFile(
         fileBytes: zipBytes,
         fileName: _exportFileName,
-        driveFolderId: _driveFolderNutrition,
+        driveFolderId: folderId,
       );
 
       _log.info('Background Drive export completed successfully');
