@@ -14,7 +14,7 @@ import 'package:opennutritracker/core/presentation/widgets/image_full_screen.dar
 import 'package:opennutritracker/core/styles/color_schemes.dart';
 import 'package:opennutritracker/core/styles/fonts.dart';
 import 'package:opennutritracker/core/services/background_export_service.dart';
-import 'package:opennutritracker/core/services/drive_upload_service.dart';
+import 'package:opennutritracker/core/services/gcs_upload_service.dart';
 import 'package:opennutritracker/core/utils/env.dart';
 import 'package:opennutritracker/core/utils/locator.dart';
 import 'package:workmanager/workmanager.dart';
@@ -51,7 +51,7 @@ Future<void> main() async {
   await initLocator();
 
   await Workmanager().initialize(backgroundExportCallback, isInDebugMode: false);
-  if (await DriveUploadService.hasServiceAccountKey()) {
+  if (await GcsUploadService.hasServiceAccountKey()) {
     await Workmanager().registerPeriodicTask(
       driveExportUniqueTaskName,
       driveExportTaskName,

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:opennutritracker/core/services/background_export_service.dart';
-import 'package:opennutritracker/core/services/drive_upload_service.dart';
+import 'package:opennutritracker/core/services/gcs_upload_service.dart';
 import 'package:opennutritracker/core/utils/locator.dart';
 import 'package:opennutritracker/features/settings/domain/usecase/export_data_usecase.dart';
 import 'package:workmanager/workmanager.dart';
 
-const _exportFileName = 'opennutritracker-export.zip';
+const _exportObjectName = 'opennutritracker-export.zip';
 
 class AutoExportDialog extends StatefulWidget {
   const AutoExportDialog({super.key});
@@ -16,13 +16,13 @@ class AutoExportDialog extends StatefulWidget {
 
 class _AutoExportDialogState extends State<AutoExportDialog> {
   final _keyController = TextEditingController();
-  final _folderController = TextEditingController();
+  final _bucketController = TextEditingController();
   bool _hasKey = false;
   bool _saving = false;
   bool _testing = false;
   String? _error;
   String? _testResult;
-  String? _currentFolderId;
+  String? _currentBucket;
 
   @override
   void initState() {
@@ -31,12 +31,12 @@ class _AutoExportDialogState extends State<AutoExportDialog> {
   }
 
   Future<void> _loadState() async {
-    final hasKey = await DriveUploadService.hasServiceAccountKey();
-    final folderId = await DriveUploadService.loadFolderId();
+    final hasKey = await GcsUploadService.hasServiceAccountKey();
+    final bucket = await GcsUploadService.loadBucketName();
     if (mounted) {
       setState(() {
         _hasKey = hasKey;
-        _currentFolderId = folderId;
+        _currentBucket = bucket;
       });
     }
   }
@@ -44,19 +44,19 @@ class _AutoExportDialogState extends State<AutoExportDialog> {
   @override
   void dispose() {
     _keyController.dispose();
-    _folderController.dispose();
+    _bucketController.dispose();
     super.dispose();
   }
 
   Future<void> _save() async {
     final json = _keyController.text.trim();
-    final folderId = _folderController.text.trim();
+    final bucket = _bucketController.text.trim();
     if (json.isEmpty) {
       setState(() => _error = 'Paste the service account JSON key first.');
       return;
     }
-    if (folderId.isEmpty) {
-      setState(() => _error = 'Enter the Shared Drive folder ID.');
+    if (bucket.isEmpty) {
+      setState(() => _error = 'Enter the GCS bucket name.');
       return;
     }
     setState(() {
@@ -64,8 +64,8 @@ class _AutoExportDialogState extends State<AutoExportDialog> {
       _error = null;
     });
     try {
-      await DriveUploadService.saveServiceAccountKey(json);
-      await DriveUploadService.saveFolderId(folderId);
+      await GcsUploadService.saveServiceAccountKey(json);
+      await GcsUploadService.saveBucketName(bucket);
       await Workmanager().registerPeriodicTask(
         driveExportUniqueTaskName,
         driveExportTaskName,
@@ -77,7 +77,7 @@ class _AutoExportDialogState extends State<AutoExportDialog> {
       if (mounted) {
         setState(() {
           _hasKey = true;
-          _currentFolderId = folderId;
+          _currentBucket = bucket;
         });
       }
     } catch (e) {
@@ -89,15 +89,15 @@ class _AutoExportDialogState extends State<AutoExportDialog> {
 
   Future<void> _disable() async {
     await Workmanager().cancelByUniqueName(driveExportUniqueTaskName);
-    await DriveUploadService.deleteServiceAccountKey();
-    await DriveUploadService.deleteFolderId();
+    await GcsUploadService.deleteServiceAccountKey();
+    await GcsUploadService.deleteBucketName();
     if (mounted) setState(() => _hasKey = false);
   }
 
   Future<void> _testNow() async {
-    final folderId = _currentFolderId;
-    if (folderId == null) {
-      setState(() => _error = 'No folder ID saved.');
+    final bucket = _currentBucket;
+    if (bucket == null) {
+      setState(() => _error = 'No bucket name saved.');
       return;
     }
     setState(() {
@@ -107,13 +107,13 @@ class _AutoExportDialogState extends State<AutoExportDialog> {
     });
     try {
       final zipBytes = await locator<ExportDataUsecase>().exportDataAsBytes();
-      await DriveUploadService().uploadFile(
+      await GcsUploadService().uploadFile(
         fileBytes: zipBytes,
-        fileName: _exportFileName,
-        driveFolderId: folderId,
+        objectName: _exportObjectName,
+        bucketName: bucket,
       );
       if (mounted) {
-        setState(() => _testResult = 'Upload successful! Check your Drive folder.');
+        setState(() => _testResult = 'Upload successful! Check your GCS bucket.');
       }
     } catch (e) {
       if (mounted) setState(() => _error = 'Upload failed: $e');
@@ -125,7 +125,7 @@ class _AutoExportDialogState extends State<AutoExportDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text('Auto-export to Drive'),
+      title: const Text('Auto-export to Cloud Storage'),
       content: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -139,7 +139,7 @@ class _AutoExportDialogState extends State<AutoExportDialog> {
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(
-                      'Daily export enabled.\nFolder: ${_currentFolderId ?? "—"}',
+                      'Daily export enabled.\nBucket: ${_currentBucket ?? "—"}',
                     ),
                   ),
                 ],
@@ -155,8 +155,8 @@ class _AutoExportDialogState extends State<AutoExportDialog> {
               ],
             ] else ...[
               const Text(
-                'Paste the service account JSON key and your Shared Drive '
-                'folder ID below.',
+                'Paste the service account JSON key and the GCS bucket name '
+                'where exports should be uploaded.',
               ),
               const SizedBox(height: 12),
               TextField(
@@ -170,12 +170,12 @@ class _AutoExportDialogState extends State<AutoExportDialog> {
               ),
               const SizedBox(height: 8),
               TextField(
-                controller: _folderController,
+                controller: _bucketController,
                 maxLines: 1,
                 decoration: const InputDecoration(
                   border: OutlineInputBorder(),
-                  labelText: 'Shared Drive folder ID',
-                  hintText: 'e.g. 1ABC123xyz...',
+                  labelText: 'GCS bucket name',
+                  hintText: 'icarus-nutrition-exports',
                 ),
               ),
             ],
