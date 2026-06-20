@@ -60,6 +60,8 @@ class DriveUploadService {
       final existing = await driveApi.files.list(
         q: "name = '$fileName' and '$driveFolderId' in parents and trashed = false",
         spaces: 'drive',
+        includeItemsFromAllDrives: true,
+        supportsAllDrives: true,
         $fields: 'files(id)',
       );
 
@@ -69,6 +71,7 @@ class DriveUploadService {
           drive.File(),
           existingId,
           uploadMedia: media,
+          supportsAllDrives: true,
         );
         return existingId;
       } else {
@@ -78,6 +81,7 @@ class DriveUploadService {
         final created = await driveApi.files.create(
           newFile,
           uploadMedia: media,
+          supportsAllDrives: true,
         );
         return created.id!;
       }
